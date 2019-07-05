@@ -291,8 +291,7 @@ average temperature between the modes where the compressor is off and on.
 </li>
 </ol>
 <p>
-The electric power only contains the power for the compressor, but not any power
-for pumps or fans.
+The electric power only contains only the power for the chiller pump.
 </p>
 </html>",
 revisions="<html>
