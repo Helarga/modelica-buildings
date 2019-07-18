@@ -33,15 +33,36 @@ model EquationFitWaterToWater "Water source heat pump_Equation Fit"
   parameter Modelica.SIunits.MassFlowRate   mEva_flow_nominal=per.mEva_flow_nominal
    "Heating mode Evaporator mass flow rate nominal capacity";
   parameter Modelica.SIunits.HeatFlowRate   Q_flow_small = QCon_heatflow_nominal*1E-9
-     "Small value for heat flow rate or power, used to avoid division by zero";
+   "Small value for heat flow rate or power, used to avoid division by zero";
+
+  Modelica.Blocks.Interfaces.RealInput TEvaSet(final unit="K", displayUnit="degC")
+    "Set point for leaving chilled water temperature"
+     annotation (Placement(
+        transformation(extent={{-182,-110},{-142,-70}}), iconTransformation(
+          extent={{-128,-104},{-100,-76}})));
+  Modelica.Blocks.Interfaces.RealInput TConSet(final unit="K", displayUnit="degC")
+    "Set point for leaving heating water temperature"
+     annotation (Placement(
+        transformation(extent={{-180,70},{-140,110}}), iconTransformation(
+          extent={{-128,76},{-100,104}})));
+  Modelica.Blocks.Interfaces.IntegerInput uMod
+    "HeatPump control input signal,Heating mode= 1, Off=0, Cooling mode=-1"
+     annotation (Placement(transformation(extent={{-180,-20},{-140,20}}),
+        iconTransformation(extent={{-128,-14},{-100,14}})));
+  Modelica.Blocks.Interfaces.RealOutput  P(final unit="W")
+    "Compressor Power "
+     annotation (Placement(transformation(extent={{140,-10},{160,10}}),
+        iconTransformation(extent={{100,-12},{120,8}})));
+   Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
+    "Evaporator heat flow rate" annotation (Placement(transformation(extent={{140,
+            -30},{160,-10}}), iconTransformation(extent={{100,-100},{120,-80}})));
+   Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
+    "Condenser heat flow rate" annotation (Placement(transformation(extent={{140,
+            10},{160,30}}), iconTransformation(extent={{100,78},{120,98}})));
 
    Buildings.Fluid.HeatPumps.BaseClasses.EquationFitMethod equFit(per=per)
     "EquationFit method which describes the water to water heat pump performance"
      annotation (Placement(transformation(extent={{-80,-10},{-60,10}})));
-   Modelica.Blocks.Interfaces.IntegerInput uMod
-    "HeatPump control input signal,Heating mode= 1, Off=0, Cooling mode=-1"
-     annotation (Placement(transformation(extent={{-180,-20},{-140,20}}),
-        iconTransformation(extent={{-128,-14},{-100,14}})));
    HeatTransfer.Sources.PrescribedHeatFlow preHeaFloCon
     "Prescribed condenser heat flow rate"
      annotation (Placement(transformation(extent={{-37,12},
@@ -49,40 +70,6 @@ model EquationFitWaterToWater "Water source heat pump_Equation Fit"
    HeatTransfer.Sources.PrescribedHeatFlow preHeaFloEva
     "Prescribed evaporator heat flow rate"
      annotation (Placement(transformation(extent={{-37,-30},{-17,-10}})));
-   Modelica.Blocks.Sources.RealExpression hConSet(final y=
-        Medium1.specificEnthalpy_pTX(
-        p=port_b1.p,
-        T=TConSet,
-        X=cat(
-          1,
-          port_b1.Xi_outflow,
-          {1 - sum(port_b1.Xi_outflow)})))
-    "Heating water setpoint enthalpy"
-     annotation (Placement(transformation(extent={{-134,58},{-114,78}})));
-   Modelica.Blocks.Sources.RealExpression hEvaSet(final y=
-        Medium2.specificEnthalpy_pTX(
-        p=port_b2.p,
-        T=TEvaSet,
-        X=cat(
-          1,
-          port_b2.Xi_outflow,
-          {1 - sum(port_b2.Xi_outflow)})))
-    "Cooled water setpoint enthalpy"
-     annotation (Placement(transformation(extent={{-134,-80},{-114,-60}})));
-  Modelica.Blocks.Sources.RealExpression QConFloSet(final y=
-        Buildings.Utilities.Math.Functions.smoothMax(
-        x1=mConFlo.y*(hConSet.y - inStream(port_a1.h_outflow)),
-        x2=Q_flow_small,
-        deltaX=Q_flow_small/10))
-    "Setpoint heat flow rate of the condenser"
-     annotation (Placement(transformation(extent={{-134,-2},{-114,18}})));
-  Modelica.Blocks.Sources.RealExpression QEvaFloSet(final y=
-        Buildings.Utilities.Math.Functions.smoothMin(
-        x1=mEvaFlo.y*(hEvaSet.y - inStream(port_a2.h_outflow)),
-        x2=-Q_flow_small,
-        deltaX=Q_flow_small/100))
-    "Setpoint heat flow rate of the evaporator"
-     annotation (Placement(transformation(extent={{-134,-20},{-114,0}})));
    Modelica.Blocks.Sources.RealExpression TConEnt(y=Medium1.temperature(
                                                    Medium1.setState_phX(port_a1.p,
                                                    inStream(port_a1.h_outflow))))
@@ -105,28 +92,37 @@ model EquationFitWaterToWater "Water source heat pump_Equation Fit"
    Modelica.Blocks.Sources.RealExpression mEvaFlo(y=vol2.ports[1].m_flow)
     "Evaporator mass flow rate"
      annotation (Placement(transformation(extent={{-134,-36},{-114,-16}})));
-   Modelica.Blocks.Interfaces.RealOutput P( final unit="W", displayUnit="W")
-    "Compressor Power "
-     annotation (Placement(transformation(extent={{140,-10},{160,10}}),
-        iconTransformation(extent={{100,-12},{120,8}})));
-   Modelica.Blocks.Interfaces.RealOutput QEva(final unit="W", displayUnit="W")
-    "Evaporator heat flow rate"
-     annotation (Placement(transformation(extent={{140,
-            -30},{160,-10}}), iconTransformation(extent={{100,-100},{120,-80}})));
-   Modelica.Blocks.Interfaces.RealOutput QCon(final unit="W", displayUnit="W")
-    "Condenser heat flow rate"
-     annotation (Placement(transformation(extent={{140,
-            10},{160,30}}), iconTransformation(extent={{100,78},{120,98}})));
-   Modelica.Blocks.Interfaces.RealInput TEvaSet(final unit="K", displayUnit="degC")
-    "Set point for leaving chilled water temperature"
-     annotation (Placement(
-        transformation(extent={{-182,-110},{-142,-70}}), iconTransformation(
-          extent={{-128,-104},{-100,-76}})));
-   Modelica.Blocks.Interfaces.RealInput TConSet(final unit="K", displayUnit="degC")
-    "Set point for leaving heating water temperature"
-     annotation (Placement(
-        transformation(extent={{-180,70},{-140,110}}), iconTransformation(
-          extent={{-128,76},{-100,104}})));
+   Modelica.Blocks.Sources.RealExpression QConFloSet(final y=
+        Buildings.Utilities.Math.Functions.smoothMax(
+        x1=mConFlo.y*(hConSet- inStream(port_a1.h_outflow)),
+        x2=Q_flow_small,
+        deltaX=Q_flow_small/10))
+    "Setpoint heat flow rate of the condenser"
+     annotation (Placement(transformation(extent={{-134,-2},{-114,18}})));
+  Modelica.Blocks.Sources.RealExpression QEvaFloSet(final y=
+        Buildings.Utilities.Math.Functions.smoothMin(
+        x1=mEvaFlo.y*(hEvaSet - inStream(port_a2.h_outflow)),
+        x2=-Q_flow_small,
+        deltaX=Q_flow_small/100))
+    "Setpoint heat flow rate of the evaporator"
+     annotation (Placement(transformation(extent={{-134,-20},{-114,0}})));
+   Modelica.SIunits.SpecificEnthalpy hEvaSet=
+      Medium2.specificEnthalpy_pTX(
+       p=port_b2.p,
+       T=TEvaSet,
+       X=cat( 1,
+              port_b2.Xi_outflow,
+              {1 - sum(port_b2.Xi_outflow)}))
+    "Chilled water setpoint enthalpy";
+   Modelica.SIunits.SpecificEnthalpy hConSet=
+      Medium1.specificEnthalpy_pTX(
+       p=port_b1.p,
+       T=TConSet,
+       X=cat( 1,
+              port_b1.Xi_outflow,
+              {1 - sum(port_b1.Xi_outflow)}))
+    "Heating water setpoint enthalpy";
+
 equation
   connect(preHeaFloCon.port,vol1.heatPort)
      annotation (Line(points={{-17,22},{-16,22},{-16,60},{-10,60}}, color={191,0,0}));
@@ -142,11 +138,10 @@ equation
   connect(TEvaSet, equFit.TEvaSet)
      annotation (Line(points={{-162,-90},{-88,-90},{-88,-9.9},{-80.9,-9.9}},
                                         color={0,0,127}));
-  connect(equFit.QEva, preHeaFloEva.Q_flow)
-     annotation (Line(points={{-59,-4},{-42,
-          -4},{-42,-20},{-37,-20}}, color={0,0,127}));
-  connect(equFit.QEva, QEva) annotation (Line(points={{-59,-4},{132,-4},{132,-20},
-          {150,-20}}, color={0,0,127}));
+  connect(equFit.QEva_flow, preHeaFloEva.Q_flow) annotation (Line(points={{-59,-4},
+          {-42,-4},{-42,-20},{-37,-20}}, color={0,0,127}));
+  connect(equFit.QEva_flow, QEva_flow) annotation (Line(points={{-59,-4},{132,-4},
+          {132,-20},{150,-20}}, color={0,0,127}));
   connect(QConFloSet.y, equFit.QConFloSet)
      annotation (Line(
       points={{-113,8},{-106,8},{-106,2},{-81,2}},
@@ -157,9 +152,8 @@ equation
       points={{-113,-10},{-106,-10},{-106,-2.1},{-80.9,-2.1}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(equFit.QCon, preHeaFloCon.Q_flow)
-     annotation (Line(points={{-59,4},{-42,
-          4},{-42,22},{-37,22}}, color={0,0,127}));
+  connect(equFit.QCon_flow, preHeaFloCon.Q_flow) annotation (Line(points={{-59,4},
+          {-42,4},{-42,22},{-37,22}}, color={0,0,127}));
   connect(TEvaEnt.y, equFit.TEvaEnt)
      annotation (Line(points={{-113,-54},{-98,-54},{-98,-7.9},{-80.9,-7.9}},
                                       color={0,0,127}));
@@ -180,9 +174,8 @@ equation
           {-104,4},{-81,4}}, color={0,0,127}));
   connect(equFit.P, P)
      annotation (Line(points={{-59,0},{150,0}}, color={0,0,127}));
-  connect(equFit.QCon, QCon)
-     annotation (Line(points={{-59,4},{132,4},{132,20},{
-          150,20}}, color={0,0,127}));
+  connect(equFit.QCon_flow, QCon_flow) annotation (Line(points={{-59,4},{132,4},
+          {132,20},{150,20}}, color={0,0,127}));
      annotation (Icon(coordinateSystem(preserveAspectRatio=false,extent={{-100,-100},
             {100,100}}),       graphics={
         Rectangle(
@@ -278,13 +271,13 @@ equation
 The model uses four non-dimensional equations or curves stated in <a href=\"Buildings.Fluid.HeatPumps.BaseClasses.EquationFitMethod\">
 Buildings.Fluid.HeatPumps.BaseClasses.EquationFitMethod</a> to predict the heat pump performance in either cooling or
 heating modes.The methodology involved using the generalized least square method to create a set of performance
-coefficients A1 to A10 and B1 to B10 from the catalog data at indicated reference conditions. These respective coefficients
+coefficients for the heating and cooling load ratios <code>HLRC</code>, <code>CLRC</code> and for the compressor power ratio <code>P_HDC</code>, <code>P_CDC</code> for heating and cooling modes respectively from the catalog data at indicated reference conditions. These respective coefficients
 and indicated reference conditions are used in the model to simulate the heat pump performance.
 The variables include load side inlet temperature, source side inlet temperature,
 load side water flow rate and source side water flow rate. Source and load sides are terms which 
-separates between thermal source and building load sides within the heat pump. For ex. when the control integer signal <code>uMod</code>= +1,
+separates between thermal source and building load sides within the heat pump. For ex. when the control integer signal <code>uMod</code>= 1,
 the heat pump is controlled to meet the condenser outlet temperature i.e. supply heating temperature to the building, 
-the source sideis the evaporator and the load side is the condenser.
+the source side is the evaporator and the load side is the condenser.
 Likewise, in case of <code>uMod</code>=-1, the heat pump is controlled to meet the evaporator leaving water temperature,
 accordingly, the source side is the condenser and the load side is the evaporator.
 </p>
@@ -294,8 +287,7 @@ Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
 </p>
 <p>
 The model takes as input signals; the set point for either the leaving water temperature for the
-condenser or the evaporator which is met if the heat pump has sufficient capacity and the integer input <code>uMod</code> which identifies the heat pump operational mode:
-<code>uMod</code>=+1 for heating mode, <code>uMod</code>=-1 for cooling mode, <code>uMod</code>=0 for shut off the system.
+condenser or the evaporator which is met if the heat pump has sufficient capacity and the integer input <code>uMod</code> which identifies the heat pump operational mode.
 </p>
 <p>
 The electric power only includes the power for the compressor, but not any power for pumps or fans.

@@ -25,7 +25,7 @@ model EquationFitWaterToWater_EnergyPlus "Validation with EnergyPlus model"
 
     parameter Data.EquationFitWaterToWater.EnergyPlus_HeatPump perEP
     "EnergyPlus HeatPump performance"
-     annotation (Placement(transformation(extent={{70,24},{90,44}})));
+     annotation (Placement(transformation(extent={{90,-8},{110,12}})));
     parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=perEP.mEva_flow_nominal
     "Evaporator nominal mass flow rate";
     parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=perEP.mCon_flow_nominal
@@ -76,17 +76,6 @@ model EquationFitWaterToWater_EnergyPlus "Validation with EnergyPlus model"
        dp_nominal=6000)
       "Flow resistance"
        annotation (Placement(transformation(extent={{-10,-92},{10,-72}})));
-
-     Controls.OBC.CDL.Continuous.LessEqualThreshold    lesEquThr(threshold=-1)
-       annotation (Placement(transformation(extent={{-94,20},{-74,40}})));
-     Controls.OBC.CDL.Continuous.GreaterEqualThreshold greEquThr(threshold=1)
-       annotation (Placement(transformation(extent={{-96,-40},{-76,-20}})));
-     Controls.OBC.CDL.Conversions.BooleanToInteger     booToInt(integerTrue=-1)
-       annotation (Placement(transformation(extent={{-60,20},{-40,40}})));
-     Controls.OBC.CDL.Conversions.BooleanToInteger     booToInt1
-       annotation (Placement(transformation(extent={{-58,-40},{-38,-20}})));
-     Controls.OBC.CDL.Integers.Add                     addInt
-       annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
 
      Modelica.Blocks.Sources.TimeTable TConEnt(table=[0,327.92; 600,327.92; 1200,327.92;
         1800,327.92; 2400,327.92; 3000,327.91; 3600,327.91; 4200,327.91; 4800,327.91;
@@ -242,7 +231,7 @@ model EquationFitWaterToWater_EnergyPlus "Validation with EnergyPlus model"
         0; 166200,0; 166800,0; 167400,0; 168000,0; 168600,0; 169200,0; 169800,0; 170400,
         0; 171000,0; 171600,0; 172200,0; 172800,0])
         "EnergyPlus HeatPump mode control signal"
-         annotation (Placement(transformation(extent={{-132,-10},{-112,10}})));
+         annotation (Placement(transformation(extent={{-110,-10},{-90,10}})));
       Modelica.Blocks.Sources.TimeTable TEvaSet(
         table=[0,285.66; 600,285.66; 1200,285.75; 1800,285.86; 2400,285.9; 3000,285.89;
         3600,285.88; 4200,285.87; 4800,285.86; 5400,285.85; 6000,285.84; 6600,285.84;
@@ -533,6 +522,8 @@ model EquationFitWaterToWater_EnergyPlus "Validation with EnergyPlus model"
         3.66; 172200,3.66; 172800,3.66])
         "EnergyPlus results: compressor power"
          annotation (Placement(transformation(extent={{-112,-90},{-92,-70}})));
+    Modelica.Blocks.Math.RealToInteger reaToInt
+       annotation (Placement(transformation(extent={{-48,-10},{-28,10}})));
 equation
   connect(heaPum.port_a1, conPum.ports[1])
    annotation (Line(points={{32,6},{24,6},
@@ -548,37 +539,22 @@ equation
                                                        color={0,127,255}));
   connect(res2.port_b, heaPum.port_b2)
    annotation (Line(points={{10,-82},{24,-82},{24,-6},{32,-6}},  color={0,127,255}));
-  connect(addInt.y, heaPum.uMod)
-   annotation (Line(points={{11,0},{18,0},{18,1.66533e-16},{30.6,1.66533e-16}},
-                                               color={255,127,0}));
   connect(TEvaSet.y, heaPum.TEvaSet)
    annotation (Line(points={{1,-50},{20,-50},{20,-9},{30.6,-9}},
                            color={0,0,127}));
-  connect(heaPumMod.y, lesEquThr.u)
-   annotation (Line(points={{-111,0},{-104,0},{-104,30},{-96,30}},
-                           color={0,0,127}));
-  connect(heaPumMod.y, greEquThr.u)
-   annotation (Line(points={{-111,0},{-104,0},{-104,-30},{-98,-30}},
-                             color={0,0,127}));
   connect(TConEnt.y, conPum.T_in)
    annotation (Line(points={{-99,84},{-60,84},{-60,
           81.8},{-56.6,81.8}}, color={0,0,127}));
   connect(TConSet.y, heaPum.TConSet)
    annotation (Line(points={{1,50},{20,50},{20,9},{30.6,9}},color={0,0,127}));
-  connect(lesEquThr.y, booToInt.u)
-   annotation (Line(points={{-73,30},{-62,30}}, color={255,0,255}));
-  connect(booToInt.y, addInt.u1)
-   annotation (Line(points={{-39,30},{-32,30},{-32,
-          6},{-12,6}}, color={255,127,0}));
-  connect(booToInt1.y, addInt.u2)
-   annotation (Line(points={{-37,-30},{-32,-30},{
-          -32,-6},{-12,-6}}, color={255,127,0}));
   connect(res2.port_a, cooVol.ports[1])
    annotation (Line(points={{-10,-82},{-28,-82}}, color={0,127,255}));
   connect(res1.port_b, heaVol.ports[1])
    annotation (Line(points={{84,84},{98,84}}, color={0,127,255}));
-  connect(greEquThr.y, booToInt1.u)
-   annotation (Line(points={{-75,-30},{-60,-30}}, color={255,0,255}));
+  connect(heaPumMod.y, reaToInt.u)
+    annotation (Line(points={{-89,0},{-50,0}}, color={0,0,127}));
+  connect(heaPum.uMod, reaToInt.y)
+    annotation (Line(points={{30.6,0},{-27,0}}, color={255,127,0}));
    annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}}),
                          graphics={
