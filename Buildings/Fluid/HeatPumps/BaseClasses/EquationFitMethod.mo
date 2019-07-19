@@ -109,19 +109,19 @@ equation
       m1_flow/per.mCon_flow_nominal,m2_flow/per.mEva_flow_nominal};
 
       HLR  = sum( A1.*x1);
-      CLR = 0;
+      CLR  = 0;
       P_HD = sum( A2.*x2);
       P_CD = 0;
       QCon_flow_ava= HLR *(per.QCon_heatflow_nominal);
       QEva_flow_ava = 0;
 
-    QCon_flow = Buildings.Utilities.Math.Functions.smoothMin(
-      x1=QConFloSet,
-      x2=QCon_flow_ava,
-      deltaX=Q_flow_small/10);
+      QCon_flow = Buildings.Utilities.Math.Functions.smoothMin(
+        x1=QConFloSet,
+        x2=QCon_flow_ava,
+        deltaX=Q_flow_small/10);
 
       P = P_HD * (per.PCon_nominal_HD);
-    QEva_flow = -(QCon_flow - P);
+      QEva_flow = -(QCon_flow - P);
 
     elseif (uMod==-1) then
 
@@ -133,20 +133,20 @@ equation
       x2={1,TConEnt/per.TRef,TEvaEnt/per.TRef,
       m1_flow/per.mCon_flow_nominal,m2_flow/per.mEva_flow_nominal};
 
-      HLR = 0;
+      HLR  = 0;
       CLR  = sum(A1.*x1);
       P_HD = 0;
       P_CD = sum(A2.*x2);
       QCon_flow_ava = 0;
       QEva_flow_ava = CLR* (per.QEva_heatflow_nominal);
 
-    QEva_flow = Buildings.Utilities.Math.Functions.smoothMax(
-      x1=QEvaFloSet,
-      x2=QEva_flow_ava,
-      deltaX=Q_flow_small/10);
+      QEva_flow = Buildings.Utilities.Math.Functions.smoothMax(
+        x1=QEvaFloSet,
+        x2=QEva_flow_ava,
+        deltaX=Q_flow_small/10);
 
       P = P_CD * (per.PEva_nominal_CD);
-    QCon_flow = -QEva_flow + P;
+      QCon_flow = -QEva_flow + P;
 
     else
 
@@ -163,72 +163,71 @@ equation
       P = 0;
       QCon_flow_ava = 0;
       QEva_flow_ava = 0;
-
-    QCon_flow = 0;
-    QEva_flow = 0;
+      QCon_flow = 0;
+      QEva_flow = 0;
 
     end if;
 
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)),
               Diagram(coordinateSystem(preserveAspectRatio=false)),
-  defaultComponentName="equFit",
-  Documentation(info="<html>
-<p>
-The Block includes the description of the equation fit method dedicated for
-<a href=\"Buildings.Fluid.HeatPumps.EquationFitWaterToWater\">
-Buildings.Fluid.HeatPumps.EquationFitWaterToWater</a>.
-</p>
-<p>
-The block uses four functions to predict capacity and power consumption for heating mode
-and cooling mode:
-</p>
-<ul>
-<li>
-The heating mode when <code>uMod</code>=+1
-<p align=\"center\" style=\"font-style:italic;\">
-Q&#775;<sub>Con</sub>/Q&#775;<sub>Con,nominal</sub> = HLRC<sub>1</sub>+ HLRC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
-HLRC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ HLRC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
-+ HLRC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
-
-<p align=\"center\" style=\"font-style:italic;\">
-Power<sub>Con</sub>/Power<sub>Con,nominal</sub>= P_HDC<sub>1</sub>+ P_HDC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
-P_HDC<sub>3</sub>.T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ P_HDC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
-+ P_HDC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
-</li>
-</ul>
-<p>
-where the coefficients <i>HLRC<sub>1</sub> to HLRC<sub>5</sub> </i> and  <i>P_HDC<sub>1</sub> to P_HDC<sub>5</sub> </i>
-are stored in the data record <code>per</code> at <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
-Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
-</p>
-<ul>
-<li>
-The cooling mode when <code>uMod</code>=-1
-<p align=\"center\" style=\"font-style:italic;\">
-Q&#775;<sub>Eva</sub>/Q&#775;<sub>Eva,nominal</sub> = CLRC<sub>1</sub>+ CLRC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
-CLRC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ CLRC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
-+ CLRC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
-
-<p align=\"center\" style=\"font-style:italic;\">
- Power<sub>Eva</sub>/Power<sub>Eva,nominal</sub> = P_CDC<sub>1</sub>+ P_CDC<sub>2</sub>.T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
- P_CDC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ P_CDC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
- + P_CDC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
-</li>
-</ul>
-<p>
-where the coefficients <i>CLRC<sub>1</sub> to CLRC<sub>5</sub> </i> and  <i>P_CDC<sub>1</sub> to P_CDC<sub>5</sub> </i>
-are stored in the data record <code>per</code> at <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
-Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
-</p>
-<p>
-For these four equations, the inlet conditions or variables are divided by the reference conditions.
-This formulation allows the coefficients to fall into smaller range of values. Moreover, the value of the coefficient
-indirectly represents the sensitivity of the output to that particular inlet variable.
-</p>
-</html>",
-revisions="<html>
-<ul>
-<li>
+defaultComponentName="equFit",
+Documentation(info="<html>
+  <p>
+  The Block includes the description of the equation fit method dedicated for
+  <a href=\"Buildings.Fluid.HeatPumps.EquationFitWaterToWater\">
+  Buildings.Fluid.HeatPumps.EquationFitWaterToWater</a>.
+  </p>
+  <p>
+  The block uses four functions to predict capacity and power consumption for heating mode
+  and cooling mode:
+  </p>
+  <ul>
+  <li>
+  The heating mode when <code>uMod</code>=+1
+  <p align=\"center\" style=\"font-style:italic;\">
+  Q&#775;<sub>Con</sub>/Q&#775;<sub>Con,nominal</sub> = HLRC<sub>1</sub>+ HLRC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
+  HLRC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ HLRC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
+  + HLRC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
+  
+  <p align=\"center\" style=\"font-style:italic;\">
+  Power<sub>Con</sub>/Power<sub>Con,nominal</sub>= P_HDC<sub>1</sub>+ P_HDC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
+  P_HDC<sub>3</sub>.T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ P_HDC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
+  + P_HDC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
+  </li>
+  </ul>
+  <p>
+  where the coefficients <i>HLRC<sub>1</sub> to HLRC<sub>5</sub> </i> and  <i>P_HDC<sub>1</sub> to P_HDC<sub>5</sub> </i>
+  are stored in the data record <code>per</code> at <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
+  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
+  </p>
+  <ul>
+  <li>
+  The cooling mode when <code>uMod</code>=-1
+  <p align=\"center\" style=\"font-style:italic;\">
+  Q&#775;<sub>Eva</sub>/Q&#775;<sub>Eva,nominal</sub> = CLRC<sub>1</sub>+ CLRC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
+  CLRC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ CLRC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
+  + CLRC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
+  
+  <p align=\"center\" style=\"font-style:italic;\">
+   Power<sub>Eva</sub>/Power<sub>Eva,nominal</sub> = P_CDC<sub>1</sub>+ P_CDC<sub>2</sub>.T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
+   P_CDC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ P_CDC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
+   + P_CDC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
+  </li>
+  </ul>
+  <p>
+  where the coefficients <i>CLRC<sub>1</sub> to CLRC<sub>5</sub> </i> and  <i>P_CDC<sub>1</sub> to P_CDC<sub>5</sub> </i>
+  are stored in the data record <code>per</code> at <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
+  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
+  </p>
+  <p>
+  For these four equations, the inlet conditions or variables are divided by the reference conditions.
+  This formulation allows the coefficients to fall into smaller range of values. Moreover, the value of the coefficient
+  indirectly represents the sensitivity of the output to that particular inlet variable.
+  </p>
+  </html>",
+  revisions="<html>
+  <ul>
+  <li>
 May 19, 2019, by Hagar Elarga:<br/>
 First implementation.
 </li>

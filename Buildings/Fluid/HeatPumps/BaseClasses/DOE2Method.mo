@@ -45,7 +45,7 @@ block DOE2Method
   Modelica.Blocks.Interfaces.RealInput TConSet(final unit="K", displayUnit="degC")
    "Set point for leaving heating water temperature"
     annotation (Placement(
-        transformation(extent={{-122,88},{-100,110}}), iconTransformation(
+        transformation(extent={{-124,86},{-100,110}}), iconTransformation(
           extent={{-120,90},{-100,110}})));
   Modelica.Blocks.Interfaces.IntegerInput uMod
    "HeatPump control input signal, Heating mode= 1, Off=0, Cooling mode=-1"
@@ -60,12 +60,12 @@ block DOE2Method
    "Evaporator leaving water temperature"
     annotation (Placement(transformation(extent={{-124,-72},{-100,-48}}), iconTransformation(extent={{-120,
             -60},{-100,-40}})));
-  Modelica.Blocks.Interfaces.RealInput QConFloSet(final unit="W", displayUnit="W")
+  Modelica.Blocks.Interfaces.RealInput QConFloSet(final unit="W")
    "Condenser setpoint heat flow rate"
     annotation (Placement(transformation(
           extent={{-124,28},{-100,52}}), iconTransformation(extent={{-120,12},{-100,
             32}})));
-  Modelica.Blocks.Interfaces.RealInput QEvaFloSet(final unit="W", displayUnit="W")
+  Modelica.Blocks.Interfaces.RealInput QEvaFloSet(final unit="W")
    "Evaporator setpoint heat flow rate"
     annotation (Placement(transformation(
           extent={{-124,-52},{-100,-28}}), iconTransformation(extent={{-120,-36},
@@ -88,7 +88,7 @@ block DOE2Method
     "Evaporator heat flow rate"
     annotation (Placement(transformation(extent={{100,
             -48},{120,-28}}), iconTransformation(extent={{100,-50},{120,-30}})));
-  Modelica.Blocks.Interfaces.RealOutput P(final unit="W", displayUnit="W")
+  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
    "Compressor power"
     annotation (Placement(transformation(extent={{100,-10},{120,10}}),iconTransformation(extent={{100,-10},
             {120,10}})));
@@ -112,50 +112,50 @@ equation
 
   if (uMod==1) then
 
-    capFunT = Buildings.Utilities.Math.Functions.smoothMax(
-       x1 =  1E-7,
-       x2 =   Buildings.Utilities.Math.Functions.biquadratic( a = per.capFunT,
-                                                             x1 = TEvaLvg_degC,
-                                                             x2 = TConEnt_degC),
-                                                         deltaX = 1E-7);
+      capFunT = Buildings.Utilities.Math.Functions.smoothMax(
+         x1 =  1E-7,
+         x2 =   Buildings.Utilities.Math.Functions.biquadratic( a = per.capFunT,
+                                                               x1 = TEvaLvg_degC,
+                                                               x2 = TConEnt_degC),
+                                                           deltaX = 1E-7);
 
-    EIRFunT = Buildings.Utilities.Math.Functions.biquadratic( a = per.EIRFunT,
-                                                             x1 = TEvaLvg_degC,
-                                                             x2 = TConEnt_degC);
+      EIRFunT = Buildings.Utilities.Math.Functions.biquadratic( a = per.EIRFunT,
+                                                               x1 = TEvaLvg_degC,
+                                                               x2 = TConEnt_degC);
 
-    EIRFunPLR= per.EIRFunPLR[1]+per.EIRFunPLR[2]*PLR2+per.EIRFunPLR[3]*PLR2^2;
+      EIRFunPLR= per.EIRFunPLR[1]+per.EIRFunPLR[2]*PLR2+per.EIRFunPLR[3]*PLR2^2;
 
-    QCon_flow_ava = QCon_heatflow_nominal*capFunT;
-    QEva_flow_ava = 0;
+      QCon_flow_ava = QCon_heatflow_nominal*capFunT;
+      QEva_flow_ava = 0;
 
-    PLR1 =Buildings.Utilities.Math.Functions.smoothMax(
-                                  x1 =  QConFloSet/(QCon_flow_ava - Q_flow_small),
-                                  x2 =  per.PLRMax,
-                              deltaX =  per.PLRMax/100);
+      PLR1 = Buildings.Utilities.Math.Functions.smoothMax(
+                                    x1 =  QConFloSet/(QCon_flow_ava - Q_flow_small),
+                                    x2 =  per.PLRMax,
+                                deltaX =  per.PLRMax/100);
 
-    PLR2 = Buildings.Utilities.Math.Functions.smoothMax(
-                                  x1 =  per.PLRMinUnl,
-                                  x2 =  PLR1,
-                              deltaX =  per.PLRMinUnl/100);
+      PLR2 = Buildings.Utilities.Math.Functions.smoothMax(
+                                    x1 =  per.PLRMinUnl,
+                                    x2 =  PLR1,
+                                deltaX =  per.PLRMinUnl/100);
 
-    CR = Buildings.Utilities.Math.Functions.smoothMin(
-                                  x1 =  PLR1/per.PLRMin,
-                                  x2 =  1,
-                              deltaX =  0.001);
+      CR  = Buildings.Utilities.Math.Functions.smoothMin(
+                                    x1 =  PLR1/per.PLRMin,
+                                    x2 =  1,
+                                deltaX =  0.001);
 
-    P =  (QCon_flow_ava/per.COP_nominal)*EIRFunT*EIRFunPLR*CR;
-    QCon_flow = Buildings.Utilities.Math.Functions.smoothMin(
-      x1=QConFloSet,
-      x2=QCon_flow_ava,
-      deltaX=Q_flow_small/10);
+      P  = (QCon_flow_ava/per.COP_nominal)*EIRFunT*EIRFunPLR*CR;
+      QCon_flow = Buildings.Utilities.Math.Functions.smoothMin(
+        x1=QConFloSet,
+        x2=QCon_flow_ava,
+        deltaX=Q_flow_small/10);
 
-    QEva_flow = -(QCon_flow - P*per.etaMotor);
-    COP =QCon_flow/(P + Q_flow_small);
+      QEva_flow = -(QCon_flow - P*per.etaMotor);
+      COP =QCon_flow/(P + Q_flow_small);
 
   elseif (uMod==-1) then
 
-     capFunT = Buildings.Utilities.Math.Functions.smoothMax(
-       x1 =    1E-6,
+      capFunT = Buildings.Utilities.Math.Functions.smoothMax(
+        x1 =    1E-6,
         x2 =    Buildings.Utilities.Math.Functions.biquadratic( a = per.capFunT,
                                                                x1 = TEvaLvg_degC,
                                                                x2 = TConEnt_degC),
@@ -184,132 +184,132 @@ equation
                                 deltaX =  0.001);
 
       P = (-QEva_flow_ava)/per.COP_nominal*EIRFunT*EIRFunPLR*CR;
-    QEva_flow = Buildings.Utilities.Math.Functions.smoothMax(
-      x1=QEvaFloSet,
-      x2=QEva_flow_ava,
-      deltaX=Q_flow_small/10);
 
-    QCon_flow = -QEva_flow + P*per.etaMotor;
+      QEva_flow = Buildings.Utilities.Math.Functions.smoothMax(
+        x1=QEvaFloSet,
+        x2=QEva_flow_ava,
+        deltaX=Q_flow_small/10);
+
+      QCon_flow = -QEva_flow + P*per.etaMotor;
       COP  =-QEva_flow/(P + Q_flow_small);
 
   else
 
-      capFunT = 0;
-      EIRFunT = 0;
-      EIRFunPLR= 0;
-      QEva_flow_ava = 0;
-      QCon_flow_ava = 0;
-      PLR1 = 0;
-      PLR2 = 0;
-      CR   = 0;
-    QCon_flow = 0;
-    QEva_flow = 0;
-      P    = 0;
-      COP = 0;
+     capFunT = 0;
+     EIRFunT = 0;
+     EIRFunPLR= 0;
+     QEva_flow_ava = 0;
+     QCon_flow_ava = 0;
+     PLR1 = 0;
+     PLR2 = 0;
+     CR   = 0;
+     QCon_flow = 0;
+     QEva_flow = 0;
+     P    = 0;
+     COP = 0;
 
   end if;
 
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)),
                                 Diagram(coordinateSystem(preserveAspectRatio=false)),
-  defaultComponentName="doe2",
-  Documentation(info="<html>
-<p>
-The Block includes the description of the DOE2 method dedicated for<a href=\"Buildings.Fluid.HeatPumps.DOE2WaterToWater\">
-Buildings.Fluid.HeatPumps.DOE2WaterToWater</a>.
-</p>
-The block uses three functions to predict the thermal capacity and power consumption for
-either the heating mode <code>uMod</code>=+1 or the cooling mode <code>uMod</code>=-1:
-<ul>
-<li>
-The capacity function of temperature bi-quadratic curve:
-<p align=\"center\" style=\"font-style:italic;\">
-CAPFT = capFunT<sub>1</sub>+ capFunT<sub>2</sub>T<sub>Eva,Lvg</sub>+
-capFunT<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ capFunT<sub>4</sub>T<sub>Con,Ent</sub>+capFunT<sub>5</sub>T<sup>2</sup><sub>Con,Ent</sub>
-+capFunT<sub>6</sub>T<sub>Con,Ent</sub>T<sub>Eva,Lvg</sub>
-</li>
-</ul>
-<p>
-where the performance curve coefficients from <i>capFunT<sub>1</sub> to capFunT<sub>6</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-<ul>
-<li>
-The electric input to capacity output ratio function of temperature bi-quadratic curve:
-
-<p align=\"center\" style=\"font-style:italic;\">
-EIRFT = EIRFunT<sub>1</sub>+ EIRFunT<sub>2</sub>T<sub>Eva,Lvg</sub>+
-EIRFunT<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ EIRFunT<sub>4</sub>T<sub>Con,Ent</sub>+EIRFunT<sub>5</sub>T<sup>2</sup><sub>Con,Ent</sub>
-+EIRFunT<sub>6</sub>T<sub>Con,Ent</sub>T<sub>Eva,Lvg</sub>
-</li>
-</ul>
-<p>
-where the performance curve coefficients from <i>EIRFunT<sub>1</sub> to EIRFunT<sub>6</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-<ul>
-<li>
-The electric input to capacity output ratio function of part load ratio bi-cubic curve:
-<p align=\"center\" style=\"font-style:italic;\">
-EIRFPLR = EIRFunPLR<sub>1</sub>+ EIRFunPLR<sub>2</sub>PLR+EIRFunPLR<sub>3</sub>PLR<sup>2</sup>
-</li>
-</ul>
-<p>
-where the performance curve coefficients from <i>EIRFunPLR<sub>1</sub> to EIRFunPLR<sub>3</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-<p>
-The data record <code>per</code> is available at
-<a href=\"Buildings.Fluid.Chillers.Data.ElectricEIR\">
-Buildings.Fluid.Chillers.Data.ElectricEIR</a>.
-Additional performance curves can be developed using
-two available techniques (Hydeman and Gillespie, 2002). The first technique is called the
-Least-squares Linear Regression method and is used when sufficient performance data exist
-to employ standard least-square linear regression techniques. The second technique is called
-Reference Curve Method and is used when insufficient performance data exist to apply linear
-regression techniques. A detailed description of both techniques can be found in
-Hydeman and Gillespie (2002).
-</p>
-<p>
-The model has three tests on the part load ratio and the cycling ratio:
-</p>
-<ol>
-<li>
-The test<pre>
-  PLR1 =min(QEva_flow_set/QEva_flow_ava, PLRMax);
-</pre>
-ensures that the heatpump capacity does not exceed the heatpump capacity specified
-by the parameter <code>PLRMax</code>.
-</li>
-<li>
-The test <pre>
-  CR = min(PLR1/per.PRLMin, 1.0);
-</pre>
-computes a cycling ratio. This ratio expresses the fraction of time
-that a heatpump would run if it were to cycle because its load is smaller than the
-minimal load at which it can operate.
-Note that this model continuously operates even if the part load ratio is below the
-minimum part load ratio.
-Its leaving evaporator and condenser temperature can therefore be considered as an
-average temperature between the modes where the compressor is off and on.
-</li>
-<li>
-The test <pre>
-  PLR2 = max(per.PLRMinUnl, PLR1);
-</pre>
-computes the part load ratio of the compressor.
-The assumption is that for a part load ratio below <code>per.PLRMinUnl</code>,
-the heatpump uses hot gas bypass to reduce the capacity, while the compressor
-power draw does not change.
-</li>
-</ol>
-<p>
-The electric power only contains the power for the compressor, but not any power
-for pumps or fans.
-</p>
-</html>",
-revisions="<html>
-<ul>
-<li>
+ defaultComponentName="doe2",
+ Documentation(info="<html>
+  <p>
+  The Block includes the description of the DOE2 method dedicated for<a href=\"Buildings.Fluid.HeatPumps.DOE2WaterToWater\">
+  Buildings.Fluid.HeatPumps.DOE2WaterToWater</a>.
+  </p>
+  The block uses three functions to predict the thermal capacity and power consumption for
+  either the heating mode <code>uMod</code>=1 or the cooling mode <code>uMod</code>=-1:
+  <ul>
+  <li>
+  The capacity function of temperature bi-quadratic curve:
+  <p align=\"center\" style=\"font-style:italic;\">
+  CAPFT = capFunT<sub>1</sub>+ capFunT<sub>2</sub>T<sub>Eva,Lvg</sub>+
+  capFunT<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ capFunT<sub>4</sub>T<sub>Con,Ent</sub>+capFunT<sub>5</sub>T<sup>2</sup><sub>Con,Ent</sub>
+  +capFunT<sub>6</sub>T<sub>Con,Ent</sub>T<sub>Eva,Lvg</sub>
+  </li>
+  </ul>
+  <p>
+  where the performance curve coefficients from <i>capFunT<sub>1</sub> to capFunT<sub>6</sub> </i>
+  are stored in the data record <code>per</code>.
+  </p>
+  <ul>
+  <li>
+  The electric input to capacity output ratio function of temperature bi-quadratic curve:
+  <p align=\"center\" style=\"font-style:italic;\">
+  EIRFT = EIRFunT<sub>1</sub>+ EIRFunT<sub>2</sub>T<sub>Eva,Lvg</sub>+
+  EIRFunT<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ EIRFunT<sub>4</sub>T<sub>Con,Ent</sub>+EIRFunT<sub>5</sub>T<sup>2</sup><sub>Con,Ent</sub>
+  +EIRFunT<sub>6</sub>T<sub>Con,Ent</sub>T<sub>Eva,Lvg</sub>
+  </li>
+  </ul>
+  <p>
+  where the performance curve coefficients from <i>EIRFunT<sub>1</sub> to EIRFunT<sub>6</sub> </i>
+  are stored in the data record <code>per</code>.
+  </p>
+  <ul>
+  <li>
+  The electric input to capacity output ratio function of part load ratio bi-cubic curve:
+  <p align=\"center\" style=\"font-style:italic;\">
+  EIRFPLR = EIRFunPLR<sub>1</sub>+ EIRFunPLR<sub>2</sub>PLR+EIRFunPLR<sub>3</sub>PLR<sup>2</sup>
+  </li>
+  </ul>
+  <p>
+  where the performance curve coefficients from <i>EIRFunPLR<sub>1</sub> to EIRFunPLR<sub>3</sub> </i>
+  are stored in the data record <code>per</code>.
+  </p>
+  <p>
+  The data record <code>per</code> is available at
+  <a href=\"Buildings.Fluid.Chillers.Data.ElectricEIR\">
+  Buildings.Fluid.Chillers.Data.ElectricEIR</a>.
+  Additional performance curves can be developed using
+  two available techniques (Hydeman and Gillespie, 2002). The first technique is called the
+  Least-squares Linear Regression method and is used when sufficient performance data exist
+  to employ standard least-square linear regression techniques. The second technique is called
+  Reference Curve Method and is used when insufficient performance data exist to apply linear
+  regression techniques. A detailed description of both techniques can be found in
+  Hydeman and Gillespie (2002).
+  </p>
+  <p>
+  The model has three tests on the part load ratio and the cycling ratio:
+  </p>
+  <ol>
+  <li>
+  The test<pre>
+    PLR1 =min(QEva_flow_set/QEva_flow_ava, PLRMax);
+  </pre>
+  ensures that the heatpump capacity does not exceed the heatpump capacity specified
+  by the parameter <code>PLRMax</code>.
+  </li>
+  <li>
+  The test <pre>
+    CR = min(PLR1/per.PRLMin, 1.0);
+  </pre>
+  computes a cycling ratio. This ratio expresses the fraction of time
+  that a heatpump would run if it were to cycle because its load is smaller than the
+  minimal load at which it can operate.
+  Note that this model continuously operates even if the part load ratio is below the
+  minimum part load ratio.
+  Its leaving evaporator and condenser temperature can therefore be considered as an
+  average temperature between the modes where the compressor is off and on.
+  </li>
+  <li>
+  The test <pre>
+    PLR2 = max(per.PLRMinUnl, PLR1);
+  </pre>
+  computes the part load ratio of the compressor.
+  The assumption is that for a part load ratio below <code>per.PLRMinUnl</code>,
+  the heatpump uses hot gas bypass to reduce the capacity, while the compressor
+  power draw does not change.
+  </li>
+  </ol>
+  <p>
+  The electric power only contains the power for the compressor, but not any power
+  for pumps or fans.
+  </p>
+  </html>",
+  revisions="<html>
+  <ul>
+  <li>
 June 24, 2019, by Hagar Elarga:<br/>
 First implementation.
 </li>

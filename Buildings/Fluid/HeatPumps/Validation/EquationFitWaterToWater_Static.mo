@@ -2,7 +2,15 @@ within Buildings.Fluid.HeatPumps.Validation;
 model EquationFitWaterToWater_Static "example"
   package Medium = Buildings.Media.Water "Medium model";
 
-   Buildings.Fluid.HeatPumps.EquationFitWaterToWater heaPum(
+    parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=per.mEva_flow_nominal
+    "Evaporator nominal mass flow rate";
+    parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=per.mCon_flow_nominal
+    "Condenser nominal mass flow rate";
+    parameter Data.EquationFitWaterToWater.Trane_Axiom_EXW240 per
+    "Water to water heat pump performance data "
+     annotation (Placement(transformation(extent={{74,24},{94,44}})));
+
+    Buildings.Fluid.HeatPumps.EquationFitWaterToWater heaPum(
     per=per,
     redeclare package Medium1 = Medium,
     redeclare package Medium2 = Medium,
@@ -14,13 +22,6 @@ model EquationFitWaterToWater_Static "example"
     "Water to Water heatpump"
      annotation (Placement(transformation(extent={{34,-10},
             {54,10}})));
-    parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=per.mEva_flow_nominal
-    "Evaporator nominal mass flow rate";
-    parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=per.mCon_flow_nominal
-    "Condenser nominal mass flow rate";
-    parameter Data.EquationFitWaterToWater.Trane_Axiom_EXW240 per
-    "Water to water heat pump performance data "
-     annotation (Placement(transformation(extent={{74,24},{94,44}})));
     Sources.MassFlowSource_T evaPum(
     m_flow=mEva_flow_nominal,
     nPorts=1,
@@ -104,36 +105,30 @@ model EquationFitWaterToWater_Static "example"
 
 equation
   connect(res1.port_b,heaVol. ports[1])
-   annotation (Line(points={{86,76},{98,76},{98,84}}, color={0,127,255}));
+  annotation (Line(points={{86,76},{98,76},{98,84}}, color={0,127,255}));
   connect(cooVol.ports[1],res2. port_a)
-   annotation (Line(points={{-34,-84},{-4,-84}},  color={0,127,255}));
+  annotation (Line(points={{-34,-84},{-4,-84}},  color={0,127,255}));
   connect(res2.port_b, heaPum.port_b2)
-   annotation (Line(points={{16,-84},{30,-84},{30,-6},{34,-6}},
-                                 color={0,127,255}));
+  annotation (Line(points={{16,-84},{30,-84},{30,-6},{34,-6}}, color={0,127,255}));
   connect(TEvaSet.y, heaPum.TEvaSet)
-   annotation (Line(points={{1,-50},{22,-50},{22,-9},{32.6,-9}},
-                              color={0,0,127}));
-  connect(TEvaEnt.y, evaPum.T_in) annotation (Line(points={{93,-86},{104,-86},{104,
-          -53.4},{92.2,-53.4}}, color={0,0,127}));
+  annotation (Line(points={{1,-50},{22,-50},{22,-9},{32.6,-9}},color={0,0,127}));
+  connect(TEvaEnt.y, evaPum.T_in)
+  annotation (Line(points={{93,-86},{104,-86},{104,-53.4},{92.2,-53.4}}, color={0,0,127}));
   connect(evaPum.ports[1], heaPum.port_a2)
-   annotation (Line(points={{68,-49},{62,-49},{62,-6},{54,-6}},
-                                    color={0,127,255}));
+  annotation (Line(points={{68,-49},{62,-49},{62,-6},{54,-6}},color={0,127,255}));
   connect(heaPum.port_a1, conPum.ports[1])
-   annotation (Line(points={{34,6},{30,6},{30,90},{-40,90}},
-                                color={0,127,255}));
+  annotation (Line(points={{34,6},{30,6},{30,90},{-40,90}},color={0,127,255}));
   connect(TConSet.y, heaPum.TConSet)
-   annotation (Line(points={{1,70},{22,70},{22,9},{32.6,9}},color={0,0,127}));
+  annotation (Line(points={{1,70},{22,70},{22,9},{32.6,9}},color={0,0,127}));
   connect(res1.port_a, heaPum.port_b1)
-   annotation (Line(points={{66,76},{54,76},{54,6}},
-                          color={0,127,255}));
+  annotation (Line(points={{66,76},{54,76},{54,6}}, color={0,127,255}));
   connect(TConEnt.y, conPum.T_in)
-   annotation (Line(points={{-95,86},{-62,86}}, color={0,0,127}));
+  annotation (Line(points={{-95,86},{-62,86}}, color={0,0,127}));
   connect(uMod.y, reaToInt.u)
-   annotation (Line(points={{-97,0},{-62,0}}, color={0,0,127}));
+  annotation (Line(points={{-97,0},{-62,0}}, color={0,0,127}));
   connect(reaToInt.y, heaPum.uMod)
-   annotation (Line(points={{-39,0},{32.6,0}}, color={255,127,0}));
-   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
-            -100},{100,100}}),
+  annotation (Line(points={{-39,0},{32.6,0}}, color={255,127,0}));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
                          graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},
@@ -149,19 +144,19 @@ equation
             100}})),
      __Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/Fluid/HeatPumps/Validation/EquationFitWaterToWater_Static.mos"
            "Simulate and plot"),experiment(Tolerance=1e-6, StopTime=14400),
-     Documentation(info="<html>
-<p>
-Model that demonstrates the use of <a href=\"modelica://Buildings.Fluid.HeatPumps.EquationFitWaterToWater\">
-Buildings.Fluid.HeatPumps.EquationFitWaterToWater </a> heat pump model implementing steady state energy and mass balance.
-The heat pump power, condenser heat transfer rate and evaporator heat transfer rate are calculated for given leaving water
-  temperatures and mass flow rates on the evaporator and condenser sides.
-</p>
-</html>", revisions="<html>
-<ul>
-<li>
-May 3, 2019, by Hagar Elarga:<br/>
-First implementation.
- </li>
- </ul>
+Documentation(info="<html>
+  <p>
+  Model that demonstrates the use of <a href=\"modelica://Buildings.Fluid.HeatPumps.EquationFitWaterToWater\">
+  Buildings.Fluid.HeatPumps.EquationFitWaterToWater </a> heat pump model implementing steady state energy and mass balance.
+  The heat pump power, condenser heat transfer rate and evaporator heat transfer rate are calculated for given leaving water
+    temperatures and mass flow rates on the evaporator and condenser sides.
+  </p>
+  </html>", revisions="<html>
+  <ul>
+  <li>
+  May 3, 2019, by Hagar Elarga:<br/>
+  First implementation.
+   </li>
+   </ul>
  </html>"));
 end EquationFitWaterToWater_Static;

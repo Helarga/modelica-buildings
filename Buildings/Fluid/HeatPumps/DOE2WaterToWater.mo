@@ -25,7 +25,7 @@ model DOE2WaterToWater "Water source heat pump_Performance curve"
    parameter Buildings.Fluid.Chillers.Data.ElectricEIR.Generic per
     "Performance data"
        annotation (choicesAllMatching=
-        true, Placement(transformation(extent={{48,66},{68,86}})));
+        true, Placement(transformation(extent={{80,80},{100,100}})));
    final parameter Modelica.SIunits.Power
      P_nominal = -QEva_heatflow_nominal/COP_nominal
     "Nominal power of the compressor"
@@ -45,73 +45,75 @@ model DOE2WaterToWater "Water source heat pump_Performance curve"
    final parameter Modelica.SIunits.MassFlowRate
      mCon_flow_nominal= per.mCon_flow_nominal
    "Nominal mass flow at Condenser"
-       annotation (Dialog(group="Nominal condition"));
+      annotation (Dialog(group="Nominal condition"));
    final parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal= per.mEva_flow_nominal
    "Nominal mass flow at Evaorator"
-       annotation (Dialog(group="Nominal condition"));
+      annotation (Dialog(group="Nominal condition"));
    final parameter Modelica.SIunits.HeatFlowRate Q_flow_small = QCon_heatflow_nominal*1E-9
     "Small value for heat flow rate or power, used to avoid division by zero";
    Modelica.Blocks.Interfaces.IntegerInput uMod
-      "HeatPump control signal, Heating=+1, Off=0, Cooling=-1"
-       annotation (Placement(transformation(extent={{-192,-16},{-160,16}}),
+    "HeatPump control signal, Heating=+1, Off=0, Cooling=-1"
+     annotation (Placement(transformation(extent={{-192,-16},{-160,16}}),
         iconTransformation(extent={{-118,-14},{-92,12}})));
    Modelica.Blocks.Interfaces.RealInput    TEvaSet(final unit="K", displayUnit="degC")
     "Set point for leaving cooled water temperature"
-       annotation (Placement(transformation(extent={{-188,-94},{-160,-66}}),
+     annotation (Placement(transformation(extent={{-188,-94},{-160,-66}}),
        iconTransformation(extent={{-118,-104},{-92,-78}})));
    Modelica.Blocks.Interfaces.RealInput    TConSet(final unit="K", displayUnit="degC")
-      "Set point for leaving heating water temperature"
-       annotation (Placement(
+    "Set point for leaving heating water temperature"
+     annotation (Placement(
         transformation(extent={{-184,68},{-160,92}}),  iconTransformation(
           extent={{-116,78},{-92,102}})));
    Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W", displayUnit="W")
-    "Condenser heat flow rate" annotation (Placement(transformation(extent={{100,
-            10},{120,30}}), iconTransformation(extent={{100,80},{120,100}})));
+    "Condenser heat flow rate"
+     annotation (Placement(transformation(extent={{100,10},{120,30}}),iconTransformation(
+     extent={{100,80},{120,100}})));
    Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W", displayUnit="W")
-    "Evaporator heat flow rate" annotation (Placement(transformation(extent={{100,
-            -30},{120,-10}}), iconTransformation(extent={{100,-100},{120,-80}})));
+    "Evaporator heat flow rate"
+     annotation (Placement(transformation(extent={{100,-30},{120,-10}}),iconTransformation(
+    extent={{100,-100},{120,-80}})));
    Modelica.Blocks.Interfaces.RealOutput   P(final unit="W", displayUnit="W")
-      "Electric power consumed by compressor"
-       annotation (Placement(transformation(extent={{100,-10},{120,10}}),
-        iconTransformation(extent={{100,-10},{120,10}})));
+    "Electric power consumed by compressor"
+     annotation (Placement(transformation(extent={{100,-10},{120,10}}),iconTransformation(
+       extent={{100,-10},{120,10}})));
    BaseClasses.DOE2Method doe2(per=per)
-      "DOE2 method which describes the water to water heat pump performance"
-       annotation (Placement(transformation(extent={{-108,-10},{-88,10}})));
+    "DOE2 method which describes the water to water heat pump performance"
+     annotation (Placement(transformation(extent={{-108,-10},{-88,10}})));
    Modelica.Blocks.Sources.RealExpression QConFloSet(final y=
         Buildings.Utilities.Math.Functions.smoothMax(
         x1=m1_flow*(hConSet - inStream(port_a1.h_outflow)),
         x2=Q_flow_small,
         deltaX=Q_flow_small/10))
-      "Setpoint heat flow rate at the condenser"
-       annotation (Placement(transformation(extent={{-156,4},{-136,24}})));
+    "Setpoint heat flow rate at the condenser"
+     annotation (Placement(transformation(extent={{-156,4},{-136,24}})));
    Modelica.Blocks.Sources.RealExpression QEvaFloSet(final y=
         Buildings.Utilities.Math.Functions.smoothMin(
         x1=m2_flow*(hEvaSet - inStream(port_a2.h_outflow)),
         x2=-Q_flow_small,
         deltaX=Q_flow_small/100))
-      "Setpoint heat flow rate of the evaporator"
-       annotation (Placement(transformation(extent={{-156,-26},{-136,-6}})));
+    "Setpoint heat flow rate of the evaporator"
+     annotation (Placement(transformation(extent={{-156,-26},{-136,-6}})));
    Modelica.Blocks.Sources.RealExpression TConEnt(y=Medium1.temperature(
         Medium1.setState_phX(port_a1.p, inStream(port_a1.h_outflow))))
-      "Condenser entering water temperature"
-       annotation (Placement(transformation(extent={{-156,42},
-            {-136,62}})));
+    "Condenser entering water temperature"
+     annotation (Placement(transformation(extent={{-156,42},
+          {-136,62}})));
    Modelica.Blocks.Sources.RealExpression TEvaEnt(y=Medium2.temperature(
         Medium2.setState_phX(port_a2.p, inStream(port_a2.h_outflow))))
-      "Evaporator entering water temperature"
-       annotation (Placement(transformation(extent={{-156,-64},{-136,-44}})));
+    "Evaporator entering water temperature"
+     annotation (Placement(transformation(extent={{-156,-64},{-136,-44}})));
    Modelica.Blocks.Sources.RealExpression TConLvg(y=vol1.heatPort.T)
-      "Condenser leaving water temperature"
-       annotation (Placement(transformation(extent={{-156,28},{-136,48}})));
+    "Condenser leaving water temperature"
+     annotation (Placement(transformation(extent={{-156,28},{-136,48}})));
    Modelica.Blocks.Sources.RealExpression TEvaLvg(y=vol2.heatPort.T)
-      "Evaporator leaving water temperature"
-       annotation (Placement(transformation(extent={{-156,-50},{-136,-30}})));
+    "Evaporator leaving water temperature"
+     annotation (Placement(transformation(extent={{-156,-50},{-136,-30}})));
    HeatTransfer.Sources.PrescribedHeatFlow preHeaFloCon
-      "Prescribed condenser heat flow rate"
-       annotation (Placement(transformation(extent={{-41,24},{-21,44}})));
+    "Prescribed condenser heat flow rate"
+     annotation (Placement(transformation(extent={{-41,24},{-21,44}})));
    HeatTransfer.Sources.PrescribedHeatFlow preHeaFloEva
-      "Prescribed evaporator heat flow rate"
-       annotation (Placement(transformation(extent={{-41,-50},{-21,-30}})));
+    "Prescribed evaporator heat flow rate"
+     annotation (Placement(transformation(extent={{-41,-50},{-21,-30}})));
    Modelica.SIunits.SpecificEnthalpy hEvaSet=
       Medium2.specificEnthalpy_pTX(
        p=port_b2.p,
@@ -131,51 +133,40 @@ model DOE2WaterToWater "Water source heat pump_Performance curve"
 
 equation
   connect(preHeaFloCon.port,vol1.heatPort)
-   annotation (Line(points={{-21,34},{-16,34},{-16,60},{-10,60}}, color={191,0,0}));
+  annotation (Line(points={{-21,34},{-16,34},{-16,60},{-10,60}}, color={191,0,0}));
   connect(preHeaFloEva.port,vol2.heatPort)
-   annotation (Line(points={{-21,-40},{-2,-40},{-2,-60},{12,-60}},
-                                       color={191,0,0}));
+  annotation (Line(points={{-21,-40},{-2,-40},{-2,-60},{12,-60}},color={191,0,0}));
   connect(port_a2, port_a2)
-   annotation (Line(points={{100,-60},{105,-60},{105,-60},
-          {100,-60}}, color={0,127,255}));
+  annotation (Line(points={{100,-60},{105,-60},{105,-60},{100,-60}},color={0,127,255}));
   connect(uMod,doe2. uMod)
-   annotation (Line(points={{-176,0},{-144,0},{-144,-0.2},{-109,-0.2}},
-                          color={255,127,0}));
+  annotation (Line(points={{-176,0},{-144,0},{-144,-0.2},{-109,-0.2}},color={255,127,0}));
   connect(TConSet,doe2. TConSet)
-   annotation (Line(points={{-172,80},{-116,80},{-116,10},{-109,10}},
-                          color={0,0,127}));
+  annotation (Line(points={{-172,80},{-116,80},{-116,10},{-109,10}},color={0,0,127}));
   connect(QConFloSet.y,doe2. QConFloSet)
-   annotation (Line(points={{-135,14},{-122,14},{-122,2.2},{-109,2.2}},
-                                 color={0,0,127}));
+  annotation (Line(points={{-135,14},{-122,14},{-122,2.2},{-109,2.2}},color={0,0,127}));
   connect(QEvaFloSet.y,doe2. QEvaFloSet)
-   annotation (Line(points={{-135,-16},{-120,-16},{-120,-2.6},{-109,-2.6}},
-                                           color={0,0,127}));
+  annotation (Line(points={{-135,-16},{-120,-16},{-120,-2.6},{-109,-2.6}},color={0,0,127}));
   connect(TEvaLvg.y,doe2. TEvaLvg)
-   annotation (Line(points={{-135,-40},{-118,-40},{-118,-5},{-109,-5}},
-                                      color={0,0,127}));
+  annotation (Line(points={{-135,-40},{-118,-40},{-118,-5},{-109,-5}},color={0,0,127}));
   connect(doe2.TEvaEnt, TEvaEnt.y)
-   annotation (Line(points={{-109,-7.4},{-116,-7.4},{-116,-54},{-135,-54}},
-                                        color={0,0,127}));
+  annotation (Line(points={{-109,-7.4},{-116,-7.4},{-116,-54},{-135,-54}},color={0,0,127}));
   connect(doe2.TEvaSet, TEvaSet)
-   annotation (Line(points={{-109,-10},{-114,-10},{-114,-80},{-174,-80}},
-                                  color={0,0,127}));
-  connect(doe2.QCon_flow, preHeaFloCon.Q_flow) annotation (Line(points={{-87,4},
-          {-58,4},{-58,34},{-41,34}}, color={0,0,127}));
-  connect(doe2.QCon_flow, QCon_flow) annotation (Line(points={{-87,4},{86,4},{86,
-          20},{110,20}}, color={0,0,127}));
+  annotation (Line(points={{-109,-10},{-114,-10},{-114,-80},{-174,-80}},color={0,0,127}));
+  connect(doe2.QCon_flow, preHeaFloCon.Q_flow)
+  annotation (Line(points={{-87,4},{-58,4},{-58,34},{-41,34}}, color={0,0,127}));
+  connect(doe2.QCon_flow, QCon_flow)
+  annotation (Line(points={{-87,4},{86,4},{86,20},{110,20}}, color={0,0,127}));
   connect(doe2.P, P)
-   annotation (Line(points={{-87,0},{110,0}}, color={0,0,127}));
-  connect(doe2.QEva_flow, preHeaFloEva.Q_flow) annotation (Line(points={{-87,-4},
-          {-58,-4},{-58,-40},{-41,-40}}, color={0,0,127}));
-  connect(doe2.QEva_flow, QEva_flow) annotation (Line(points={{-87,-4},{86,-4},{
-          86,-20},{110,-20}}, color={0,0,127}));
+  annotation (Line(points={{-87,0},{110,0}}, color={0,0,127}));
+  connect(doe2.QEva_flow, preHeaFloEva.Q_flow)
+  annotation (Line(points={{-87,-4},{-58,-4},{-58,-40},{-41,-40}}, color={0,0,127}));
+  connect(doe2.QEva_flow, QEva_flow)
+  annotation (Line(points={{-87,-4},{86,-4},{86,-20},{110,-20}}, color={0,0,127}));
   connect(TConLvg.y,doe2. TConLvg)
-   annotation (Line(points={{-135,38},{-120,38},{-120,4.8},{-109,4.8}},
-                                  color={0,0,127}));
+  annotation (Line(points={{-135,38},{-120,38},{-120,4.8},{-109,4.8}},color={0,0,127}));
   connect(TConEnt.y,doe2. TConEnt)
-   annotation (Line(points={{-135,52},{-118,52},{-118,7.4},{-109,7.4}},
-                                  color={0,0,127}));
-    annotation (Dialog(group="Nominal condition"),
+  annotation (Line(points={{-135,52},{-118,52},{-118,7.4},{-109,7.4}},color={0,0,127}));
+  annotation (Dialog(group="Nominal condition"),
                choicesAllMatching=true,Placement(transformation(extent={{48,66},{68,86}})),
               Icon(coordinateSystem(preserveAspectRatio=false,extent={{-100,-100},{100,100}}),
                    graphics={
@@ -261,63 +252,63 @@ equation
                                                  color={0,0,255}),
         Line(points={{0,-70},{0,-84},{0,-90},{100,-90}}, color={28,108,200}),
         Line(points={{60,0},{104,0}}, color={28,108,200})}),
-    defaultComponentName="heaPumDOE2",
+defaultComponentName="heaPumDOE2",
 Documentation(info="<html>
-<p>
-Model of a water to water heat pump, based on the DOE-2.1 chiller model,
-the EnergyPlus chiller model <code>Chiller:Electric:EIR</code> and from <a href=\"Buildings.Fluid.Chillers.ElectricEIR\">
-Buildings.Fluid.Chillers.ElectricEIR</a>.
-</p>
-<p>
-This model uses three functions stated in <a href=\"Buildings.Fluid.HeatPumps.BaseClasses.DOE2Method\">
-Buildings.Fluid.HeatPupms.BaseClasses.DOE2Method</a>. to predict the thermal capacity and the compressor power consumption through
-three operational modes executed by a control input signal <code>uMod</code>=+1 heating mode, <code>uMod</code>=-1 cooling mode and
-<code>uMod</code>=0 shutoff.
-</p>
-<ul>
-<li>
-A biquadratic function is used to predict the thermal capacity as a function of
-condenser entering and evaporator leaving fluid temperature.
-</li>
-<li>
-A quadratic functions is used to predict power input to the thermal capacity
-ratio with respect to the part load ratio.
-</li>
-<li>
-A biquadratic functions is used to predict power input to the thermal capacity ratio as a function of
-condenser entering and evaporator leaving fluid temperature.
-</li>
-</ul>
-<p>
-The model takes as input signals; the set point either for the leaving water temperature of the
-condenser or the evaporator which is met if the heat pump has sufficient capacity and the
-integer input <code>uMod</code>.
-The model has a built-in, ideal temperature control.
-</p>
-<p>
-The model can be parametrized to compute a transient
-or steady-state response.
-The transient response of the heatpump is computed using a first
-order differential equation for the evaporator and condenser fluid volumes.
-The heatpump outlet temperatures are equal to the temperatures of these lumped volumes.
-</p>
-<h4>References</h4>
-<ul>
-<li>
-Hydeman, M. and K.L. Gillespie. 2002. Tools and Techniques to Calibrate Electric Chiller
-Component Models. <i>ASHRAE Transactions</i>, AC-02-9-1.
-</li>
-</ul>
-</html>",
-revisions="<html>
-<ul>
-<li>
-June 21, 2019, by Hagar Elarga:<br/>
-First implementation.
-Refactored ,<a href=\"Buildings.Fluid.Chillers.ElectricEIR\">ElectricEIR EIR chiller</a>
-model to include simultaneous heating and cooling modes.
-</li>
-</ul>
+  <p>
+  Model of a water to water heat pump, based on the DOE-2.1 chiller model,
+  the EnergyPlus chiller model <code>Chiller:Electric:EIR</code> and from <a href=\"Buildings.Fluid.Chillers.ElectricEIR\">
+  Buildings.Fluid.Chillers.ElectricEIR</a>.
+  </p>
+  <p>
+  This model uses three functions stated in <a href=\"Buildings.Fluid.HeatPumps.BaseClasses.DOE2Method\">
+  Buildings.Fluid.HeatPupms.BaseClasses.DOE2Method</a>. to predict the thermal capacity and the compressor power consumption through
+  three operational modes executed by a control input signal <code>uMod</code>=1 heating mode, <code>uMod</code>=-1 cooling mode and
+  <code>uMod</code>=0 shutoff.
+  </p>
+  <ul>
+  <li>
+  A biquadratic function is used to predict the thermal capacity as a function of
+  condenser entering and evaporator leaving fluid temperature.
+  </li>
+  <li>
+  A quadratic function is used to predict power input to the thermal capacity
+  ratio with respect to the part load ratio.
+  </li>
+  <li>
+  A biquadratic function is used to predict power input to the thermal capacity ratio as a function of
+  condenser entering and evaporator leaving fluid temperature.
+  </li>
+  </ul>
+  <p>
+  The model takes two input signals; the first is set point either for the leaving water temperature of the
+  condenser or the evaporator which is met if the heat pump has sufficient capacity and the second is the
+  integer input <code>uMod</code>.
+  The model has a built-in, ideal temperature control.
+  </p>
+  <p>
+  The model can be parametrized to compute a transient
+  or steady-state response.
+  The transient response of the heatpump is computed using a first
+  order differential equation for the evaporator and condenser fluid volumes.
+  The heatpump outlet temperatures are equal to the temperatures of these lumped volumes.
+  </p>
+  <h4>References</h4>
+  <ul>
+  <li>
+  Hydeman, M. and K.L. Gillespie. 2002. Tools and Techniques to Calibrate Electric Chiller
+  Component Models. <i>ASHRAE Transactions</i>, AC-02-9-1.
+  </li>
+  </ul>
+  </html>",
+  revisions="<html>
+  <ul>
+  <li>
+  June 21, 2019, by Hagar Elarga:<br/>
+  First implementation.
+  Refactored ,<a href=\"Buildings.Fluid.Chillers.ElectricEIR\">ElectricEIR EIR chiller</a>
+  model to include simultaneous heating and cooling modes.
+  </li>
+  </ul>
 </html>"),
     Diagram(coordinateSystem(extent={{-160,-100},{100,100}})));
 end DOE2WaterToWater;

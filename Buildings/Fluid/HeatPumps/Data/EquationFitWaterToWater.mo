@@ -29,49 +29,49 @@ package EquationFitWaterToWater "WaterToWaterHeatPump"
     parameter Modelica.SIunits.Power PEva_nominal_CD
      "Nominal compressor power cooling mode"
       annotation (Dialog(group="Nominal conditions cooling dominated mode"));
-   constant Integer nCLR= 5
-    "Number of coefficients for Cooling load Ratio "
+    constant Integer nCLR= 5
+     "Number of coefficients for Cooling load Ratio "
       annotation (Dialog(group="Equationfit cooling dominated load coefficients"));
-   constant Integer nPowR_CD= 5
+     constant Integer nPowR_CD= 5
     "Number of coefficients for Power Ratio"
       annotation (Dialog(group="Equationfit cooling dominated  power coefficients"));
-   constant Integer nHLR=5
-    "Number of coefficients for HLR "
+    constant Integer nHLR=5
+     "Number of coefficients for HLR "
       annotation (Dialog(group="Equationfit heating dominated load coefficients"));
-   constant Integer nPowR_HD=5
-    "Number of coefficients for PowR"
+    constant Integer nPowR_HD=5
+     "Number of coefficients for PowR"
       annotation (Dialog(group="Equationfit heating dominated  power coefficients"));
-   parameter Real HLRC[nHLR]
-    "Heating Load ratio coefficients"
+    parameter Real HLRC[nHLR]
+     "Heating Load ratio coefficients"
       annotation (Dialog(group="Equationfit heating dominated load coefficients"));
-   parameter Real P_HDC[nPowR_HD]
-    "Power Ratio coefficients  in heating mode"
+    parameter Real P_HDC[nPowR_HD]
+     "Power Ratio coefficients  in heating mode"
       annotation (Dialog(group="Equationfit heating dominated  power coefficients"));
-   parameter Real CLRC[nCLR]
-    "Cooling Load ratio coefficients"
+    parameter Real CLRC[nCLR]
+     "Cooling Load ratio coefficients"
       annotation (Dialog(group="Equationfit cooling dominated load coefficients"));
-   parameter Real P_CDC[nPowR_CD]
-    "Power Ratio coefficients in cooling mode"
+    parameter Real P_CDC[nPowR_CD]
+     "Power Ratio coefficients in cooling mode"
       annotation (Dialog(group="Equationfit cooling dominated  power coefficients"));
-   parameter Modelica.SIunits.Temperature TRef= 10+273.15
-    "Reference temperature used to normalize the inlet temperature variables"
+    parameter Modelica.SIunits.Temperature TRef= 10+273.15
+     "Reference temperature used to normalize the inlet temperature variables"
       annotation (Dialog(group="Refrence condition"));
   annotation (
-    defaultComponentName="datPer",
-    defaultComponentPrefixes="parameter",
-    Documentation(info =        "<html>
-<p>This record is used as a template for performance data
-for the heatpump model
-<a href=\"Buildings.Fluid.HeatPumps.EquationFitWaterToWater\">
-Buildings.Fluid.HeatPumps.EquationFitWaterToWater</a>.
-</p>
-</html>", revisions="<html>
-<ul>
-<li>
-June 19, 2019 by Hagar Elarga:<br/>
-First implementation.
-</li>
-</ul>
+  defaultComponentName="datPer",
+  defaultComponentPrefixes="parameter",
+  Documentation(info =        "<html>
+  <p>This record is used as a template for performance data
+  for the heatpump model
+  <a href=\"Buildings.Fluid.HeatPumps.EquationFitWaterToWater\">
+  Buildings.Fluid.HeatPumps.EquationFitWaterToWater</a>.
+  </p>
+  </html>",  revisions="<html>
+  <ul>
+  <li>
+  June 19, 2019 by Hagar Elarga:<br/>
+  First implementation.
+  </li>
+  </ul>
 </html>"));
 
   end Generic_EquationFit;
