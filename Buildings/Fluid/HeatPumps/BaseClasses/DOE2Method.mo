@@ -4,7 +4,8 @@ block DOE2Method
 
   parameter  Buildings.Fluid.Chillers.Data.ElectricEIR.Generic per
     "Performance data"
-     annotation (choicesAllMatching = true,Placement(transformation(extent={{56,74},{76,94}})));
+     annotation (choicesAllMatching = true,Placement(transformation(extent={{80,80},
+            {100,100}})));
   final parameter Modelica.SIunits.HeatFlowRate QCon_heatflow_nominal = -QEva_heatflow_nominal + P_nominal
     "Nominal heat flow at the condenser";
 
@@ -114,9 +115,9 @@ equation
 
       capFunT = Buildings.Utilities.Math.Functions.smoothMax(
          x1 =  1E-7,
-         x2 =   Buildings.Utilities.Math.Functions.biquadratic( a = per.capFunT,
-                                                               x1 = TEvaLvg_degC,
-                                                               x2 = TConEnt_degC),
+         x2 =   Buildings.Utilities.Math.Functions.biquadratic(
+           a = per.capFunT,
+           x1 = TEvaLvg_degC,                                  x2 = TConEnt_degC),
                                                            deltaX = 1E-7);
 
       EIRFunT = Buildings.Utilities.Math.Functions.biquadratic( a = per.EIRFunT,

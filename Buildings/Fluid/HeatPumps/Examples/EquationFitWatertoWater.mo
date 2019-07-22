@@ -12,7 +12,7 @@ model EquationFitWatertoWater "example"
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
       "Water to Water heatpump"
-       annotation (Placement(transformation(extent={{32,-10},{52,10}})));
+       annotation (Placement(transformation(extent={{30,-12},{50,8}})));
 
     parameter Data.EquationFitWaterToWater.Trane_Axiom_EXW240 per
        "HeatPump performance"
@@ -102,29 +102,34 @@ model EquationFitWatertoWater "example"
 
 equation
   connect(heaPum.port_a1, conPum.ports[1])
-  annotation (Line(points={{32,6},{24,6},{24,90},{-40,90}}, color={0,127,255}));
+  annotation (Line(points={{33.3333,4},{24,4},{24,90},{-40,90}},
+                                                            color={0,127,255}));
   connect(TConEnt.y, conPum.T_in)
   annotation (Line(points={{-97,86},{-62,86}}, color={0,0,127}));
   connect(TEvaEnt.y, evaPum.T_in)
   annotation (Line(points={{81,-84},{98,-84},{98,-51.4},{86.2,-51.4}}, color={0,0,127}));
   connect(evaPum.ports[1], heaPum.port_a2)
-  annotation (Line(points={{62,-47},{56,-47},{56,-6},{52,-6}}, color={0,127,255}));
+  annotation (Line(points={{62,-47},{56,-47},{56,-8},{50,-8}}, color={0,127,255}));
   connect(cooVol.ports[1], res2.port_a)
   annotation (Line(points={{-40,-84},{-10,-84}}, color={0,127,255}));
   connect(res1.port_a, heaPum.port_b1)
-  annotation (Line(points={{58,66},{52,66},{52,6}},  color={0,127,255}));
+  annotation (Line(points={{58,66},{58,4},{50,4}},   color={0,127,255}));
   connect(res2.port_b, heaPum.port_b2)
-  annotation (Line(points={{10,-84},{24,-84},{24,-6},{32,-6}},color={0,127,255}));
+  annotation (Line(points={{10,-84},{24,-84},{24,-8},{33.3333,-8}},
+                                                              color={0,127,255}));
   connect(TConSet.y, heaPum.TConSet)
-  annotation (Line(points={{1,70},{16,70},{16,9},{30.6,9}}, color={0,0,127}));
+  annotation (Line(points={{1,70},{16,70},{16,7},{32.1667,7}},
+                                                            color={0,0,127}));
   connect(TEvaSet.y, heaPum.TEvaSet)
-  annotation (Line(points={{1,-50},{16,-50},{16,-9},{30.6,-9}},color={0,0,127}));
+  annotation (Line(points={{1,-50},{16,-50},{16,-11},{32.1667,-11}},
+                                                               color={0,0,127}));
   connect(res1.port_b, heaVol.ports[1])
   annotation (Line(points={{78,66},{84,66},{84,84}}, color={0,127,255}));
   connect(uMod.y, reaToInt.u)
   annotation (Line(points={{-97,0},{-62,0}}, color={0,0,127}));
   connect(reaToInt.y, heaPum.uMod)
-  annotation (Line(points={{-39,0},{30.6,0}}, color={255,127,0}));
+  annotation (Line(points={{-39,0},{-2,0},{-2,-2},{32.1667,-2}},
+                                              color={255,127,0}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},
             {100,100}}), graphics={
         Ellipse(lineColor = {75,138,73},

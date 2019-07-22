@@ -160,8 +160,8 @@ model EquationFitWaterToWater_OneRoomRadiator
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={2,-178})));
-  Modelica.Blocks.Logical.Hysteresis hysteresis(uLow=273.15 + 15, uHigh=273.15
-         + 22)         "Hysteresis controller"
+  Modelica.Blocks.Logical.Hysteresis hysteresis(uLow=273.15 + 19, uHigh=273.15
+         + 21)         "Hysteresis controller"
             annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         origin={-210,-50})));
@@ -258,16 +258,17 @@ equation
       color={191,0,0},
       smooth=Smooth.None));
 
-  connect(temRet.port_b, heaPum.port_a1) annotation (Line(points={{58,-30},{58,-130},{34,-130}},
-                                      color={0,127,255}));
+  connect(temRet.port_b, heaPum.port_a1) annotation (Line(points={{58,-30},{58,
+          -130},{30.6667,-130}},      color={0,127,255}));
   connect(preSou.ports[1], temRet.port_b) annotation (Line(points={{70,-122},{58,-122},{58,-30}},
                                color={0,127,255}));
   connect(sou.ports[1], pumEva.port_a) annotation (Line(points={{-18,-198},{2,-198},
           {2,-188}}, color={0,127,255}));
   connect(pumEva.port_b, heaPum.port_a2) annotation (Line(points={{2,-168},{2,-168},
           {2,-142},{14,-142}}, color={0,127,255}));
-  connect(sin.ports[1], heaPum.port_b2) annotation (Line(points={{68,-200},{42,-200},
-          {42,-142},{34,-142}},       color={0,127,255}));
+  connect(sin.ports[1], heaPum.port_b2) annotation (Line(points={{68,-200},{42,
+          -200},{42,-142},{30.6667,-142}},
+                                      color={0,127,255}));
   connect(hysteresis.y, not2.u) annotation (Line(points={{-199,-50},{-182,-50}},
                       color={255,0,255}));
   connect(temRoo.T, hysteresis.u)
@@ -285,7 +286,7 @@ equation
   connect(tesEvaPum.y, and1.u2) annotation (Line(points={{-16,-101},{-16,-80},{
           -8,-80}},                color={255,0,255}));
   connect(pumCon.m_flow_actual, tesConHea.u) annotation (Line(points={{-81,-89},
-          {-52,-89},{-52,-70},{-42,-70}}, color={0,0,127}));
+          {-82,-89},{-82,-70},{-42,-70}}, color={0,0,127}));
   connect(pumEva.m_flow_actual, tesEvaPum.u) annotation (Line(points={{-3,-167},
           {-16,-167},{-16,-124}},                     color={0,0,127}));
   connect(heaPum.port_b1, pumCon.port_a) annotation (Line(points={{14,-130},{
@@ -301,11 +302,14 @@ equation
           {-144,-100},{-134,-100}}, color={255,0,255}));
   connect(and2.y, booleanToInteger.u) annotation (Line(points={{51,-50},{66,-50}},   color={255,0,255}));
   connect(booleanToInteger.y, heaPum.uMod)
-    annotation (Line(points={{89,-50},{98,-50},{98,-136},{35.4,-136}}, color={255,127,0}));
-  connect(heaPum.TEvaSet, TEvaSet.y) annotation (Line(points={{35.4,-145},{54,-145},
-          {54,-160},{73,-160}}, color={0,0,127}));
-  connect(heaPum.TConSet, TConSet.y) annotation (Line(points={{35.4,-127},{52,
-          -127},{52,-88},{69,-88}}, color={0,0,127}));
+    annotation (Line(points={{89,-50},{98,-50},{98,-136},{31.8333,-136}},
+                                                                       color={255,127,0}));
+  connect(heaPum.TEvaSet, TEvaSet.y) annotation (Line(points={{31.8333,-145},{
+          54,-145},{54,-160},{73,-160}},
+                                color={0,0,127}));
+  connect(heaPum.TConSet, TConSet.y) annotation (Line(points={{31.8333,-127},{
+          52,-127},{52,-88},{69,-88}},
+                                    color={0,0,127}));
   annotation (Documentation(info="<html>
 <p>
 Example that simulates one room equipped with a radiator. Hot water is produced

@@ -25,7 +25,7 @@ model EquationFitWaterToWater "Water source heat pump_Equation Fit"
   parameter Data.EquationFitWaterToWater.Generic_EquationFit per
    "Performance data"
    annotation (choicesAllMatching = true,
-                Placement(transformation(extent={{120,80},{140,100}})));
+                Placement(transformation(extent={{80,80},{100,100}})));
   parameter Modelica.SIunits.HeatFlowRate   QCon_heatflow_nominal=per.QCon_heatflow_nominal
    "Heating load nominal capacity_Heating mode";
   parameter Modelica.SIunits.MassFlowRate   mCon_flow_nominal= per.mCon_flow_nominal
@@ -49,15 +49,15 @@ model EquationFitWaterToWater "Water source heat pump_Equation Fit"
                   extent={{-128,-14},{-100,14}})));
   Modelica.Blocks.Interfaces.RealOutput  P(final unit="W")
     "Compressor Power "
-     annotation (Placement(transformation(extent={{140,-10},{160,10}}),iconTransformation(
+     annotation (Placement(transformation(extent={{100,-10},{120,10}}),iconTransformation(
                   extent={{100,-12},{120,8}})));
    Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
     "Evaporator heat flow rate"
-     annotation (Placement(transformation(extent={{140,-30},{160,-10}}),iconTransformation(
+     annotation (Placement(transformation(extent={{100,-30},{120,-10}}),iconTransformation(
                   extent={{100,-100},{120,-80}})));
    Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
     "Condenser heat flow rate"
-     annotation (Placement(transformation(extent={{140,10},{160,30}}),iconTransformation(
+     annotation (Placement(transformation(extent={{100,10},{120,30}}),iconTransformation(
                   extent={{100,78},{120,98}})));
    Buildings.Fluid.HeatPumps.BaseClasses.EquationFitMethod equFit(per=per)
     "EquationFit method which describes the water to water heat pump performance"
@@ -135,7 +135,7 @@ equation
   connect(equFit.QEva_flow, preHeaFloEva.Q_flow)
   annotation (Line(points={{-59,-4},{-42,-4},{-42,-20},{-37,-20}}, color={0,0,127}));
   connect(equFit.QEva_flow, QEva_flow)
-  annotation (Line(points={{-59,-4},{132,-4},{132,-20},{150,-20}}, color={0,0,127}));
+  annotation (Line(points={{-59,-4},{92,-4},{92,-20},{110,-20}},   color={0,0,127}));
   connect(QConFloSet.y, equFit.QConFloSet)
   annotation (Line(points={{-113,8},{-106,8},{-106,2},{-81,2}},color={0,0,127},pattern=LinePattern.Dash));
   connect(QEvaFloSet.y, equFit.QEvaFloSet)
@@ -156,11 +156,11 @@ equation
   connect(mConFlo.y, equFit.m1_flow)
   annotation (Line(points={{-113,24},{-104,24},{-104,4},{-81,4}}, color={0,0,127}));
   connect(equFit.P, P)
-  annotation (Line(points={{-59,0},{150,0}}, color={0,0,127}));
+  annotation (Line(points={{-59,0},{110,0}}, color={0,0,127}));
   connect(equFit.QCon_flow, QCon_flow)
-  annotation (Line(points={{-59,4},{132,4},{132,20},{150,20}}, color={0,0,127}));
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false,extent={{-100,-100},
-            {100,100}}),       graphics={
+  annotation (Line(points={{-59,4},{92,4},{92,20},{110,20}},   color={0,0,127}));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false,extent={{-140,
+            -100},{100,100}}), graphics={
         Rectangle(
           extent={{-70,80},{70,-80}},
           lineColor={0,0,0}),
@@ -291,5 +291,5 @@ equation
   </li>
   </ul>
 </html>"),
-    Diagram(coordinateSystem(extent={{-140,-100},{140,100}})));
+    Diagram(coordinateSystem(extent={{-140,-100},{100,100}})));
 end EquationFitWaterToWater;

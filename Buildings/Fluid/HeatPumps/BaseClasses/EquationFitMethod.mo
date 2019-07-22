@@ -178,12 +178,9 @@ Documentation(info="<html>
   Buildings.Fluid.HeatPumps.EquationFitWaterToWater</a>.
   </p>
   <p>
-  The block uses four functions to predict capacity and power consumption for heating mode
-  and cooling mode:
+  The block uses four functions to predict capacity and power consumption for the heating and cooling modes.The governing equations for the heating mode are
   </p>
-  <ul>
-  <li>
-  The heating mode when <code>uMod</code>=+1
+  
   <p align=\"center\" style=\"font-style:italic;\">
   Q&#775;<sub>Con</sub>/Q&#775;<sub>Con,nominal</sub> = HLRC<sub>1</sub>+ HLRC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
   HLRC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ HLRC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
@@ -193,16 +190,14 @@ Documentation(info="<html>
   Power<sub>Con</sub>/Power<sub>Con,nominal</sub>= P_HDC<sub>1</sub>+ P_HDC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
   P_HDC<sub>3</sub>.T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ P_HDC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
   + P_HDC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
-  </li>
-  </ul>
   <p>
   where the coefficients <i>HLRC<sub>1</sub> to HLRC<sub>5</sub> </i> and  <i>P_HDC<sub>1</sub> to P_HDC<sub>5</sub> </i>
   are stored in the data record <code>per</code> at <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
-  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
+  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>. The heating mode is activated when the integer input signal <code>uMod</code>=1.
   </p>
-  <ul>
-  <li>
-  The cooling mode when <code>uMod</code>=-1
+  <p>
+  While, the governing equations for the cooling mode are
+  </p>
   <p align=\"center\" style=\"font-style:italic;\">
   Q&#775;<sub>Eva</sub>/Q&#775;<sub>Eva,nominal</sub> = CLRC<sub>1</sub>+ CLRC<sub>2</sub> T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
   CLRC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ CLRC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
@@ -212,17 +207,15 @@ Documentation(info="<html>
    Power<sub>Eva</sub>/Power<sub>Eva,nominal</sub> = P_CDC<sub>1</sub>+ P_CDC<sub>2</sub>.T<sub>Con,Ent</sub>/T<sub>Con,nominal</sub>+
    P_CDC<sub>3</sub> T<sub>Eva,Ent</sub>/T<sub>Eva,nominal</sub>+ P_CDC<sub>4</sub> V&#775;<sub>Con,Ent</sub>/V&#775;<sub>Con,nominal</sub>+
    + P_CDC<sub>5</sub> V&#775;<sub>Eva,Ent</sub>/V&#775;<sub>Eva,nominal</sub>
-  </li>
-  </ul>
   <p>
   where the coefficients <i>CLRC<sub>1</sub> to CLRC<sub>5</sub> </i> and  <i>P_CDC<sub>1</sub> to P_CDC<sub>5</sub> </i>
   are stored in the data record <code>per</code> at <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
-  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
+  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.The cooling mode is activated when the integer input signal <code>uMod</code>=-1.
   </p>
   <p>
   For these four equations, the inlet conditions or variables are divided by the reference conditions.
   This formulation allows the coefficients to fall into smaller range of values. Moreover, the value of the coefficient
-  indirectly represents the sensitivity of the output to that particular inlet variable.
+  represents the sensitivity of the output to that particular inlet variable.
   </p>
   </html>",
   revisions="<html>
