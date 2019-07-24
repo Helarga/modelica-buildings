@@ -64,15 +64,15 @@ model DOE2WaterToWater "Water source heat pump_Performance curve"
      annotation (Placement(
         transformation(extent={{-184,68},{-160,92}}),  iconTransformation(
           extent={{-116,78},{-92,102}})));
-   Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W", displayUnit="W")
+   Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
     "Condenser heat flow rate"
      annotation (Placement(transformation(extent={{100,10},{120,30}}),iconTransformation(
      extent={{100,80},{120,100}})));
-   Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W", displayUnit="W")
+   Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
     "Evaporator heat flow rate"
      annotation (Placement(transformation(extent={{100,-30},{120,-10}}),iconTransformation(
     extent={{100,-100},{120,-80}})));
-   Modelica.Blocks.Interfaces.RealOutput   P(final unit="W", displayUnit="W")
+   Modelica.Blocks.Interfaces.RealOutput   P(final unit="W")
     "Electric power consumed by compressor"
      annotation (Placement(transformation(extent={{100,-10},{120,10}}),iconTransformation(
        extent={{100,-10},{120,10}})));
