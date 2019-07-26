@@ -1,7 +1,7 @@
 simulateModel("Buildings.Fluid.Chillers.Examples.AbsorptionIndirectSteam", tolerance=1e-6, stopTime=14400, method="dassl", resultFile="AbsorptionIndirectSteam");
 createPlot(id = 1,
  position = {60, 10, 640, 480},
- y = {"absIndSte.QEva", "absIndSte.QGen", "absIndSte.QCon"},
+ y = {"absIndSte.QEva_flow", "absIndSte.QGen", "absIndSte.QCon_flow"},
  autoscale = true,
  autoerase = true,
  autoreplot = true,

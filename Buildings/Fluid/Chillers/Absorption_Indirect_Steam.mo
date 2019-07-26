@@ -133,20 +133,6 @@ equation
                                     color={0,0,127}));
   connect(absBlo.P, P)
     annotation (Line(points={{-77,9.8},{-77,10},{110,10}}, color={0,0,127}));
-    /*
-     QEva_flow_nominal=-10000,
-   P_nominal=150,
-   PLRMax=1,
-   PLRMin=0.15,
-   mEva_flow_nominal=0.4,
-   mCon_flow_nominal=1.1,
-   capFunEva={0.690571,0.065571,-0.00289,0},
-   capFunCon={0.245507,0.023614,0.0000278,0.000013},
-   GenHIR={0.18892,0.968044,1.119202,-0.5034},
-   EIRP={1,0,0},
-   GenConT={0.712019,-0.00478,0.000864,-0.000013},
-   GenEvaT={0.995571,0.046821,-0.01099,0.000608});
-   */
   connect(absBlo.mSte, mSte) annotation (Line(points={{-77,3},{-58,3},{-58,-20},
           {110,-20}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(extent={{-100,-100},{100,100}}),

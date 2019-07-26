@@ -9,7 +9,6 @@ model AbsorptionIndirectSteam
     "Performance data implemented at EnergyPlus example"
     annotation (Placement(transformation(extent={{58,72},{78,92}})));
 
-protected
   parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=perEP.mEva_flow_nominal
     "Evaporator nominal mass flow rate";
   parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=perEP.mCon_flow_nominal
