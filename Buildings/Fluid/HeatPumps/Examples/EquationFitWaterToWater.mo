@@ -1,6 +1,18 @@
 within Buildings.Fluid.HeatPumps.Examples;
-model EquationFitWatertoWater "example"
+model EquationFitWaterToWater "example"
  package Medium = Buildings.Media.Water "Medium model";
+
+  Buildings.Fluid.HeatPumps.EquationFitWaterToWater heaPum(
+    per=Data.EquationFitWaterToWater.Trane_Axiom_EXW240(),
+    redeclare package Medium1 = Medium,
+    redeclare package Medium2 = Medium,
+    show_T=true,
+    dp1_nominal=200,
+    dp2_nominal=200,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
+      "Water to Water heatpump"
+       annotation (Placement(transformation(extent={{30,-12},{50,8}})));
 
     parameter Data.EquationFitWaterToWater.Trane_Axiom_EXW240 per
     "HeatPump performance"
@@ -10,17 +22,6 @@ model EquationFitWatertoWater "example"
     parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=per.mCon_flow_nominal
        "Condenser nominal mass flow rate";
 
-    Buildings.Fluid.HeatPumps.EquationFitWaterToWater heaPum(
-         per=Data.EquationFitWaterToWater.Trane_Axiom_EXW240(),
-         redeclare package Medium1 = Medium,
-         redeclare package Medium2 = Medium,
-         show_T=true,
-         dp1_nominal=200,
-         dp2_nominal=200,
-         energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-         massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
-      "Water to Water heatpump"
-       annotation (Placement(transformation(extent={{30,-12},{50,8}})));
     Modelica.Blocks.Math.RealToInteger reaToInt
        annotation (Placement(transformation(extent={{-60,-10},{-40,10}})));
     Sources.MassFlowSource_T conPum(
@@ -70,14 +71,12 @@ model EquationFitWatertoWater "example"
        dp_nominal=6000)
       "Flow resistance"
        annotation (Placement(transformation(extent={{-20,-80},{0,-60}})));
-    Modelica.Fluid.Sources.FixedBoundary heaVol(
-      nPorts=1,
-      redeclare package Medium = Medium)
+    Modelica.Fluid.Sources.FixedBoundary heaVol(nPorts=1, redeclare package
+      Medium =                                                                       Medium)
       "Volume for heating load"
        annotation (Placement(transformation(extent={{120,60},{100,80}})));
-    Modelica.Fluid.Sources.FixedBoundary cooVol(
-      nPorts=1,
-      redeclare package Medium = Medium)
+    Modelica.Fluid.Sources.FixedBoundary cooVol(nPorts=1, redeclare package
+      Medium =                                                                       Medium)
       "Volume for cooling load"
        annotation (Placement(transformation(extent={{-60,-80},{-40,-60}})));
     Controls.OBC.CDL.Continuous.Sources.Ramp TEvaSet(
@@ -104,27 +103,33 @@ model EquationFitWatertoWater "example"
 
 equation
   connect(heaPum.port_a1, conPum.ports[1])
-  annotation (Line(points={{33.3333,4},{24,4},{24,70},{-20,70}},color={0,127,255}));
+  annotation (Line(points={{33.3333,4},{24,4},{24,70},{-20,70}},
+                                                            color={0,127,255}));
   connect(TEvaEnt.y, evaPum.T_in)
-  annotation (Line(points={{121,-50},{134,-50},{134,-12},{102,-12}},color={0,0,127}));
+  annotation (Line(points={{121,-50},{134,-50},{134,-12},{102,-12}},   color={0,0,127}));
   connect(evaPum.ports[1], heaPum.port_a2)
-  annotation (Line(points={{80,-8},{50,-8}},color={0,127,255}));
+  annotation (Line(points={{80,-8},{50,-8}},                   color={0,127,255}));
   connect(cooVol.ports[1], res2.port_a)
   annotation (Line(points={{-40,-70},{-20,-70}}, color={0,127,255}));
   connect(res1.port_a, heaPum.port_b1)
-  annotation (Line(points={{62,66},{62,4},{50,4}}, color={0,127,255}));
+  annotation (Line(points={{62,66},{62,4},{50,4}},   color={0,127,255}));
   connect(res2.port_b, heaPum.port_b2)
-  annotation (Line(points={{0,-70},{24,-70},{24,-8},{33.3333,-8}},color={0,127,255}));
+  annotation (Line(points={{0,-70},{24,-70},{24,-8},{33.3333,-8}},
+                                                              color={0,127,255}));
   connect(TConSet.y, heaPum.TConSet)
-  annotation (Line(points={{1,30},{16,30},{16,7},{32.1667,7}},color={0,0,127}));
+  annotation (Line(points={{1,30},{16,30},{16,7},{32.1667,7}},
+                                                            color={0,0,127}));
   connect(TEvaSet.y, heaPum.TEvaSet)
-  annotation (Line(points={{1,-30},{16,-30},{16,-11},{32.1667,-11}},color={0,0,127}));
+  annotation (Line(points={{1,-30},{16,-30},{16,-11},{32.1667,-11}},
+                                                               color={0,0,127}));
   connect(res1.port_b, heaVol.ports[1])
-  annotation (Line(points={{82,66},{100,66},{100,70}},color={0,127,255}));
+  annotation (Line(points={{82,66},{100,66},{100,70}},
+                                                     color={0,127,255}));
   connect(uMod.y, reaToInt.u)
   annotation (Line(points={{-79,0},{-62,0}}, color={0,0,127}));
   connect(reaToInt.y, heaPum.uMod)
-  annotation (Line(points={{-39,0},{-2,0},{-2,-2},{32.1667,-2}},color={255,127,0}));
+  annotation (Line(points={{-39,0},{-2,0},{-2,-2},{32.1667,-2}},
+                                              color={255,127,0}));
   connect(conPum.T_in, TConEnt.y) annotation (Line(points={{-42,66},{-70,66},{
           -70,70},{-79,70}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},
@@ -159,4 +164,4 @@ First implementation.
  </li>
  </ul>
  </html>"));
-end EquationFitWatertoWater;
+end EquationFitWaterToWater;

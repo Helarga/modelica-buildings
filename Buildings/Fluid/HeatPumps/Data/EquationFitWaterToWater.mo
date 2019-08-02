@@ -44,17 +44,26 @@ package EquationFitWaterToWater "WaterToWaterHeatPump"
     parameter Real HLRC[nHLR]
      "Heating Load ratio coefficients"
       annotation (Dialog(group="Equationfit heating dominated load coefficients"));
-    parameter Real P_HDC[nPowR_HD]
-     "Power Ratio coefficients  in heating mode"
+    parameter Real PHC[nPowR_HD]
+     "Power Ratio coefficients in heating mode"
       annotation (Dialog(group="Equationfit heating dominated  power coefficients"));
     parameter Real CLRC[nCLR]
      "Cooling Load ratio coefficients"
       annotation (Dialog(group="Equationfit cooling dominated load coefficients"));
-    parameter Real P_CDC[nPowR_CD]
+    parameter Real PCC[nPowR_CD]
      "Power Ratio coefficients in cooling mode"
       annotation (Dialog(group="Equationfit cooling dominated  power coefficients"));
-    parameter Modelica.SIunits.Temperature TRef= 10+273.15
-     "Reference temperature used to normalize the inlet temperature variables"
+    parameter Modelica.SIunits.Temperature TRefHeaCon
+     "Reference temperature in heating mode used to normalize the condenser inlet water temperature"
+      annotation (Dialog(group="Refrence condition"));
+    parameter Modelica.SIunits.Temperature TRefHeaEva
+     "Reference temperature in heating mode used to normalize the evaporator inlet water temperature"
+      annotation (Dialog(group="Refrence condition"));
+    parameter Modelica.SIunits.Temperature TRefCooCon
+     "Reference temperature in cooling mode used to normalize the condenser inlet water temperature"
+      annotation (Dialog(group="Refrence condition"));
+    parameter Modelica.SIunits.Temperature TRefCooEva
+     "Reference temperature in cooling mode used to normalize the evaporator inlet water temperature"
       annotation (Dialog(group="Refrence condition"));
   annotation (
   defaultComponentName="datPer",
@@ -73,12 +82,14 @@ package EquationFitWaterToWater "WaterToWaterHeatPump"
   </li>
   </ul>
 </html>"));
-
   end Generic_EquationFit;
 
 record Trane_Axiom_EXW240 =
  Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater.Generic_EquationFit (
-      TRef=10 + 273.15,
+      TRefHeaCon= 45 + 273.15,
+      TRefCooCon= 10 + 273.15,
+      TRefHeaEva= 45 + 273.15,
+      TRefCooEva= 10 + 273.15,
       QCon_heatflow_nominal=77000.00,
       QEva_heatflow_nominal=-55680.00,
       VCon_nominal=0.001893,
@@ -89,14 +100,14 @@ record Trane_Axiom_EXW240 =
       PEva_nominal_CD=14244.44,
       HLRC={-4.23,-1.24,6.28,0.01,0.08},
       CLRC={-5.79235417,9.83800467,-3.19795605,0.32498894,0.043752306918433},
-      P_HDC={-5.55,5.08,1.01,-0.04,0.00},
-      P_CDC={-6.37109639,1.27560526,5.81780490,0.03132874,-0.082990443216406})
+      PHC={-5.55,5.08,1.01,-0.04,0.00},
+      PCC={-6.37109639,1.27560526,5.81780490,0.03132874,-0.082990443216406})
     "Water source HeatPump Trane_Axiom_EXW240"
 annotation (
   defaultComponentName="dataHP",
   defaultComponentPrefixes="parameter",
   Documentation(info =   "<html>
-  
+
   <p>
 Performance data for HeatPump model.
 This data corresponds to the following<a href=\"https://www.trane.com/content/dam/Trane/Commercial/global/products-systems/equipment/unitary/water-source-heat-pumps/water-to-water-wshp/WSHP-PRC022E-EN_08152017.pdf\"> https://www.trane.com/wshp.pdf</a> catalog data.
@@ -130,31 +141,31 @@ First implementation.
 </html>"));
   record EnergyPlus_HeatPump =
    Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater.Generic_EquationFit (
-      TRef=10 + 273.15,
-      QCon_heatflow_nominal=39040.00,
+      TRefHeaCon= 55 + 273.15,
+      TRefHeaEva= 14 + 273.15,
+      TRefCooCon= 35 + 273.15,
+      TRefCooEva= 8  + 273.15,
+      QCon_heatflow_nominal= 39040.00,
       QEva_heatflow_nominal=-39890.91,
       VCon_nominal=0.001893,
-      mCon_flow_nominal=1000*0.001893,
+      mCon_flow_nominal=1.9,
       VEva_nominal=0.001893,
-      mEva_flow_nominal=1000*0.001893,
-      PCon_nominal_HD=4790,
-      PEva_nominal_CD=4790,
+      mEva_flow_nominal=1.9,
+      PCon_nominal_HD=2800,
+      PEva_nominal_CD=2300,
       HLRC={-3.33491153,-0.51451946,4.51592706,0.01797107,0.155797661},
       CLRC={-1.52030596,3.46625667,-1.32267797,0.09395678,0.038975504},
-      P_HDC={-4.59564386,0.96265085,4.69489229,0.2501669,-1.20132665},
-      P_CDC={-4.59564386,0.96265085,4.69489229,0.02501669,-0.20132665})
-        "EnergyPlus_HeatPump"
+      PHC={-8.93121751,8.57035762,1.29660976,-0.21629222, 0.033862378},
+      PCC={-8.59564386,0.96265085,8.69489229,0.02501669,-0.20132665})
+        "EnergyPlus_HeatPumpEnergyPlus_HeatPump"
     annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
           coordinateSystem(preserveAspectRatio=false)),
     defaultComponentName="EPdataHP",
     defaultComponentPrefixes="parameter",
-    Documentation(info=
-                   "<html>
+    Documentation(info= "<html>
 This data corresponds to the EnergyPlus example file <code>GSHPSimple-GLHE.idf</code>
-from EnergyPlus 9.1, with a nominal cooling capacity of <i>39890</i> Watts and 
+from EnergyPlus 9.1, with a nominal cooling capacity of <i>39890</i> Watts and
 nominal heating capacity of <i>39040</i> Watt.
-
-
 </html>"));
 annotation(preferredView="info",
  Documentation(info="<html>

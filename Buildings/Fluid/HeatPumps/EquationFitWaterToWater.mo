@@ -108,16 +108,14 @@ model EquationFitWaterToWater "Water source heat pump_Equation Fit"
       Medium2.specificEnthalpy_pTX(
        p=port_b2.p,
        T=TEvaSet,
-       X=cat( 1,
-              port_b2.Xi_outflow,
-              {1 - sum(port_b2.Xi_outflow)}))
+       X=cat( 1,  port_b2.Xi_outflow,
+             {1 - sum(port_b2.Xi_outflow)}))
     "Chilled water setpoint enthalpy";
    Modelica.SIunits.SpecificEnthalpy hConSet=
       Medium1.specificEnthalpy_pTX(
        p=port_b1.p,
        T=TConSet,
-       X=cat( 1,
-              port_b1.Xi_outflow,
+       X=cat( 1,  port_b1.Xi_outflow,
               {1 - sum(port_b1.Xi_outflow)}))
     "Heating water setpoint enthalpy";
 
@@ -127,38 +125,40 @@ equation
   connect(preHeaFloEva.port, vol2.heatPort)
   annotation (Line(points={{-17,-20},{20,-20},{20,-60},{12,-60}},color={191,0,0}));
   connect(uMod, equFit.uMod)
-  annotation (Line(points={{-160,0},{-96,0},{-96,-0.1},{-80.9,-0.1}},color={255,127,0}));
+  annotation (Line(points={{-160,0},{-96,0},{-96,-0.3},{-81.3,-0.3}},color={255,127,0}));
   connect(TConSet, equFit.TConSet)
-  annotation (Line(points={{-160,90},{-88,90},{-88,10},{-81,10}},color={0,0,111}));
+  annotation (Line(points={{-160,90},{-88,90},{-88,9.8},{-81,9.8}},color={0,0,111}));
   connect(TEvaSet, equFit.TEvaSet)
-  annotation (Line(points={{-162,-90},{-88,-90},{-88,-9.9},{-80.9,-9.9}},color={0,0,127}));
+  annotation (Line(points={{-162,-90},{-88,-90},{-88,-10.5},{-81.3,-10.5}},color={0,0,127}));
   connect(equFit.QEva_flow, preHeaFloEva.Q_flow)
   annotation (Line(points={{-59,-4},{-42,-4},{-42,-20},{-37,-20}}, color={0,0,127}));
   connect(equFit.QEva_flow, QEva_flow)
   annotation (Line(points={{-59,-4},{92,-4},{92,-20},{110,-20}},   color={0,0,127}));
   connect(QConFloSet.y, equFit.QConFloSet)
-  annotation (Line(points={{-113,8},{-106,8},{-106,2},{-81,2}},color={0,0,127},pattern=LinePattern.Dash));
+  annotation (Line(points={{-113,8},{-106,8},{-106,1.6},{-81,1.6}},color={0,0,127},
+      pattern=LinePattern.Dash));
   connect(QEvaFloSet.y, equFit.QEvaFloSet)
-  annotation (Line(points={{-113,-10},{-106,-10},{-106,-2.1},{-80.9,-2.1}},color={0,0,127},
-                 pattern=LinePattern.Dash));
+  annotation (Line(points={{-113,-10},{-106,-10},{-106,-2.3},{-81.3,-2.3}},color={0,0,127},
+      pattern=LinePattern.Dash));
   connect(equFit.QCon_flow, preHeaFloCon.Q_flow)
   annotation (Line(points={{-59,4},{-42,4},{-42,22},{-37,22}}, color={0,0,127}));
   connect(TEvaEnt.y, equFit.TEvaEnt)
-  annotation (Line(points={{-113,-54},{-98,-54},{-98,-7.9},{-80.9,-7.9}},color={0,0,127}));
+  annotation (Line(points={{-113,-54},{-98,-54},{-98,-8.5},{-81.3,-8.5}},color={0,0,127}));
   connect(TEvaLvg.y, equFit.TEvaLvg)
-  annotation (Line(points={{-113,-40},{-102,-40},{-102,-6.1},{-80.9,-6.1}},color={0,0,127}));
+  annotation (Line(points={{-113,-40},{-102,-40},{-102,-6.5},{-81.3,-6.5}},color={0,0,127}));
   connect(TConEnt.y, equFit.TConEnt)
-  annotation (Line(points={{-113,38},{-102,38},{-102,6},{-81,6}},color={0,0,127}));
+  annotation (Line(points={{-113,38},{-102,38},{-102,5.6},{-81,5.6}},
+                                                                 color={0,0,127}));
   connect(TConLvg.y, equFit.TConLvg)
-  annotation (Line(points={{-113,54},{-96,54},{-96,8},{-81,8}},color={0,0,127}));
+  annotation (Line(points={{-113,54},{-96,54},{-96,7.6},{-81,7.6}},color={0,0,127}));
   connect(mEvaFlo.y, equFit.m2_flow)
-  annotation (Line(points={{-113,-26},{-104,-26},{-104,-3.9},{-80.9,-3.9}}, color={0,0,127}));
+  annotation (Line(points={{-113,-26},{-104,-26},{-104,-4.3},{-81.3,-4.3}}, color={0,0,127}));
   connect(mConFlo.y, equFit.m1_flow)
-  annotation (Line(points={{-113,24},{-104,24},{-104,4},{-81,4}}, color={0,0,127}));
+  annotation (Line(points={{-113,24},{-104,24},{-104,3.6},{-81,3.6}},color={0,0,127}));
   connect(equFit.P, P)
   annotation (Line(points={{-59,0},{110,0}}, color={0,0,127}));
   connect(equFit.QCon_flow, QCon_flow)
-  annotation (Line(points={{-59,4},{92,4},{92,20},{110,20}},   color={0,0,127}));
+  annotation (Line(points={{-59,4},{92,4},{92,20},{110,20}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false,extent={{-140,
             -100},{100,100}}), graphics={
         Rectangle(
@@ -248,24 +248,24 @@ equation
   Documentation(info="<html>
   <p>
   Model for a water to water heat pump using the equation fit model as described
-  in the EnergyPlus reference: Water to Water equation fit model and based on (J.Hui 2002, S.Arun. 2004 and C.Tang 2004).
+  in the EnergyPlus9.0.1 engineering reference documentation section 16.6.1: Water to water heat pump model. The model is based on J.Hui (2002), S.Arun. (2004) and C.Tang (2005).
   </p>
   <p>
   The model uses four non-dimensional equations or curves stated in <a href=\"Buildings.Fluid.HeatPumps.BaseClasses.EquationFitMethod\">
   Buildings.Fluid.HeatPumps.BaseClasses.EquationFitMethod</a> to predict the heat pump performance in either cooling or
   heating modes. The methodology involved using the generalized least square method to create a set of performance
-  coefficients for the heating and cooling load ratios <code>HLRC</code>, <code>CLRC</code> and for the compressor power ratio <code>P_HDC</code>, <code>P_CDC</code> for heating and cooling modes respectively from the catalog data at indicated reference conditions. These respective coefficients
+  coefficients for the heating and cooling load ratios <code>HLRC</code>, <code>CLRC</code> and for the compressor power ratios <code>PHC</code>, <code>PCC</code> for heating and cooling modes respectively from the catalog data at indicated reference conditions. These respective coefficients
   and indicated reference conditions are used in the model to simulate the heat pump performance.
   The variables include load side inlet temperature, source side inlet temperature,
-  load side water flow rate and source side water flow rate. Source and load sides are terms which 
+  load side water flow rate and source side water flow rate. Source and load sides are terms which
   separates between thermal source and building load sides within the heat pump. For ex. when the control integer signal <code>uMod</code>= 1,
-  the heat pump is controlled to meet the condenser outlet temperature i.e. supply heating temperature to the building, 
+  the heat pump is controlled to meet the condenser outlet temperature i.e. supply heating temperature to the building,
   the source side is the evaporator and the load side is the condenser.
   Likewise, in case of <code>uMod</code>=-1, the heat pump is controlled to meet the evaporator leaving water temperature,
   accordingly, the source side is the condenser and the load side is the evaporator.
   </p>
   <p>
-  The heating and cooling coefficients are stored in the data record <code>per</code> and are available from <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
+  The heating and cooling performance coefficients are stored in the data record <code>per</code> and are available from <a href=\"Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater\">
   Buildings.Fluid.HeatPumps.Data.EquationFitWaterToWater</a>.
   </p>
   <p>
@@ -277,7 +277,7 @@ equation
   </p>
   <h4>References</h4>
   <p>
-  C.C Tang
+  C.Tang
    <i>
   Equation fit based models of water source heat pumps.
   </i>

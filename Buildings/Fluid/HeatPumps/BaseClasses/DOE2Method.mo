@@ -116,13 +116,15 @@ equation
       capFunT = Buildings.Utilities.Math.Functions.smoothMax(
          x1 =  1E-7,
          x2 =   Buildings.Utilities.Math.Functions.biquadratic(
-           a = per.capFunT,
-           x1 = TEvaLvg_degC,                                  x2 = TConEnt_degC),
-                                                           deltaX = 1E-7);
+                                      a = per.capFunT,
+                                     x1 = TEvaLvg_degC,
+                                     x2 = TConEnt_degC),
+                                         deltaX = 1E-7);
 
-      EIRFunT = Buildings.Utilities.Math.Functions.biquadratic( a = per.EIRFunT,
-                                                               x1 = TEvaLvg_degC,
-                                                               x2 = TConEnt_degC);
+      EIRFunT = Buildings.Utilities.Math.Functions.biquadratic(
+                                      a = per.EIRFunT,
+                                     x1 = TEvaLvg_degC,
+                                     x2 = TConEnt_degC);
 
       EIRFunPLR= per.EIRFunPLR[1]+per.EIRFunPLR[2]*PLR2+per.EIRFunPLR[3]*PLR2^2;
 
@@ -157,14 +159,15 @@ equation
 
       capFunT = Buildings.Utilities.Math.Functions.smoothMax(
         x1 =    1E-6,
-        x2 =    Buildings.Utilities.Math.Functions.biquadratic( a = per.capFunT,
-                                                               x1 = TEvaLvg_degC,
-                                                               x2 = TConEnt_degC),
-                                                           deltaX = 1E-7);
-
-      EIRFunT = Buildings.Utilities.Math.Functions.biquadratic( a = per.EIRFunT,
-                                                               x1 = TEvaLvg_degC,
-                                                               x2 = TConEnt_degC);
+        x2 =    Buildings.Utilities.Math.Functions.biquadratic(
+                                      a = per.capFunT,
+                                     x1 = TEvaLvg_degC,
+                                     x2 = TConEnt_degC),
+                                 deltaX = 1E-7);
+      EIRFunT = Buildings.Utilities.Math.Functions.biquadratic(
+                                      a = per.EIRFunT,
+                                     x1 = TEvaLvg_degC,
+                                     x2 = TConEnt_degC);
 
       EIRFunPLR= per.EIRFunPLR[1]+per.EIRFunPLR[2]*PLR2+per.EIRFunPLR[3]*PLR2^2;
 
@@ -219,56 +222,54 @@ equation
   The Block includes the description of the DOE2 method dedicated for<a href=\"Buildings.Fluid.HeatPumps.DOE2WaterToWater\">
   Buildings.Fluid.HeatPumps.DOE2WaterToWater</a>.
   </p>
-  The block uses three functions to predict the thermal capacity and power consumption for
-  either the heating mode <code>uMod</code>=1 or the cooling mode <code>uMod</code>=-1:
-  <ul>
+  <p>
+  The block uses three functions to predict the thermal capacity and power consumption through three operational modes executed by a control input integer signal uMod=1 heating mode, uMod=-1 cooling mode and uMod=0 shutoff. 
+  </p>
+  <ol>
   <li>
-  The capacity function of temperature bi-quadratic curve:
+  The first function is <code>CAPFT</code> the capacity function of temperature bi-quadratic curve
   <p align=\"center\" style=\"font-style:italic;\">
   CAPFT = capFunT<sub>1</sub>+ capFunT<sub>2</sub>T<sub>Eva,Lvg</sub>+
   capFunT<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ capFunT<sub>4</sub>T<sub>Con,Ent</sub>+capFunT<sub>5</sub>T<sup>2</sup><sub>Con,Ent</sub>
   +capFunT<sub>6</sub>T<sub>Con,Ent</sub>T<sub>Eva,Lvg</sub>
   </li>
-  </ul>
+  </p>
   <p>
   where the performance curve coefficients from <i>capFunT<sub>1</sub> to capFunT<sub>6</sub> </i>
   are stored in the data record <code>per</code>.
   </p>
-  <ul>
   <li>
-  The electric input to capacity output ratio function of temperature bi-quadratic curve:
+  The second function is <code>EIRFT</code> the electric input to capacity output ratio function of temperature bi-quadratic curve
+  </li>
   <p align=\"center\" style=\"font-style:italic;\">
   EIRFT = EIRFunT<sub>1</sub>+ EIRFunT<sub>2</sub>T<sub>Eva,Lvg</sub>+
   EIRFunT<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ EIRFunT<sub>4</sub>T<sub>Con,Ent</sub>+EIRFunT<sub>5</sub>T<sup>2</sup><sub>Con,Ent</sub>
   +EIRFunT<sub>6</sub>T<sub>Con,Ent</sub>T<sub>Eva,Lvg</sub>
-  </li>
-  </ul>
+  
   <p>
   where the performance curve coefficients from <i>EIRFunT<sub>1</sub> to EIRFunT<sub>6</sub> </i>
   are stored in the data record <code>per</code>.
   </p>
-  <ul>
   <li>
-  The electric input to capacity output ratio function of part load ratio bi-cubic curve:
+  The third performance function is the electric input to capacity output ratio function of part load ratio bi-cubic curve
+  </li>
   <p align=\"center\" style=\"font-style:italic;\">
   EIRFPLR = EIRFunPLR<sub>1</sub>+ EIRFunPLR<sub>2</sub>PLR+EIRFunPLR<sub>3</sub>PLR<sup>2</sup>
-  </li>
-  </ul>
   <p>
   where the performance curve coefficients from <i>EIRFunPLR<sub>1</sub> to EIRFunPLR<sub>3</sub> </i>
   are stored in the data record <code>per</code>.
   </p>
+  </ol>
   <p>
   The data record <code>per</code> is available at
   <a href=\"Buildings.Fluid.Chillers.Data.ElectricEIR\">
   Buildings.Fluid.Chillers.Data.ElectricEIR</a>.
   Additional performance curves can be developed using
-  two available techniques (Hydeman and Gillespie, 2002). The first technique is called the
+  two available techniques Hydeman and Gillespie, (2002). The first technique is called the
   Least-squares Linear Regression method and is used when sufficient performance data exist
   to employ standard least-square linear regression techniques. The second technique is called
   Reference Curve Method and is used when insufficient performance data exist to apply linear
-  regression techniques. A detailed description of both techniques can be found in
-  Hydeman and Gillespie (2002).
+  regression techniques.
   </p>
   <p>
   The model has three tests on the part load ratio and the cycling ratio:
