@@ -3,13 +3,13 @@ model DOE2WaterToWater
  extends Modelica.Icons.Example;
    package Medium = Buildings.Media.Water "Medium model";
 
-   parameter Chillers.Data.ElectricEIR.ElectricEIRChiller_McQuay_WSC_471kW_5_89COP_Vanes per
-    "Performance data"
+   parameter Chillers.Data.ElectricEIR.ElectricEIRChiller_McQuay_WSC_471kW_5_89COP_Vanes
+    per "Performance data"
      annotation (Placement(transformation(extent={{-100,-60},{-80,-40}})));
    parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=per.mEva_flow_nominal
-    "Evaporator nominal mass flow rate";
+       "Evaporator nominal mass flow rate";
    parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=per.mCon_flow_nominal
-    "Condenser nominal mass flow rate";
+       "Condenser nominal mass flow rate";
 
     Buildings.Fluid.HeatPumps.DOE2WaterToWater heaPumDOE2(
     per=per,
@@ -22,7 +22,7 @@ model DOE2WaterToWater
     massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
     "Water to Water heatpump DOE2 method"
     annotation (Placement(transformation(extent={{32,-10},{52,10}})));
-   Sources.MassFlowSource_T conPum(
+    Sources.MassFlowSource_T conPum(
       use_m_flow_in=false,
       m_flow=mCon_flow_nominal,
       nPorts=1,
@@ -71,12 +71,12 @@ model DOE2WaterToWater
      annotation (Placement(transformation(extent={{-10,-90},{10,-70}})));
     Modelica.Fluid.Sources.FixedBoundary heaVol(
       nPorts=1,
-      redeclare package Medium = Medium)
+      redeclare package Medium =Medium)
     "Volume for heating load"
      annotation (Placement(transformation(extent={{114,54},{94,74}})));
     Modelica.Fluid.Sources.FixedBoundary cooVol(
       nPorts=1,
-      redeclare package Medium = Medium)
+      redeclare package Medium =Medium)
     "Volume for cooling load"
      annotation (Placement(transformation(extent={{-60,-90},{-40,-70}})));
     Controls.OBC.CDL.Continuous.Sources.Ramp TEvaSet(
@@ -105,27 +105,27 @@ model DOE2WaterToWater
 
 equation
   connect(heaPumDOE2.port_a1, conPum.ports[1])
-  annotation (Line(points={{32,6},{24,6},{24,60},{-22,60}}, color={0,127,255}));
+  annotation (Line(points={{32,6},{24,6},{24,60},{-22,60}},color={0,127,255}));
   connect(TConEnt.y, conPum.T_in)
   annotation (Line(points={{-79,70},{-52,70},{-52,56},{-44,56}},color={0,0,127}));
   connect(TEvaEnt.y, evaPum.T_in)
   annotation (Line(points={{81,-50},{98,-50},{98,-10},{84,-10}},color={0,0,127}));
   connect(evaPum.ports[1], heaPumDOE2.port_a2)
-  annotation (Line(points={{62,-6},{52,-6}},color={0,127,255}));
+  annotation (Line(points={{62,-6},{52,-6}}, color={0,127,255}));
   connect(cooVol.ports[1],res2. port_a)
   annotation (Line(points={{-40,-80},{-10,-80}}, color={0,127,255}));
   connect(res1.port_a, heaPumDOE2.port_b1)
   annotation (Line(points={{68,64},{60,64},{60,6},{52,6}},color={0,127,255}));
   connect(res2.port_b, heaPumDOE2.port_b2)
-  annotation (Line(points={{10,-80},{24,-80},{24,-6},{32,-6}},color={0,127,255}));
+  annotation (Line(points={{10,-80},{24,-80},{24,-6},{32,-6}}, color={0,127,255}));
   connect(TConSet.y, heaPumDOE2.TConSet)
-  annotation (Line(points={{1,30},{16,30},{16,9},{31.6,9}},color={0,0,127}));
+  annotation (Line(points={{1,30},{16,30},{16,9},{31.6,9}}, color={0,0,127}));
   connect(TEvaSet.y, heaPumDOE2.TEvaSet)
-  annotation (Line(points={{1,-50},{16,-50},{16,-9.1},{31.5,-9.1}},color={0,0,127}));
+  annotation (Line(points={{1,-50},{16,-50},{16,-9.1},{31.5,-9.1}}, color={0,0,127}));
   connect(res1.port_b,heaVol. ports[1])
-  annotation (Line(points={{88,64},{94,64}},color={0,127,255}));
+  annotation (Line(points={{88,64},{94,64}}, color={0,127,255}));
   connect(uMod.y, reaToInt.u)
-  annotation (Line(points={{-79,0},{-62,0}},color={0,0,127}));
+  annotation (Line(points={{-79,0},{-62,0}}, color={0,0,127}));
   connect(reaToInt.y, heaPumDOE2.uMod)
   annotation (Line(points={{-39,0},{-4,0},{-4,-0.1},{31.5,-0.1}}, color={255,127,0}));
   annotation (experiment(StopTime=14400, Tolerance=1e-06),

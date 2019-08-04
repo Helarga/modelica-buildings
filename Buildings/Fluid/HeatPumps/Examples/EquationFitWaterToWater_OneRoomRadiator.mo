@@ -8,14 +8,14 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
 
   parameter Modelica.SIunits.HeatFlowRate Q_flow_nominal = 20000
     "Nominal heat flow rate of radiator";
-  parameter Modelica.SIunits.Temperature TRadSup_nominal = 273.15+55
+  parameter Modelica.SIunits.Temperature TRadSup_nominal = 273.15+45
     "Radiator nominal supply water temperature";
   parameter Modelica.SIunits.Temperature TRadRet_nominal = 273.15+40
     "Radiator nominal return water temperature";
   parameter Modelica.SIunits.MassFlowRate mRad_flow_nominal=
     Q_flow_nominal/4200/(TRadSup_nominal-TRadRet_nominal)
     "Radiator nominal mass flow rate";
-  parameter Modelica.SIunits.Temperature TConSup_nominal = 273.15+57
+  parameter Modelica.SIunits.Temperature TConSup_nominal = 273.15+50
     "Condenser nominal supply water temperature";
   parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal = per.mCon_flow_nominal
     "Condenser nominal mass flow rate";
@@ -24,20 +24,20 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
   parameter Modelica.SIunits.MassFlowRate mRadVal_flow_nominal=
     Q_flow_nominal/4200/(TConSup_nominal-TRadRet_nominal)
     "Radiator nominal mass flow rate";
-  parameter Data.EquationFitWaterToWater.Trane_Axiom_EXW240 per
-     annotation (Placement(transformation(extent={{158,-118},{178,-98}})));
   parameter Modelica.SIunits.Volume V=6*10*3
     "Room volume";
   parameter Modelica.SIunits.MassFlowRate mA_flow_nominal = V*1.2*6/3600
     "Nominal mass flow rate";
   parameter Modelica.SIunits.HeatFlowRate QRooInt_flow = 4000
     "Internal heat gains of the room";
+  parameter Data.EquationFitWaterToWater.Trane_Axiom_EXW240 per
+    annotation (Placement(transformation(extent={{112,-100},{132,-80}})));
 
   Buildings.Fluid.MixingVolumes.MixingVolume vol(
     redeclare package Medium = MediumA,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     m_flow_nominal=mA_flow_nominal,
-    V=V)
+    V=V) "room air volume"
      annotation (Placement(transformation(extent={{92,18},{112,38}})));
   Modelica.Thermal.HeatTransfer.Components.ThermalConductor theCon(G=20000/30)
     "Thermal conductance with the ambient"
@@ -87,58 +87,6 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
       extent={{-10,-10},{10,10}},
       rotation=90,
       origin={-50,-68})));
-  Buildings.Fluid.FixedResistances.Junction mix(
-    redeclare package Medium = MediumW,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal={mRadVal_flow_nominal,-mRad_flow_nominal,mRad_flow_nominal
-         - mRadVal_flow_nominal},
-    dp_nominal={100,-8000,6750})
-    "Mixer between valve and radiators"
-     annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={-50,-110})));
-  Buildings.Fluid.FixedResistances.Junction spl(
-    redeclare package Medium = MediumW,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal={mCon_flow_nominal,-mRadVal_flow_nominal,-mCon_flow_nominal},
-    dp_nominal={200,-200,0})
-    "Splitter of heatpump loop bypass"
-     annotation (
-      Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={-50,-212})));
-  Buildings.Fluid.FixedResistances.Junction spl2(
-    redeclare package Medium = MediumW,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    dp_nominal=-500*{0,0,0},
-    m_flow_nominal={mRad_flow_nominal,-mRadVal_flow_nominal,-mRad_flow_nominal
-         + mRadVal_flow_nominal})
-     annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=270,
-        origin={60,-110})));
-  Buildings.Fluid.FixedResistances.Junction mix2(
-    redeclare package Medium = MediumW,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    dp_nominal={0,-200,200},
-    m_flow_nominal={mRadVal_flow_nominal,-mCon_flow_nominal,mCon_flow_nominal})
-    "Mixer"
-    annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=270,
-        origin={60,-212})));
-  Buildings.Fluid.FixedResistances.Junction spl3(
-    redeclare package Medium = MediumW,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal=mRadVal_flow_nominal*{1,-1,-1},
-    dp_nominal=200*{1,-1,-1})
-    "Splitter for radiator loop valve bypass"
-    annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=270,
-        origin={60,-150})));
   Buildings.Fluid.Movers.FlowControlled_m_flow pumCon(
     redeclare package Medium = MediumW,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -176,7 +124,7 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
      annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
-        origin={-50,-150})));
+        origin={-50,-180})));
   Buildings.Fluid.Sources.Boundary_pT preSou(
     redeclare package Medium = MediumW,
       nPorts=1)
@@ -224,9 +172,8 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
   Modelica.Blocks.Logical.Not not1
    "Negate output of hysteresis"
     annotation (Placement(transformation(extent={{-272,-82},{-252,-62}})));
-  Controls.SetPoints.Table TSetSup(
-   table=[273.15 + 19,273.15 + 55;
-          273.15 + 21,273.15 +21])
+  Controls.SetPoints.Table TSetSup(table=[273.15 + 19,273.15 + 50; 273.15 + 21,273.15
+         + 21])
    "Setpoint for supply water temperature"
     annotation (Placement(transformation(extent={{-260,-20},{-240,0}})));
   Buildings.Controls.Continuous.LimPID conPIDRad(
@@ -240,14 +187,14 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
     filNam=Modelica.Utilities.Files.loadResource(
      "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"))
     "Weather data reader"
-    annotation (Placement(transformation(extent={{-362,60},{-342,80}})));
+    annotation (Placement(transformation(extent={{-376,72},{-356,92}})));
   BoundaryConditions.WeatherData.Bus weaBus
     annotation (Placement(transformation(extent={{-320,60},{-300,80}}),
         iconTransformation(extent={{-230,68},{-210,88}})));
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature TOut
    "Outside temperature"
     annotation (Placement(transformation(extent={{-260,60},{-240,80}})));
-  .Buildings.Fluid.HeatPumps.EquationFitWaterToWater heaPum(
+  Buildings.Fluid.HeatPumps.EquationFitWaterToWater heaPum(
     p1_start(displayUnit="Pa"),
     T1_start=313.15,
     p2_start(displayUnit="Pa"),
@@ -274,143 +221,160 @@ model EquationFitWaterToWater_OneRoomRadiator "Example of one room equipped with
       nPorts=1)
     "Fluid sink on on evaporator side"
     annotation (Placement(transformation(extent={{90,-350},{70,-330}})));
-  Modelica.Blocks.Sources.Constant TEvaSet(k=20 + 273.15)
+  Modelica.Blocks.Sources.Constant TEvaSet(k=17 + 273.15)
     "Evaporator setpoint temperature"
     annotation (Placement(transformation(extent={{180,-364},{160,-344}})));
     Controls.OBC.CDL.Continuous.Sources.Constant TConSet(k=55 + 273.15)
     "Condenser setpoint water temperature"
     annotation (Placement(transformation(extent={{180,-262},{160,-242}})));
-
+  FixedResistances.Junction spl1(
+    redeclare package Medium = MediumW,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    m_flow_nominal={mCon_flow_nominal,-mRadVal_flow_nominal,-mCon_flow_nominal},
+    dp_nominal={200,-200,0})
+    "Splitter of heatpump loop bypass"
+     annotation (
+      Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={-50,-228})));
+  Buildings.Fluid.FixedResistances.Junction spl2(
+    redeclare package Medium = MediumW,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    m_flow_nominal=mRadVal_flow_nominal*{1,-1,-1},
+    dp_nominal=200*{1,-1,-1})
+    "Splitter for radiator loop valve bypass"
+    annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=270,
+        origin={60,-180})));
+   FixedResistances.Junction mix1(
+    redeclare package Medium = MediumW,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    dp_nominal={0,-200,200},
+    m_flow_nominal={mRadVal_flow_nominal,-mCon_flow_nominal,mCon_flow_nominal})
+    "Mixer"
+    annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=270,
+        origin={60,-228})));
 equation
-  connect(theCon.port_b, vol.heatPort) annotation (Line(
+  connect(theCon.port_b, vol.heatPort)
+   annotation (Line(
       points={{40,50},{54,50},{54,28},{92,28}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(preHea.port, vol.heatPort) annotation (Line(
+  connect(preHea.port, vol.heatPort)
+   annotation (Line(
       points={{40,80},{66,80},{66,28},{92,28}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(heaCap.port, vol.heatPort) annotation (Line(
+  connect(heaCap.port, vol.heatPort)
+   annotation (Line(
       points={{104,50},{82,50},{82,28},{92,28}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(timTab.y[1], preHea.Q_flow) annotation (Line(
+  connect(timTab.y[1], preHea.Q_flow)
+   annotation (Line(
       points={{1,80},{20,80}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(temSup.port_b, rad.port_a) annotation (Line(
+  connect(temSup.port_b, rad.port_a)
+   annotation (Line(
       points={{-50,-30},{-50,-10},{-5.55112e-16,-10}},
       color={0,127,255},
       smooth=Smooth.None));
-  connect(temRoo.port, vol.heatPort) annotation (Line(
+  connect(temRoo.port, vol.heatPort)
+   annotation (Line(
       points={{-30,28},{92,28}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(rad.heatPortCon, vol.heatPort) annotation (Line(
+  connect(rad.heatPortCon, vol.heatPort)
+   annotation (Line(
       points={{8,-2.8},{8,28},{92,28}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(rad.heatPortRad, vol.heatPort) annotation (Line(
+  connect(rad.heatPortRad, vol.heatPort)
+   annotation (Line(
       points={{12,-2.8},{12,28},{92,28}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(pumRad.port_b, temSup.port_a) annotation (Line(
+  connect(pumRad.port_b, temSup.port_a)
+   annotation (Line(
       points={{-50,-58},{-50,-50}},
       color={0,127,255},
       smooth=Smooth.None));
-  connect(spl.port_2, valRad.port_1)
+  connect(valRad.port_3,spl2. port_3)
    annotation (Line(
-      points={{-50,-202},{-50,-160}},
+      points={{-40,-180},{50,-180}},
       color={0,127,255},
       smooth=Smooth.None));
-  connect(valRad.port_2, mix.port_1)
-                                  annotation (Line(
-      points={{-50,-140},{-50,-120}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(spl3.port_2, mix2.port_1) annotation (Line(
-      points={{60,-160},{60,-202}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(spl2.port_2,spl3. port_1) annotation (Line(
-      points={{60,-120},{60,-140}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(valRad.port_3,spl3. port_3)
-                                   annotation (Line(
-      points={{-40,-150},{50,-150}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(spl.port_3, mix2.port_3) annotation (Line(
-      points={{-40,-212},{50,-212}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(mix.port_3, spl2.port_3) annotation (Line(
-      points={{-40,-110},{50,-110}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(mix.port_2, pumRad.port_a) annotation (Line(
-      points={{-50,-100},{-50,-78}},
-      color={0,127,255},
-      smooth=Smooth.None));
-  connect(rad.port_b, spl2.port_1) annotation (Line(
-      points={{20,-10},{60,-10},{60,-100}},
-      color={0,127,255},
-      smooth=Smooth.None));
-
-  connect(hysTOut.y, not2.u) annotation (Line(
+  connect(hysTOut.y, not2.u)
+   annotation (Line(
       points={{-299,-190},{-282,-190}},
       color={255,0,255},
       smooth=Smooth.None));
-  connect(not2.y, and1.u2) annotation (Line(
+  connect(not2.y, and1.u2)
+   annotation (Line(
       points={{-259,-190},{-244,-190},{-244,-158},{-232,-158}},
       color={255,0,255},
       smooth=Smooth.None));
-  connect(senTOut.T, hysTOut.u) annotation (Line(
+  connect(senTOut.T, hysTOut.u)
+   annotation (Line(
       points={{-346,-124},{-346,-190},{-322,-190}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(and1.y, booToReaRad1.u) annotation (Line(
+  connect(and1.y, booToReaRad1.u)
+   annotation (Line(
       points={{-209,-150},{-180,-150},{-180,-280},{-142,-280}},
       color={255,0,255},
       smooth=Smooth.None));
-  connect(temRoo.T,hysPum. u) annotation (Line(
+  connect(temRoo.T,hysPum. u)
+   annotation (Line(
       points={{-50,28},{-322,28},{-322,-72},{-314,-72}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(hysPum.y,not1. u) annotation (Line(
+  connect(hysPum.y,not1. u)
+   annotation (Line(
       points={{-291,-72},{-274,-72}},
       color={255,0,255},
       smooth=Smooth.None));
-  connect(not1.y, and1.u1) annotation (Line(
+  connect(not1.y, and1.u1)
+   annotation (Line(
       points={{-251,-72},{-244,-72},{-244,-150},{-232,-150}},
       color={255,0,255},
       smooth=Smooth.None));
-  connect(and1.y, booToReaRad.u) annotation (Line(
+  connect(and1.y, booToReaRad.u)
+   annotation (Line(
       points={{-209,-150},{-180,-150},{-180,-68},{-150,-68}},
       color={255,0,255},
       smooth=Smooth.None));
-  connect(temRoo.T, TSetSup.u) annotation (Line(
+  connect(temRoo.T, TSetSup.u)
+   annotation (Line(
       points={{-50,28},{-280,28},{-280,-10},{-262,-10}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(TSetSup.y, conPIDRad.u_s) annotation (Line(
+  connect(TSetSup.y, conPIDRad.u_s)
+   annotation (Line(
       points={{-239,-10},{-208,-10}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(temSup.T, conPIDRad.u_m) annotation (Line(
+  connect(temSup.T, conPIDRad.u_m)
+   annotation (Line(
       points={{-61,-40},{-196,-40},{-196,-22}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(weaDat.weaBus, weaBus) annotation (Line(
-      points={{-342,70},{-310,70}},
+  connect(weaDat.weaBus, weaBus)
+   annotation (Line(
+      points={{-356,82},{-336,82},{-336,70},{-310,70}},
       color={255,204,51},
       thickness=0.5,
       smooth=Smooth.None), Text(
       string="%second",
       index=1,
       extent={{6,3},{6,3}}));
-  connect(weaBus.TDryBul, TOut.T) annotation (Line(
+  connect(weaBus.TDryBul, TOut.T)
+   annotation (Line(
       points={{-310,70},{-262,70}},
       color={255,204,51},
       thickness=0.5,
@@ -418,60 +382,82 @@ equation
       string="%first",
       index=-1,
       extent={{-6,3},{-6,3}}));
-  connect(TOut.port, theCon.port_a) annotation (Line(
+  connect(TOut.port, theCon.port_a)
+   annotation (Line(
       points={{-240,70},{-220,70},{-220,50},{20,50}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(TOut.port, senTOut.port) annotation (Line(
+  connect(TOut.port, senTOut.port)
+   annotation (Line(
       points={{-240,70},{-220,70},{-220,50},{-346,50},{-346,-104}},
       color={191,0,0},
       smooth=Smooth.None));
   connect(booToReaRad.y, pumRad.m_flow_in)
-  annotation (Line(
+   annotation (Line(
       points={{-127,-68},{-62,-68}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(conPIDRad.y, valRad.y) annotation (Line(
-      points={{-185,-10},{-98,-10},{-98,-150},{-62,-150}},
+  connect(conPIDRad.y, valRad.y)
+   annotation (Line(
+      points={{-185,-10},{-98,-10},{-98,-180},{-62,-180}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(booToReaRad1.y,pumCon. m_flow_in) annotation (Line(
+  connect(booToReaRad1.y,pumCon. m_flow_in)
+   annotation (Line(
       points={{-119,-280},{-62,-280}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(sou.ports[1], pumEva.port_a) annotation (Line(points={{-52,-348},{-34,-348},
+  connect(sou.ports[1], pumEva.port_a)
+   annotation (Line(points={{-52,-348},{-34,-348},
           {-34,-334}},
                      color={0,127,255}));
-  connect(pumCon.port_a, heaPum.port_b1) annotation (Line(points={{-50,-290},{-50,
+  connect(pumCon.port_a, heaPum.port_b1)
+   annotation (Line(points={{-50,-290},{-50,
           -302},{-10,-302}}, color={0,127,255}));
-  connect(temRet.port_b, preSou.ports[1]) annotation (Line(points={{60,-284},{60,
+  connect(temRet.port_b, preSou.ports[1])
+   annotation (Line(points={{60,-284},{60,
           -296},{72,-296}}, color={0,127,255}));
-  connect(heaPum.port_a1, temRet.port_b) annotation (Line(points={{6.66667,-302},
+  connect(heaPum.port_a1, temRet.port_b)
+   annotation (Line(points={{6.66667,-302},
           {60,-302},{60,-284}}, color={0,127,255}));
-  connect(heaPum.port_b2, sin.ports[1]) annotation (Line(points={{6.66667,-314},
+  connect(heaPum.port_b2, sin.ports[1])
+   annotation (Line(points={{6.66667,-314},
           {38,-314},{38,-340},{70,-340}},color={0,127,255}));
   connect(heaPum.port_a2, pumEva.port_b)
-    annotation (Line(points={{-10,-314},{-34,-314}}, color={0,127,255}));
-  connect(booToReaRad1.y, pumEva.m_flow_in) annotation (Line(points={{-119,-280},
+   annotation (Line(points={{-10,-314},{-34,-314}}, color={0,127,255}));
+  connect(booToReaRad1.y, pumEva.m_flow_in)
+   annotation (Line(points={{-119,-280},
           {-76,-280},{-76,-324},{-46,-324}}, color={0,0,127}));
-  connect(heaPumCon.y, heaPum.uMod) annotation (Line(points={{-119,-366},{94,-366},
+  connect(heaPumCon.y, heaPum.uMod)
+   annotation (Line(points={{-119,-366},{94,-366},
           {94,-308},{7.83333,-308}}, color={255,127,0}));
-  connect(and1.y, heaPumCon.u) annotation (Line(points={{-209,-150},{-180,-150},{
+  connect(and1.y, heaPumCon.u)
+   annotation (Line(points={{-209,-150},{-180,-150},{
           -180,-366},{-142,-366}}, color={255,0,255}));
-  connect(heaPum.TEvaSet, TEvaSet.y) annotation (Line(
+  connect(heaPum.TEvaSet, TEvaSet.y)
+   annotation (Line(
       points={{7.83333,-317},{20,-317},{20,-354},{159,-354}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-
-  connect(heaPum.TConSet, TConSet.y) annotation (Line(
+  connect(heaPum.TConSet, TConSet.y)
+   annotation (Line(
       points={{7.83333,-299},{12,-299},{12,-300},{18,-300},{18,-252},{159,-252}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-
-  connect(pumCon.port_b, spl.port_1)
-    annotation (Line(points={{-50,-270},{-50,-222}}, color={0,127,255}));
-  connect(mix2.port_2, temRet.port_a)
-    annotation (Line(points={{60,-222},{60,-264}}, color={0,127,255}));
+  connect(valRad.port_2, pumRad.port_a)
+    annotation (Line(points={{-50,-170},{-50,-78}}, color={0,127,255}));
+  connect(spl2.port_1, rad.port_b)
+    annotation (Line(points={{60,-170},{60,-10},{20,-10}}, color={0,127,255}));
+  connect(pumCon.port_b, spl1.port_1)
+    annotation (Line(points={{-50,-270},{-50,-238}}, color={0,127,255}));
+  connect(valRad.port_1, spl1.port_2)
+    annotation (Line(points={{-50,-190},{-50,-218}}, color={0,127,255}));
+  connect(spl2.port_2,mix1. port_1)
+    annotation (Line(points={{60,-190},{60,-218}}, color={0,127,255}));
+  connect(temRet.port_a,mix1. port_2)
+    annotation (Line(points={{60,-264},{60,-238}}, color={0,127,255}));
+  connect(spl1.port_3, mix1.port_3)
+    annotation (Line(points={{-40,-228},{50,-228}}, color={0,127,255}));
   annotation (Documentation(info="<html>
 <p>
 Example that simulates one room equipped with a radiator. Hot water is produced

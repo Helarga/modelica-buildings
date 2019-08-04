@@ -2,7 +2,7 @@ simulateModel("Buildings.Fluid.HeatPumps.Examples.EquationFitWaterToWater_OneRoo
  tolerance=1e-6, stopTime=172800, resultFile="EquationFitWaterToWater");
 createPlot(id = 1,
    position = {60, 10, 640, 480},
-   y = {"temRoo.T", "temSup.T","temRet.T","heaPum.equFit.TconEnt","heaPum.equFit.TConLvg"},
+   y = {"temRoo.T", "rad.sta_a.T","rad.sta_b.T","heaPum.equFit.TconEnt","heaPum.equFit.TConLvg","heaPum.equFit.TConEnt"},
    autoscale = true,
    autoerase = true,
    autoreplot = true,
