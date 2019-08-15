@@ -4,22 +4,15 @@ model Absorption_Indirect_Steam
     extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
      dp2_nominal=200,
      dp1_nominal=200,
-     massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
      show_T=true,
      T1_start = 273.15+25,
      T2_start = 273.15+5,
      m1_flow_nominal= mCon_flow_nominal,
      m2_flow_nominal= mEva_flow_nominal,
    redeclare final Buildings.Fluid.MixingVolumes.MixingVolume
-      vol1(energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-           massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-            V=m1_flow_nominal*tau1/rho1_nominal,
+      vol1( V=m1_flow_nominal*tau1/rho1_nominal,
             nPorts=2,final prescribedHeatFlowRate=true),
-      vol2(
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-      massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-            V=m2_flow_nominal*tau2/rho2_nominal,
+      vol2( V=m2_flow_nominal*tau2/rho2_nominal,
             nPorts=2,final prescribedHeatFlowRate=true));
 
   parameter Buildings.Fluid.Chillers.Data.AbsorptionIndirect.Generic  per
@@ -62,21 +55,25 @@ model Absorption_Indirect_Steam
     annotation (Placement(transformation(extent={{-138,-16},{-118,4}})));
   Modelica.Blocks.Interfaces.RealOutput P
    "Chiller pump power"
-    annotation (Placement(transformation(extent={{100,0},{120,20}}),
+     annotation (Placement(transformation(extent={{100,0},{120,20}}),
                             iconTransformation(extent={{100,-30},{120,-10}})));
-  Modelica.Blocks.Interfaces.RealOutput QGen_flow "Generator heat flow "
-    annotation (Placement(transformation(extent={{100,-16},{120,4}}),
+  Modelica.Blocks.Interfaces.RealOutput QGen_flow
+    "Generator heat flow "
+     annotation (Placement(transformation(extent={{100,-16},{120,4}}),
         iconTransformation(extent={{100,10},{120,30}})));
-  Modelica.Blocks.Interfaces.RealOutput QEva_flow "Evaporator heat flow "
-    annotation (Placement(transformation(extent={{100,-46},{120,-26}}),
+  Modelica.Blocks.Interfaces.RealOutput QEva_flow
+    "Evaporator heat flow "
+     annotation (Placement(transformation(extent={{100,-46},{120,-26}}),
         iconTransformation(extent={{100,-96},{120,-76}})));
-  Modelica.Blocks.Interfaces.RealOutput QCon_flow "Condenser heat flow "
-    annotation (Placement(transformation(extent={{100,18},{120,38}}),
+  Modelica.Blocks.Interfaces.RealOutput QCon_flow
+    "Condenser heat flow "
+     annotation (Placement(transformation(extent={{100,18},{120,38}}),
         iconTransformation(extent={{100,74},{120,94}})));
-  Modelica.Blocks.Sources.RealExpression TConEnt(y=Medium1.temperature(
+  Modelica.Blocks.Sources.RealExpression TConEnt(
+        y=Medium1.temperature(
         Medium1.setState_phX(port_a1.p, inStream(port_a1.h_outflow))))
-   "Condenser entering water temperature"
-    annotation (Placement(transformation(extent={{-138,4},{-118,24}})));
+    "Condenser entering water temperature"
+     annotation (Placement(transformation(extent={{-138,4},{-118,24}})));
   Modelica.Blocks.Sources.RealExpression TEvaLvg(y=vol2.heatPort.T)
    "Evaporator leaving water temperature"
     annotation (Placement(transformation(extent={{-138,-34},{-118,-14}})));
@@ -99,8 +96,8 @@ equation
     annotation (Line(points={{-154,6},{-99,6}},
                                color={255,0,255}));
   connect(absBlo.QCon_flow, preHeaFloCon.Q_flow)
-    annotation (Line(points={{-77,14},
-          {-68,14},{-68,52},{-57,52}}, color={0,0,127}));
+    annotation (Line(points={{-77,14},{-68,14},{-68,52},{-57,52}},
+                                       color={0,0,127}));
   connect(preHeaFloCon.port, vol1.heatPort)
     annotation (Line(points={{-37,52},{-20,52},{-20,60},{-10,60}},
                                color={191,0,0}));
@@ -108,13 +105,13 @@ equation
     annotation (Line(points={{-77,14},{90,14},
           {90,28},{110,28}}, color={0,0,127}));
   connect(absBlo.QEva_flow, preHeaFloEva.Q_flow)
-    annotation (Line(points={{-77,-1.4},{-68,-1.4},{-68,-42},{-55,-42}},
+    annotation (Line(points={{-77,-1.4},{-66,-1.4},{-66,-42},{-55,-42}},
                                           color={0,0,127}));
   connect(preHeaFloEva.port, vol2.heatPort)
     annotation (Line(points={{-35,-42},{ -16,-42},{-16,-60},{12,-60}},
                                   color={191,0,0}));
   connect(absBlo.QEva_flow, QEva_flow)
-    annotation (Line(points={{-77,-1.4},{-68,-1.4},{-68,-36},{110,-36}},
+    annotation (Line(points={{-77,-1.4},{-66,-1.4},{-66,-36},{110,-36}},
                                 color={0,0,127}));
   connect(absBlo.QGen_flow, QGen_flow)
     annotation (Line(points={{-77,6},{90,6},{

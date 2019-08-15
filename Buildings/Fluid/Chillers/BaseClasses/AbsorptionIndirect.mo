@@ -8,10 +8,53 @@ block AbsorptionIndirect
      annotation (choicesAllMatching = true,Placement(transformation(extent={{56,74},{76,94}})));
   parameter Modelica.SIunits.HeatFlowRate Q_flow_small = - per.QEva_flow_nominal*1E-9
     "Small value for heat flow rate or power, used to avoid division by zero";
-  parameter Modelica.SIunits.Enthalpy hfg = 2201 "Latent heat of steam at 2 bar absolute pressure";
-  parameter Modelica.SIunits.Temperature TSubCoo = 2 "Sub cooling temperature difference";
-  parameter Modelica.SIunits.SpecificHeatCapacity cpWat=4187 "Specific heat of water";
+  parameter Modelica.SIunits.Enthalpy hfg = 2201
+    "Latent heat of steam at 2 bar absolute pressure";
+  parameter Modelica.SIunits.Temperature DelTSubCoo = 2
+    "Sub cooling temperature difference";
+  parameter Modelica.SIunits.SpecificHeatCapacity cpWat=4187
+    "Specific heat of water";
 
+  Modelica.Blocks.Interfaces.RealInput TConEnt(final unit="K", displayUnit="degC")
+    "Condenser entering water temperature"
+     annotation (Placement(transformation(extent={{-124,28},{-100,52}}),iconTransformation(extent={{-120,24},
+            {-100,44}})));
+  Modelica.Blocks.Interfaces.RealInput TEvaLvg(final unit="K", displayUnit="degC")
+    "Evaporator leaving water temperature in degC"
+     annotation (Placement(transformation(extent={{-124,
+            -92},{-100,-68}}),      iconTransformation(extent={{-120,-84},{-100,
+            -64}})));
+  Modelica.Blocks.Interfaces.RealInput TConLvg(final unit="K", displayUnit="degC")
+    "Condenser leaving water temperature in degC"
+     annotation (Placement(transformation(
+          extent={{-124,68},{-100,92}}), iconTransformation(extent={{-120,62},{
+            -100,82}})));
+  Modelica.Blocks.Interfaces.RealInput QEvaFloSet(final unit="W")
+    "Evaporator setpoint heat flow rate"
+     annotation (Placement(transformation(
+          extent={{-124,-52},{-100,-28}}), iconTransformation(extent={{-120,-44},
+            {-100,-24}})));
+  Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
+    "Condenser heat flow rate "
+     annotation (Placement(transformation(extent={{100,
+            50},{120,70}}), iconTransformation(extent={{100,70},{120,90}})));
+  Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
+    "Evaporator heat flow rate"
+     annotation (Placement(transformation(extent={{100,
+            -70},{120,-50}}), iconTransformation(extent={{100,-84},{120,-64}})));
+  Modelica.Blocks.Interfaces.RealOutput QGen_flow(final unit="W")
+    "Generator heat flow rate"
+     annotation (Placement(transformation(extent={{100,-10},
+            {120,10}}),       iconTransformation(extent={{100,-10},{120,10}})));
+  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
+    "Chiller pumping power"
+     annotation (Placement(transformation(extent={{100,22},{120,42}}), iconTransformation(extent={{100,28},
+            {120,48}})));
+  Modelica.Blocks.Interfaces.RealOutput mSte(final unit="kg/s")
+    "Generator steam mass flow rate"
+    annotation (Placement(transformation(
+          extent={{100,-38},{120,-18}}), iconTransformation(extent={{100,-40},{
+            120,-20}})));
   Modelica.SIunits.Efficiency GenHIR(nominal=1)
    "Ratio of the generator heat input to chiller operating capacity";
   Modelica.SIunits.Efficiency EIRP(min=0,nominal=1)
@@ -38,43 +81,6 @@ block AbsorptionIndirect
     "Set to true to enable the circulating pump, or false to disable the circulating pump"
     annotation (Placement(transformation(extent={{-124,-12},{-100,12}}),
         iconTransformation(extent={{-120,-10},{-100,10}})));
-  Modelica.Blocks.Interfaces.RealInput TConEnt(final unit="K", displayUnit="degC")
-    "Condenser entering water temperature"
-    annotation (Placement(transformation(extent={{-124,20},{-100,44}}),iconTransformation(extent={{-120,24},
-            {-100,44}})));
-  Modelica.Blocks.Interfaces.RealInput TEvaLvg(final unit="K", displayUnit="degC")
-    "Evaporator leaving water temperature in degC"
-    annotation (Placement(transformation(extent={{-124,
-            -92},{-100,-68}}),      iconTransformation(extent={{-120,-84},{-100,
-            -64}})));
-  Modelica.Blocks.Interfaces.RealInput TConLvg(final unit="K", displayUnit="degC")
-    "Condenser leaving water temperature in degC"
-    annotation (Placement(transformation(
-          extent={{-124,58},{-100,82}}), iconTransformation(extent={{-120,62},{
-            -100,82}})));
-  Modelica.Blocks.Interfaces.RealInput QEvaFloSet(final unit="W")
-   "Evaporator setpoint heat flow rate"
-    annotation (Placement(transformation(
-          extent={{-124,-54},{-100,-30}}), iconTransformation(extent={{-120,-44},
-            {-100,-24}})));
-  Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
-    "Condenser heat flow rate " annotation (Placement(transformation(extent={{100,
-            50},{120,70}}), iconTransformation(extent={{100,70},{120,90}})));
-  Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
-    "Evaporator heat flow rate" annotation (Placement(transformation(extent={{100,
-            -70},{120,-50}}), iconTransformation(extent={{100,-84},{120,-64}})));
-  Modelica.Blocks.Interfaces.RealOutput QGen_flow(final unit="W")
-    "Generator heat flow rate" annotation (Placement(transformation(extent={{100,-10},
-            {120,10}}),       iconTransformation(extent={{100,-10},{120,10}})));
-  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
-   " Chiller pumping power"
-    annotation (Placement(transformation(extent={{100,22},{120,42}}), iconTransformation(extent={{100,28},
-            {120,48}})));
-  Modelica.Blocks.Interfaces.RealOutput mSte(final unit="kg/s")
-    "Generator steam mass flow rate"
-    annotation (Placement(transformation(
-          extent={{100,-38},{120,-18}}), iconTransformation(extent={{100,-40},{
-            120,-20}})));
 initial equation
   assert(per.QEva_flow_nominal < 0,
   "Parameter QEva_flow_nominal must be lesser than zero.");
@@ -131,7 +137,7 @@ equation
 
     QCon_flow = -QEva_flow + QGen_flow + P;
 
-    mSte= QGen_flow/(hfg+ cpWat *TSubCoo);
+    mSte= QGen_flow/(hfg+ cpWat *DelTSubCoo);
 
   else
 
@@ -162,68 +168,50 @@ equation
 The Block includes the description of the performance curves method dedicated for<a href=\"Buildings.Fluid.Chillers.Absorption_Indirect_Steam\">
 Buildings.Fluid.Chillers.Absorption_Indirect_Steam</a>.
 </p>
+<p>
 The block uses six functions to predict the chiller cooling capacity, power consumption for
 the chillerpump, the generator heat flow and the condenser heat flow:
-
+</p>
+<ol>
+<li>
 The chiller capacity function of the evaporator leaving water temperature cubic curve
 <p align=\"center\" style=\"font-style:italic;\">
 CAPFunEva = A<sub>1</sub>+ A<sub>2</sub>T<sub>Eva,Lvg</sub>+
 A<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ A<sub>4</sub></sub>T<sup>3</sup><sub>Eva,Lvg</sub>
-
-<p>
-where the performance curve coefficients from <i>A<sub>1</sub> to A<sub>4</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-
+</li>
+<li>
 The chiller capacity function of the condenser entering water temperature cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
 CAPFunCon = B<sub>1</sub>+ B<sub>2</sub>T<sub>Con,Ent</sub>+
 B<sub>3</sub>T<sup>2</sup><sub>Con,Ent</sub>+ B<sub>4</sub></sub>T<sup>3</sup><sub>Con,Ent</sub>
-
-<p>
-where the performance curve coefficients from <i>B<sub>1</sub> to B<sub>4</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-
+</li>
+<li>
 The chiller pump electric input to cooling capacity output ratio function of part load ratio quadratic curve:
 <p align=\"center\" style=\"font-style:italic;\">
 EIRFP = C<sub>1</sub>+ C<sub>2</sub>PLR+C<sub>3</sub>PLR<sup>2</sup>
-
-<p>
-where the performance curve coefficients from <i>C<sub>1</sub> to C<sub>3</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-
+</li>
+<li>
 The generator heat input to cooling capacity output ratio function of part load ratio cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
 GENHIR = D<sub>1</sub>+ D<sub>2</sub>PLR+D<sub>3</sub>PLR<sup>2</sup>++D<sub>4</sub>PLR<sup>3</sup>
-
-<p>
-where the performance curve coefficients from <i>D<sub>1</sub> to D<sub>4</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
+</li>
 <p>
 Two additional curves are available to modifiy the heat input requirment based on the condenser inlet water temperature 
 and the evaporator outlet water temperature.
-<ol>
+</p>
 <li>
 The heat input modifier based on the condenser inlet water temperature cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
 GENCONT = E<sub>1</sub>+ E<sub>2</sub>T<sub>Con,Ent</sub>+
 E<sub>3</sub>T<sup>2</sup><sub>Con,Ent</sub>+ E<sub>4</sub></sub>T<sup>3</sup><sub>Con,Ent</sub>
-</ol>
 </li>
-<p>
-where the performance curve coefficients from <i>E<sub>1</sub> to E<sub>4</sub> </i>
-are stored in the data record <code>per</code>.
-</p>
-<ol>
+<li>
 The heat input modifier based on the evaporator inlet water temperature cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
 GENEVAT= F<sub>1</sub>+ F<sub>2</sub>T<sub>Eva,Lvg</sub>+
 F<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ F<sub>4</sub></sub>T<sup>3</sup><sub>Eva,Lvg</sub>
-</ol>
 </li>
+</ol>
 <p>
 where the performance curve coefficients from <i>F<sub>1</sub> to F<sub>4</sub> </i>
 are stored in the data record <code>per</code>.
