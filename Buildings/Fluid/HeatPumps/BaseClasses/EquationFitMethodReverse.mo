@@ -50,7 +50,7 @@ block EquationFitMethodReverse
        annotation (Placement(transformation(extent={{-124,-82},{-100,-58}}),
           iconTransformation(extent={{-120,-78},{-100,-58}})));
     Modelica.Blocks.Interfaces.RealInput m1_flow(final unit="kg/s")
-    "Volume 1 massflow rate "
+    "Volume 1 mass flow rate "
        annotation (Placement(transformation(extent={{-124,8},{-100,32}}),
           iconTransformation(extent={{-120,12},{-100,32}})));
     Modelica.Blocks.Interfaces.RealInput m2_flow(final unit="kg/s")
@@ -198,7 +198,8 @@ equation
       PLR=0;
 
     end if;
-  connect(uMod, integerToBoolean.u) annotation (Line(points={{-112,0},{-50,0},{-50,
+  connect(uMod, integerToBoolean.u)
+    annotation (Line(points={{-112,0},{-50,0},{-50,
           66},{-36,66}}, color={255,127,0}));
   connect(integerToBoolean.y, not1.u)
     annotation (Line(points={{-13,66},{-2,66}}, color={255,0,255}));
@@ -206,7 +207,8 @@ equation
     annotation (Line(points={{21,66},{40,66}}, color={255,0,255}));
   connect(assMsg, and2.y)
     annotation (Line(points={{110,66},{64,66}}, color={255,0,255}));
-  connect(revCyc.y, and2.u2) annotation (Line(points={{22,26},{32,26},{32,58},{40,
+  connect(revCyc.y, and2.u2)
+    annotation (Line(points={{22,26},{32,26},{32,58},{40,
           58}}, color={255,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)),
               Diagram(coordinateSystem(preserveAspectRatio=false)),

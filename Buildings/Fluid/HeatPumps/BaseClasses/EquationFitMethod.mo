@@ -131,7 +131,7 @@ equation
                               x2 =  QCon_flow_ava,
                           deltaX =  Q_flow_small/10);
 
-      P= PRH*etaPL* (per.P_nominal_hea*scaling_factor);
+      P= PRH*etaPL*PLR* (per.P_nominal_hea*scaling_factor);
       QEva_flow= -(QCon_flow -P);
 
     elseif (uMod==-1) then
@@ -161,7 +161,7 @@ equation
                               x2 =  1,
                           deltaX =  1/100);
 
-      P= PRC*etaPL*(per.P_nominal_coo*scaling_factor);
+      P= PRC*etaPL*PLR*(per.P_nominal_coo*scaling_factor);
       QCon_flow =(-QEva_flow + P);
 
     else

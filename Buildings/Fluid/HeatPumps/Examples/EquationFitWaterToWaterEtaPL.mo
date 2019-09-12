@@ -20,7 +20,7 @@ model EquationFitWaterToWaterEtaPL "example"
       dp2_nominal=200,
       scaling_factor=1,
       per=per,
-      a={0.3,0.5})
+      a={0.3,0.7})
     "Water to Water heatpump"
      annotation (Placement(transformation(extent={{28,-10},{48,10}})));
     Modelica.Blocks.Math.RealToInteger reaToInt

@@ -1,5 +1,5 @@
-simulateModel("Buildings.Fluid.HeatPumps.Examples.ReverseWaterToWaterEtaPLR", method="dassl",
- tolerance=1e-6, stopTime=14400, resultFile="EquationFitWaterToWaterEtaPLR");
+simulateModel("Buildings.Fluid.HeatPumps.Examples.ReverseWaterToWaterEtaPL", method="dassl",
+ tolerance=1e-6, stopTime=14400, resultFile="ReverseWaterToWaterEtaPLR");
 createPlot(id = 1,
    position = {60, 10, 600, 450},
    y = {"heaPum.QSou_flow", "heaPum.QLoa_flow"},

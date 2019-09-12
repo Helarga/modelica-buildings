@@ -1,40 +1,32 @@
 within Buildings.Fluid.HeatPumps;
 model DOE2WaterToWater "Water source heat pump_Performance curve"
-   extends Buildings.Fluid.HeatPumps.BaseClasses.PartialHeatpumpPerformanceCurve(
+   extends
+    Buildings.Fluid.HeatPumps.BaseClasses.PartialHeatpumpPerformanceCurves(
      QCon_flow_nominal=-QEva_heatflow_nominal + P_nominal,
-     mCon_flow_nominal=per.mCon_flow_nominal*SF,
-     mEva_flow_nominal= per.mEva_flow_nominal*SF,
-     Q_flow_small=QCon_flow_nominal*1E-9*SF,
-     SF=SF);
+     mCon_flow_nominal=per.mCon_flow_nominal*scaling_factor,
+     mEva_flow_nominal= per.mEva_flow_nominal*scaling_factor,
+     Q_flow_small=QCon_flow_nominal*1E-9*scaling_factor);
 
    parameter Buildings.Fluid.Chillers.Data.ElectricEIR.Generic per
    "Performance data"
     annotation (choicesAllMatching= true,
                    Placement(transformation(extent={{80,80},{100,100}})));
-   parameter Real SF
+   parameter Real scaling_factor
    "Load scale factor for heatpump,SF=0.2 means scaling the heatpump down to 20% from the nominal load,SF= 1 means scaling up to 100%";
    final parameter Modelica.SIunits.Power
      P_nominal = -QEva_heatflow_nominal/COP_nominal
    "Nominal power of the compressor"
     annotation (Dialog(group="Nominal condition"));
    final parameter Modelica.SIunits.HeatFlowRate
-     QEva_heatflow_nominal= per.QEva_flow_nominal*SF
+     QEva_heatflow_nominal= per.QEva_flow_nominal*scaling_factor
    "Nominal heat flow at the evaporator"
     annotation (Dialog(group="Nominal condition"));
    final parameter Modelica.SIunits.Efficiency
      COP_nominal=per.COP_nominal
    "Reference coefficient  of performance"
     annotation (Dialog(group="Nominal condition"));
-   Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
-   "Evaporator heat flow rate"
-    annotation (Placement(transformation(extent={{100,-30},{120,-10}}),iconTransformation(
-    extent={{100,-100},{120,-80}})));
-   Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
-   "Electric power consumed by compressor"
-    annotation (Placement(transformation(extent={{100,-10},{120,10}}),iconTransformation(
-       extent={{100,-10},{120,10}})));
    BaseClasses.DOE2Method doe2(per=per,
-                               SF=SF)
+                               scaling_factor=scaling_factor)
    "DOE2 method which describes the water to water heat pump performance"
     annotation (Placement(transformation(extent={{-2,-10},{18,10}})));
    Modelica.SIunits.SpecificEnthalpy hEvaSet=
@@ -57,30 +49,30 @@ model DOE2WaterToWater "Water source heat pump_Performance curve"
 equation
   connect(port_a2, port_a2)
   annotation (Line(points={{100,-60},{105,-60},{105,-60},{100,-60}},color={0,127,255}));
-  connect(doe2.QCon_flow, QCon_flow)
-  annotation (Line(points={{19,4},{86,4},{86,20},{110,20}},  color={0,0,127}));
-  connect(doe2.P, P)
-  annotation (Line(points={{19,0},{110,0}},  color={0,0,127}));
-  connect(doe2.QEva_flow, QEva_flow)
-  annotation (Line(points={{19,-4},{86,-4},{86,-20},{110,-20}},  color={0,0,127}));
   connect(TConEnt.y, doe2.TConEnt) annotation (Line(points={{-57,40},{-22,40},{-22,
           7.4},{-3,7.4}}, color={0,0,127}));
-  connect(QConFloSet.y, doe2.QConFloSet) annotation (Line(points={{-57,24},{-40,
-          24},{-40,2.2},{-3,2.2}}, color={0,0,127}));
-  connect(QEvaFloSet.y, doe2.QEvaFloSet) annotation (Line(points={{-57,-24},{-40,
-          -24},{-40,-2.6},{-3,-2.6}}, color={0,0,127}));
   connect(TEvaLvg.y, doe2.TEvaLvg) annotation (Line(points={{-59,-40},{-22,-40},
           {-22,-6},{-3,-6}}, color={0,0,127}));
   connect(TEvaSet, doe2.TEvaSet) annotation (Line(points={{-120,-90},{-18,-90},{
           -18,-10},{-3,-10}}, color={0,0,127}));
   connect(TConSet, doe2.TConSet) annotation (Line(points={{-120,90},{-18,90},{-18,
           10},{-3,10}}, color={0,0,127}));
-  connect(doe2.QCon_flow, preHeaFloCon.Q_flow)
+  connect(doe2.QCon_flow, preHeaFlo.Q_flow)
     annotation (Line(points={{19,4},{72,4},{72,22},{59,22}}, color={0,0,127}));
-  connect(doe2.QEva_flow, preHeaFloEva.Q_flow) annotation (Line(points={{19,-4},
-          {72,-4},{72,-20},{59,-20}}, color={0,0,127}));
+  connect(doe2.QEva_flow, preCooFlo.Q_flow) annotation (Line(points={{19,-4},{
+          72,-4},{72,-20},{59,-20}}, color={0,0,127}));
   connect(uMod, doe2.uMod) annotation (Line(points={{-120,0},{-62,0},{-62,-0.2},
           {-3,-0.2}}, color={255,127,0}));
+  connect(doe2.QCon_flow, QCon_flow) annotation (Line(points={{19,4},{84,4},{84,
+          20},{110,20}}, color={0,0,127}));
+  connect(doe2.P, P)
+    annotation (Line(points={{19,0},{110,0}}, color={0,0,127}));
+  connect(QCon_flow_set.y, doe2.QConFloSet) annotation (Line(points={{-57,24},{
+          -34,24},{-34,2.2},{-3,2.2}}, color={0,0,127}));
+  connect(QEva_flow_set.y, doe2.QEvaFloSet) annotation (Line(points={{-57,-24},
+          {-32,-24},{-32,-2.6},{-3,-2.6}}, color={0,0,127}));
+  connect(doe2.QEva_flow, QEva_flow) annotation (Line(points={{19,-4},{84,-4},{
+          84,-20},{110,-20},{110,-20}}, color={0,0,127}));
   annotation (Dialog(group="Nominal condition"),
                choicesAllMatching=true,Placement(transformation(extent={{48,66},{68,86}})),
               Icon(coordinateSystem(preserveAspectRatio=false,extent={{-120,-100},
@@ -225,11 +217,5 @@ Documentation(info="<html>
   model to include simultaneous heating and cooling modes.
   </li>
   </ul>
-</html>"),
-<<<<<<< HEAD
-    Diagram(coordinateSystem(extent={{-100,-100},{100,100}})));
+</html>"));
 end DOE2WaterToWater;
-=======
-    Diagram(coordinateSystem(extent={{-160,-100},{100,100}})));
-end DOE2WaterToWater;
->>>>>>> a0a6e3243ce88d6fc208f457a4eb852b9e13e4c4

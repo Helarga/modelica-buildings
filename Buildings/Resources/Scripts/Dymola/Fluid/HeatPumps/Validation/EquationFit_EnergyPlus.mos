@@ -1,0 +1,22 @@
+simulateModel("Buildings.Fluid.HeatPumps.Validation.EquationFit_EnergyPlus", method="dassl", tolerance=1e-6, stopTime=86400, resultFile="EquationFit_EnergyPlus");
+createPlot(id = 1,
+   position = {60, 10, 640, 480},
+   y = {"heaPum.QCon_flow", "heaPum.QEva_flow", "QConEP.y", "QEvaEP.y"},
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+createPlot(id = 2,
+   position = {710, 10, 640, 480},
+   y = {"heaPum.P", "comPEP.y"},
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+

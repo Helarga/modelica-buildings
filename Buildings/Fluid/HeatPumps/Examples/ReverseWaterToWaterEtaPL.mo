@@ -149,7 +149,7 @@ equation
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,
             100}})),
              __Dymola_Commands(
-  file="modelica://Buildings/Resources/Scripts/Dymola/Fluid/HeatPumps/Examples/ReverseWaterToWaterEtaPLR.mos"
+  file="modelica://Buildings/Resources/Scripts/Dymola/Fluid/HeatPumps/Examples/ReverseWaterToWaterEtaPL.mos"
         "Simulate and plot"),
          experiment(Tolerance=1e-6, StopTime=14400),
 Documentation(info="<html>
