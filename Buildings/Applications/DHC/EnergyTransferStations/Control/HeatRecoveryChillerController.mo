@@ -17,21 +17,21 @@ model HeatRecoveryChillerController
         iconTransformation(extent={{100,-14},{128,14}})));
   Modelica.Blocks.Logical.Or or1
     annotation (Placement(transformation(extent={{-20,10},{0,30}})));
-  Controls.OBC.CDL.Logical.Switch swi1
+   Buildings.Controls.OBC.CDL.Logical.Switch swi1
     annotation (Placement(transformation(extent={{36,-10},{56,10}})));
-  Controls.OBC.CDL.Logical.Switch swi2
+  Buildings.Controls.OBC.CDL.Logical.Switch swi2
     annotation (Placement(transformation(extent={{-20,-60},{0,-40}})));
-  Controls.OBC.CDL.Continuous.Sources.Constant cooModHeaPum(k=-1)
+   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant cooModHeaPum(k=-1)
     "Heating mode signal for the heatpump =-1"
     annotation (Placement(transformation(extent={{-60,-40},{-40,-20}})));
   Modelica.Blocks.Logical.And and1
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}})));
-  Controls.OBC.CDL.Continuous.Sources.Constant heaModHeaPum(k=1)
+   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant heaModHeaPum(k=1)
     "Heating mode signal for the heatpump =1"
     annotation (Placement(transformation(extent={{0,40},{20,60}})));
-  Modelica.Blocks.Math.RealToInteger realToInteger
+   Modelica.Blocks.Math.RealToInteger realToInteger
     annotation (Placement(transformation(extent={{68,-10},{88,10}})));
-  Controls.OBC.CDL.Continuous.Sources.Constant shuOffSig(k=0)
+   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant shuOffSig(k=0)
     "HeatPump shut off signal =0"
     annotation (Placement(transformation(extent={{-60,-80},{-40,-60}})));
 
@@ -58,17 +58,17 @@ equation
           -39,0}},
                color={255,0,255}));
   connect(swi1.u3,swi2. y)
-   annotation (Line(points={{34,-8},{26,-8},{26,-50},{1,
-          -50}}, color={0,0,127}));
+   annotation (Line(points={{34,-8},{26,-8},{26,-50},{2,-50}},
+                 color={0,0,127}));
   connect(swi1.u1, heaModHeaPum.y)
-   annotation (Line(points={{34,8},{26,8},{26,50},{21,50}}, color={0,0,127}));
+   annotation (Line(points={{34,8},{26,8},{26,50},{22,50}}, color={0,0,127}));
   connect(swi1.y, realToInteger.u)
-   annotation (Line(points={{57,0},{66,0}}, color={0,0,127}));
+   annotation (Line(points={{58,0},{66,0}}, color={0,0,127}));
   connect(swi2.u1, cooModHeaPum.y)
-   annotation (Line(points={{-22,-42},{-38,-42},
-          {-38,-30},{-39,-30}},color={0,0,127}));
+   annotation (Line(points={{-22,-42},{-38,-42},{-38,-30},{-38,-30}},
+                               color={0,0,127}));
   connect(swi2.u3, shuOffSig.y)
-   annotation (Line(points={{-22,-58},{-38,-58},{-38,-70},{-39,-70}},
+   annotation (Line(points={{-22,-58},{-38,-58},{-38,-70},{-38,-70}},
                                color={0,0,127}));
   connect(realToInteger.y, heaPumMod)
    annotation (Line(points={{89,0},{114,0}}, color={255,127,0}));

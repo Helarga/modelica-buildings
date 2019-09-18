@@ -1,9 +1,9 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Examples;
 model CondenserandEvaporatorPumpsController
-  ETSControl.CondenserAndEvaporatorPumpsController pumEvaConCon
+  Buildings.Applications.DHC.EnergyTransferStations.Control.CondenserAndEvaporatorPumpsController pumEvaConCon
     "Evaporator and condenser pumps controller"
     annotation (Placement(transformation(extent={{64,-16},{90,16}})));
-    Controls.OBC.CDL.Continuous.Sources.Ramp uMod(
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Ramp uMod(
     height=10,
     duration(displayUnit="h") = 14400,
     offset=-5,
@@ -48,7 +48,7 @@ equation
   connect(TConLvg.y, pumEvaConCon.TConLvg) annotation (Line(points={{-19,20},{-16,
           20},{-16,4},{63.09,4}}, color={0,0,127}));
   connect(uMod.y, realToInteger.u)
-    annotation (Line(points={{-75,0},{-70,0}}, color={0,0,127}));
+    annotation (Line(points={{-74,0},{-70,0}}, color={0,0,127}));
   connect(pumEvaConCon.heaPumMod, realToInteger.y) annotation (Line(points={{
           62.31,0.16},{12,0.16},{12,0},{-47,0}}, color={255,127,0}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
