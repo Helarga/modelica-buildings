@@ -9,18 +9,18 @@ model HeatPumpController "The control block of the heatpump on heating mode"
   Buildings.Controls.OBC.CDL.Interfaces.BooleanInput ReqCoo
   "Cooling is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,16},{-100,44}}),
-        iconTransformation(extent={{-128,-104},{-100,-76}})));
+        iconTransformation(extent={{-128,46},{-100,74}})));
 
   Buildings.Controls.OBC.CDL.Interfaces.RealInput           TSetHea(final unit="K",
-      displayUnit="degC")
-    "Setpoint for heating supply water to space loads" annotation (Placement(transformation(extent={{-128,
-            -48},{-100,-20}}),
-                    iconTransformation(extent={{-120,30},{-100,50}})));
+      displayUnit="degC") "Setpoint for heating supply water to space loads"
+                                                       annotation (Placement(transformation(extent={{-130,
+            -60},{-102,-32}}),
+                    iconTransformation(extent={{-120,-10},{-100,10}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput           TSetCoo(final unit="K",
       displayUnit="degC") "Setpoint for cooling supply water to space loads"
                                                        annotation (Placement(transformation(extent={{-128,
-            -130},{-100,-102}}),
-                     iconTransformation(extent={{-120,-68},{-100,-48}})));
+            -104},{-100,-76}}),
+                     iconTransformation(extent={{-120,-88},{-100,-68}})));
   Modelica.Blocks.Logical.Or or1
     annotation (Placement(transformation(extent={{-40,28},{-20,48}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi1
@@ -48,39 +48,37 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     annotation (Placement(transformation(extent={{34,-60},{54,-40}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant MinSetTem(k=25 + 273.15)
     "Minimum setpoint condenser leaving water temperature"
-    annotation (Placement(transformation(extent={{-20,-166},{0,-146}})));
+    annotation (Placement(transformation(extent={{0,-150},{20,-130}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaLvg(final unit="K", displayUnit=
         "degC") "Evaporator leaving water temperature" annotation (Placement(
-        transformation(extent={{-128,-162},{-100,-134}}), iconTransformation(
-          extent={{-120,-50},{-100,-30}})));
+        transformation(extent={{-128,-134},{-100,-106}}), iconTransformation(
+          extent={{-120,-66},{-100,-46}})));
   Modelica.Blocks.Logical.And and1
-    annotation (Placement(transformation(extent={{-52,-30},{-32,-10}})));
+    annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
   Modelica.Blocks.Logical.Or or2
-    annotation (Placement(transformation(extent={{-8,-30},{12,-10}})));
+    annotation (Placement(transformation(extent={{-40,-30},{-20,-10}})));
   Buildings.Controls.Continuous.LimPID pumConCon(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     yMax=1,
-    yMin=-1,
+    yMin=0,
     reset=Buildings.Types.Reset.Parameter,
-    y_reset=-1,
+    y_reset=0,
     k=1,
     Ti(displayUnit="s") = 300,
     reverseAction=true) "Controller for heatpump mode"
-   annotation (Placement(transformation(extent={{-80,-126},{-60,-106}})));
-  Modelica.Blocks.Math.Product product
-    annotation (Placement(transformation(extent={{-40,-120},{-20,-100}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TConLvg(final unit="K", displayUnit=
-        "degC") "Condenser leaving water temperature" annotation (Placement(
-        transformation(extent={{-128,-80},{-100,-52}}), iconTransformation(
-          extent={{-120,-26},{-100,-6}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final unit="K", displayUnit=
-        "degC") "Condenser entering water temperature" annotation (Placement(
-        transformation(extent={{-128,-106},{-100,-78}}), iconTransformation(
-          extent={{-120,-2},{-100,18}})));
-  Modelica.Blocks.Math.Add add(k2=-1)
-    annotation (Placement(transformation(extent={{-80,-96},{-60,-76}})));
-  Modelica.Blocks.Math.Add add1
-    annotation (Placement(transformation(extent={{-8,-82},{12,-62}})));
+   annotation (Placement(transformation(extent={{-80,-100},{-60,-80}})));
+  Buildings.Controls.OBC.CDL.Continuous.Line lin
+    annotation (Placement(transformation(extent={{-20,-100},{0,-80}})));
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X1(k=0)
+    "PI minimum error"
+    annotation (Placement(transformation(extent={{-60,-72},{-40,-52}})));
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X2(k=1)
+    "PI maximum error"
+    annotation (Placement(transformation(extent={{-60,-128},{-40,-108}})));
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHeaMax(final unit="K",
+      displayUnit="degC") "Maximum setpoint for heating water " annotation (
+      Placement(transformation(extent={{-128,-154},{-100,-126}}),
+        iconTransformation(extent={{-120,-38},{-100,-18}})));
 equation
 
   connect(ReqCoo, or1.u2)
@@ -102,60 +100,50 @@ equation
   connect(swi1.y, realToInteger.u)
     annotation (Line(points={{22,38},{58,38}}, color={0,0,127}));
   connect(TSetHea, swi2.u1)
-    annotation (Line(points={{-114,-34},{74,-34}}, color={0,0,127}));
-  connect(ReqCoo, swi3.u2)
-    annotation (Line(points={{-114,30},{-96,30},{-96,-50},
-          {32,-50}}, color={255,0,255}));
+    annotation (Line(points={{-116,-46},{-30,-46},{-30,-34},{74,-34}},
+                                                   color={0,0,127}));
   connect(swi3.u3, MinSetTem.y)
-    annotation (Line(points={{32,-58},{24,-58},{24,
-          -156},{2,-156}}, color={0,0,127}));
+    annotation (Line(points={{32,-58},{22,-58},{22,-140}},
+                           color={0,0,127}));
   connect(swi3.y, swi2.u3)
     annotation (Line(points={{56,-50},{74,-50}},
                      color={0,0,127}));
   connect(swi2.y, TSetCon)
     annotation (Line(points={{98,-42},{110,-42}}, color={0,0,127}));
   connect(ReqCoo, and1.u2)
-    annotation (Line(points={{-114,30},{-96,30},{-96,-28},
-          {-54,-28}}, color={255,0,255}));
+    annotation (Line(points={{-114,30},{-96,30},{-96,-38},{-82,-38}},
+                      color={255,0,255}));
   connect(ReqHea, and1.u1)
-    annotation (Line(points={{-114,68},{-92,68},{-92,-20},
-          {-54,-20}}, color={255,0,255}));
-  connect(ReqHea, or2.u1)
-    annotation (Line(points={{-114,68},{-92,68},{-92,-4},
-          {-16,-4},{-16,-20},{-10,-20}}, color={255,0,255}));
-  connect(and1.y, or2.u2)
-    annotation (Line(points={{-31,-20},{-26,-20},{-26,-28},
-          {-10,-28}}, color={255,0,255}));
-  connect(or2.y, swi2.u2)
-    annotation (Line(points={{13,-20},{70,-20},{70,-42},{
-          74,-42}}, color={255,0,255}));
+    annotation (Line(points={{-114,68},{-92,68},{-92,-30},{-82,-30}},
+                      color={255,0,255}));
   connect(pumConCon.u_s, TSetCoo)
-    annotation (Line(points={{-82,-116},{-114,-116}}, color={0,0,127}));
+    annotation (Line(points={{-82,-90},{-114,-90}},   color={0,0,127}));
   connect(TEvaLvg, pumConCon.u_m)
-    annotation (Line(points={{-114,-148},{-70,
-          -148},{-70,-128}}, color={0,0,127}));
-  connect(pumConCon.y, product.u2)
-    annotation (Line(points={{-59,-116},{-42,
-          -116}},                       color={0,0,127}));
+    annotation (Line(points={{-114,-120},{-70,-120},{-70,-102}},
+                             color={0,0,127}));
   connect(ReqCoo, pumConCon.trigger)
-    annotation (Line(points={{-114,30},{-96,30},
-          {-96,-140},{-78,-140},{-78,-128}}, color={255,0,255}));
-  connect(TConLvg, add.u1)
-    annotation (Line(points={{-114,-66},{-96,-66},{-96,
-          -80},{-82,-80}}, color={0,0,127}));
-  connect(TConEnt, add.u2)
-    annotation (Line(points={{-114,-92},{-82,-92}}, color={0,0,127}));
-  connect(add.y, product.u1)
-    annotation (Line(points={{-59,-86},{-46,-86},{-46,
-          -104},{-42,-104}}, color={0,0,127}));
-  connect(TConLvg, add1.u1)
-    annotation (Line(points={{-114,-66},{-10,-66}}, color={0,0,127}));
-  connect(add1.y, swi3.u1)
-    annotation (Line(points={{13,-72},{18,-72},{18,-42},
-          {32,-42}}, color={0,0,127}));
-  connect(product.y, add1.u2)
-    annotation (Line(points={{-19,-110},{-16,-110},{
-          -16,-78},{-10,-78}}, color={0,0,127}));
+    annotation (Line(points={{-114,30},{-96,30},{-96,-112},{-78,-112},{-78,-102}},
+                                             color={255,0,255}));
+  connect(lin.y, swi3.u1) annotation (Line(points={{2,-90},{22,-90},{22,-42},{
+          32,-42}}, color={0,0,127}));
+  connect(and1.y, or2.u2) annotation (Line(points={{-59,-30},{-46,-30},{-46,-28},
+          {-42,-28}}, color={255,0,255}));
+  connect(ReqHea, swi2.u2) annotation (Line(points={{-114,68},{-92,68},{-92,-4},
+          {64,-4},{64,-42},{74,-42}}, color={255,0,255}));
+  connect(ReqCoo, or2.u1) annotation (Line(points={{-114,30},{-96,30},{-96,-8},
+          {-54,-8},{-54,-20},{-42,-20}}, color={255,0,255}));
+  connect(or2.y, swi3.u2) annotation (Line(points={{-19,-20},{18,-20},{18,-50},
+          {32,-50}}, color={255,0,255}));
+  connect(X1.y, lin.x1) annotation (Line(points={{-38,-62},{-34,-62},{-34,-82},
+          {-22,-82}}, color={0,0,127}));
+  connect(TSetHea, lin.f1) annotation (Line(points={{-116,-46},{-30,-46},{-30,
+          -86},{-22,-86}}, color={0,0,127}));
+  connect(pumConCon.y, lin.u)
+    annotation (Line(points={{-59,-90},{-22,-90}}, color={0,0,127}));
+  connect(TSetHeaMax, lin.f2) annotation (Line(points={{-114,-140},{-26,-140},{
+          -26,-98},{-22,-98}}, color={0,0,127}));
+  connect(X2.y, lin.x2) annotation (Line(points={{-38,-118},{-32,-118},{-32,-94},
+          {-22,-94}}, color={0,0,127}));
   annotation (defaultComponentName="heaPumCon",Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,80}})),                                   Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-180},{100,80}}),
