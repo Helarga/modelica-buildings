@@ -1,0 +1,23 @@
+simulateModel("Buildings.Applications.DHC.EnergyTransferStations.Examples.Source_Load_PumpsController", method="dassl",
+tolerance=1e-6, stopTime=1000, resultFile="Source_LoadPumpsControllerBlock");
+createPlot(id = 1,
+   position = {60, 10, 600, 450},
+   y = {"pumCon.yPumSou","pumCon.yPumLoa","heaPum.sta_b1.T" },
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+createPlot(id = 2,
+   position = {670, 10, 600, 450},
+   y = {"pumCon.disCooVal","pumCon.disHeaVal"},
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+

@@ -131,13 +131,13 @@ model SubstationUO
   Buildings.Controls.OBC.CDL.Conversions.BooleanToReal booToRea1
     annotation (Placement(transformation(extent={{120,-210},{140,-190}})));
 
-  Controls.OBC.CDL.Continuous.Sources.Constant           con1(k=0)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant           con1(k=0)
     annotation (Placement(transformation(extent={{62,-58},{82,-38}})));
 equation
   connect(mSetColTan.y, conCooTan.u_s)
-    annotation (Line(points={{-79,20},{-42,20}}, color={0,0,127}));
-  connect(pumHeaCon.y, pumConMin) annotation (Line(points={{181,70},{230,70}}, color={0,0,127}));
-  connect(pumCooCon.y, pumEvamin) annotation (Line(points={{181,-70},{230,-70}}, color={0,0,127}));
+    annotation (Line(points={{-78,20},{-42,20}}, color={0,0,127}));
+  connect(pumHeaCon.y, pumConMin) annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
+  connect(pumCooCon.y, pumEvamin) annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
   connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{-162,190}},
                                             color={0,0,127}));
   connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{-180,160},{-180,180},
@@ -153,21 +153,21 @@ equation
   connect(conColSid.reqCoo, or1.u2) annotation (Line(points={{-139,-191},{-130,-191},
           {-130,104},{-122,104}}, color={255,0,255}));
   connect(or1.y, not1.u)
-    annotation (Line(points={{-99,112},{-92,112}}, color={255,0,255}));
-  connect(not1.y, conHeaTan.trigger) annotation (Line(points={{-69,112},{-60,
-          112},{-60,50},{-38,50},{-38,58}}, color={255,0,255}));
-  connect(not1.y, conCooTan.trigger) annotation (Line(points={{-69,112},{-60,
-          112},{-60,0},{-38,0},{-38,8}},  color={255,0,255}));
+    annotation (Line(points={{-98,112},{-92,112}}, color={255,0,255}));
+  connect(not1.y, conHeaTan.trigger) annotation (Line(points={{-68,112},{-60,112},
+          {-60,50},{-38,50},{-38,58}},      color={255,0,255}));
+  connect(not1.y, conCooTan.trigger) annotation (Line(points={{-68,112},{-60,112},
+          {-60,0},{-38,0},{-38,8}},       color={255,0,255}));
   connect(conHotSid.THeaSupSet, TSetHea) annotation (Line(points={{-162,194},{-202,
           194},{-202,220},{-240,220}}, color={0,0,127}));
   connect(mTanHotNor, conHeaTan.u_m)
     annotation (Line(points={{-240,40},{-30,40},{-30,58}}, color={0,0,127}));
   connect(mSetHotTan.y, conHeaTan.u_s)
-    annotation (Line(points={{-79,70},{-42,70}}, color={0,0,127}));
+    annotation (Line(points={{-78,70},{-42,70}}, color={0,0,127}));
   connect(conCooTan.u_m, mTanColNor) annotation (Line(points={{-30,8},{-30,-10},{-240,-10}},
                                          color={0,0,127}));
-  connect(booToRea.y, ValHeaPos) annotation (Line(points={{141,130},{230,130}}, color={0,0,127}));
-  connect(booToRea1.y, ValCooPos) annotation (Line(points={{141,-200},{230,-200}}, color={0,0,127}));
+  connect(booToRea.y, ValHeaPos) annotation (Line(points={{142,130},{230,130}}, color={0,0,127}));
+  connect(booToRea1.y, ValCooPos) annotation (Line(points={{142,-200},{230,-200}}, color={0,0,127}));
   connect(conHotSid.reqHea, reqHea)
     annotation (Line(points={{-139,195},{50,195},{50,210},{230,210}}, color={255,0,255}));
   connect(conColSid.reqCoo, reqCoo) annotation (Line(points={{-139,-191},{-130,-191},{-130,-180},{20,-180},{20,-140},
@@ -186,13 +186,13 @@ equation
     annotation (Line(points={{-139,-200},{118,-200}}, color={255,0,255}));
   connect(pumConMin, pumConMin) annotation (Line(points={{230,70},{168,70},{168,70},{230,70}}, color={0,0,127}));
   connect(pumHeaCon.u1, con4.y) annotation (Line(points={{158,78},{122,78},{122,
-          90},{81,90}}, color={0,0,127}));
-  connect(pumHeaCon.u2, not1.y) annotation (Line(points={{158,70},{18,70},{18,
-          112},{-69,112}}, color={255,0,255}));
-  connect(not1.y, pumCooCon.u2) annotation (Line(points={{-69,112},{18,112},{18,
+          90},{82,90}}, color={0,0,127}));
+  connect(pumHeaCon.u2, not1.y) annotation (Line(points={{158,70},{18,70},{18,112},
+          {-68,112}},      color={255,0,255}));
+  connect(not1.y, pumCooCon.u2) annotation (Line(points={{-68,112},{18,112},{18,
           -70},{158,-70}}, color={255,0,255}));
   connect(pumCooCon.u1, con1.y) annotation (Line(points={{158,-62},{120,-62},{
-          120,-48},{83,-48}}, color={0,0,127}));
+          120,-48},{84,-48}}, color={0,0,127}));
   connect(conHeaTan.y, pumHeaCon.u3) annotation (Line(points={{-19,70},{0,70},{
           0,62},{158,62}}, color={0,0,127}));
   connect(conCooTan.y, pumCooCon.u3) annotation (Line(points={{-19,20},{0,20},{

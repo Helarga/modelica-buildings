@@ -3,11 +3,11 @@ model CondenserAndEvaporatorPumpsController
   "The control block of the condenser and the evaporator water pumps"
      extends Modelica.Blocks.Icons.Block;
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaLvg
-  "Evaporator leaving water temperature"
+    "Evaporator leaving water temperature"
    annotation (Placement(transformation(extent={{-124,-140},{-100,-116}}),
         iconTransformation(extent={{-114,-46},{-100,-32}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TConLvg
-  "Condenser leaving water temperature"
+    "Condenser leaving water temperature"
    annotation (Placement(transformation(extent={{-120,70},{-100,90}}),
         iconTransformation(extent={{-114,18},{-100,32}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHea
@@ -34,8 +34,7 @@ model CondenserAndEvaporatorPumpsController
     y_reset=0.1,
     k=0.1,
     Ti(displayUnit="s") = 300,
-    reverseAction=true)
-  "Controller for evaporator pump speed"
+    reverseAction=true) "Controller for evaporator pump speed"
    annotation (Placement(transformation(extent={{60,-92},{80,-72}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yPumCon
     "Condenser pump  speed outlet signal" annotation (Placement(transformation(

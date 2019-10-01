@@ -7,7 +7,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     annotation (Placement(transformation(extent={{-128,54},{-100,82}}),
         iconTransformation(extent={{-128,76},{-100,104}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanInput ReqCoo
-  "Cooling is required Boolean signal"
+    "Cooling is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,16},{-100,44}}),
         iconTransformation(extent={{-128,46},{-100,74}})));
 
@@ -124,7 +124,7 @@ equation
   connect(ReqCoo, pumConCon.trigger)
     annotation (Line(points={{-114,30},{-96,30},{-96,-112},{-78,-112},{-78,-102}},
                                              color={255,0,255}));
-  connect(lin.y, swi3.u1) annotation (Line(points={{2,-90},{22,-90},{22,-42},{
+  connect(lin.y, swi3.u1) annotation (Line(points={{2,-90},{14,-90},{14,-42},{
           32,-42}}, color={0,0,127}));
   connect(and1.y, or2.u2) annotation (Line(points={{-59,-30},{-46,-30},{-46,-28},
           {-42,-28}}, color={255,0,255}));

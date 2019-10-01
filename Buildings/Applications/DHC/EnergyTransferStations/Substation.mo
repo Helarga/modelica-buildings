@@ -577,8 +577,8 @@ equation
     annotation (Line(points={{127,274.4},{172,274.4},{172,138}},
                             color={0,0,127}));
   connect(heaPumCon.heaPumMod, heaPum.uMod)
-    annotation (Line(points={{-98.6,209.111},{-56,209.111},{-56,126},{-37.4,126}},
-                                                        color={255,127,0}));
+    annotation (Line(points={{-98.6,209.111},{-56,209.111},{-56,126},{-35.4545,
+          126}},                                        color={255,127,0}));
   connect(subCon.reqHea, heaPumCon.ReqHea)
     annotation (Line(
       points={{-179.3,219.1},{-138,219.1},{-138,219.111},{-121.4,219.111}},
@@ -586,7 +586,7 @@ equation
       pattern=LinePattern.Dot));
   connect(subCon.reqCoo, heaPumCon.ReqCoo)
     annotation (Line(
-      points={{-179.2,200.6},{-138,200.6},{-138,199.111},{-121.4,199.111}},
+      points={{-179.2,200.6},{-138,200.6},{-138,215.778},{-121.4,215.778}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(pumCon.port_b, TConLvg.port_a)
@@ -595,7 +595,7 @@ equation
       pattern=LinePattern.Dash,
       thickness=0.5));
   connect(TConEnt.port_b, heaPum.port_a1)
-    annotation (Line(points={{-22,26},{-40,26},{-40,132},{-36,132}},
+    annotation (Line(points={{-22,26},{-40,26},{-40,132},{-34.1818,132}},
                                         color={0,127,255}));
   connect(pumEva.port_b, TEvaEnt.port_a) annotation (Line(
       points={{-80,98},{-30,98}},
@@ -607,7 +607,7 @@ equation
       pattern=LinePattern.Dash));
   connect(TEvaLvg.port_a, heaPum.port_b2)
     annotation (Line(
-      points={{-56,20},{-48,20},{-48,120},{-36,120}},
+      points={{-56,20},{-48,20},{-48,120},{-34.1818,120}},
       color={0,0,255},
       thickness=0.5));
   connect(hotBufTan.port_b, heaSup)
@@ -690,7 +690,7 @@ equation
       pattern=LinePattern.DashDotDot));
   connect(supTemSet.THeaSupSet, heaPum.TConSet)
     annotation (Line(
-      points={{-227,254},{-52,254},{-52,138},{-37.4,138},{-37.4,135}},
+      points={{-227,254},{-52,254},{-52,138},{-35.4545,138},{-35.4545,135}},
       color={238,46,47},
       pattern=LinePattern.DashDotDot));
   connect(subCon.ValHea, ambCon.valHea)
@@ -889,7 +889,8 @@ equation
   connect(ambSupHed.ports_b[2], valRetHea.port_a) annotation (Line(points={{
           21.7,-130},{21.7,-70},{44,-70},{44,-60},{46,-60}}, color={0,127,255}));
   connect(supTemSet.TCooSupSet, heaPum.TEvaSet) annotation (Line(
-      points={{-227,246},{-212,246},{-212,118},{-120,118},{-120,117},{-37.4,117}},
+      points={{-227,246},{-212,246},{-212,118},{-120,118},{-120,117},{-35.4545,
+          117}},
       color={85,170,255},
       pattern=LinePattern.DashDot));
 
@@ -979,8 +980,8 @@ to implement the energy storage concept within the hot and cold buffer tanks and
 </p>
 <p align=\"center\">
 <img alt=\"Image the 5th generation of district heating and cooling substation\"
-src=\"modelica://Buildings/Resources/Images/DistrictHeatingCooling/EnergyTransferStations/SubstationLayout.png\"/>
-</p>
+src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/SubstationLayout.png\"/>
+</p>          
 <p>
 The layout consists of three main water circuits categorized by the water temperature and accordingly three interfaces with both the building and district system
 </p>
