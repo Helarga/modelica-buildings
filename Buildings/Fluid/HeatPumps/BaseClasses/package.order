@@ -1,4 +1,8 @@
+DOE2Method
+DOE2Reversible
 EquationFitReversible
+EquationFitReversibleMethod
+DOE2ReversibleMethod
 EquationFitMethod
 PartialWaterToWater
 PartialHeatpumpPerformanceCurves

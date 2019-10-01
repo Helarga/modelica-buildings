@@ -1,28 +1,26 @@
 within Buildings.Fluid.HeatPumps;
-model EquationFitReversible
+model DOE2Reversible
   "Model for a reversable heat pump based on the equation fit method"
   extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
           show_T=true,
-          final m1_flow_nominal=per.hea.mLoa_flow*scaling_factor,
-          final m2_flow_nominal=per.hea.mSou_flow*scaling_factor,
-          final dp1_nominal = per.dpHeaLoa_nominal,
-          final dp2_nominal = per.dpHeaSou_nominal,
+          final m1_flow_nominal=per.mCon_flow_nominal*scaling_factor,
+          final m2_flow_nominal=per.mEva_flow_nominal*scaling_factor,
+          final dp1_nominal = 200,
+          final dp2_nominal = 200,
        redeclare final Buildings.Fluid.MixingVolumes.MixingVolume
           vol1(final prescribedHeatFlowRate=true),
        redeclare final Buildings.Fluid.MixingVolumes.MixingVolume
           vol2(final prescribedHeatFlowRate=true));
 
-  parameter Data.EquationFitReversible.Generic per
+  parameter Buildings.Fluid.Chillers.Data.ElectricEIR.Generic per
    "Performance data"
     annotation (choicesAllMatching=true, Placement(transformation(extent={{50,72},
             {70,92}})));
   parameter Real scaling_factor = 1
    "Scaling factor for heat pump capacity";
-  /*
-  parameter Modelica.SIunits.HeatFlowRate Q_flow_small = per.hea.Q_flow*scaling_factor*1E-9
-   "Small value for heat flow rate or power, used to avoid division by zero"
-   annotation(Dialog(tab="Advanced"));
-*/
+  parameter Boolean reverseCycle=true
+  "= true, if reversing the heatpump to cooling mode is required"
+    annotation(Evaluate=true, HideResult=true, Dialog(group="Conditional inputs"));
   Modelica.Blocks.Interfaces.IntegerInput uMod
    "Control input signal, cooling mode=-1, off=0, heating mode=+1"
     annotation (Placement(transformation(extent={{-124,-12},{-100,12}}),
@@ -54,7 +52,7 @@ model EquationFitReversible
     annotation (Placement(transformation(extent={{100,-50},{120,-30}}),
         iconTransformation(extent={{100,-40},{120,-20}})));
 
-  output Real PLR(min=0, nominal=1, unit="1") = equFit.PLR
+  output Real PLR(min=0, nominal=1, unit="1") = doe2.PLR
    "Part load ratio";
 protected
   constant Modelica.SIunits.SpecificEnergy h1_default=
@@ -89,12 +87,11 @@ protected
                            inStream(port_a2.Xi_outflow))))
    "Source side entering fluid temperature"
     annotation (Placement(transformation(extent={{-80,-36},{-60,-16}})));
-  Modelica.Blocks.Sources.RealExpression TLoaEnt(
-    final y=Medium1.temperature(
-      Medium1.setState_phX(port_a1.p,
-                          inStream(port_a1.h_outflow),
-                          inStream(port_a1.Xi_outflow))))
-   "Load side entering fluid temperature"
+  Modelica.Blocks.Sources.RealExpression TLoaLvg(final y=Medium1.temperature(
+        Medium1.setState_phX(
+        port_b1.p,
+        inStream(port_b1.h_outflow),
+        inStream(port_b1.Xi_outflow)))) "Load side leaving fluid temperature"
     annotation (Placement(transformation(extent={{-80,-2},{-60,18}})));
   Modelica.Blocks.Sources.RealExpression Q_flow_set(
     final y= if (uMod == 0)
@@ -104,9 +101,9 @@ protected
         m1_flow*(hSet - inStream(port_a1.h_outflow)))
     "Required heat flow rate to meet set point"
     annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
-
-  BaseClasses.EquationFitReversible equFit(final per=per,
-                                         final scaling_factor=scaling_factor)
+   BaseClasses.DOE2Reversible doe2(
+     final per=per,
+     final scaling_factor=scaling_factor)
    "Performance model"
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
 
@@ -119,54 +116,60 @@ protected
 
   Buildings.Controls.OBC.CDL.Integers.LessThreshold lesThr(
     final threshold=0) if
-       not per.reverseCycle
+       not reverseCycle
     "Indicator, outputs true if in cooling mode"
     annotation (Placement(transformation(extent={{-80,-90},{-60,-70}})));
 
   Buildings.Controls.OBC.CDL.Utilities.Assert aleMes(
     message="uMod cannot be -1 if reverseCycle is false.") if
-         not per.reverseCycle
+         not reverseCycle
     "Generate alert message if control input is not valid"
     annotation (Placement(transformation(extent={{-52,-90},{-32,-70}})));
 
 equation
-  connect(equFit.QSou_flow,QSou_flow)
+  connect(doe2.QSou_flow,QSou_flow)
   annotation (Line(points={{11,-2},{32,-2},{32,-88},{110,-88}}, color={0,0,127}));
-  connect(mSou_flow.y, equFit.mSou_flow) annotation (Line(points={{-59,-10},{
+  connect(mSou_flow.y, doe2.mSou_flow)
+  annotation (Line(points={{-59,-10},{
           -54,-10},{-54,-8},{-11,-8}},
                                    color={0,0,127}));
-  connect(mLoa_flow.y, equFit.mLoa_flow) annotation (Line(points={{-59,26},{-48,
+  connect(mLoa_flow.y, doe2.mLoa_flow)
+  annotation (Line(points={{-59,26},{-48,
           26},{-48,6},{-11,6}}, color={0,0,127}));
-  connect(equFit.QLoa_flow,QLoa_flow)
+  connect(doe2.QLoa_flow,QLoa_flow)
   annotation (Line(points={{11,6},{80,6},{80,88},{110,88}},color={0,0,127}));
-  connect(equFit.QLoa_flow,preHeaFloLoa.Q_flow)
+  connect(doe2.QLoa_flow,preHeaFloLoa.Q_flow)
   annotation (Line(points={{11,6},{80,6},{80,20},{59,20}},color={0,0,127}));
-  connect(TSouEnt.y,equFit.TSouEnt)
+  connect(TSouEnt.y,doe2.TSouEnt)
   annotation (Line(points={{-59,-26},{-50,-26},{-50,-4},{-11,-4}},    color={0,0,127}));
-  connect(TLoaEnt.y,equFit.TLoaEnt)
-  annotation (Line(points={{-59,8},{-54,8},{-54,3},{-11,3}},      color={0,0,127}));
-  connect(equFit.P, P)
+  connect(doe2.P, P)
   annotation (Line(points={{11,2},{60,2},{60,0},{110,0}},
                                            color={0,0,127}));
-  connect(uMod, equFit.uMod)
-  annotation (Line(points={{-112,0},{-11,0}}, color={255,127,0}));
-  connect(equFit.QSou_flow, preHeaFloSou.Q_flow)
+  connect(uMod, doe2.uMod)
+  annotation (Line(points={{-112,0},{-62,0},{-62,-0.2},{-11,-0.2}},
+                                              color={255,127,0}));
+  connect(doe2.QSou_flow, preHeaFloSou.Q_flow)
   annotation (Line(points={{11,-2},{32,-2},{32,-44},{74,-44},{74,-60},{59,-60}},
                                                                color={0,0,127}));
   connect(vol1.heatPort, preHeaFloLoa.port)
   annotation (Line(points={{-10,60},{-14,60},{-14,20},{39,20}}, color={191,0,0}));
   connect(vol2.heatPort, preHeaFloSou.port)
   annotation (Line(points={{12,-60},{39,-60}},                   color={191,0,0}));
-
   connect(aleMes.u, lesThr.y)
-    annotation (Line(points={{-54,-80},{-58,-80}}, color={255,0,255}));
-  connect(lesThr.u, uMod) annotation (Line(points={{-82,-80},{-88,-80},{-88,0},{
+  annotation (Line(points={{-54,-80},{-58,-80}}, color={255,0,255}));
+  connect(lesThr.u, uMod)
+  annotation (Line(points={{-82,-80},{-88,-80},{-88,0},{
           -112,0}}, color={255,127,0}));
-  connect(equFit.Q_flow_set, Q_flow_set.y) annotation (Line(points={{-11,9},{
+  connect(doe2.Q_flow_set, Q_flow_set.y)
+  annotation (Line(points={{-11,9},{
           -44,9},{-44,40},{-59,40}},
                                  color={0,0,127}));
-  connect(equFit.COP, COP) annotation (Line(points={{11,-6},{36,-6},{36,-40},{
+  connect(doe2.COP, COP)
+  annotation (Line(points={{11,-6},{36,-6},{36,-40},{
           110,-40}}, color={0,0,127}));
+  connect(TLoaLvg.y, doe2.TLoaLvg)
+  annotation (Line(points={{-59,8},{-54,8},{-54,
+          3},{-11,3}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false),
      graphics={
         Ellipse(
@@ -384,4 +387,4 @@ First implementation.
 </li>
 </ul>
 </html>"));
-end EquationFitReversible;
+end DOE2Reversible;

@@ -28,16 +28,16 @@ block EquationFitReversible
         iconTransformation(extent={{-120,-50},{-100,-30}})));
 
   Modelica.Blocks.Interfaces.RealInput mLoa_flow(final unit="kg/s")
-    "Mass flow rate at load side" annotation (Placement(transformation(extent={{-124,48},
+   "Mass flow rate at load side" annotation (Placement(transformation(extent={{-124,48},
             {-100,72}}),          iconTransformation(extent={{-120,50},{-100,70}})));
 
   Modelica.Blocks.Interfaces.RealInput mSou_flow(final unit="kg/s")
-    "Mass flow rate at source side" annotation (Placement(transformation(extent={{-124,
+   "Mass flow rate at source side" annotation (Placement(transformation(extent={{-124,
             -92},{-100,-68}}),       iconTransformation(extent={{-120,-90},{
             -100,-70}})));
 
   Modelica.Blocks.Interfaces.RealInput Q_flow_set(final unit="W")
-    "Required heat to meet set point" annotation (Placement(transformation(
+   "Required heat to meet set point" annotation (Placement(transformation(
           extent={{-124,76},{-100,100}}),iconTransformation(extent={{-120,80},{-100,
             100}})));
 
