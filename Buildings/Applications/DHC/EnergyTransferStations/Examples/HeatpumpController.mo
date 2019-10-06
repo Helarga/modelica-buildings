@@ -51,7 +51,7 @@ model HeatpumpController
   Modelica.Blocks.Sources.BooleanConstant heaMod(k=false) "Step control"
     annotation (Placement(transformation(extent={{-60,42},{-40,62}})));
   Modelica.Blocks.Sources.BooleanConstant CooMod "Step control"
-    annotation (Placement(transformation(extent={{-60,-60},{-40,-40}})));
+    annotation (Placement(transformation(extent={{-54,-60},{-34,-40}})));
   Fluid.FixedResistances.PressureDrop res2(
     redeclare package Medium = Medium,
     m_flow_nominal=mSou_flow_nominal,
@@ -71,7 +71,7 @@ model HeatpumpController
       origin={16,-52})));
   Modelica.Blocks.Sources.Constant TCooSet(k=7 + 273.15)
     "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-92,-40},{-72,-20}})));
+    annotation (Placement(transformation(extent={{-92,-38},{-72,-18}})));
   Fluid.FixedResistances.PressureDrop
                                 res1(
     redeclare package Medium = Medium,
@@ -105,6 +105,16 @@ model HeatpumpController
   Modelica.Blocks.Sources.Constant THeaSetMax(k=55 + 273.15)
     "Maximum heating set point temperature"
     annotation (Placement(transformation(extent={{-92,-6},{-72,14}})));
+  Modelica.Blocks.Sources.Constant minFloHeaPum(k=0.2)
+    "Minimum flow rate for the heat pump"
+    annotation (Placement(transformation(extent={{-92,-72},{-72,-52}})));
+  Modelica.Blocks.Sources.Ramp mLoa(
+    height=0.9,
+    duration=500,
+    offset=0.1) "Mass flow rate at the load side"
+    annotation (Placement(transformation(extent={{-92,-102},{-72,-82}})));
+  Modelica.Blocks.Sources.Ramp mSou "Mass flow rate at the source side"
+    annotation (Placement(transformation(extent={{-92,-134},{-72,-114}})));
 equation
   connect(loaPum.T_in,TLoaEnt. y)
     annotation (Line(points={{-56,80},{-70,80}}, color={0,0,127}));
@@ -115,19 +125,19 @@ equation
   connect(loaPum.ports[1], heaPum.port_a1) annotation (Line(points={{-34,84},{
           10,84},{10,6},{20,6}},
                               color={0,127,255}));
-  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{-21.4,11},{-32,
-          11},{-32,52},{-39,52}},
+  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{-21.4,11},{-30,
+          11},{-30,52},{-39,52}},
                               color={255,0,255}));
   connect(heaPumCon.ReqCoo, CooMod.y) annotation (Line(points={{-21.4,8},{-30,8},
-          {-30,-50},{-39,-50}}, color={255,0,255}));
+          {-30,-50},{-33,-50}}, color={255,0,255}));
   connect(TSouLvg.port_b,res2. port_a)
     annotation (Line(points={{16,-62},{16,-80},{10,-80}},color={0,127,255}));
   connect(souVol.ports[1],res2. port_b)
     annotation (Line(points={{-24,-80},{-10,-80}}, color={0,127,255}));
   connect(heaPum.port_b2,TSouLvg. port_a)
     annotation (Line(points={{20,-6},{16,-6},{16,-42}}, color={0,127,255}));
-  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-5.8},{
-          -54,-5.8},{-54,-30},{-71,-30}},
+  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-2.4},{
+          -66,-2.4},{-66,-28},{-71,-28}},
                                       color={0,0,127}));
   connect(res1.port_b,loaVol. ports[1])
     annotation (Line(points={{72,60},{78,60}},color={0,127,255}));
@@ -136,16 +146,22 @@ equation
                    color={0,0,127}));
   connect(heaPum.port_a2, souPum.ports[1])
     annotation (Line(points={{40,-6},{66,-6}}, color={0,127,255}));
-  connect(heaPumCon.TSetHea, THeaSet.y) annotation (Line(points={{-21,2},{-54,2},
-          {-54,38},{-71,38}}, color={0,0,127}));
+  connect(heaPumCon.TSetHea, THeaSet.y) annotation (Line(points={{-21,2},{-62,2},
+          {-62,38},{-71,38}}, color={0,0,127}));
   connect(TSouLvg.T, heaPumCon.TEvaLvg) annotation (Line(
-      points={{5,-52},{-36,-52},{-36,-3.6},{-21,-3.6}},
+      points={{5,-52},{-28,-52},{-28,-0.8},{-21,-0.8}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(res1.port_a, heaPum.port_b1) annotation (Line(points={{52,60},{46,60},
           {46,6},{40,6}}, color={0,127,255}));
   connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-71,4},
-          {-58,4},{-58,-0.8},{-21,-0.8}}, color={0,0,127}));
+          {-66,4},{-66,0.6},{-21,0.6}},   color={0,0,127}));
+  connect(minFloHeaPum.y, heaPumCon.minFloHeaPum) annotation (Line(points={{-71,
+          -62},{-64,-62},{-64,-4.2},{-21,-4.2}}, color={0,0,127}));
+  connect(mLoa.y, heaPumCon.mFloLoaHeaPum) annotation (Line(points={{-71,-92},{
+          -60,-92},{-60,-6},{-21,-6}}, color={0,0,127}));
+  connect(mSou.y, heaPumCon.mFloSouHeaPum) annotation (Line(points={{-71,-124},
+          {-56,-124},{-56,-7.8},{-21,-7.8}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},
@@ -155,7 +171,8 @@ equation
                 fillColor = {75,138,73},
                 pattern = LinePattern.None,
                 fillPattern = FillPattern.Solid,
-                points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false),
+                points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={
+            {-100,-140},{100,100}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
     experiment(StopTime=14400),
     __Dymola_Commands(

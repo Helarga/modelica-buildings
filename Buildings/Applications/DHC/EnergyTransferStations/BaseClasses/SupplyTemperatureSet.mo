@@ -50,7 +50,7 @@ model SupplyTemperatureSet "Calculation of supply water temperature setpoint"
     annotation (Placement(transformation(extent={{120,-10},{140,10}}),
       iconTransformation(extent={{100,-100},{120,-80}})));
 
-  EnergyTransferStation.BaseClasses.HeatingWaterSupplyReturn heaWatSupRet(
+ Buildings.Applications.DHC.EnergyTransferStations.BaseClasses.HeatingWaterSupplyReturn heaWatSupRet(
     THeaWatSup_nominal=THeaWatSup_nominal,
     THeaWatRet_nominal=THeaWatRet_nominal,
     THeaWatOut_nominal=THeaWatOut_nominal,
@@ -62,7 +62,7 @@ model SupplyTemperatureSet "Calculation of supply water temperature setpoint"
     annotation (Placement(transformation(extent={{-60,-50},{-40,-30}})));
   Buildings.Utilities.Psychrometrics.ToDryAir toDryAir
     annotation (Placement(transformation(extent={{0,-50},{20,-30}})));
-  EnergyTransferStation.BaseClasses.CoolingWaterSupplyTemperature cooSupTem_set(
+  Buildings.Applications.DHC.EnergyTransferStations.BaseClasses.CoolingWaterSupplyTemperature cooSupTem_set(
     TSup_max=TCooWatSup_max,
     TSup_min=TCooWatSup_min,
     TSup_ini=TCooWatSup_ini,

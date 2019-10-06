@@ -8,78 +8,75 @@ model Source_Load_PumpsController "Source and load pumps controller"
     width=70,
     period=200,
     startTime=0)                                          "Step control"
-    annotation (Placement(transformation(extent={{28,60},{48,80}})));
+    annotation (Placement(transformation(extent={{60,40},{80,60}})));
   Modelica.Blocks.Sources.BooleanPulse    CooMod(width=70, period=200)
                                                  "Step control"
-    annotation (Placement(transformation(extent={{30,-80},{50,-60}})));
+    annotation (Placement(transformation(extent={{60,-80},{80,-60}})));
   Modelica.Blocks.Sources.Constant TSouEntMin(k=4 + 273.15)
     "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-90,-46},{-70,-26}})));
-  Modelica.Blocks.Sources.Constant THeaSet(k=40 + 273.15)
-    "Heating set point temperature"
-    annotation (Placement(transformation(extent={{2,20},{22,40}})));
-  Modelica.Blocks.Sources.Constant yPumMinSou(k=0.2)
-    "Minimum speed for the source side pump"
-    annotation (Placement(transformation(extent={{28,-46},{48,-26}})));
+    annotation (Placement(transformation(extent={{-94,20},{-74,40}})));
+  Modelica.Blocks.Sources.Constant mSecCoo(k=40 + 273.15)
+    "Mass flow rate of the secondary pump at the cold tank side"
+    annotation (Placement(transformation(extent={{0,-40},{20,-20}})));
+  Modelica.Blocks.Sources.Constant mSecHea(k=0.2)
+    "Mass flow rate of the secondary pump at the hot tank side"
+    annotation (Placement(transformation(extent={{-40,-40},{-20,-20}})));
   Control.Source_Load_PumpsController pumCon
-    annotation (Placement(transformation(extent={{60,-10},{80,10}})));
-  Modelica.Blocks.Sources.Pulse TLoaLvg(
+    annotation (Placement(transformation(extent={{90,-10},{110,10}})));
+  Modelica.Blocks.Sources.Pulse mLoa(
     amplitude=5,
     width=50,
     period=200,
-    offset=35 + 273.15) "Load side leaving water temperature"
-    annotation (Placement(transformation(extent={{-30,20},{-10,40}})));
+    offset=35 + 273.15) "Load side water flow rate"
+    annotation (Placement(transformation(extent={{0,20},{20,40}})));
   Modelica.Blocks.Sources.Constant TLoaEntMax(k=55 + 273.15)
     "Maximum entering water temperature at the load side"
-    annotation (Placement(transformation(extent={{-90,20},{-70,40}})));
+    annotation (Placement(transformation(extent={{-62,20},{-42,40}})));
   Modelica.Blocks.Sources.Pulse    TSouEnt(
     amplitude=4,
     period=200,
     offset=12 + 273.15)
     "Source side entering water temperature"
-    annotation (Placement(transformation(extent={{-62,-46},{-42,-26}})));
-  Modelica.Blocks.Sources.Pulse    TSouLvg(
+    annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
+  Modelica.Blocks.Sources.Pulse mSou(
     amplitude=2,
     width=50,
     period=200,
-    offset=9 + 273.15)
-    "Source side leaving water temperature"
-    annotation (Placement(transformation(extent={{-32,-46},{-12,-26}})));
-  Modelica.Blocks.Sources.Constant TCooSet(k=280.15)
-    "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{0,-46},{20,-26}})));
+    offset=9 + 273.15) "Source side water flow rate"
+    annotation (Placement(transformation(extent={{40,-40},{60,-20}})));
   Modelica.Blocks.Sources.Pulse TLoaEnt(
     amplitude=20,
     width=50,
     period=200,
     offset=35 + 273.15) "Load side enetring water temperature"
-    annotation (Placement(transformation(extent={{-58,20},{-38,40}})));
+    annotation (Placement(transformation(extent={{-32,20},{-12,40}})));
 equation
-  connect(pumCon.ReqHea, heaMod.y) annotation (Line(points={{58.6,9.4},{56,9.4},
-          {56,70},{49,70}}, color={255,0,255}));
-  connect(CooMod.y, pumCon.ReqCoo) annotation (Line(points={{51,-70},{56,-70},{56,
-          -9.8},{58.6,-9.8}}, color={255,0,255}));
-  connect(pumCon.pumConMin, yPumMinLoa.y)
-    annotation (Line(points={{59.3,7.5},{54,7.5},{54,30}}, color={0,0,127}));
-  connect(pumCon.TSetHea, THeaSet.y) annotation (Line(points={{59.3,5.9},{28,5.9},
-          {28,30},{23,30}},color={0,0,127}));
-  connect(TLoaLvg.y, pumCon.TLoaLvg) annotation (Line(points={{-9,30},{-4,30},{-4,
-          4.3},{59.3,4.3}},      color={0,0,127}));
-  connect(TLoaEntMax.y, pumCon.TLoaEntMax) annotation (Line(points={{-69,30},{-64,
-          30},{-64,1.5},{59.3,1.5}}, color={0,0,127}));
-  connect(pumCon.pumEvaMin, yPumMinSou.y) annotation (Line(points={{59.3,-7.5},{
-          54,-7.5},{54,-36},{49,-36}}, color={0,0,127}));
-  connect(TSouEntMin.y, pumCon.TSouEntMin) annotation (Line(points={{-69,-36},{-64,
-          -36},{-64,-1.1},{59.3,-1.1}},
+  connect(pumCon.ReqHea, heaMod.y) annotation (Line(points={{88.6,9.4},{88,9.4},
+          {88,50},{81,50}}, color={255,0,255}));
+  connect(CooMod.y, pumCon.ReqCoo) annotation (Line(points={{81,-70},{86,-70},{
+          86,-9.8},{88.6,-9.8}},
+                              color={255,0,255}));
+  connect(pumCon.yheaPumMin, yPumMinLoa.y)
+    annotation (Line(points={{89.3,6.1},{54,6.1},{54,30}}, color={0,0,127}));
+  connect(mLoa.y, pumCon.mLoa) annotation (Line(points={{21,30},{24,30},{24,4.1},
+          {89.3,4.1}}, color={0,0,127}));
+  connect(TLoaEntMax.y,pumCon.TLoaEntMax)  annotation (Line(points={{-41,30},{
+          -36,30},{-36,-0.1},{89.3,-0.1}},
+                                     color={0,0,127}));
+  connect(TSouEntMin.y, pumCon.TSouEntMin) annotation (Line(points={{-73,30},{
+          -70,30},{-70,-1.9},{89.3,-1.9}},
                                       color={0,0,127}));
-  connect(TSouLvg.y, pumCon.TSouLvg) annotation (Line(points={{-11,-36},{-4,-36},
-          {-4,-4.1},{59.3,-4.1}},  color={0,0,127}));
-  connect(pumCon.TSetCoo, TCooSet.y) annotation (Line(points={{59.3,-5.9},{26,-5.9},
-          {26,-36},{21,-36}}, color={0,0,127}));
-  connect(pumCon.TSouEnt, TSouEnt.y) annotation (Line(points={{59.3,-2.5},{-34,-2.5},
-          {-34,-36},{-41,-36}}, color={0,0,127}));
-  connect(TLoaEnt.y, pumCon.TLoaEnt) annotation (Line(points={{-37,30},{-34,30},
-          {-34,2.9},{59.3,2.9}}, color={0,0,127}));
+  connect(pumCon.TSouEnt, TSouEnt.y) annotation (Line(points={{89.3,-3.5},{-46,
+          -3.5},{-46,-30},{-59,-30}},
+                                color={0,0,127}));
+  connect(TLoaEnt.y, pumCon.TLoaEnt) annotation (Line(points={{-11,30},{-4,30},
+          {-4,2.1},{89.3,2.1}},  color={0,0,127}));
+  connect(pumCon.mSou, mSou.y) annotation (Line(points={{89.3,-8.3},{66,-8.3},{
+          66,-30},{61,-30}}, color={0,0,127}));
+  connect(mSecCoo.y, pumCon.mSecCoo) annotation (Line(points={{21,-30},{26,-30},
+          {26,-6.7},{89.3,-6.7}}, color={0,0,127}));
+  connect(mSecHea.y, pumCon.mSecHot) annotation (Line(points={{-19,-30},{-14,
+          -30},{-14,-5.1},{89.3,-5.1}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},

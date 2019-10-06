@@ -3,3 +3,4 @@ HeatingRecoveryChillerController
 CondenserandEvaporatorPumpsController
 HeatpumpController
 Source_Load_PumpsController
+HeatpumpControllerBlock
