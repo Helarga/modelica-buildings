@@ -1,4 +1,4 @@
-within Buildings.Applications.DHC.EnergyTransferStations.Control;
+﻿within Buildings.Applications.DHC.EnergyTransferStations.Control;
 model Source_Load_PumpsController
   "The control block of the condenser and the evaporator water pumps"
      extends Modelica.Blocks.Icons.Block;
@@ -20,7 +20,7 @@ model Source_Load_PumpsController
     annotation (Placement(transformation(extent={{-8,124},{12,144}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yPumLoa
     "Load side pump  speed outlet signal" annotation (Placement(transformation(
-          extent={{156,58},{188,90}}),   iconTransformation(extent={{100,70},{120,
+          extent={{160,58},{192,90}}),   iconTransformation(extent={{100,70},{120,
             90}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yPumSou
     "Source side pump speed outlet signal"
@@ -151,9 +151,9 @@ equation
   connect(max2.y, swi1.u1) annotation (Line(points={{82,134},{104,134},{104,82},
           {108,82}}, color={0,0,127}));
   connect(yPumLoa, yPumLoa)
-    annotation (Line(points={{172,74},{172,74}}, color={0,0,127}));
+    annotation (Line(points={{176,74},{176,74}}, color={0,0,127}));
   connect(swi1.y, yPumLoa)
-    annotation (Line(points={{132,74},{172,74}}, color={0,0,127}));
+    annotation (Line(points={{132,74},{176,74}}, color={0,0,127}));
   connect(TLoaEnt, t2Off2.u1) annotation (Line(points={{-110,200},{-48,200},{
           -48,190},{-40,190}}, color={0,0,127}));
   connect(mSecHot, pro.u1)
@@ -221,8 +221,40 @@ equation
           fillPattern=FillPattern.Solid,
           textStyle={TextStyle.Bold},
           textString="Source side water pump")}),
-                Documentation(info="<html>
-<p>
+Documentation(info="<html>
+<h4> Principle of operation</h4> 
+<p> 
+the applied pumping configuration is variable flow primary-secondary systems. The primary
+<code>pumSou</code> and <code>pumLoa</code> pumps are interlocked and controlled to satisfiy 
+the thermal requirments at the building(secondary) side considering the following
+</p>
+
+<ul>
+<li>
+The mass flow rate of the primary pumps is 10% higher than the secondary pumps to avoid 
+the cross circulation through the hot and cold buffer tanks form the secondary side i.e. the return water 
+from the secondary side is mixed with the supply water.
+
+<p align=\"center\">
+<img alt=\"Image BufferTankCrossCirculation\"
+src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/BufferTankCrossCirculation.png\"/>
+</p>  
+</li>
+<li>
+Maintain the heat pump flow rate between the minimum and maximum limit of laod and source sides heat exchangers.
+</li>
+<li>
+Maintain the hydraulic balance between the primary <code>pumSou</code> or <code>pumLoa</code> 
+and <code>disPum</code> once the system is switched to reject heat to district network mode.
+</li>
+
+<p> check it with Antoine
+■ Manage transient flows without
+compromising stable operation,
+especially in multi heatpumps plants.
+</p>
+
+<h4>Control approach</h4>
 The controller outputs the load and source side pumps rotating speed, taking
 real inputs of heating and cooling set point temperatures <code>THeaSet</code>,<code>TCooSet</code>,
 load and source entering and leaving water temperatures <code>TLoaLvg</code>, <code>SouEnt</code>, <code>TSouLvg</code>
