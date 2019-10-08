@@ -540,7 +540,7 @@ model Substation
           extent={{-10,10},{10,-10}},
           rotation=270,
           origin={-68,-90})));
-    parameter Fluid.HeatPumps.Data.EquationFitWaterToWater.Generic_EquationFit heaPumDat
+    parameter Fluid.HeatPumps.Data.EquationFitReversible.Generic               heaPumDat
       "Performance data of the water to water heat pump"
       annotation (choicesAllMatching=true, Placement(
           transformation(extent={{-292,-252},{-272,-232}})));
@@ -576,9 +576,8 @@ equation
   connect(solTheMod.pumSol, pumSol.y)
     annotation (Line(points={{127,274.4},{172,274.4},{172,138}},
                             color={0,0,127}));
-  connect(heaPumCon.heaPumMod, heaPum.uMod)
-    annotation (Line(points={{-98.6,209.111},{-56,209.111},{-56,126},{-35.4545,
-          126}},                                        color={255,127,0}));
+  connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{-98.6,
+          209.111},{-56,209.111},{-56,126},{-35.4545,126}}, color={255,127,0}));
   connect(subCon.reqHea, heaPumCon.ReqHea)
     annotation (Line(
       points={{-179.3,219.1},{-138,219.1},{-138,219.111},{-121.4,219.111}},

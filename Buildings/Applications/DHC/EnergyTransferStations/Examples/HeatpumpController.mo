@@ -118,10 +118,10 @@ model HeatpumpController
 equation
   connect(loaPum.T_in,TLoaEnt. y)
     annotation (Line(points={{-56,80},{-70,80}}, color={0,0,127}));
-  connect(heaPumCon.heaPumMod, heaPum.uMod) annotation (Line(points={{1.4,2},{
-          10,2},{10,0},{19,0}},          color={255,127,0}));
-  connect(heaPumCon.TSetCon, heaPum.THeaLoaSet) annotation (Line(points={{1.4,6.2},
-          {6,6.2},{6,9},{18.6,9}}, color={0,0,127}));
+  connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{1.4,2},{
+          10,2},{10,0},{19,0}}, color={255,127,0}));
+  connect(heaPumCon.TSetHeaPum, heaPum.THeaLoaSet) annotation (Line(points={{
+          1.4,6.2},{6,6.2},{6,9},{18.6,9}}, color={0,0,127}));
   connect(loaPum.ports[1], heaPum.port_a1) annotation (Line(points={{-34,84},{
           10,84},{10,6},{20,6}},
                               color={0,127,255}));
@@ -136,8 +136,8 @@ equation
     annotation (Line(points={{-24,-80},{-10,-80}}, color={0,127,255}));
   connect(heaPum.port_b2,TSouLvg. port_a)
     annotation (Line(points={{20,-6},{16,-6},{16,-42}}, color={0,127,255}));
-  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-2.4},{
-          -66,-2.4},{-66,-28},{-71,-28}},
+  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-7.2},{
+          -66,-7.2},{-66,-28},{-71,-28}},
                                       color={0,0,127}));
   connect(res1.port_b,loaVol. ports[1])
     annotation (Line(points={{72,60},{78,60}},color={0,127,255}));
@@ -146,8 +146,8 @@ equation
                    color={0,0,127}));
   connect(heaPum.port_a2, souPum.ports[1])
     annotation (Line(points={{40,-6},{66,-6}}, color={0,127,255}));
-  connect(heaPumCon.TSetHea, THeaSet.y) annotation (Line(points={{-21,2},{-62,2},
-          {-62,38},{-71,38}}, color={0,0,127}));
+  connect(heaPumCon.TSetHeaMin, THeaSet.y) annotation (Line(points={{-21,0.6},{
+          -62,0.6},{-62,38},{-71,38}}, color={0,0,127}));
   connect(TSouLvg.T, heaPumCon.TEvaLvg) annotation (Line(
       points={{5,-52},{-28,-52},{-28,-0.8},{-21,-0.8}},
       color={0,0,127},
@@ -155,7 +155,7 @@ equation
   connect(res1.port_a, heaPum.port_b1) annotation (Line(points={{52,60},{46,60},
           {46,6},{40,6}}, color={0,127,255}));
   connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-71,4},
-          {-66,4},{-66,0.6},{-21,0.6}},   color={0,0,127}));
+          {-66,4},{-66,-3.2},{-21,-3.2}}, color={0,0,127}));
   connect(minFloHeaPum.y, heaPumCon.minFloHeaPum) annotation (Line(points={{-71,
           -62},{-64,-62},{-64,-4.2},{-21,-4.2}}, color={0,0,127}));
   connect(mLoa.y, heaPumCon.mFloLoaHeaPum) annotation (Line(points={{-71,-92},{

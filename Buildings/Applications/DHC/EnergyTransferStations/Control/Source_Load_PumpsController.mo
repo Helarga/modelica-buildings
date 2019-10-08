@@ -241,7 +241,7 @@ src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStati
 </p>  
 </li>
 <li>
-Maintain the heat pump flow rate between the minimum and maximum limit of laod and source sides heat exchangers.
+Maintain the heat pump flow rate between the minimum and maximum limit of load and source sides heat exchangers.
 </li>
 <li>
 Maintain the hydraulic balance between the primary <code>pumSou</code> or <code>pumLoa</code> 
