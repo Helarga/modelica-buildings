@@ -6,43 +6,46 @@ model HeatpumpControllerBlock
   Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpController heaPumCon
     annotation (Placement(transformation(extent={{40,0},{60,18}})));
 
-  Modelica.Blocks.Sources.BooleanConstant
-                                       heaMod(k=false)
+  Modelica.Blocks.Sources.BooleanPulse heaMod(width=50, period=500)
     "Step control"
     annotation (Placement(transformation(extent={{0,60},{20,80}})));
-  Modelica.Blocks.Sources.BooleanPulse    CooMod(width=50, period=1000)
+  Modelica.Blocks.Sources.BooleanPulse    cooMod(
+    width=50,
+    period=500,
+    startTime=125)
     "Step control"
     annotation (Placement(transformation(extent={{0,30},{20,50}})));
   Modelica.Blocks.Sources.Constant TCooSet(k=7 + 273.15)
     "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-60,-78},{-40,-58}})));
+    annotation (Placement(transformation(extent={{-60,-50},{-40,-30}})));
   Modelica.Blocks.Sources.Constant THeaSetMin(k=25 + 273.15)
     "Minimum heating set point temperature"
     annotation (Placement(transformation(extent={{-60,54},{-40,74}})));
   Modelica.Blocks.Sources.Constant THeaSetMax(k=50 + 273.15)
     "Maximum heating set point temperature"
-    annotation (Placement(transformation(extent={{-60,-12},{-40,8}})));
+    annotation (Placement(transformation(extent={{-60,20},{-40,40}})));
   Modelica.Blocks.Sources.Constant TSouLvg(k=10 + 273.15)
     "Maximum heating set point temperature"
-    annotation (Placement(transformation(extent={{-60,-42},{-40,-22}})));
+    annotation (Placement(transformation(extent={{-60,-84},{-40,-64}})));
   Modelica.Blocks.Sources.Constant THeaSet(k=30 + 273.15)
     "Heating set point temperature"
-    annotation (Placement(transformation(extent={{-60,20},{-40,40}})));
+    annotation (Placement(transformation(extent={{-60,-16},{-40,4}})));
 equation
-  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{38.6,19},{30,19},
-          {30,70},{21,70}},   color={255,0,255}));
-  connect(heaPumCon.ReqCoo, CooMod.y) annotation (Line(points={{38.6,16},{26,16},
+  connect(heaPumCon.ReqHea, heaMod.y)
+  annotation (Line(points={{38.6,17.1},{30,17.1},{30,70},{21,70}},
+                              color={255,0,255}));
+  connect(heaPumCon.ReqCoo,cooMod. y) annotation (Line(points={{38.6,14.4},{26,14.4},
           {26,40},{21,40}},     color={255,0,255}));
-  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{39,0.8},{36,
-          0.8},{36,-68},{-39,-68}},   color={0,0,127}));
-  connect(heaPumCon.TSetHeaMin, THeaSetMin.y) annotation (Line(points={{39,8.6},
-          {-20,8.6},{-20,64},{-39,64}}, color={0,0,127}));
-  connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-39,-2},
-          {-28,-2},{-28,4.8},{39,4.8}},   color={0,0,127}));
-  connect(TSouLvg.y, heaPumCon.TSouLvg) annotation (Line(points={{-39,-32},{22,
-          -32},{22,2.8},{39,2.8}}, color={0,0,127}));
-  connect(THeaSet.y, heaPumCon.TSetHea) annotation (Line(points={{-39,30},{-28,
-          30},{-28,6.8},{39,6.8}}, color={0,0,127}));
+  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{39,1.8},{16,1.8},
+          {16,-40},{-39,-40}},        color={0,0,127}));
+  connect(heaPumCon.TSetHeaMin, THeaSetMin.y) annotation (Line(points={{39,7.74},
+          {-12,7.74},{-12,64},{-39,64}},color={0,0,127}));
+  connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-39,30},
+          {-20,30},{-20,5.58},{39,5.58}}, color={0,0,127}));
+  connect(TSouLvg.y, heaPumCon.TSouLvg) annotation (Line(points={{-39,-74},{22,-74},{22,0},{39,0}},
+                                   color={0,0,127}));
+  connect(THeaSet.y, heaPumCon.TSetHea) annotation (Line(points={{-39,-6},{-20,-6},
+          {-20,3.6},{39,3.6}},     color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},
@@ -55,9 +58,23 @@ equation
                 points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={
             {-100,-140},{100,100}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
-    experiment(StopTime=3500),
+    experiment(StopTime=4500),
     __Dymola_Commands(
-  file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/HeatpumpController.mos"
+  file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/HeatpumpControllerBlock.mos"
         "Simulate and plot"),
-         experiment(Tolerance=1e-6, StopTime=14400));
+         experiment(Tolerance=1e-6, StopTime=2000),
+Documentation(info="<html>
+<p>
+This model validates the controller block
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpController\"> 
+Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpController</a>.
+<p>
+
+</html>", revisions="<html>
+<ul>
+<li>
+ <br/>
+</li>
+</ul>
+</html>"));
 end HeatpumpControllerBlock;

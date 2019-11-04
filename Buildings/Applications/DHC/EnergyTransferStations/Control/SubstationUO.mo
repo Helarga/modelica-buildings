@@ -138,16 +138,16 @@ equation
     annotation (Line(points={{-78,20},{-42,20}}, color={0,0,127}));
   connect(pumHeaCon.y, pumConMin) annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
   connect(pumCooCon.y, pumEvamin) annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
-  connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{-162,190}},
-                                            color={0,0,127}));
-  connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{-180,160},{-180,180},
-          {-162,180}},                      color={0,0,127}));
+  connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{
+          -200,190},{-200,191},{-161,191}}, color={0,0,127}));
+  connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{
+          -180,160},{-180,181},{-161,181}}, color={0,0,127}));
   connect(TSetCoo, conColSid.THeaSupSet) annotation (Line(points={{-240,-140},{
           -180,-140},{-180,-192},{-162,-192}}, color={0,0,127}));
   connect(TTanCooTop, conColSid.TTanTop) annotation (Line(points={{-240,-180},{
-          -200,-180},{-200,-196},{-162,-196}}, color={0,0,127}));
+          -200,-180},{-200,-195},{-161,-195}}, color={0,0,127}));
   connect(TTanCooBot, conColSid.TTanBot) annotation (Line(points={{-240,-210},{
-          -192,-210},{-192,-206},{-162,-206}}, color={0,0,127}));
+          -192,-210},{-192,-205},{-161,-205}}, color={0,0,127}));
   connect(conHotSid.reqHea, or1.u1) annotation (Line(points={{-139,195},{-130,195},{-130,112},{
           -122,112}},             color={255,0,255}));
   connect(conColSid.reqCoo, or1.u2) annotation (Line(points={{-139,-191},{-130,-191},

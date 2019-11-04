@@ -14,7 +14,7 @@ model HeatpumpController
    "Scaling factor for heatpump capacity";
 
   Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpController heaPumCon
-    annotation (Placement(transformation(extent={{-20,-8},{0,10}})));
+    annotation (Placement(transformation(extent={{-20,-10},{0,8}})));
 
   Fluid.HeatPumps.ReverseWaterToWater heaPum(
     m1_flow_nominal=mLoa_flow_nominal,
@@ -34,7 +34,10 @@ model HeatpumpController
     annotation (Placement(transformation(extent={{20,-10},{40,10}})));
 
 
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TLoaEnt(k=273.15 + 35)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Sine     TLoaEnt(
+    amplitude=5,
+    freqHz=1/3000,
+    offset=30 + 273.15)
     "Load heat exchanger entering water temperature"
     annotation (Placement(transformation(extent={{-92,70},{-72,90}})));
   Fluid.Sources.MassFlowSource_T loaPum(
@@ -51,7 +54,7 @@ model HeatpumpController
   Modelica.Blocks.Sources.BooleanConstant heaMod(k=false) "Step control"
     annotation (Placement(transformation(extent={{-60,42},{-40,62}})));
   Modelica.Blocks.Sources.BooleanConstant CooMod "Step control"
-    annotation (Placement(transformation(extent={{-54,-60},{-34,-40}})));
+    annotation (Placement(transformation(extent={{-58,-60},{-38,-40}})));
   Fluid.FixedResistances.PressureDrop res2(
     redeclare package Medium = Medium,
     m_flow_nominal=mSou_flow_nominal,
@@ -71,7 +74,7 @@ model HeatpumpController
       origin={16,-52})));
   Modelica.Blocks.Sources.Constant TCooSet(k=7 + 273.15)
     "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-92,-38},{-72,-18}})));
+    annotation (Placement(transformation(extent={{-92,-90},{-72,-70}})));
   Fluid.FixedResistances.PressureDrop
                                 res1(
     redeclare package Medium = Medium,
@@ -93,75 +96,62 @@ model HeatpumpController
       extent={{-10,-10},{10,10}},
       rotation=180,
       origin={76,-6})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Sine sin(
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Sine TSouEnt(
     amplitude=3,
     freqHz=1/3000,
     offset=12 + 273.15,
-    startTime=0)  "Sine source block"
+    startTime=0) "Entering water temperature at the source side"
     annotation (Placement(transformation(extent={{60,-60},{80,-40}})));
   Modelica.Blocks.Sources.Constant THeaSet(k=40 + 273.15)
     "Heating set point temperature"
-    annotation (Placement(transformation(extent={{-92,28},{-72,48}})));
+    annotation (Placement(transformation(extent={{-92,-50},{-72,-30}})));
   Modelica.Blocks.Sources.Constant THeaSetMax(k=55 + 273.15)
     "Maximum heating set point temperature"
-    annotation (Placement(transformation(extent={{-92,-6},{-72,14}})));
-  Modelica.Blocks.Sources.Constant minFloHeaPum(k=0.2)
-    "Minimum flow rate for the heat pump"
-    annotation (Placement(transformation(extent={{-92,-72},{-72,-52}})));
-  Modelica.Blocks.Sources.Ramp mLoa(
-    height=0.9,
-    duration=500,
-    offset=0.1) "Mass flow rate at the load side"
-    annotation (Placement(transformation(extent={{-92,-102},{-72,-82}})));
-  Modelica.Blocks.Sources.Ramp mSou "Mass flow rate at the source side"
-    annotation (Placement(transformation(extent={{-92,-134},{-72,-114}})));
+    annotation (Placement(transformation(extent={{-90,2},{-70,22}})));
+  Modelica.Blocks.Sources.Constant TSetHeaMin(k=25)
+    "Minimum heating set point temperature"
+    annotation (Placement(transformation(extent={{-90,34},{-70,54}})));
 equation
   connect(loaPum.T_in,TLoaEnt. y)
     annotation (Line(points={{-56,80},{-70,80}}, color={0,0,127}));
-  connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{1.4,2},{
-          10,2},{10,0},{19,0}}, color={255,127,0}));
-  connect(heaPumCon.TSetHeaPum, heaPum.THeaLoaSet) annotation (Line(points={{
-          1.4,6.2},{6,6.2},{6,9},{18.6,9}}, color={0,0,127}));
+  connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{1.4,
+          2.22045e-16},{10,2.22045e-16},{10,0},{19,0}},
+                                color={255,127,0}));
+  connect(heaPumCon.TSetHeaPum, heaPum.THeaLoaSet) annotation (Line(points={{1.4,4.2},
+          {6,4.2},{6,9},{18.6,9}},          color={0,0,127}));
   connect(loaPum.ports[1], heaPum.port_a1) annotation (Line(points={{-34,84},{
           10,84},{10,6},{20,6}},
                               color={0,127,255}));
-  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{-21.4,11},{-30,
-          11},{-30,52},{-39,52}},
-                              color={255,0,255}));
-  connect(heaPumCon.ReqCoo, CooMod.y) annotation (Line(points={{-21.4,8},{-30,8},
-          {-30,-50},{-33,-50}}, color={255,0,255}));
+  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{-21.4,9},{-28,9},
+          {-28,52},{-39,52}}, color={255,0,255}));
+  connect(heaPumCon.ReqCoo, CooMod.y) annotation (Line(points={{-21.4,6},{-28,6},
+          {-28,-50},{-37,-50}}, color={255,0,255}));
   connect(TSouLvg.port_b,res2. port_a)
     annotation (Line(points={{16,-62},{16,-80},{10,-80}},color={0,127,255}));
   connect(souVol.ports[1],res2. port_b)
     annotation (Line(points={{-24,-80},{-10,-80}}, color={0,127,255}));
   connect(heaPum.port_b2,TSouLvg. port_a)
     annotation (Line(points={{20,-6},{16,-6},{16,-42}}, color={0,127,255}));
-  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-7.2},{
-          -66,-7.2},{-66,-28},{-71,-28}},
-                                      color={0,0,127}));
   connect(res1.port_b,loaVol. ports[1])
     annotation (Line(points={{72,60},{78,60}},color={0,127,255}));
-  connect(sin.y,souPum. T_in) annotation (Line(points={{82,-50},{96,-50},{96,-10},
-          {88,-10}},
-                   color={0,0,127}));
+  connect(TSouEnt.y, souPum.T_in) annotation (Line(points={{82,-50},{96,-50},{
+          96,-10},{88,-10}}, color={0,0,127}));
   connect(heaPum.port_a2, souPum.ports[1])
     annotation (Line(points={{40,-6},{66,-6}}, color={0,127,255}));
-  connect(heaPumCon.TSetHeaMin, THeaSet.y) annotation (Line(points={{-21,0.6},{
-          -62,0.6},{-62,38},{-71,38}}, color={0,0,127}));
-  connect(TSouLvg.T, heaPumCon.TEvaLvg) annotation (Line(
-      points={{5,-52},{-28,-52},{-28,-0.8},{-21,-0.8}},
-      color={0,0,127},
-      pattern=LinePattern.Dot));
   connect(res1.port_a, heaPum.port_b1) annotation (Line(points={{52,60},{46,60},
           {46,6},{40,6}}, color={0,127,255}));
-  connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-71,4},
-          {-66,4},{-66,-3.2},{-21,-3.2}}, color={0,0,127}));
-  connect(minFloHeaPum.y, heaPumCon.minFloHeaPum) annotation (Line(points={{-71,
-          -62},{-64,-62},{-64,-4.2},{-21,-4.2}}, color={0,0,127}));
-  connect(mLoa.y, heaPumCon.mFloLoaHeaPum) annotation (Line(points={{-71,-92},{
-          -60,-92},{-60,-6},{-21,-6}}, color={0,0,127}));
-  connect(mSou.y, heaPumCon.mFloSouHeaPum) annotation (Line(points={{-71,-124},
-          {-56,-124},{-56,-7.8},{-21,-7.8}}, color={0,0,127}));
+  connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-69,12},
+          {-66,12},{-66,-3.8},{-21,-3.8}},color={0,0,127}));
+  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-8},{-60,
+          -8},{-60,-80},{-71,-80}}, color={0,0,127}));
+  connect(TSetHeaMin.y, heaPumCon.TSetHeaMin) annotation (Line(points={{-69,44},
+          {-62,44},{-62,-1.4},{-21,-1.4}}, color={0,0,127}));
+  connect(THeaSet.y, heaPumCon.TSetHea) annotation (Line(points={{-71,-40},{-64,
+          -40},{-64,-6},{-21,-6}}, color={0,0,127}));
+  connect(TSouLvg.T, heaPumCon.TSouLvg) annotation (Line(
+      points={{5,-52},{-26,-52},{-26,-10},{-21,-10}},
+      color={0,0,127},
+      pattern=LinePattern.Dot));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},
