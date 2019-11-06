@@ -371,13 +371,11 @@ model Substation
       annotation (Placement(transformation(extent={{-10,-10},{10,10}},
           rotation=270,
           origin={-90,-194})));
-    Fluid.Movers.FlowControlled_m_flow           pumBor(
+    Fluid.Movers.SpeedControlled_y               pumBor(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       addPowerToMedium=false,
-      nominalValuesDefineDefaultPressureCurve=true,
       show_T=show_T,
-      m_flow_nominal=mGeo_flow_nominal,
       per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
@@ -408,13 +406,11 @@ model Substation
           extent={{10,-10},{-10,10}},
           rotation=90,
           origin={112,-152})));
-    Fluid.Movers.FlowControlled_m_flow pumHexDis(
+    Fluid.Movers.SpeedControlled_y     pumHexDis(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       addPowerToMedium=false,
-      nominalValuesDefineDefaultPressureCurve=true,
       show_T=show_T,
-      m_flow_nominal=mHex_flow_nominal,
       per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
@@ -470,10 +466,10 @@ model Substation
           origin={224,-192})));
     Buildings.Controls.OBC.CDL.Continuous.Gain gaiBor(k=mGeo_flow_nominal)
      "Gain for mass flow rate of borefield"
-      annotation (Placement(transformation(extent={{-100,-270},{-80,-250}})));
+      annotation (Placement(transformation(extent={{-100,-278},{-80,-258}})));
     Buildings.Controls.OBC.CDL.Continuous.Gain gaiMHex(k=mHex_flow_nominal)
      "Gain for mass flow of heat exchanger"
-      annotation (Placement(transformation(extent={{24,-270},{44,-250}})));
+      annotation (Placement(transformation(extent={{24,-284},{44,-264}})));
     final parameter Fluid.Geothermal.Borefields.Data.Filling.Bentonite filDat(kFil=2.1)
       annotation (Placement(transformation(extent={{-292,-156},{-272,-136}})));
     final parameter Fluid.Geothermal.Borefields.Data.Soil.SandStone soiDat(
@@ -715,13 +711,6 @@ equation
       color={28,108,200},
       thickness=0.5,
       pattern=LinePattern.DashDotDot));
-  connect(gaiBor.y,pumBor. m_flow_in)
-    annotation (Line(points={{-78,-260},{-52,-260},{-52,-144},{-56,-144}},
-                                        color={0,0,127},
-      pattern=LinePattern.Dash));
-  connect(gaiMHex.y, pumHexDis.m_flow_in)
-    annotation (Line(points={{46,-260},{80,-260},{80,-102},{94,-102}}, color={0,0,127},
-      pattern=LinePattern.Dash));
   connect(subCon.ValHeaPos, valSupHea.y)
     annotation (Line(
       points={{-179.1,208.5},{-152,208.5},{-152,-2},{8,-2},{8,-8}},
@@ -792,15 +781,6 @@ equation
 
   connect(cooSupHed.ports_b[1],TEvaLvg. port_b) annotation (Line(points={{-98.7,
           21},{-90,21},{-90,20},{-76,20}}, color={0,127,255}));
-  connect(gaiBor.u, ambCon.pumBor) annotation (Line(
-      points={{-102,-260},{-242,-260},{-242,-138},{-235,-138}},
-      color={0,0,127},
-      pattern=LinePattern.Dot));
-  connect(gaiMHex.u, ambCon.pumHexDis) annotation (Line(
-      points={{22,-260},{-28,-260},{-28,-280},{-248,-280},{-248,-133},{-235,
-          -133}},
-      color={0,0,127},
-      pattern=LinePattern.Dot));
 
   connect(subCon.pumEvamin, pumPrimCon.minEvaMasFlo)
     annotation (Line(points={{-179.1,210.7},{-148,210.7},{-148,167},{-120.8,167}}, color={0,0,127}));
@@ -871,23 +851,23 @@ equation
     annotation (Line(points={{-68,-134},{-68,-116},{-66,-116}}, color={0,127,255}));
   connect(splVal.port_3, valRad1.port_3) annotation (Line(points={{30,-106},{-56,-106}}, color={0,127,255}));
   connect(subCon.ValHea, ambCon.valHea) annotation (Line(
-      points={{-179.2,217.2},{-166,217.2},{-166,-128.8},{-213,-128.8}},
+      points={{-179.2,217.2},{-166,217.2},{-166,-126.8},{-213,-126.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ambCon.valCoo, subCon.ValCoo) annotation (Line(
-      points={{-213,-126.2},{-168,-126.2},{-168,202.4},{-179.2,202.4}},
+      points={{-213,-128.8},{-168,-128.8},{-168,202.4},{-179.2,202.4}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(TConEnt.T, ambCon.TEntCon) annotation (Line(
-      points={{-10,31},{-10,32},{-156,32},{-156,-121.2},{-213,-121.2}},
+      points={{-10,31},{-10,32},{-156,32},{-156,-121.8},{-213,-121.8}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TEvaEnt.T, ambCon.TEntEva) annotation (Line(
-      points={{-20,107},{-20,112},{-158,112},{-158,-123.6},{-213,-123.6}},
+      points={{-20,107},{-20,112},{-158,112},{-158,-124.2},{-213,-124.2}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TBorIn.T, ambCon.TBorIn) annotation (Line(
-      points={{-101,-166},{-152,-166},{-152,-131.4},{-213,-131.4}},
+      points={{-101,-166},{-152,-166},{-152,-132},{-213,-132}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(pumHexDis.port_a, TDisHex.port_b)
@@ -895,12 +875,22 @@ equation
   connect(splVal.port_2, heaRetHed.ports_b[2])
     annotation (Line(points={{40,-96},{40,-1},{44.6,-1}}, color={0,127,255}));
   connect(TBorOut.T, ambCon.TBorOut) annotation (Line(
-      points={{-43,-200},{-46,-200},{-46,-220},{-160,-220},{-160,-134},{-213,
-          -134}},
+      points={{-43,-200},{-46,-200},{-46,-220},{-160,-220},{-160,-134.6},{-213,
+          -134.6}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(heaRetHed.ports_b[3], TDisHex.port_a) annotation (Line(points={{44.6,
           -3.93333},{44.6,-34},{106,-34},{106,-56}}, color={0,127,255}));
+  connect(ambCon.yPumBor, pumBor.y) annotation (Line(
+      points={{-235,-138},{-242,-138},{-242,-212},{-48,-212},{-48,-144},{-56,
+          -144}},
+      color={0,0,127},
+      pattern=LinePattern.Dot));
+  connect(ambCon.yPumHexDis, pumHexDis.y) annotation (Line(
+      points={{-235,-133.4},{-250,-133.4},{-250,-82},{80,-82},{80,-102},{94,
+          -102}},
+      color={0,0,127},
+      pattern=LinePattern.Dot));
    annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
                                 Rectangle(
         extent={{-100,-100},{100,100}},
