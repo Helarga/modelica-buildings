@@ -1,6 +1,5 @@
 within Buildings.Applications.DHC.EnergyTransferStations.BaseClasses;
-model CoolingSupplyHeader
- "Hydraulic supply water header to connect the heat pump to building cooling load"
+model HydraulicHeader "Hydraulic header manifold."
  replaceable package Medium = Modelica.Media.Interfaces.PartialMedium;
 
  parameter Modelica.SIunits.MassFlowRate m_flow_nominal
@@ -46,29 +45,30 @@ equation
      annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
        Rectangle(
          extent={{-86,6},{90,-8}},
-         lineColor={28,108,200},
+         lineColor={102,44,145},
          lineThickness=0.5,
-         fillColor={28,108,200},
-         fillPattern=FillPattern.Solid),
+         fillColor={255,255,85},
+         fillPattern=FillPattern.Backward),
        Rectangle(
          extent={{-98,18},{-86,-22}},
          lineColor={28,108,200},
          lineThickness=0.5,
-         fillColor={28,108,200},
-         fillPattern=FillPattern.Solid),
+         fillColor={102,44,145},
+         fillPattern=FillPattern.Forward),
        Rectangle(
          extent={{88,20},{100,-20}},
          lineColor={28,108,200},
          lineThickness=0.5,
-         fillColor={28,108,200},
-         fillPattern=FillPattern.Solid),Text(
+         fillColor={102,44,145},
+         fillPattern=FillPattern.Forward),
+                                        Text(
        extent={{-150,140},{150,100}},
        lineColor={0,0,255}),    Text(
-         extent={{-151,95},{149,55}},
+         extent={{-136,88},{139,55}},
          lineColor={0,0,255},
          fillPattern=FillPattern.HorizontalCylinder,
          fillColor={0,127,255},
          textString="%name")}),
                               Diagram(
        coordinateSystem(preserveAspectRatio=false)), defaultComponentName="cooSupHed");
-end CoolingSupplyHeader;
+end HydraulicHeader;

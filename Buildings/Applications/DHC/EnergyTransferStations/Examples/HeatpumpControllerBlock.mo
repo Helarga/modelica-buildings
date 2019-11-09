@@ -3,7 +3,7 @@ model HeatpumpControllerBlock
   "Reverse heatpump controller operates in heating mode only"
   package Medium = Buildings.Media.Water "Medium model";
 
-  Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpController heaPumCon
+  Control.HeatPumpController heaPumCon
     annotation (Placement(transformation(extent={{40,0},{60,18}})));
 
   Modelica.Blocks.Sources.BooleanPulse heaMod(width=50, period=500)
@@ -18,9 +18,6 @@ model HeatpumpControllerBlock
   Modelica.Blocks.Sources.Constant TCooSet(k=7 + 273.15)
     "Cooling setpoint temperature"
     annotation (Placement(transformation(extent={{-60,-50},{-40,-30}})));
-  Modelica.Blocks.Sources.Constant THeaSetMin(k=25 + 273.15)
-    "Minimum heating set point temperature"
-    annotation (Placement(transformation(extent={{-60,54},{-40,74}})));
   Modelica.Blocks.Sources.Constant THeaSetMax(k=50 + 273.15)
     "Maximum heating set point temperature"
     annotation (Placement(transformation(extent={{-60,20},{-40,40}})));
@@ -38,11 +35,9 @@ equation
           {26,40},{21,40}},     color={255,0,255}));
   connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{39,1.8},{16,1.8},
           {16,-40},{-39,-40}},        color={0,0,127}));
-  connect(heaPumCon.TSetHeaMin, THeaSetMin.y) annotation (Line(points={{39,7.74},
-          {-12,7.74},{-12,64},{-39,64}},color={0,0,127}));
   connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-39,30},
           {-20,30},{-20,5.58},{39,5.58}}, color={0,0,127}));
-  connect(TSouLvg.y, heaPumCon.TSouLvg) annotation (Line(points={{-39,-74},{22,-74},{22,0},{39,0}},
+  connect(TSouLvg.y,heaPumCon.TEvaLvg)  annotation (Line(points={{-39,-74},{22,-74},{22,0},{39,0}},
                                    color={0,0,127}));
   connect(THeaSet.y, heaPumCon.TSetHea) annotation (Line(points={{-39,-6},{-20,-6},
           {-20,3.6},{39,3.6}},     color={0,0,127}));

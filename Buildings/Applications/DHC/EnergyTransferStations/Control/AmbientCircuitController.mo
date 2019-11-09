@@ -44,12 +44,12 @@ model AmbientCircuitController
             -100,-36}})));
   Modelica.Blocks.Interfaces.RealInput TDisHexEnt(final unit="K")
     "District heat exchnager entering water temperature"
-    annotation (Placement(transformation(extent={{-260,-240},{-220,-200}}), iconTransformation(extent={{-120,
+    annotation (Placement(transformation(extent={{-260,-218},{-220,-178}}), iconTransformation(extent={{-120,
             -86},{-100,-66}})));
   Modelica.Blocks.Interfaces.RealInput TDisHexLvg(final unit="K")
     "District heat exchnager leaving water temperature"
     annotation (Placement(
-        transformation(extent={{-260,-276},{-220,-236}}), iconTransformation(
+        transformation(extent={{-260,-254},{-220,-214}}), iconTransformation(
           extent={{-120,-110},{-100,-90}})));
   Modelica.Blocks.Interfaces.BooleanInput valHea "Heating load side valve control"
     annotation (Placement(transformation(extent={{-260,160},{-220,200}}),
@@ -82,9 +82,9 @@ model AmbientCircuitController
     "Heat exchanger pump control"
     annotation (Placement(transformation(extent={{80,-190},{100,-170}})));
   Buildings.Controls.OBC.CDL.Continuous.Add add4(k2=-1)
-    annotation (Placement(transformation(extent={{-160,-260},{-140,-240}})));
+    annotation (Placement(transformation(extent={{-160,-238},{-140,-218}})));
   Buildings.Controls.OBC.CDL.Continuous.Abs abs3
-    annotation (Placement(transformation(extent={{-120,-260},{-100,-240}})));
+    annotation (Placement(transformation(extent={{-120,-238},{-100,-218}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant con3(k=dTHex)
     annotation (Placement(transformation(extent={{0,-190},{20,-170}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant con4(k=0)
@@ -118,8 +118,7 @@ model AmbientCircuitController
     final k=1,
     yMin=0.5,
     final controllerType=controllerType,
-    Ti(displayUnit="min") = 3600)
-    "Geothermal pump control"
+    Ti(displayUnit="min") = 3600) "Geothermal pump control"
     annotation (Placement(transformation(extent={{20,130},{40,150}})));
   Buildings.Controls.OBC.CDL.Logical.Switch runBorPum
     "Switch that enable borefield pump"
@@ -143,20 +142,39 @@ model AmbientCircuitController
     annotation (Placement(transformation(extent={{-4,-146},{16,-126}})));
   Modelica.Blocks.Logical.Hysteresis hysteresis(uLow=0.2, uHigh=1)
     annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
+  Buildings.Controls.Continuous.LimPID borThrWay(
+    final Td=Td,
+    reset=Buildings.Types.Reset.Parameter,
+    reverseAction=true,
+    y_reset=0,
+    final k=1,
+    yMin=0.5,
+    final controllerType=controllerType,
+    Ti(displayUnit="min") = 3600)
+    "Valve which controls the enetring water tempearture to the borefield holes."
+    annotation (Placement(transformation(extent={{-120,-302},{-100,-282}})));
+  Modelica.Blocks.Interfaces.RealInput TBorMaxEnt(final unit="K")
+    "Maximum entering water temperature to the borefiled holes." annotation (
+      Placement(transformation(extent={{-258,-312},{-218,-272}}),
+        iconTransformation(extent={{-120,-86},{-100,-66}})));
+  Modelica.Blocks.Interfaces.RealOutput yBorThrVal(final unit="1")
+    "Control signal for the borefiled three way valve which control the entering water temperature "
+    annotation (Placement(transformation(extent={{220,-302},{240,-282}}),
+        iconTransformation(extent={{100,-44},{120,-24}})));
 equation
   connect(valOpe.y, runDisPum.u1) annotation (Line(points={{-158,170},{-16,170},
           {-16,-136},{-6,-136}}, color={255,0,255}));
   connect(add4.y, abs3.u)
-    annotation (Line(points={{-138,-250},{-122,-250}}, color={0,0,127}));
+    annotation (Line(points={{-138,-228},{-122,-228}}, color={0,0,127}));
   connect(abs3.y,hexPumCon. u_m)
-   annotation (Line(points={{-98,-250},{90,-250},{90,-192}},
+   annotation (Line(points={{-98,-228},{90,-228},{90,-192}},
                        color={0,0,127}));
   connect(con3.y,hexPumCon. u_s)
     annotation (Line(points={{22,-180},{78,-180}},   color={0,0,127}));
   connect(TDisHexEnt, add4.u1)
-    annotation (Line(points={{-240,-220},{-200,-220},{-200,-244},{-162,-244}}, color={0,0,127}));
+    annotation (Line(points={{-240,-198},{-200,-198},{-200,-222},{-162,-222}}, color={0,0,127}));
   connect(TDisHexLvg, add4.u2)
-    annotation (Line(points={{-240,-256},{-162,-256}}, color={0,0,127}));
+    annotation (Line(points={{-240,-234},{-162,-234}}, color={0,0,127}));
   connect(con2.y,heaMod. u1)
     annotation (Line(points={{102,-32},{110,-32},{110,-52},{120,-52}},
                                                   color={0,0,127}));
@@ -235,7 +253,16 @@ equation
   connect(hysteresis.y, not1.u) annotation (Line(points={{-59,-30},{-52,-30},{-52,
           -144},{-48,-144}}, color={255,0,255}));
 
-  annotation (Diagram(  coordinateSystem( extent={{-220,-280},{220,200}}, preserveAspectRatio=false),
+  connect(TBorOut, borThrWay.u_m) annotation (Line(points={{-240,12},{-200,12},
+          {-200,-326},{-110,-326},{-110,-304}}, color={0,0,127}));
+  connect(TBorMaxEnt, borThrWay.u_s)
+    annotation (Line(points={{-238,-292},{-122,-292}}, color={0,0,127}));
+  connect(borThrWay.y, yBorThrVal) annotation (Line(points={{-99,-292},{230,
+          -292},{230,-292}}, color={0,0,127}));
+  connect(runBorPum1.y, borThrWay.trigger) annotation (Line(points={{82,170},{
+          90,170},{90,6},{-134,6},{-134,-316},{-118,-316},{-118,-304}}, color={
+          255,0,255}));
+  annotation (Diagram(  coordinateSystem( extent={{-220,-340},{220,200}}, preserveAspectRatio=false),
                         Icon(coordinateSystem(initialScale=1)),
                         graphics={Text(
                         extent={{382,176},{198,140}},
@@ -289,5 +316,6 @@ and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
  <br/>
 </li>
 </ul>
-</html>"));
+</html>"),
+    Icon(coordinateSystem(extent={{-100,-100},{100,100}})));
 end AmbientCircuitController;

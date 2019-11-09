@@ -23,11 +23,11 @@ model SubstationUO
 
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCoo(final unit="K", displayUnit="degC")
     "Setpoint for cooling supply water to space loads" annotation (Placement(transformation(extent={{-260,-160},{-220,
-            -120}}), iconTransformation(extent={{-120,-50},{-100,-30}})));
+            -120}}), iconTransformation(extent={{-120,-60},{-100,-40}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanCooTop(final unit="K",displayUnit="degC")
     "Top temperature of cooling buffer tank"
     annotation (Placement(transformation(extent={{-260,-200},{-220,-160}}),
-      iconTransformation(extent={{-120,-106},{-100,-86}})));
+      iconTransformation(extent={{-120,-100},{-100,-80}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanCooBot(final unit="K",displayUnit="degC")
     "Bottom temperature of cooling buffer tank"
     annotation (Placement(transformation(extent={{-260,-230},{-220,-190}}),
@@ -35,52 +35,58 @@ model SubstationUO
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanHeaTop(final unit="K",displayUnit="degC")
     "Top temperature of heating buffer tank"
     annotation (Placement(transformation(extent={{-260,170},{-220,210}}),
-      iconTransformation(extent={{-120,90},{-100,110}})));
+      iconTransformation(extent={{-120,80},{-100,100}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanHeaBot(final unit="K",displayUnit="degC")
     "Bottom temperature of heating buffer tank"
     annotation (Placement(transformation(extent={{-260,140},{-220,180}}),
-      iconTransformation(extent={{-120,62},{-100,82}})));
+      iconTransformation(extent={{-120,60},{-100,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHea(final unit="K", displayUnit="degC")
     "Setpoint for heating supply water to space loads" annotation (Placement(transformation(extent={{-260,200},{-220,
-            240}}), iconTransformation(extent={{-120,36},{-100,56}})));
+            240}}), iconTransformation(extent={{-120,40},{-100,60}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput mTanHotNor(final unit="1")
     "Normalized flow rate of hot buffer tank"
     annotation (Placement(transformation(extent={{-260,20},{-220,60}}),
-      iconTransformation(extent={{-120,10},{-100,30}})));
+      iconTransformation(extent={{-120,0},{-100,20}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput mTanColNor(final unit="1")
     "Normalized flow rate of cold buffer tank"
     annotation (Placement(transformation(extent={{-260,-30},{-220,10}}),
-      iconTransformation(extent={{-120,-24},{-100,-4}})));
+      iconTransformation(extent={{-120,-20},{-100,0}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumConMin(final unit="1")
     "Condenser water supply pump control signal to assure minimum flow rate to the hot tank" annotation (
-      Placement(transformation(extent={{220,60},{240,80}}), iconTransformation(extent={{100,22},{118,40}})));
+      Placement(transformation(extent={{220,60},{240,80}}), iconTransformation(extent={{100,20},
+            {120,40}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumEvamin(final unit="1")
     "Evaporator water supply pump control signal to assure minimum flow rate to the cold tank" annotation (
-      Placement(transformation(extent={{220,-80},{240,-60}}), iconTransformation(extent={{100,-2},{118,16}})));
+      Placement(transformation(extent={{220,-80},{240,-60}}), iconTransformation(extent={{100,0},
+            {120,20}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValHeaPos "Hot side valve status(1:On, 0:Off)" annotation (
-      Placement(transformation(extent={{220,120},{240,140}}), iconTransformation(extent={{100,-24},{118,-6}})));
+      Placement(transformation(extent={{220,120},{240,140}}), iconTransformation(extent={{100,-20},
+            {120,0}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValCooPos "Cold side valve status(1:On, 0:Off)" annotation (
-      Placement(transformation(extent={{220,-210},{240,-190}}), iconTransformation(extent={{100,-46},{118,-28}})));
+      Placement(transformation(extent={{220,-210},{240,-190}}), iconTransformation(extent={{100,-40},
+            {120,-20}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput reqHea
     "True if heating is required from heat pump, false otherwise" annotation (Placement(transformation(extent={{220,
-            200},{240,220}}), iconTransformation(extent={{100,84},{114,98}})));
+            200},{240,220}}), iconTransformation(extent={{100,80},{120,100}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput reqCoo
     "True if cooling is required from heat pump, false otherwise" annotation (Placement(transformation(extent={{220,
-            -150},{240,-130}}), iconTransformation(extent={{100,-102},{116,-86}})));
+            -150},{240,-130}}), iconTransformation(extent={{100,-100},{120,-80}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput rejColFulLoa
     "true if cold side requires heat rejection with borefield and district heat exchanger"
     annotation (Placement(transformation(extent={{220,-170},{240,-150}}),
-      iconTransformation(extent={{100,-64},{116,-48}})));
+      iconTransformation(extent={{100,-82},{120,-62}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput rejHeaFulLoa
     "true if hot side requires heat rejection with borefield and district heat exchaner"
     annotation (Placement(transformation(extent={{220,182},{240,202}}),
-      iconTransformation(extent={{100,44},{116,60}})));
+      iconTransformation(extent={{100,-62},{120,-42}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValHea
     "Hot side valve status,true when rejection of part or full heating load is reuired" annotation (Placement(
-        transformation(extent={{220,150},{240,170}}), iconTransformation(extent={{100,64},{116,80}})));
+        transformation(extent={{220,150},{240,170}}), iconTransformation(extent={{100,60},
+            {120,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValCoo
     "Hot side valve status,true when rejection of part or full cooling load is reuired" annotation (Placement(
-        transformation(extent={{220,-190},{240,-170}}), iconTransformation(extent={{100,-84},{116,-68}})));
+        transformation(extent={{220,-190},{240,-170}}), iconTransformation(extent={{100,40},
+            {120,60}})));
 
   Buildings.Controls.Continuous.LimPID conHeaTan(
     final k=k,

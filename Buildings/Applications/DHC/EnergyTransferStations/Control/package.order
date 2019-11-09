@@ -1,7 +1,7 @@
 AmbientCircuitController
 ColdSideControlleUO
 CondenserAndEvaporatorPumpsController
-HeatPumpController
+HeatPumpControllerWithMinimumSetHeatingTemperatureForCooOnlyMode
 HotColdSideControllerUO
 HotSideControllerUO
 SolSytem
@@ -9,3 +9,5 @@ SubstationUO
 TanHotUO
 HeatRecoveryChillerController
 EvaporatorCondenserPumpsController
+AmbientCircuitSid
+HeatPumpController
