@@ -1,5 +1,6 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-model SubstationUO
+model ETSController
+  "Overall controller of the ETS hot and cold sides."
   extends Modelica.Blocks.Icons.Block;
 
   parameter Modelica.Blocks.Types.SimpleController
@@ -200,6 +201,7 @@ equation
           220},{-202,195},{-161,195}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-220,-220},{220,220}})),
+        defaultComponentName="ETSCon",
         Documentation(info="<html>
 
 <h4> ETS-control theory of operation </h4>
@@ -284,4 +286,4 @@ While in case of the hot buffer tank the discharging direction is from top to bo
 </li>
 </ul>
 </html>"));
-end SubstationUO;
+end ETSController;

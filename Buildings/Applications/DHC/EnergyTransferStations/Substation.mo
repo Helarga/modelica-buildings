@@ -3,25 +3,26 @@ model Substation
   "5th generation of district heating and cooling plant"
    package Medium = Buildings.Media.Water "Medium model";
 
-  //--------------------------WSHP------------------------
+  //--------------------------WSHP system------------------------
     parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal
      "Condenser nominal water flow rate"
-      annotation (Dialog(tab="WSHP"));
+      annotation (Dialog(tab="WSHP system"));
     parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal
      "Evaporator nominal water flow rate"
-      annotation (Dialog(tab="WSHP"));
+      annotation (Dialog(tab="WSHP system"));
     parameter Modelica.SIunits.PressureDifference dpCon_nominal
       "Pressure difference accross the condenser"
-      annotation (Dialog(tab="WSHP"));
+      annotation (Dialog(tab="WSHP system"));
     parameter Modelica.SIunits.PressureDifference dpEva_nominal
       "Pressure difference accross the evaporator"
-      annotation (Dialog(tab="WSHP"));
+      annotation (Dialog(tab="WSHP system"));
   Fluid.HeatPumps.EquationFitReversible heaPum(
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       per = heaPumDat,
       redeclare package Medium1 = Medium,
       redeclare package Medium2 = Medium)
+    "Reversible water to water heat pump"
       annotation (Placement(transformation(extent={{-30,116},{-10,136}})));
   Buildings.Fluid.Movers.SpeedControlled_y pumCon(
     redeclare package Medium = Medium,
@@ -43,7 +44,7 @@ model Substation
       allowFlowReversal=false,
       use_inputFilter=false,
       riseTime=10)
-      "Evaporator variable speed pump-primary circuit"
+    "Evaporator variable speed pump-primary circuit"
     annotation (Placement(transformation(
           extent={{-10,-10},{10,10}},
           rotation=0,
@@ -148,7 +149,7 @@ model Substation
       m_flow_nominal=mGeo_flow_nominal,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
+      per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
       "Pump (or valve) that forces the flow rate to be set to the control signal"
@@ -164,6 +165,33 @@ model Substation
     parameter Modelica.SIunits.PressureDifference dpHex_nominal(displayUnit="Pa")
       "Pressure difference across heat exchanger"
       annotation (Dialog(tab="DistrictHeatExchanger"));
+    BaseClasses.WaterWaterHeatExchanger hex(
+      redeclare package Medium1 = Medium,
+      redeclare package Medium2 = Medium,
+      dp1_nominal=dpHex_nominal,
+      eps_nominal=eps_nominal,
+      dp2_nominal=dpHex_nominal,
+      m1_flow_nominal=mHex_flow_nominal,
+      m2_flow_nominal=mHex_flow_nominal)
+      "Heat exchanger"
+       annotation (Placement(
+          transformation(
+          extent={{10,-10},{-10,10}},
+          rotation=90,
+          origin={112,-152})));
+    Fluid.Movers.FlowControlled_m_flow pumHexDis(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal=mHex_flow_nominal,
+      addPowerToMedium=false,
+      show_T=show_T,
+      per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
+      use_inputFilter=false,
+      riseTime=10)
+      "Pump (or valve) that forces the flow rate to be set to the control signal"
+       annotation (
+        Placement(transformation(extent={{-10,10},{10,-10}},rotation=270,
+                                            origin={106,-104})));
 //----------------------------------Generanl---------------------------------------
     parameter Modelica.Fluid.Types.Dynamics fixedEnergyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial
       "Formulation of energy balance for mixing volume at inlet and outlet"
@@ -174,22 +202,35 @@ model Substation
     parameter Boolean show_T=true
       "= true, if actual temperature at port is computed"
       annotation (Dialog(group="Advanced"));
+
  //-----------------------------Controllers------------------------------------
 
-    Control.HeatPumpController heaPumCon "Control of the heatpump model"
-    annotation (Placement(transformation(extent={{-120,200},{-100,220}})));
-
-    Control.SubstationUO subCon
-    "Substation control "
-      annotation (Placement(transformation(extent={{-200,200},{-180,220}})));
-
+    Control.ETSController ETSCon
+      "Overall control of the ETS cold and hot sides."
+        annotation (Placement(transformation(extent={{-200,200},{-180,220}})));
+    Control.HeatPumpController heaPumCon
+      "Control of the heatpump model and associated three way valves"
+        annotation (Placement(transformation(extent={{-120,200},{-100,220}})));
+    Control.EvaporatorCondenserPumpsController pumPrimCon
+      "Control of the primary circuit pumps"
+        annotation (Placement(transformation(extent={{-120,158},{-100,178}})));
+    Control.AmbientCircuitSid  ambCon
+      "control of the ambient hydraulic circuit"
+        annotation (Placement(transformation(extent={{-144,-80},{-124,-60}})));
+    Buildings.Controls.OBC.CDL.Continuous.Gain gaiBor(k=mGeo_flow_nominal)
+      "Gain for mass flow rate of borefield"
+        annotation (Placement(transformation(extent={{-110,-150},{-90,-130}})));
+    Buildings.Controls.OBC.CDL.Continuous.Gain gaiMDisHex(k=mHex_flow_nominal)
+      "Gain for mass flow of heat exchanger"
+        annotation (Placement(transformation(extent={{40,-262},{60,-242}})));
 
  //-----------------------------Sensors------------------------------------
     Buildings.Fluid.Sensors.TemperatureTwoPort TConLvg(
       redeclare final package Medium = Medium,
       allowFlowReversal=false,
       m_flow_nominal=mCon_flow_nominal,
-      tau=0) "Condenser leaving water temperature"
+      tau=0)
+      "Condenser leaving water temperature"
       annotation (Placement(
           transformation(
           extent={{10,10},{-10,-10}},
@@ -199,13 +240,15 @@ model Substation
       redeclare final package Medium = Medium,
       allowFlowReversal=false,
       m_flow_nominal=mCon_flow_nominal,
-      tau=0) "Condenser entering water temperature"
+      tau=0)
+      "Condenser entering water temperature"
       annotation (Placement(transformation(extent={{0,10},{-20,30}})));
     Buildings.Fluid.Sensors.TemperatureTwoPort TEvaEnt(
       redeclare final package Medium = Medium,
       allowFlowReversal=false,
       m_flow_nominal=mEva_flow_nominal,
-      tau=0) "Evaporator entering water temperature"
+      tau=0)
+      "Evaporator entering water temperature"
       annotation (Placement(
         transformation(
         extent={{10,10},{-10,-10}},
@@ -215,7 +258,8 @@ model Substation
       redeclare final package Medium = Medium,
       allowFlowReversal=false,
       m_flow_nominal=mEva_flow_nominal,
-      tau=30) "Evaporator leaving water temperature"
+      tau=30)
+      "Evaporator leaving water temperature"
       annotation (Placement(transformation(extent={{-68,10},{-88,30}})));
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topCooTan
       "Cold tank top temperature"
@@ -229,6 +273,88 @@ model Substation
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor botHotTan
       "Hot tank bottom temperature"
       annotation (Placement(transformation(extent={{176,-42},{196,-22}})));
+   Fluid.Sensors.TemperatureTwoPort TBorLvg(
+    allowFlowReversal=false,
+    tau=0,
+    redeclare final package Medium = Medium,
+    m_flow_nominal=mGeo_flow_nominal) "Borefield system leaving water temperature"
+    annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={-34,-214})));
+  Fluid.Sensors.TemperatureTwoPort TAmbSup(
+    allowFlowReversal=false,
+    tau=0,
+    redeclare final package Medium = Medium,
+    m_flow_nominal=mGeo_flow_nominal) "ambient system supply water temperature to the borefield" annotation (Placement(
+        transformation(
+        extent={{-10,10},{10,-10}},
+        rotation=270,
+        origin={-68,-74})));
+  Fluid.Sensors.TemperatureTwoPort TDisHexLvg(
+    allowFlowReversal=false,
+    redeclare final package Medium = Medium,
+    tau=10,
+    m_flow_nominal=mHex_flow_nominal) "District heat exchanger leaving water temperature"
+    annotation (Placement(
+        transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={22,-200})));
+
+     Fluid.Sensors.TemperatureTwoPort TBorEnt(
+      allowFlowReversal=false,
+      tau=0,
+      redeclare final package Medium = Medium,
+      m_flow_nominal=mGeo_flow_nominal) "Entering water temperature to the borefield system" annotation (Placement(
+        transformation(
+        extent={{-10,10},{10,-10}},
+        rotation=270,
+        origin={-68,-168})));
+    Fluid.Sensors.TemperatureTwoPort disRetTem(
+      allowFlowReversal=false,
+      tau=0,
+      redeclare final package Medium = Medium,
+      m_flow_nominal=mHex_flow_nominal)
+      "District system return water temperature"
+       annotation (Placement(
+          transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=0,
+          origin={226,-142})));
+    Fluid.Sensors.TemperatureTwoPort disSupTem(
+      allowFlowReversal=false,
+      tau=0,
+      redeclare final package Medium = Medium,
+      m_flow_nominal=mHex_flow_nominal)
+      "District system supply water temperature"
+       annotation (Placement(
+          transformation(
+          extent={{10,-10},{-10,10}},
+          rotation=0,
+          origin={224,-192})));
+   Fluid.Sensors.TemperatureTwoPort TDisHex(
+      allowFlowReversal=false,
+      redeclare final package Medium = Medium,
+      tau=10,
+      m_flow_nominal=mHex_flow_nominal)
+      "Entering water tmperature to the district heat exchanger"
+       annotation (Placement(transformation(extent={{-10,10},{10,-10}},
+                                            rotation=270,
+                                            origin={106,-70})));
+  Fluid.Sensors.MassFlowRate secCooFlo(redeclare package Medium = Media.Water)
+    "Secondary circuit chilled water flow rate"
+    annotation (Placement(transformation(extent={{-244,30},{-264,50}})));
+  Fluid.Sensors.MassFlowRate secHeaFlo(redeclare package Medium = Media.Water)
+    "Secondary circuit heating water flow rate"
+    annotation (Placement(transformation(extent={{264,42},{284,62}})));
+  Fluid.Sensors.MassFlowRate priCooFlo(redeclare package Medium = Media.Water)
+    "Primary circuit evaporator side chilled water flow rate"
+    annotation (Placement(transformation(extent={{-180,12},{-200,32}})));
+  Fluid.Sensors.MassFlowRate priLoaFlo(redeclare package Medium = Media.Water)
+    "Primary circuit load side heating water flow rate"
+    annotation (Placement(transformation(extent={{126,50},{146,70}})));
+
 
  //-----------------------------Fluid Interfaces and headers------------------------------------
     Modelica.Fluid.Interfaces.FluidPort_a cooSup(
@@ -269,16 +395,16 @@ model Substation
       "Fluid connector b (positive design flow direction is from port_a to port_b), hot water return from the building"
       annotation (Placement(transformation(extent={{312,22},{292,42}}),  iconTransformation(extent={{120,-82},
             {100,-62}})));
-  BaseClasses.HydraulicHeader cooRetHed(
-    redeclare package Medium = Medium,
-    m_flow_nominal=mEva_flow_nominal,
-    nPorts_a=2,
-    nPorts_b=1) "Return chilled water header.  " annotation (Placement(transformation(extent={{-148,70},{-128,50}})));
-  BaseClasses.HydraulicHeader cooSupHed(
-    redeclare package Medium = Medium,
-    m_flow_nominal=mEva_flow_nominal,
-    nPorts_a=1,
-    nPorts_b=2) "Supply chilled water header. " annotation (Placement(transformation(extent={{-108,10},{-128,30}})));
+     BaseClasses.HydraulicHeader cooRetHed(
+      redeclare package Medium = Medium,
+      m_flow_nominal=mEva_flow_nominal,
+      nPorts_a=2,
+      nPorts_b=1) "Return chilled water header.  " annotation (Placement(transformation(extent={{-148,70},{-128,50}})));
+    BaseClasses.HydraulicHeader cooSupHed(
+      redeclare package Medium = Medium,
+      m_flow_nominal=mEva_flow_nominal,
+      nPorts_a=1,
+      nPorts_b=2) "Supply chilled water header. " annotation (Placement(transformation(extent={{-108,10},{-128,30}})));
 
     BaseClasses.SupplyTemperatureSet supTemSet(
       THeaWatSup_nominal=THeaWatSup_nominal,
@@ -292,19 +418,60 @@ model Substation
       "Data bus that stores weather data"
       annotation (Placement(transformation(extent={{-330,256},{-290,296}}),
         iconTransformation(extent={{-120,86},{-100,106}})));
-    Control.AmbientCircuitSid  ambCon
-      "controller of the ambient hydraulic circuit"
-      annotation (Placement(transformation(extent={{-144,-80},{-124,-60}})));
-  BaseClasses.HydraulicHeader ambRetHed(
-    redeclare package Medium = Medium,
-    m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
-    nPorts_a=2,
-    nPorts_b=2) "ambient circuit return header" annotation (Placement(transformation(extent={{-30,-58},{-50,-38}})));
-  BaseClasses.HydraulicHeader ambHedSup(
-    redeclare package Medium = Medium,
-    m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
-    nPorts_a=2,
-    nPorts_b=2) "Ambient circuit supply header" annotation (Placement(transformation(extent={{0,-120},{20,-142}})));
+
+     BaseClasses.HydraulicHeader ambRetHed(
+      redeclare package Medium = Medium,
+      m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
+      nPorts_a=2,
+      nPorts_b=2) "ambient circuit return header" annotation (Placement(transformation(extent={{-30,-58},{-50,-38}})));
+
+     BaseClasses.HydraulicHeader ambHedSup(
+      redeclare package Medium = Medium,
+      m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
+      nPorts_a=2,
+      nPorts_b=2) "Ambient circuit supply header" annotation (Placement(transformation(extent={{0,-120},{20,-142}})));
+     Modelica.Fluid.Interfaces.FluidPort_a disWatIn(
+      p(start=Medium.p_default),
+      redeclare final package Medium = Medium,
+      h_outflow(start=Medium.h_default, nominal=Medium.h_default))
+      "Fluid connector a (positive design flow direction is from port_a to port_b), district water inport"
+      annotation (Placement(transformation(extent={{290,-202},{310,-182}}),
+          iconTransformation(extent={{-22,-120},{-2,-100}})));
+     Modelica.Fluid.Interfaces.FluidPort_b disWatOut(
+      p(start=Medium.p_default),
+      redeclare final package Medium = Medium,
+      h_outflow(start=Medium.h_default, nominal=Medium.h_default))
+      "Fluid connector b (positive design flow direction is from port_a to port_b), district water outport"
+      annotation (Placement(transformation(extent={{310,-152},{290,-132}}),
+          iconTransformation(extent={{22,-120},{2,-100}})));
+
+    Fluid.FixedResistances.Junction splVal1(
+      dp_nominal=200*{1,-1,-1},
+      m_flow_nominal={mGeo_flow_nominal,-mCon_flow_nominal,-mGeo_flow_nominal + mCon_flow_nominal},
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+      "Flow splitter" annotation (Placement(transformation(
+          extent={{-10,10},{10,-10}},
+          rotation=90,
+          origin={-34,-178})));
+    Fluid.FixedResistances.Junction splVal2(
+      dp_nominal={200,-200,-200},
+      m_flow_nominal={mEva_flow_nominal,-mGeo_flow_nominal,mGeo_flow_nominal - mEva_flow_nominal},
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+      "Flow splitter" annotation (Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=270,
+          origin={-60,78})));
+    Fluid.FixedResistances.Junction splVal3(
+      dp_nominal={200,-200,200},
+      m_flow_nominal={mCon_flow_nominal,-mGeo_flow_nominal,mGeo_flow_nominal - mCon_flow_nominal},
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+      "Flow splitter" annotation (Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=0,
+          origin={42,132})));
 
  //-----------------------------Valves------------------------------------
     Fluid.Actuators.Valves.TwoWayLinear valSupHea(
@@ -315,7 +482,7 @@ model Substation
       dpValve_nominal=dp_nominal,
       riseTime=10,
       l=1e-8,
-    m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
+      m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
       "Two way modulating valve"
       annotation (Placement(transformation(extent={{18,-30},{-2,-10}})));
     Fluid.Actuators.Valves.TwoWayLinear valSupCoo(
@@ -326,100 +493,42 @@ model Substation
       dpValve_nominal=dp_nominal,
       riseTime=10,
       l=1e-8,
-    m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
+      m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
       "Two way modulating valve"
       annotation (Placement(transformation(extent={{-94,-30},{-74,-10}})));
-
-
-    Fluid.Sensors.TemperatureTwoPort TBorLvg(
-    allowFlowReversal=false,
-    tau=0,
-    redeclare final package Medium = Medium,
-    m_flow_nominal=mGeo_flow_nominal) "Borefield system leaving water temperature"
+    Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valBor(
+        redeclare package Medium = Medium,
+        energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+        m_flow_nominal=mGeo_flow_nominal,
+        l={0.01,0.01},
+        dpValve_nominal=6000)
+    "Three way valve modulated to control the entering water temperature to the borefield system."
+     annotation (Placement(transformation(extent={{10,-10},{-10,10}},
+                                          rotation=90,
+                                          origin={-68,-106})));
+    Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valEva(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      m_flow_nominal=mEva_flow_nominal,
+      l={0.01,0.01},
+      dpValve_nominal=6000)
+    "Three way valve modulated to control the entering water temperature to the evaporator."
+     annotation (Placement(transformation(extent={{10,10},{-10,-10}},
+                                          rotation=270,
+                                          origin={-94,78})));
+    Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valCon(
+    redeclare package Medium = Medium,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    m_flow_nominal=mCon_flow_nominal,
+    l={0.01,0.01},
+    dpValve_nominal=6000)
+    "Three way valve modulated to control the entering water temperature to the condenser."
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
-        origin={-34,-214})));
-    BaseClasses.WaterWaterHeatExchanger hex(
-      redeclare package Medium1 = Medium,
-      redeclare package Medium2 = Medium,
-      dp1_nominal=dpHex_nominal,
-      eps_nominal=eps_nominal,
-      dp2_nominal=dpHex_nominal,
-      m1_flow_nominal=mHex_flow_nominal,
-      m2_flow_nominal=mHex_flow_nominal)
-      "Heat exchanger"
-       annotation (Placement(
-          transformation(
-          extent={{10,-10},{-10,10}},
-          rotation=90,
-          origin={112,-152})));
-    Fluid.Movers.FlowControlled_m_flow pumHexDis(
-      redeclare package Medium = Medium,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-    m_flow_nominal=mHex_flow_nominal,
-      addPowerToMedium=false,
-      show_T=show_T,
-      per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
-      use_inputFilter=false,
-      riseTime=10)
-      "Pump (or valve) that forces the flow rate to be set to the control signal"
-       annotation (
-        Placement(transformation(
-          extent={{-10,10},{10,-10}},
-          rotation=270,
-          origin={106,-104})));
+        origin={-34,52})));
 
-    Fluid.Sensors.TemperatureTwoPort TDisHexLvg(
-    allowFlowReversal=false,
-    redeclare final package Medium = Medium,
-    tau=10,
-    m_flow_nominal=mHex_flow_nominal) "District heat exchanger leaving water temperature" annotation (Placement(
-        transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={22,-200})));
-    Modelica.Fluid.Interfaces.FluidPort_a disWatIn(
-      p(start=Medium.p_default),
-      redeclare final package Medium = Medium,
-      h_outflow(start=Medium.h_default, nominal=Medium.h_default))
-      "Fluid connector a (positive design flow direction is from port_a to port_b), district water inport"
-      annotation (Placement(transformation(extent={{290,-202},{310,-182}}),
-          iconTransformation(extent={{-22,-120},{-2,-100}})));
-    Modelica.Fluid.Interfaces.FluidPort_b disWatOut(
-      p(start=Medium.p_default),
-      redeclare final package Medium = Medium,
-      h_outflow(start=Medium.h_default, nominal=Medium.h_default))
-      "Fluid connector b (positive design flow direction is from port_a to port_b), district water outport"
-      annotation (Placement(transformation(extent={{310,-152},{290,-132}}),
-          iconTransformation(extent={{22,-120},{2,-100}})));
-    Fluid.Sensors.TemperatureTwoPort disRetTem(
-      allowFlowReversal=false,
-      tau=0,
-      redeclare final package Medium = Medium,
-      m_flow_nominal=mHex_flow_nominal)
-      "District system return water temperature"
-       annotation (Placement(
-          transformation(
-          extent={{-10,-10},{10,10}},
-          rotation=0,
-          origin={226,-142})));
-    Fluid.Sensors.TemperatureTwoPort disSupTem(
-      allowFlowReversal=false,
-      tau=0,
-      redeclare final package Medium = Medium,
-      m_flow_nominal=mHex_flow_nominal)
-      "District system supply water temperature"
-       annotation (Placement(
-          transformation(
-          extent={{10,-10},{-10,10}},
-          rotation=0,
-          origin={224,-192})));
-    Buildings.Controls.OBC.CDL.Continuous.Gain gaiBor(k=mGeo_flow_nominal)
-     "Gain for mass flow rate of borefield"
-      annotation (Placement(transformation(extent={{-110,-150},{-90,-130}})));
-    Buildings.Controls.OBC.CDL.Continuous.Gain gaiMDisHex(k=mHex_flow_nominal) "Gain for mass flow of heat exchanger"
-    annotation (Placement(transformation(extent={{40,-262},{60,-242}})));
+  //----------------------------Performance data------------------------------------
     final parameter Fluid.Geothermal.Borefields.Data.Filling.Bentonite filDat(kFil=2.1)
       annotation (Placement(transformation(extent={{-292,-156},{-272,-136}})));
     final parameter Fluid.Geothermal.Borefields.Data.Soil.SandStone soiDat(
@@ -427,7 +536,7 @@ model Substation
       dSoi=1920,
       cSoi=1210)
       "Soil data"
-       annotation (Placement(transformation(extent={{-292,-180},{-272,-160}})));
+      annotation (Placement(transformation(extent={{-292,-180},{-272,-160}})));
     final parameter Fluid.Geothermal.Borefields.Data.Configuration.Template conDat(
        borCon=Buildings.Fluid.Geothermal.Borefields.Types.BoreholeConfiguration.SingleUTube,
        use_Rb=false,
@@ -442,7 +551,7 @@ model Substation
        cooBor={{dBorHol*mod((i - 1), nXBorHol),dBorHol*floor((i - 1)/
           nXBorHol)} for i in 1:nBorHol},
        xC=0.075,
-       dp_nominal=dpBorFie_nominal)
+       dp_nominal= dpBorFie_nominal)
       "Borefield configuration"
       annotation (Placement(transformation(extent={{-292,-204},{-272,-184}})));
     final parameter Fluid.Geothermal.Borefields.Data.Borefield.Template borFieDat(
@@ -451,132 +560,32 @@ model Substation
        conDat=conDat)
       "Borefield parameters"
       annotation (Placement(transformation(extent={{-292,-228},{-272,-208}})));
-    Fluid.Sensors.TemperatureTwoPort TAmbSup(
-    allowFlowReversal=false,
-    tau=0,
-    redeclare final package Medium = Medium,
-    m_flow_nominal=mGeo_flow_nominal) "ambient system supply water temperature to the borefield" annotation (Placement(
-        transformation(
-        extent={{-10,10},{10,-10}},
-        rotation=270,
-        origin={-68,-74})));
-    parameter Fluid.HeatPumps.Data.EquationFitReversible.Generic heaPumDat
+    final parameter Fluid.HeatPumps.Data.EquationFitReversible.Generic heaPumDat
       "Performance data of the water to water heat pump"
       annotation (choicesAllMatching=true, Placement(
           transformation(extent={{-292,-252},{-272,-232}})));
-    parameter Fluid.SolarCollectors.Data.GlazedFlatPlate.FP_GuangdongFSPTY95 solColDat
-      "Performance data of glazed flat plate solar collector"
-      annotation (Placement(transformation(extent={{-292,-280},{-272,-260}})));
 
-    Control.EvaporatorCondenserPumpsController pumPrimCon
-    "Primary circuit pumps control block"
-    annotation (Placement(transformation(extent={{-120,158},{-100,178}})));
+  //---------------------------I/O interfaces-----------------------------------
 
-  Fluid.Sensors.MassFlowRate secCooFlo(redeclare package Medium = Media.Water)
-    "Secondary circuit chilled water flow rate"
-    annotation (Placement(transformation(extent={{-244,30},{-264,50}})));
-  Fluid.Sensors.MassFlowRate secHeaFlo(redeclare package Medium = Media.Water)
-    "Secondary circuit heating water flow rate"
-    annotation (Placement(transformation(extent={{264,42},{284,62}})));
-  Fluid.Sensors.MassFlowRate priCooFlo(redeclare package Medium = Media.Water)
-    "Primary circuit evaporator side chilled water flow rate"
-    annotation (Placement(transformation(extent={{-180,12},{-200,32}})));
-  Fluid.Sensors.MassFlowRate priLoaFlo(redeclare package Medium = Media.Water)
-    "Primary circuit load side heating water flow rate"
-    annotation (Placement(transformation(extent={{126,50},{146,70}})));
+    Modelica.Blocks.Interfaces.RealInput TSetHeaMax "Maximum heating setpoint temperature"
+    annotation (Placement(transformation(extent={{-320,218},{-300,238}}),
+                    iconTransformation(extent={{-116,54},{-100,70}})));
 
-    Modelica.Blocks.Interfaces.RealInput TSetHeaMax "Maximum heating setpoint temperature" annotation (Placement(
-        transformation(extent={{-320,218},{-300,238}}), iconTransformation(extent={{-116,54},
-            {-100,70}})));
-    Fluid.Sensors.TemperatureTwoPort TBorEnt(
-    allowFlowReversal=false,
-    tau=0,
-    redeclare final package Medium = Medium,
-    m_flow_nominal=mGeo_flow_nominal) "Entering water temperature to the borefield system" annotation (Placement(
-        transformation(
-        extent={{-10,10},{10,-10}},
-        rotation=270,
-        origin={-68,-168})));
-  Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valBor(
-    redeclare package Medium = Medium,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal=mGeo_flow_nominal,
-    l={0.01,0.01},
-    dpValve_nominal=6000)
-    "Three way valve modulated to control the entering water temperature to the borefield system."
-     annotation (Placement(transformation(
-        extent={{10,-10},{-10,10}},
-        rotation=90,
-        origin={-68,-106})));
-    Fluid.Sensors.TemperatureTwoPort TDisHex(
-    allowFlowReversal=false,
-    redeclare final package Medium = Medium,
-    tau=10,
-    m_flow_nominal=mHex_flow_nominal)
-    "Entering water tmperature to the district heat exchanger" annotation (
-      Placement(transformation(
-        extent={{-10,10},{10,-10}},
-        rotation=270,
-        origin={106,-70})));
+
     Modelica.Blocks.Interfaces.RealInput TMaxBorEnt
-    "Maximum allowed enetring water temperature to the borefiled holes." annotation (Placement(transformation(extent={{-320,
+      "Maximum allowed enetring water temperature to the borefiled holes."
+         annotation (Placement(transformation(extent={{-320,
             -82},{-300,-62}}), iconTransformation(extent={{-116,-28},{-100,-12}})));
-  Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valEva(
-    redeclare package Medium = Medium,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal=mEva_flow_nominal,
-    l={0.01,0.01},
-    dpValve_nominal=6000)
-    "Three way valve modulated to control the entering water temperature to the borefield system." annotation (
-      Placement(transformation(
-        extent={{10,10},{-10,-10}},
-        rotation=270,
-        origin={-94,78})));
-  Fluid.FixedResistances.Junction splVal2(
-    dp_nominal={200,-200,-200},
-    m_flow_nominal={mEva_flow_nominal,-mGeo_flow_nominal,mGeo_flow_nominal - mEva_flow_nominal},
-    redeclare package Medium = Medium,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
-    "Flow splitter" annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=270,
-        origin={-60,78})));
-  Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valBor2(
-    redeclare package Medium = Medium,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal=mCon_flow_nominal,
-    l={0.01,0.01},
-    dpValve_nominal=6000)
-    "Three way valve modulated to control the entering water temperature to the borefield system."
-     annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={-34,52})));
-  Fluid.FixedResistances.Junction splVal1(
-    dp_nominal=200*{1,-1,-1},
-    m_flow_nominal={mGeo_flow_nominal,-mCon_flow_nominal,-mGeo_flow_nominal + mCon_flow_nominal},
-    redeclare package Medium = Medium,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
-    "Flow splitter" annotation (Placement(transformation(
-        extent={{-10,10},{10,-10}},
-        rotation=90,
-        origin={-34,-178})));
-  Fluid.FixedResistances.Junction splVal3(
-    dp_nominal={200,-200,200},
-    m_flow_nominal={mCon_flow_nominal,-mGeo_flow_nominal,mGeo_flow_nominal - mCon_flow_nominal},
-    redeclare package Medium = Medium,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
-    "Flow splitter" annotation (Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=0,
-        origin={42,132})));
-    Modelica.Blocks.Interfaces.RealInput TMinConEnt "Minimum condenser entering water temperature" annotation (
-      Placement(transformation(extent={{-320,184},{-300,204}}), iconTransformation(extent={{-116,24},
-            {-100,40}})));
-    Modelica.Blocks.Interfaces.RealInput TMaxEvaEnt "Maximum evaporator entering water temperature" annotation (
+
+    Modelica.Blocks.Interfaces.RealInput TMinConEnt
+      "Minimum condenser entering water temperature"
+         annotation (Placement(transformation(extent={{-320,184},{-300,204}}),
+                     iconTransformation(extent={{-116,24},{-100,40}})));
+    Modelica.Blocks.Interfaces.RealInput TMaxEvaEnt
+      "Maximum evaporator entering water temperature"
+        annotation (
       Placement(transformation(extent={{-320,170},{-300,190}}), iconTransformation(extent={{-116,-4},
             {-100,12}})));
-
 
   /*
   //-------------------------SolarCollector------------------------
@@ -625,12 +634,12 @@ equation
       thickness=0.5));
   connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{-98.6,211.2},{-40,211.2},{-40,126},{-31,126}},
                                                             color={255,127,0}));
-  connect(subCon.reqHea, heaPumCon.ReqHea)
+  connect(ETSCon.reqHea, heaPumCon.ReqHea)
     annotation (Line(
       points={{-179,219},{-140,219},{-140,219},{-121.4,219}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(subCon.reqCoo, heaPumCon.ReqCoo)
+  connect(ETSCon.reqCoo, heaPumCon.ReqCoo)
     annotation (Line(
       points={{-179,201},{-142,201},{-142,216},{-121.4,216}},
       color={255,0,255},
@@ -657,27 +666,27 @@ equation
   connect(hotBufTan.heaPorVol[1], topHotTan.port)
     annotation (Line(points={{168,42},{168,58},{214,58},{214,208}},
                                                       color={191,0,0}));
-  connect(topHotTan.T, subCon.TTanHeaTop)
+  connect(topHotTan.T,ETSCon. TTanHeaTop)
     annotation (Line(
       points={{194,208},{78,208},{78,232},{-202,232},{-202,219},{-201,219}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(botHotTan.T, subCon.TTanHeaBot)
+  connect(botHotTan.T,ETSCon. TTanHeaBot)
     annotation (Line(
       points={{196,-32},{224,-32},{224,236},{-206,236},{-206,217},{-201,217}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(topCooTan.T, subCon.TTanCooTop)
+  connect(topCooTan.T,ETSCon. TTanCooTop)
     annotation (Line(
       points={{-244,94},{-266,94},{-266,201},{-201,201}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(botCooTan.T, subCon.TTanCooBot)
+  connect(botCooTan.T,ETSCon. TTanCooBot)
     annotation (Line(
       points={{-250,0},{-274,0},{-274,203},{-201,203}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(hotBufTan.mNor_flow, subCon.mTanHotNor)
+  connect(hotBufTan.mNor_flow,ETSCon. mTanHotNor)
     annotation (Line(points={{181.2,46.8},{236,46.8},{236,246},{-210,246},{-210,211},{-201,211}},
         color={0,0,127}));
   connect(weaBus, supTemSet.weaBus)
@@ -689,12 +698,12 @@ equation
       index=-1,
       extent={{-6,3},{-6,3}},
       horizontalAlignment=TextAlignment.Right));
-  connect(supTemSet.THeaSupSet, subCon.TSetHea)
+  connect(supTemSet.THeaSupSet,ETSCon. TSetHea)
     annotation (Line(
       points={{-227,280},{-208,280},{-208,215},{-201,215}},
       color={238,46,47},
       pattern=LinePattern.DashDot));
-  connect(supTemSet.TCooSupSet, subCon.TSetCoo)
+  connect(supTemSet.TCooSupSet,ETSCon. TSetCoo)
     annotation (Line(
       points={{-227,272},{-212,272},{-212,205},{-201,205}},
       color={85,170,255},
@@ -725,9 +734,9 @@ equation
     annotation (Line(points={{122.2,19.55},{150,19.55},{150,32.4},{156,32.4}},
                                                         color={0,127,255}));
 
-  connect(subCon.pumEvamin, pumPrimCon.minEvaMasFlo)
+  connect(ETSCon.pumEvamin, pumPrimCon.minEvaMasFlo)
     annotation (Line(points={{-179,211},{-148,211},{-148,166.2},{-120.8,166.2}},   color={0,0,127}));
-  connect(subCon.pumConMin, pumPrimCon.minConMasFlo)
+  connect(ETSCon.pumConMin, pumPrimCon.minConMasFlo)
     annotation (Line(points={{-179,213},{-144,213},{-144,169.4},{-120.8,169.4}},       color={0,0,127}));
   connect(TMinConEnt, heaPumCon.TMinConEnt) annotation (Line(
       points={{-310,194},{-136,194},{-136,207.2},{-121,207.2}},
@@ -743,7 +752,7 @@ equation
       pattern=LinePattern.Dot));
   connect(heaPumCon.TSetHeaPum, heaPum.TSet) annotation (Line(points={{-98.6,214.6},{-38,214.6},{-38,135},{-31.4,135}},
                                                      color={0,0,127}));
-  connect(subCon.reqHea, pumPrimCon.ReqHea) annotation (Line(points={{-179,219},{-140,219},{-140,178},{-121.4,178}},
+  connect(ETSCon.reqHea, pumPrimCon.ReqHea) annotation (Line(points={{-179,219},{-140,219},{-140,178},{-121.4,178}},
                                                             color={255,0,255},
       pattern=LinePattern.Dot));
   connect(supTemSet.THeaSupSet, heaPumCon.TSetHea) annotation (Line(
@@ -768,7 +777,7 @@ equation
   connect(colBufTan.port_a1,priCooFlo. port_b) annotation (Line(points={{-210,50.4},{-210,22},{-200,22}},
                                     color={0,127,255}));
   connect(secCooFlo.m_flow, pumPrimCon.mSecCoo) annotation (Line(points={{-254,51},{-254,162.6},{-120.8,162.6}},
-                                            color={0,0,127}));
+                                            color={0,140,72}));
   connect(TSetHeaMax, heaPumCon.TSetHeaMax) annotation (Line(
       points={{-310,228},{-136,228},{-136,208.8},{-121,208.8}},
       color={0,0,127},
@@ -796,7 +805,7 @@ equation
       points={{-145,-75.2},{-162,-75.2},{-162,-290},{90,-290},{90,-70},{95,-70}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(subCon.mTanColNor, colBufTan.mNor_flow)
+  connect(ETSCon.mTanColNor, colBufTan.mNor_flow)
     annotation (Line(points={{-201,209},{-204,209},{-204,64.8},{-208.8,64.8}}, color={0,0,127}));
   connect(TEvaLvg.port_b, cooSupHed.ports_a[1]) annotation (Line(points={{-88,20},{-88,19.7},{-107.8,19.7}},
                                                                                                 color={0,127,255}));
@@ -821,8 +830,10 @@ equation
   connect(heaSupHed.ports_b[1], valSupHea.port_a)
     annotation (Line(points={{112.4,59.35},{112.4,40},{60,40},{60,-20},{18,-20}},
                                                                            color={0,127,255}));
-  connect(TConEnt.port_b, valBor2.port_1) annotation (Line(points={{-20,20},{-34,20},{-34,42}}, color={0,127,255}));
-  connect(heaPum.port_a1, valBor2.port_2) annotation (Line(points={{-30,132},{-34,132},{-34,62}}, color={0,127,255}));
+  connect(TConEnt.port_b, valCon.port_1)
+    annotation (Line(points={{-20,20},{-34,20},{-34,42}}, color={0,127,255}));
+  connect(heaPum.port_a1, valCon.port_2) annotation (Line(points={{-30,132},{-34,
+          132},{-34,62}}, color={0,127,255}));
   connect(valBor.port_3, splVal1.port_3)
     annotation (Line(points={{-58,-106},{-50,-106},{-50,-178},{-44,-178}}, color={0,127,255}));
   connect(TBorLvg.port_b, splVal1.port_1) annotation (Line(points={{-34,-204},{-34,-188}}, color={0,127,255}));
@@ -837,7 +848,8 @@ equation
   connect(TConLvg.port_b, heaSupHed.ports_a[1])
     annotation (Line(points={{78,132},{84,132},{84,59.7},{91.8,59.7}},
                                                                    color={0,127,255}));
-  connect(valBor2.port_3, splVal3.port_3) annotation (Line(points={{-24,52},{42,52},{42,122}}, color={0,127,255}));
+  connect(valCon.port_3, splVal3.port_3)
+    annotation (Line(points={{-24,52},{42,52},{42,122}}, color={0,127,255}));
   connect(heaSupHed.ports_b[2], priLoaFlo.port_a)
     annotation (Line(points={{112.4,60.85},{120,60.85},{120,60},{126,60}},
                                                                    color={0,127,255}));
@@ -878,51 +890,51 @@ equation
       points={{-98.6,204.4},{-96,204.4},{-96,114},{-116,114},{-116,78},{-106,78}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(heaPumCon.yValEva, valBor2.y) annotation (Line(
+  connect(heaPumCon.yValEva, valCon.y) annotation (Line(
       points={{-98.6,207.6},{-54,207.6},{-54,52},{-46,52}},
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(pumPrimCon.mSecHea, secHeaFlo.m_flow)
-    annotation (Line(points={{-120.8,173.8},{-130,173.8},{-130,190},{274,190},{274,63}}, color={0,0,127}));
+    annotation (Line(points={{-120.8,173.8},{-130,173.8},{-130,190},{274,190},{274,63}}, color={0,140,72}));
   connect(priLoaFlo.m_flow, pumPrimCon.mPriHea)
-    annotation (Line(points={{136,71},{136,186},{-128,186},{-128,176.4},{-120.8,176.4}}, color={0,0,127}));
+    annotation (Line(points={{136,71},{136,186},{-128,186},{-128,176.4},{-120.8,176.4}}, color={0,140,72}));
   connect(priCooFlo.m_flow, pumPrimCon.mPriEva)
-    annotation (Line(points={{-190,33},{-190,160},{-120.8,160}}, color={0,0,127}));
-  connect(subCon.reqCoo, pumPrimCon.ReqCoo) annotation (Line(
+    annotation (Line(points={{-190,33},{-190,160},{-120.8,160}}, color={0,140,72}));
+  connect(ETSCon.reqCoo, pumPrimCon.ReqCoo) annotation (Line(
       points={{-179,201},{-166,201},{-166,158.2},{-121.4,158.2}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(subCon.ValHeaPos, valSupHea.y)
+  connect(ETSCon.ValHeaPos, valSupHea.y)
     annotation (Line(
       points={{-179,209},{-152,209},{-152,-2},{8,-2},{8,-8}},
       color={28,108,200},
       pattern=LinePattern.DashDot));
-  connect(subCon.ValCooPos, valSupCoo.y)
+  connect(ETSCon.ValCooPos, valSupCoo.y)
     annotation (Line(
       points={{-179,207},{-154,207},{-154,-8},{-84,-8}},
       color={28,108,200},
       pattern=LinePattern.DashDot));
-  connect(subCon.reqCoo, ambCon.requireCold) annotation (Line(
+  connect(ETSCon.reqCoo, ambCon.requireCold) annotation (Line(
       points={{-179,201},{-166,201},{-166,-71},{-145,-71}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ambCon.requireHeat, subCon.reqHea) annotation (Line(
+  connect(ambCon.requireHeat,ETSCon. reqHea) annotation (Line(
       points={{-145,-60.2},{-156,-60.2},{-156,219},{-179,219}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(subCon.ValHea, ambCon.valHea) annotation (Line(
+  connect(ETSCon.ValHea, ambCon.valHea) annotation (Line(
       points={{-179,217},{-158,217},{-158,-62.4},{-145,-62.4}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(subCon.ValCoo, ambCon.valCoo) annotation (Line(
+  connect(ETSCon.ValCoo, ambCon.valCoo) annotation (Line(
       points={{-179,215},{-160,215},{-160,-64.8},{-145,-64.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ambCon.rejColFulLoa, subCon.rejColFulLoa) annotation (Line(
+  connect(ambCon.rejColFulLoa,ETSCon. rejColFulLoa) annotation (Line(
       points={{-145,-69},{-164,-69},{-164,202.8},{-179,202.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(subCon.rejHeaFulLoa, ambCon.rejHeaFulLoa) annotation (Line(
+  connect(ETSCon.rejHeaFulLoa, ambCon.rejHeaFulLoa) annotation (Line(
       points={{-179,204.8},{-162,204.8},{-162,-67},{-145,-67}},
       color={255,0,255},
       pattern=LinePattern.Dot));

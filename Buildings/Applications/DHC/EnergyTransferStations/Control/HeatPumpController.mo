@@ -213,7 +213,7 @@ equation
       points={{-25,54},{-8,54},{-8,26},{28,26},{28,-336},{32,-336},{32,-324}},
       color={255,0,255},
       pattern=LinePattern.Dash));
-  annotation (defaultComponentName="heaPumCon",Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}})),                                  Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-360},{100,
             100}}),
@@ -242,12 +242,13 @@ equation
           fillPattern=FillPattern.None,
           textString="Reset of water setpoint temperature"),
         Text(
-          extent={{-50,-352},{94,-360}},
+          extent={{-86,-352},{100,-360}},
           lineColor={0,0,255},
           fillColor={215,215,215},
           fillPattern=FillPattern.None,
           textString="Evaporator and Condenser three way valves control")}),
-                Documentation(info="<html>
+          defaultComponentName="heaPumCon",
+Documentation(info="<html>
 <p>
 The block is applied for the reversible heat pump control. It outputs the heat pump status
 and resets the water temperature setpoint input signal to the heat pump <code>TReSetHea</code> based on the operational mode.
