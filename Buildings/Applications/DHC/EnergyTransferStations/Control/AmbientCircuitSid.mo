@@ -2,11 +2,6 @@ within Buildings.Applications.DHC.EnergyTransferStations.Control;
 model AmbientCircuitSid "Generate control outputs for source model"
   extends Modelica.Blocks.Icons.Block;
 
-  parameter Modelica.SIunits.MassFlowRate mGeo_flow_nominal
-    "Nominal mass flow rate of geothermal exchanger";
-
-  parameter Modelica.SIunits.MassFlowRate mHex_flow_nominal
-    "Nominal mass flow rate of circulation pump";
   parameter Modelica.SIunits.TemperatureDifference dTGeo
     "Temperature difference in and out of borefield";
   parameter Modelica.SIunits.TemperatureDifference dTHex
@@ -330,10 +325,10 @@ equation
   connect(TBorEnt, borThrWay.u_m) annotation (Line(points={{-240,-48},{-96,-48},
           {-96,-12}}, color={0,0,127}));
   annotation (Diagram(
-            coordinateSystem(preserveAspectRatio=false, extent={{-220,-340},{220,
-            260}}),graphics={Text(extent={{336,56},{458,44}},
-                                  lineColor={28,108,200},
-            textString="PI with large time constant because of long time constantof borefield.
+            coordinateSystem(preserveAspectRatio=false, extent={{-220,-340},{220,260}}),
+              graphics={Text(extent={{336,56},{458,44}},
+                                      lineColor={28,108,200},
+            textString="PI with large time constant because of long time constant of borefield.
                        yMin=0.5 to stay turbulent")}),
             defaultComponentName="ambCirCon",
 Documentation(info="<html>

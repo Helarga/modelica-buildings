@@ -307,7 +307,6 @@ entering and leaving water temperature of the district heat exchanger <code>TDis
 The controller computes the energy rejection mode <code>ModInd</code> to either the borfield or district heat exchanger system.
 i.e. the controller computes <code>ModInd</code> =1, if the thermal energy rejection occurs through the heat pump condenser side,
 and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
-
 </p>
 
 </html>", revisions="<html>

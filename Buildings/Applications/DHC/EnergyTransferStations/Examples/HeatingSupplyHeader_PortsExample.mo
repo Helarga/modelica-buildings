@@ -2,17 +2,17 @@ within Buildings.Applications.DHC.EnergyTransferStations.Examples;
 model HeatingSupplyHeader_PortsExample "heating supply header"
    package Medium = Buildings.Media.Water "Medium model";
 
-  parameter Modelica.SIunits.MassFlowRate m_flow_nominal=1;
+ // parameter Modelica.SIunits.MassFlowRate m_flow_nominal=1;
 
-  EnergyTransferStation.BaseClasses.HeatingSupplyHeader HeaSupHed(
+  BaseClasses.HydraulicHeader HeaSupHed(
     redeclare package Medium = Medium,
-    m_flow_nominal=m_flow_nominal,
+    m_flow_nominal=1,
     nPorts_a=2,
     nPorts_b=2)
     annotation (Placement(transformation(extent={{-6,-10},{14,10}})));
   Modelica.Blocks.Sources.Constant m_flowPumVal(k=2)
     annotation (Placement(transformation(extent={{96,-54},{76,-34}})));
-  Modelica.Blocks.Sources.Pulse    pulse(
+  Modelica.Blocks.Sources.Pulse pulse(
     amplitude=1,
     width=50,
     period=100,
@@ -53,13 +53,13 @@ model HeatingSupplyHeader_PortsExample "heating supply header"
         origin={-52,-30})));
   Fluid.Sensors.TemperatureTwoPort senTem1(redeclare package Medium = Medium,
       m_flow_nominal=1)
-    annotation (Placement(transformation(extent={{-66,-8},{-46,12}})));
+    annotation (Placement(transformation(extent={{-66,-10},{-46,10}})));
   Fluid.Sensors.TemperatureTwoPort senTem2(redeclare package Medium = Medium,
       m_flow_nominal=1)
-    annotation (Placement(transformation(extent={{64,26},{44,46}})));
+    annotation (Placement(transformation(extent={{68,26},{48,46}})));
   Fluid.Sensors.MassFlowRate senHotTan(redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{40,26},{20,46}})));
-  Modelica.Blocks.Sources.Pulse    pulse1(
+  Modelica.Blocks.Sources.Pulse pulse1(
     amplitude=-2,
     width=50,
     period=100,
@@ -77,25 +77,24 @@ equation
     annotation (Line(points={{-69,66},{-48,66}}, color={0,0,127}));
   connect(solPum.m_flow_in, m_flowPumVal.y)
     annotation (Line(points={{62,-44},{75,-44}}, color={0,0,127}));
-  connect(senTem1.port_a, borPum.ports[1]) annotation (Line(points={{-66,2},{
-          -70,2},{-70,-30},{-62,-30}},
-                                    color={0,127,255}));
-  connect(senTem2.port_a, hotTan.ports[1])
-    annotation (Line(points={{64,36},{78,36}}, color={0,127,255}));
-  connect(senTem2.port_b, senHotTan.port_a)
-    annotation (Line(points={{44,36},{40,36}}, color={0,127,255}));
   connect(borPum.m_flow_in, pulse1.y)
     annotation (Line(points={{-40,-38},{-21,-38}}, color={0,0,127}));
-  connect(HeaSupHed.ports_b[1], senHotTan.port_b) annotation (Line(points={{15,2},
-          {16,2},{16,36},{20,36}}, color={0,127,255}));
-  connect(HeaSupHed.ports_b[2], solPum.ports[1]) annotation (Line(points={{15,-2},
-          {22,-2},{22,-54},{40,-54},{40,-52}}, color={0,127,255}));
-  connect(HeaSupHed.ports_a[1], senTem1.port_b)
-    annotation (Line(points={{-6.8,2},{-46,2}}, color={0,127,255}));
-  connect(HeaSupHed.ports_a[2], senCon.port_b)
-    annotation (Line(points={{-6.8,-2},{-8,-2},{-8,38}}, color={0,127,255}));
+  connect(hotTan.ports[1], senTem2.port_a)
+    annotation (Line(points={{78,36},{68,36}}, color={0,127,255}));
+  connect(senTem2.port_b, senHotTan.port_a)
+    annotation (Line(points={{48,36},{40,36}}, color={0,127,255}));
+  connect(senTem1.port_a, borPum.ports[1]) annotation (Line(points={{-66,0},{-70,
+          0},{-70,-30},{-62,-30}}, color={0,127,255}));
   connect(conPum.ports[1], senCon.port_a)
     annotation (Line(points={{-26,74},{-8,74},{-8,58}}, color={0,127,255}));
+  connect(senCon.port_b, HeaSupHed.ports_a[1]) annotation (Line(points={{-8,38},
+          {-8,0.45},{-6.2,0.45}}, color={0,127,255}));
+  connect(senTem1.port_b, HeaSupHed.ports_a[2]) annotation (Line(points={{-46,0},
+          {-26,0},{-26,-1.05},{-6.2,-1.05}}, color={0,127,255}));
+  connect(solPum.ports[1], HeaSupHed.ports_b[1]) annotation (Line(points={{40,-52},
+          {28,-52},{28,-0.65},{14.4,-0.65}}, color={0,127,255}));
+  connect(HeaSupHed.ports_b[2], senHotTan.port_b) annotation (Line(points={{14.4,
+          0.85},{14.4,36},{20,36}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},

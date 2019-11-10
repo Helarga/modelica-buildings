@@ -4,10 +4,10 @@ model HydraulicHeader "Hydraulic header manifold."
 
  parameter Modelica.SIunits.MassFlowRate m_flow_nominal
    "Nominal mass flow rate";
- parameter Integer nPorts_a
+ parameter Integer nPorts_a=1
   "Number of ports"
     annotation(Evaluate=true, Dialog(connectorSizing=true, tab="General",group="Ports"));
- parameter Integer nPorts_b
+ parameter Integer nPorts_b=1
   "Number of ports"
     annotation(Evaluate=true, Dialog(connectorSizing=true, tab="General",group="Ports"));
  Fluid.FixedResistances.LosslessPipe pip(redeclare package Medium = Medium,
@@ -15,7 +15,6 @@ model HydraulicHeader "Hydraulic header manifold."
     annotation (Placement(transformation(extent={{10,-10},{-10,10}})));
  Modelica.Fluid.Interfaces.FluidPorts_a ports_a[nPorts_a](redeclare package
       Medium =Medium)
-   "The ports which connects the heat pump outlet to the borefield inlet"
     annotation (Placement(
        transformation(extent={{-108,-40},{-88,40}}),iconTransformation(extent={{-4,-15},
             {4,15}},
@@ -30,45 +29,62 @@ model HydraulicHeader "Hydraulic header manifold."
        origin={104,1})));
 
 equation
-  if nPorts_b>0 then
+  if nPorts_b> 1 then
     for i in 1:nPorts_b loop
-      connect(ports_b[nPorts_b], pip.port_a)
-    annotation (Line(points={{98,0},{10,0}},  color={0,127,255}));
+      connect(pip.port_a, ports_b[nPorts_b])
+    annotation (Line(points={{10,0},{98,0}},color={0,127,255}));
     end for;
   end if;
-  if nPorts_a>0 then
+  if nPorts_a> 1 then
     for i in 1:nPorts_a loop
       connect(pip.port_b, ports_a[nPorts_a])
-    annotation (Line(points={{-10,0},{-98,0}},    color={0,127,255}));
+    annotation (Line(points={{-10,0},{-98,0}},color={0,127,255}));
     end for;
   end if;
-     annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+
+  connect(pip.port_b, ports_a[1])
+    annotation (Line(points={{-10,0},{-98,0}},  color={0,127,255}));
+  connect(pip.port_a, ports_b[1])
+    annotation (Line(points={{10,0},{98,0}}, color={0,127,255}));
+
+    annotation (Icon(graphics={
        Rectangle(
-         extent={{-86,6},{90,-8}},
+         extent={{-92,8},{88,-6}},
+         lineColor={255,170,255},
+         lineThickness=0.5,
+         fillColor={255,255,170},
+         fillPattern=FillPattern.Solid),
+       Rectangle(
+         extent={{-98,20},{-86,-20}},
          lineColor={217,67,180},
          lineThickness=0.5,
-          fillColor={255,255,85},
-          fillPattern=FillPattern.Solid),
-       Rectangle(
-         extent={{-98,18},{-86,-22}},
-         lineColor={28,108,200},
-         lineThickness=0.5,
-         fillColor={102,44,145},
-         fillPattern=FillPattern.Forward),
+         fillColor={255,170,213},
+         fillPattern=FillPattern.Solid),
        Rectangle(
          extent={{88,20},{100,-20}},
-         lineColor={28,108,200},
+         lineColor={217,67,180},
          lineThickness=0.5,
-         fillColor={102,44,145},
-         fillPattern=FillPattern.Forward),
-                                        Text(
-       extent={{-150,140},{150,100}},
-       lineColor={0,0,255}),    Text(
-         extent={{-136,88},{139,55}},
+         fillColor={255,170,213},
+         fillPattern=FillPattern.Solid),
+                                Text(
+         extent={{-149,93},{151,53}},
          lineColor={0,0,255},
          fillPattern=FillPattern.HorizontalCylinder,
          fillColor={0,127,255},
          textString="%name")}),
-                              Diagram(
-       coordinateSystem(preserveAspectRatio=false)), defaultComponentName="cooSupHed");
+         defaultComponentName="hydHed",
+Documentation(info="<html>
+ <h4> Water hydraulic header </h4>
+ <p>
+ The model represents a hydraulic header or a common pipe which connects different components at the system such as the heat pump, solar module etc. and it 
+ assures the delivery of the flow in the quantities required at design conditions and at all other operational modes.
+</p>
+
+</html>", revisions="<html>
+<ul>
+<li>
+ <br/>
+</li>
+</ul>
+</html>"));
 end HydraulicHeader;
