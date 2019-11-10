@@ -37,8 +37,7 @@ model HeatpumpController
   Buildings.Controls.OBC.CDL.Continuous.Sources.Sine     TLoaEnt(
     amplitude=5,
     freqHz=1/3000,
-    offset=30 + 273.15)
-    "Load heat exchanger entering water temperature"
+    offset=30 + 273.15) "Load heat exchanger entering water temperature"
     annotation (Placement(transformation(extent={{-92,70},{-72,90}})));
   Fluid.Sources.MassFlowSource_T loaPum(
     use_m_flow_in=false,
@@ -58,8 +57,7 @@ model HeatpumpController
   Fluid.FixedResistances.PressureDrop res2(
     redeclare package Medium = Medium,
     m_flow_nominal=mSou_flow_nominal,
-    dp_nominal=6000)
-   "Flow resistance"
+    dp_nominal=6000) "Flow resistance"
    annotation (Placement(transformation(extent={{10,-90},{-10,-70}})));
   Modelica.Fluid.Sources.FixedBoundary souVol(redeclare package Medium = Medium,
       nPorts=1) "Volume for source heat exchnager side"
@@ -79,8 +77,7 @@ model HeatpumpController
                                 res1(
     redeclare package Medium = Medium,
     m_flow_nominal=mLoa_flow_nominal,
-    dp_nominal=6000)
-   "Flow resistance"
+    dp_nominal=6000) "Flow resistance"
    annotation (Placement(transformation(extent={{52,50},{72,70}})));
   Modelica.Fluid.Sources.FixedBoundary loaVol(redeclare package Medium = Medium,
       nPorts=1)
@@ -114,18 +111,20 @@ model HeatpumpController
 equation
   connect(loaPum.T_in,TLoaEnt. y)
     annotation (Line(points={{-56,80},{-70,80}}, color={0,0,127}));
-  connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{1.4,
-          2.22045e-16},{10,2.22045e-16},{10,0},{19,0}},
+  connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{1.4,-1},
+          {10,-1},{10,0},{19,0}},
                                 color={255,127,0}));
-  connect(heaPumCon.TSetHeaPum, heaPum.THeaLoaSet) annotation (Line(points={{1.4,4.2},
-          {6,4.2},{6,9},{18.6,9}},          color={0,0,127}));
+  connect(heaPumCon.TSetHeaPum, heaPum.THeaLoaSet) annotation (Line(points={{1.4,
+          2.78},{6,2.78},{6,9},{18.6,9}},   color={0,0,127}));
   connect(loaPum.ports[1], heaPum.port_a1) annotation (Line(points={{-34,84},{
           10,84},{10,6},{20,6}},
                               color={0,127,255}));
-  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{-21.4,9},{-28,9},
-          {-28,52},{-39,52}}, color={255,0,255}));
-  connect(heaPumCon.ReqCoo, CooMod.y) annotation (Line(points={{-21.4,6},{-28,6},
-          {-28,-50},{-37,-50}}, color={255,0,255}));
+  connect(heaPumCon.ReqHea, heaMod.y) annotation (Line(points={{-21.4,7.1},{-28,
+          7.1},{-28,52},{-39,52}},
+                              color={255,0,255}));
+  connect(heaPumCon.ReqCoo, CooMod.y) annotation (Line(points={{-21.4,4.4},{-28,
+          4.4},{-28,-50},{-37,-50}},
+                                color={255,0,255}));
   connect(TSouLvg.port_b,res2. port_a)
     annotation (Line(points={{16,-62},{16,-80},{10,-80}},color={0,127,255}));
   connect(souVol.ports[1],res2. port_b)
@@ -141,13 +140,17 @@ equation
   connect(res1.port_a, heaPum.port_b1) annotation (Line(points={{52,60},{46,60},
           {46,6},{40,6}}, color={0,127,255}));
   connect(THeaSetMax.y, heaPumCon.TSetHeaMax) annotation (Line(points={{-69,12},
-          {-66,12},{-66,-3.8},{-21,-3.8}},color={0,0,127}));
-  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-8},{-60,
-          -8},{-60,-80},{-71,-80}}, color={0,0,127}));
+          {-66,12},{-66,-4.42},{-21,-4.42}},
+                                          color={0,0,127}));
+  connect(heaPumCon.TSetCoo, TCooSet.y) annotation (Line(points={{-21,-8.2},{
+          -60,-8.2},{-60,-80},{-71,-80}},
+                                    color={0,0,127}));
   connect(TSetHeaMin.y, heaPumCon.TSetHeaMin) annotation (Line(points={{-69,44},
-          {-62,44},{-62,-1.4},{-21,-1.4}}, color={0,0,127}));
+          {-62,44},{-62,-2.26},{-21,-2.26}},
+                                           color={0,0,127}));
   connect(THeaSet.y, heaPumCon.TSetHea) annotation (Line(points={{-71,-40},{-64,
-          -40},{-64,-6},{-21,-6}}, color={0,0,127}));
+          -40},{-64,-6.4},{-21,-6.4}},
+                                   color={0,0,127}));
   connect(TSouLvg.T,heaPumCon.TEvaLvg)  annotation (Line(
       points={{5,-52},{-26,-52},{-26,-10},{-21,-10}},
       color={0,0,127},

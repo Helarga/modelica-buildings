@@ -16,43 +16,39 @@ model Substation
     parameter Modelica.SIunits.PressureDifference dpEva_nominal
       "Pressure difference accross the evaporator"
       annotation (Dialog(tab="WSHP"));
-  //-------------------------SolarCollector------------------------
-    parameter Integer nSeg(min=3)
-     "Number of segments used to discretize the collector model"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.Angle lat
-     "Latitude"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.Angle azi
-     "Surface azimuth (0 for south-facing; -90 degree for east-facing; +90 degree for west facing"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.Angle til
-     "Surface tilt (0 for horizontally mounted collector)"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Real rho
-     "Ground reflectance"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Fluid.SolarCollectors.Types.NumberSelection nColType=Buildings.Fluid.SolarCollectors.Types.NumberSelection.Number
-     "Selection of area specification format"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Fluid.SolarCollectors.Types.SystemConfiguration sysConfig=Buildings.Fluid.SolarCollectors.Types.SystemConfiguration.Series
-     "Selection of system configuration"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Real shaCoe
-      "Shading coefficient. 0.0: no shading, 1.0: full shading"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Integer nPanels
-     "Desired number of panels in the simulation"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.HeatCapacity C=385*solColDat.mDry
-     "Heat capacity of solar collector without fluid (default: cp_copper*mDry*nPanels)"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.MassFlowRate mSol_flow_nominal
-     "Solar thermal collecDialogtor nominal water flow rate"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.PressureDifference dpSol_nominal
-      "Pressure difference accross the sollar colletor"
-      annotation (Dialog(tab="SolarCollector"));
+  Fluid.HeatPumps.EquationFitReversible heaPum(
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      per = heaPumDat,
+      redeclare package Medium1 = Medium,
+      redeclare package Medium2 = Medium)
+      annotation (Placement(transformation(extent={{-30,116},{-10,136}})));
+  Buildings.Fluid.Movers.SpeedControlled_y pumCon(
+    redeclare package Medium = Medium,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+    addPowerToMedium=false,
+    show_T=show_T,
+    per(pressure(dp={2*dpCon_nominal,0}, V_flow={0,2*mCon_flow_nominal/1000})),
+    allowFlowReversal=false,
+    use_inputFilter=false,
+    riseTime=10)
+    "Condenser variable speed pump-primary circuit"
+    annotation (Placement(transformation(extent={{0,122},{20,142}})));
+   Buildings.Fluid.Movers.SpeedControlled_y pumEva(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      addPowerToMedium=false,
+      show_T=show_T,
+      per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,2*mEva_flow_nominal/1000})),
+      allowFlowReversal=false,
+      use_inputFilter=false,
+      riseTime=10)
+      "Evaporator variable speed pump-primary circuit"
+    annotation (Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=0,
+          origin={-78,112})));
+
  //-----------------------------------------------------------------
     parameter Modelica.SIunits.MassFlowRate m_flow_nominal
     "Nominal mass flow rate";
@@ -67,6 +63,28 @@ model Substation
       annotation (Dialog(tab="Water Buffer Tank"));
     parameter Integer nSegTan(min=2)   "Number of volume segments"
       annotation (Dialog(tab="Water Buffer Tank"));
+
+    BaseClasses.StratifiedTank hotBufTan(
+      redeclare package Medium = Medium,
+      VTan=VTan,
+      hTan=hTan,
+      dIns=dIns,
+      nSeg=nSegTan,
+      show_T=show_T,
+      energyDynamics=fixedEnergyDynamics,
+      m_flow_nominal=mCon_flow_nominal,
+      T_start=313.15)
+      "Hot buffer tank"
+      annotation (Placement(transformation(extent={{156,30},{180,54}})));
+    BaseClasses.StratifiedTank colBufTan(
+      redeclare package Medium = Medium,
+      VTan=VTan,
+      hTan=hTan,
+      dIns=dIns,
+      nSeg=nSegTan,
+      show_T=show_T,
+      m_flow_nominal=mEva_flow_nominal) "Cold Buffer tank"
+      annotation (Placement(transformation(extent={{-234,48},{-210,72}})));
   //-------------------------------Design Parameters----------------
     parameter Modelica.SIunits.Temperature THeaWatSup_nominal=314.15
       "Nominal heating supply water temperature"
@@ -111,7 +129,32 @@ model Substation
     parameter Modelica.SIunits.Radius rTub
      "Outer radius of the tubes"
       annotation(Dialog(tab="Borefield"));
-  //---------------------------HeatExchanger----------
+
+   Fluid.Geothermal.Borefields.OneUTube borFie(
+      redeclare package Medium = Medium,
+      allowFlowReversal=false,
+      borFieDat=borFieDat,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      show_T=show_T,
+      dT_dz=0,
+      TExt0_start=285.95)
+      "Geothermal borefield"
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=270,
+          origin={-68,-204})));
+    Fluid.Movers.FlowControlled_m_flow pumBor(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal=mGeo_flow_nominal,
+      addPowerToMedium=false,
+      show_T=show_T,
+    per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
+      use_inputFilter=false,
+      riseTime=10)
+      "Pump (or valve) that forces the flow rate to be set to the control signal"
+       annotation (Placement(transformation(extent={{10,-10},{-10,10}},
+        rotation=90,  origin={-68,-140})));
+  //---------------------------DistrictHeatExchanger----------
     parameter Modelica.SIunits.MassFlowRate mHex_flow_nominal
       "District heat exhanger nominal water flow rate"
       annotation (Dialog(tab="DistrictHeatExchanger"));
@@ -131,50 +174,23 @@ model Substation
     parameter Boolean show_T=true
       "= true, if actual temperature at port is computed"
       annotation (Dialog(group="Advanced"));
- //------------------------------------------------------------------------
-    Fluid.HeatPumps.EquationFitReversible heaPum(
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-      massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-      per = heaPumDat,
-      redeclare package Medium1 = Medium,
-      redeclare package Medium2 = Medium)
-      annotation (Placement(transformation(extent={{-30,116},{-10,136}})));
-    Buildings.Fluid.Movers.SpeedControlled_y pumCon(
-      redeclare package Medium = Medium,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      addPowerToMedium=false,
-      show_T=show_T,
-      per(pressure(dp={2*dpCon_nominal,0}, V_flow={0,2*mCon_flow_nominal/1000})),
-      allowFlowReversal=false,
-      use_inputFilter=false,
-      riseTime=10)
-      "Pump (or valve) that forces the flow rate to be set to the control signal"
-      annotation (Placement(transformation(extent={{0,122},{20,142}})));
-  Control.HeatPumpController heaPumCon "Control of the heatpump model"
+ //-----------------------------Controllers------------------------------------
+
+    Control.HeatPumpController heaPumCon "Control of the heatpump model"
     annotation (Placement(transformation(extent={{-120,200},{-100,220}})));
-    Buildings.Fluid.Movers.SpeedControlled_y pumEva(
-      redeclare package Medium = Medium,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      addPowerToMedium=false,
-      show_T=show_T,
-      per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,2*mEva_flow_nominal/1000})),
-      allowFlowReversal=false,
-      use_inputFilter=false,
-      riseTime=10)
-      "Pump (or valve) that forces the flow rate to be set to the control signal"
-      annotation (Placement(transformation(
-          extent={{-10,-10},{10,10}},
-          rotation=0,
-          origin={-78,112})));
-   Control.SubstationUO subCon
+
+    Control.SubstationUO subCon
     "Substation control "
       annotation (Placement(transformation(extent={{-200,200},{-180,220}})));
+
+
+ //-----------------------------Sensors------------------------------------
     Buildings.Fluid.Sensors.TemperatureTwoPort TConLvg(
       redeclare final package Medium = Medium,
       allowFlowReversal=false,
       m_flow_nominal=mCon_flow_nominal,
       tau=0) "Condenser leaving water temperature"
-                                         annotation (Placement(
+      annotation (Placement(
           transformation(
           extent={{10,10},{-10,-10}},
           rotation=180,
@@ -186,11 +202,11 @@ model Substation
       tau=0) "Condenser entering water temperature"
       annotation (Placement(transformation(extent={{0,10},{-20,30}})));
     Buildings.Fluid.Sensors.TemperatureTwoPort TEvaEnt(
-    redeclare final package Medium = Medium,
-    allowFlowReversal=false,
-    m_flow_nominal=mEva_flow_nominal,
-    tau=0) "Evaporator entering water temperature"
-                                              annotation (Placement(
+      redeclare final package Medium = Medium,
+      allowFlowReversal=false,
+      m_flow_nominal=mEva_flow_nominal,
+      tau=0) "Evaporator entering water temperature"
+      annotation (Placement(
         transformation(
         extent={{10,10},{-10,-10}},
         rotation=180,
@@ -198,30 +214,23 @@ model Substation
     Buildings.Fluid.Sensors.TemperatureTwoPort TEvaLvg(
       redeclare final package Medium = Medium,
       allowFlowReversal=false,
-    m_flow_nominal=mEva_flow_nominal,
+      m_flow_nominal=mEva_flow_nominal,
       tau=30) "Evaporator leaving water temperature"
       annotation (Placement(transformation(extent={{-68,10},{-88,30}})));
-    BaseClasses.StratifiedTank hotBufTan(
-      redeclare package Medium = Medium,
-      VTan=VTan,
-      hTan=hTan,
-      dIns=dIns,
-      nSeg=nSegTan,
-      show_T=show_T,
-      energyDynamics=fixedEnergyDynamics,
-      m_flow_nominal=mCon_flow_nominal,
-      T_start=313.15)
-      "Hot buffer tank"
-      annotation (Placement(transformation(extent={{156,30},{180,54}})));
-    BaseClasses.StratifiedTank colBufTan(
-      redeclare package Medium = Medium,
-      VTan=VTan,
-      hTan=hTan,
-      dIns=dIns,
-      nSeg=nSegTan,
-      show_T=show_T,
-      m_flow_nominal=mEva_flow_nominal) "Cold Buffer tank"
-      annotation (Placement(transformation(extent={{-234,48},{-210,72}})));
+    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topCooTan
+      "Cold tank top temperature"
+      annotation (Placement(transformation(extent={{-224,84},{-244,104}})));
+    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor botCooTan
+      "Cold tank bottom temperature"
+      annotation (Placement(transformation(extent={{-230,-10},{-250,10}})));
+    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topHotTan
+      "Hot tank top temperature"
+      annotation (Placement(transformation(extent={{214,198},{194,218}})));
+    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor botHotTan
+      "Hot tank bottom temperature"
+      annotation (Placement(transformation(extent={{176,-42},{196,-22}})));
+
+ //-----------------------------Fluid Interfaces and headers------------------------------------
     Modelica.Fluid.Interfaces.FluidPort_a cooSup(
       h_outflow(start=Medium.h_default, nominal=Medium.h_default),
       redeclare final package Medium = Medium,
@@ -270,22 +279,7 @@ model Substation
     m_flow_nominal=mEva_flow_nominal,
     nPorts_a=1,
     nPorts_b=2) "Supply chilled water header. " annotation (Placement(transformation(extent={{-108,10},{-128,30}})));
-    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topCooTan
-      "Cold tank top temperature"
-      annotation (Placement(transformation(extent={{-224,84},{-244,104}})));
-    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor botCooTan
-      "Cold tank bottom temperature"
-      annotation (Placement(transformation(extent={{-230,-10},{-250,10}})));
-    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topHotTan
-      "Hot tank top temperature"
-      annotation (Placement(transformation(extent={{214,198},{194,218}})));
-    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor botHotTan
-      "Hot tank bottom temperature"
-      annotation (Placement(transformation(extent={{176,-42},{196,-22}})));
-    Modelica.Blocks.Interfaces.RealInput TSolSetHotTan
-    "Setpoint temperature of the water inside the hot tank incase the solar system is active"
-      annotation (Placement(transformation(extent={{-320,138},{-300,158}}),
-          iconTransformation(extent={{-118,34},{-102,50}})));
+
     BaseClasses.SupplyTemperatureSet supTemSet(
       THeaWatSup_nominal=THeaWatSup_nominal,
       THeaWatRet_nominal=THeaWatRet_nominal,
@@ -293,7 +287,7 @@ model Substation
       TCooWatSup_min=TCooWatSup_min,
       dTCooWat=dTCooWat)
       "Calculation of heating and cooling setpoint temperature"
-      annotation (Placement(transformation(extent={{-248,240},{-228,260}})));
+      annotation (Placement(transformation(extent={{-248,266},{-228,286}})));
     Buildings.BoundaryConditions.WeatherData.Bus weaBus
       "Data bus that stores weather data"
       annotation (Placement(transformation(extent={{-330,256},{-290,296}}),
@@ -311,6 +305,8 @@ model Substation
     m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
     nPorts_a=2,
     nPorts_b=2) "Ambient circuit supply header" annotation (Placement(transformation(extent={{0,-120},{20,-142}})));
+
+ //-----------------------------Valves------------------------------------
     Fluid.Actuators.Valves.TwoWayLinear valSupHea(
       redeclare final package Medium = Medium,
       use_inputFilter=false,
@@ -333,30 +329,7 @@ model Substation
     m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
       "Two way modulating valve"
       annotation (Placement(transformation(extent={{-94,-30},{-74,-10}})));
-    Fluid.Geothermal.Borefields.OneUTube borFie(
-      redeclare package Medium = Medium,
-      allowFlowReversal=false,
-      borFieDat=borFieDat,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-      show_T=show_T,
-      dT_dz=0,
-    TExt0_start=285.95)
-      "Geothermal borefield"
-      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
-          rotation=270,
-          origin={-68,-204})));
-    Fluid.Movers.FlowControlled_m_flow pumBor(
-      redeclare package Medium = Medium,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      m_flow_nominal=mGeo_flow_nominal,
-      addPowerToMedium=false,
-      show_T=show_T,
-    per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
-      use_inputFilter=false,
-      riseTime=10)
-      "Pump (or valve) that forces the flow rate to be set to the control signal"
-       annotation (Placement(transformation(extent={{10,-10},{-10,10}},
-        rotation=90,  origin={-68,-140})));
+
 
     Fluid.Sensors.TemperatureTwoPort TBorLvg(
     allowFlowReversal=false,
@@ -513,7 +486,8 @@ model Substation
     annotation (Placement(transformation(extent={{126,50},{146,70}})));
 
     Modelica.Blocks.Interfaces.RealInput TSetHeaMax "Maximum heating setpoint temperature" annotation (Placement(
-        transformation(extent={{-320,218},{-300,238}}), iconTransformation(extent={{-118,34},{-102,50}})));
+        transformation(extent={{-320,218},{-300,238}}), iconTransformation(extent={{-116,54},
+            {-100,70}})));
     Fluid.Sensors.TemperatureTwoPort TBorEnt(
     allowFlowReversal=false,
     tau=0,
@@ -544,9 +518,9 @@ model Substation
         extent={{-10,10},{10,-10}},
         rotation=270,
         origin={106,-70})));
-    Modelica.Blocks.Interfaces.RealInput TBorMaxEnt
+    Modelica.Blocks.Interfaces.RealInput TMaxBorEnt
     "Maximum allowed enetring water temperature to the borefiled holes." annotation (Placement(transformation(extent={{-320,
-            -82},{-300,-62}}), iconTransformation(extent={{-118,34},{-102,50}})));
+            -82},{-300,-62}}), iconTransformation(extent={{-116,-28},{-100,-12}})));
   Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valEva(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -597,9 +571,52 @@ model Substation
         rotation=0,
         origin={42,132})));
     Modelica.Blocks.Interfaces.RealInput TMinConEnt "Minimum condenser entering water temperature" annotation (
-      Placement(transformation(extent={{-320,184},{-300,204}}), iconTransformation(extent={{-118,34},{-102,50}})));
+      Placement(transformation(extent={{-320,184},{-300,204}}), iconTransformation(extent={{-116,24},
+            {-100,40}})));
     Modelica.Blocks.Interfaces.RealInput TMaxEvaEnt "Maximum evaporator entering water temperature" annotation (
-      Placement(transformation(extent={{-320,170},{-300,190}}), iconTransformation(extent={{-118,34},{-102,50}})));
+      Placement(transformation(extent={{-320,170},{-300,190}}), iconTransformation(extent={{-116,-4},
+            {-100,12}})));
+
+
+  /*
+  //-------------------------SolarCollector------------------------
+    parameter Integer nSeg(min=3)
+     "Number of segments used to discretize the collector model"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Modelica.SIunits.Angle lat
+     "Latitude"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Modelica.SIunits.Angle azi
+     "Surface azimuth (0 for south-facing; -90 degree for east-facing; +90 degree for west facing"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Modelica.SIunits.Angle til
+     "Surface tilt (0 for horizontally mounted collector)"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Real rho
+     "Ground reflectance"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Fluid.SolarCollectors.Types.NumberSelection nColType=Buildings.Fluid.SolarCollectors.Types.NumberSelection.Number
+     "Selection of area specification format"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Fluid.SolarCollectors.Types.SystemConfiguration sysConfig=Buildings.Fluid.SolarCollectors.Types.SystemConfiguration.Series
+     "Selection of system configuration"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Real shaCoe
+      "Shading coefficient. 0.0: no shading, 1.0: full shading"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Integer nPanels
+     "Desired number of panels in the simulation"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Modelica.SIunits.HeatCapacity C=385*solColDat.mDry
+     "Heat capacity of solar collector without fluid (default: cp_copper*mDry*nPanels)"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Modelica.SIunits.MassFlowRate mSol_flow_nominal
+     "Solar thermal collecDialogtor nominal water flow rate"
+      annotation (Dialog(tab="SolarCollector"));
+    parameter Modelica.SIunits.PressureDifference dpSol_nominal
+      "Pressure difference accross the sollar colletor"
+      annotation (Dialog(tab="SolarCollector"));
+ */
 
 equation
   connect(heaPum.port_b1,pumCon. port_a)
@@ -632,10 +649,10 @@ equation
     annotation (Line(points={{-304,60},{-234,60}},                     color={238,46,47}));
   connect(colBufTan.heaPorVol[1], topCooTan.port)
     annotation (Line(points={{-222,60},{-222,94},{-224,94}},color={191,0,0}));
-  connect(colBufTan.heaPorVol[nSeg], botCooTan.port)
+  connect(colBufTan.heaPorVol[nSegTan], botCooTan.port)
     annotation (Line(points={{-222,60},{-222,0},{-230,0}},
                                      color={191,0,0}));
-  connect(hotBufTan.heaPorVol[nSeg], botHotTan.port)
+  connect(hotBufTan.heaPorVol[nSegTan], botHotTan.port)
     annotation (Line(points={{168,42},{168,-32},{176,-32}},color={191,0,0}));
   connect(hotBufTan.heaPorVol[1], topHotTan.port)
     annotation (Line(points={{168,42},{168,58},{214,58},{214,208}},
@@ -665,7 +682,7 @@ equation
         color={0,0,127}));
   connect(weaBus, supTemSet.weaBus)
     annotation (Line(
-      points={{-310,276},{-278,276},{-278,250},{-248,250}},
+      points={{-310,276},{-248,276}},
       color={255,204,51},
       thickness=0.5), Text(
       string="%first",
@@ -674,12 +691,12 @@ equation
       horizontalAlignment=TextAlignment.Right));
   connect(supTemSet.THeaSupSet, subCon.TSetHea)
     annotation (Line(
-      points={{-227,254},{-208,254},{-208,215},{-201,215}},
+      points={{-227,280},{-208,280},{-208,215},{-201,215}},
       color={238,46,47},
       pattern=LinePattern.DashDot));
   connect(supTemSet.TCooSupSet, subCon.TSetCoo)
     annotation (Line(
-      points={{-227,246},{-212,246},{-212,205},{-201,205}},
+      points={{-227,272},{-212,272},{-212,205},{-201,205}},
       color={85,170,255},
       pattern=LinePattern.DashDot));
   connect(hex.port_a1, pumHexDis.port_b)
@@ -730,11 +747,11 @@ equation
                                                             color={255,0,255},
       pattern=LinePattern.Dot));
   connect(supTemSet.THeaSupSet, heaPumCon.TSetHea) annotation (Line(
-      points={{-227,254},{-132,254},{-132,213},{-121,213}},
+      points={{-227,280},{-132,280},{-132,213},{-121,213}},
       color={238,46,47},
       pattern=LinePattern.DashDot));
   connect(supTemSet.TCooSupSet, heaPumCon.TSetCoo) annotation (Line(
-      points={{-227,246},{-134,246},{-134,211},{-121,211}},
+      points={{-227,272},{-134,272},{-134,211},{-121,211}},
       color={85,170,255},
       pattern=LinePattern.DashDot));
   connect(colBufTan.port_b1, secCooFlo.port_a) annotation (Line(points={{-234,50.4},{-234,40},{-244,40}},
@@ -763,7 +780,7 @@ equation
     annotation (Line(points={{-123,-64.2},{-123,-64},{-100,-64},{-100,-106},{-80,-106}}, color={0,0,127}));
   connect(pumBor.port_b, TBorEnt.port_a) annotation (Line(points={{-68,-150},{-68,-158}}, color={0,127,255}));
   connect(borFie.port_a, TBorEnt.port_b) annotation (Line(points={{-68,-194},{-68,-178}}, color={0,127,255}));
-  connect(TBorMaxEnt, ambCon.TBorMaxEnt) annotation (Line(
+  connect(TMaxBorEnt, ambCon.TBorMaxEnt) annotation (Line(
       points={{-310,-72},{-172,-72},{-172,-73},{-145,-73}},
       color={0,0,127},
       pattern=LinePattern.Dot));
@@ -956,7 +973,7 @@ equation
           points={{86,92}},
           color={28,108,200},
           pattern=LinePattern.Dash)}),
-          defaultComponentName="SubSta",
+          defaultComponentName="ETS",
  Documentation(info="<html>
  <h4> Energy Transfer Station </h4>
 <p>
