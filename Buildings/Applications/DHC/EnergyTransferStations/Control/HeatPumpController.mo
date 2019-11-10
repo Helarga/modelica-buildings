@@ -15,7 +15,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
       displayUnit="degC") "Setpoint for cooling supply water to space loads"
                                                        annotation (Placement(transformation(extent={{-128,
             -160},{-100,-132}}),
-                     iconTransformation(extent={{-120,-58},{-100,-38}})));
+                     iconTransformation(extent={{-120,0},{-100,20}})));
   Modelica.Blocks.Logical.Or or1
     annotation (Placement(transformation(extent={{-46,44},{-26,64}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi1
@@ -30,17 +30,17 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     annotation (Placement(transformation(extent={{58,44},{78,64}})));
   Buildings.Controls.OBC.CDL.Interfaces.IntegerOutput yHeaPumMod
     "Heatpump operational mode" annotation (Placement(transformation(extent={{102,44},
-            {122,64}}),     iconTransformation(extent={{100,-14},{128,14}})));
+            {122,64}}),     iconTransformation(extent={{100,-2},{128,26}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput TSetHeaPum(final unit="K",
       displayUnit="degC") "Setpint temperture for the heatpump" annotation (
       Placement(transformation(extent={{100,-18},{120,2}}),
-        iconTransformation(extent={{100,28},{128,56}})));
+        iconTransformation(extent={{100,32},{128,60}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi2
     annotation (Placement(transformation(extent={{60,-18},{80,2}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaLvg(final unit="K", displayUnit=
         "degC") "Evaporator leaving water temperature" annotation (Placement(
         transformation(extent={{-128,-204},{-100,-176}}), iconTransformation(
-          extent={{-120,-104},{-100,-84}})));
+          extent={{-120,-94},{-100,-74}})));
   Modelica.Blocks.Logical.And simHeaCoo "Simultaneous heating and cooling mode"
     annotation (Placement(transformation(extent={{-60,-88},{-40,-68}})));
   Buildings.Controls.Continuous.LimPID PI(
@@ -66,11 +66,11 @@ model HeatPumpController "The control block of the heatpump on heating mode"
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHeaMax(final unit="K",
       displayUnit="degC") "Maximum setpoint for heating water " annotation (
       Placement(transformation(extent={{-128,-228},{-100,-200}}),
-        iconTransformation(extent={{-120,-82},{-100,-62}})));
+        iconTransformation(extent={{-120,-22},{-100,-2}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHea(final unit="K",
       displayUnit="degC") "Setpoint for heating supply water to space loads"
     annotation (Placement(transformation(extent={{-128,-14},{-100,14}}),
-        iconTransformation(extent={{-120,-38},{-100,-18}})));
+        iconTransformation(extent={{-120,20},{-100,40}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi4
     annotation (Placement(transformation(extent={{40,-102},{60,-82}})));
   Modelica.Blocks.Logical.Or cooOnl "Cooling only mode"
@@ -95,16 +95,16 @@ model HeatPumpController "The control block of the heatpump on heating mode"
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaEnt(final unit="K",
       displayUnit="degC") "Evaporator entering water temperature" annotation (
       Placement(transformation(extent={{-128,-302},{-100,-274}}),
-        iconTransformation(extent={{-120,-104},{-100,-84}})));
+        iconTransformation(extent={{-120,-76},{-100,-56}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TMaxEvaEnt(final unit="K",
       displayUnit="degC") "Maximum evaporator entering water temperature"
     annotation (Placement(transformation(extent={{-128,-274},{-100,-246}}),
-        iconTransformation(extent={{-120,-104},{-100,-84}})));
+        iconTransformation(extent={{-120,-56},{-100,-36}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva(final unit="K",
       displayUnit="degC")
     "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
     annotation (Placement(transformation(extent={{100,-270},{120,-250}}),
-        iconTransformation(extent={{100,28},{128,56}})));
+        iconTransformation(extent={{100,-38},{128,-10}})));
   Buildings.Controls.Continuous.LimPID valEva1(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     yMax=1,
@@ -118,16 +118,16 @@ model HeatPumpController "The control block of the heatpump on heating mode"
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final unit="K",
       displayUnit="degC") "Condenser entering water temperature" annotation (
       Placement(transformation(extent={{-126,-354},{-98,-326}}),
-        iconTransformation(extent={{-120,-104},{-100,-84}})));
+        iconTransformation(extent={{-120,-108},{-100,-88}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TMinConEnt(final unit="K",
       displayUnit="degC") "Minimum condenser entering water temperature"
     annotation (Placement(transformation(extent={{-126,-326},{-98,-298}}),
-        iconTransformation(extent={{-120,-104},{-100,-84}})));
+        iconTransformation(extent={{-120,-38},{-100,-18}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva1(final unit="K",
       displayUnit="degC")
     "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
     annotation (Placement(transformation(extent={{102,-322},{122,-302}}),
-        iconTransformation(extent={{100,28},{128,56}})));
+        iconTransformation(extent={{100,-70},{128,-42}})));
 equation
 
   connect(ReqCoo, or1.u2)
@@ -222,7 +222,7 @@ equation
           extent={{-100,8},{100,-234}},
           lineColor={28,108,200},
           lineThickness=0.5,
-          fillColor={213,255,170},
+          fillColor={218,244,206},
           fillPattern=FillPattern.Solid),
         Rectangle(
           extent={{-100,102},{100,20}},
@@ -236,7 +236,7 @@ equation
           fillPattern=FillPattern.None,
           textString="Heatpump operational mode"),
         Text(
-          extent={{-30,-224},{114,-232}},
+          extent={{-106,-224},{38,-232}},
           lineColor={0,0,255},
           fillColor={215,215,215},
           fillPattern=FillPattern.None,

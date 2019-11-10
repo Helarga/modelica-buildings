@@ -13,8 +13,8 @@ model HeatpumpController
   parameter Real scaling_factor=1
    "Scaling factor for heatpump capacity";
 
-  Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpController heaPumCon
-    annotation (Placement(transformation(extent={{-20,-10},{0,8}})));
+  Buildings.Applications.DHC.EnergyTransferStations.Control.HeatPumpControllerWithMinimumSetHeatingTemperatureForCooOnlyMode
+    heaPumCon annotation (Placement(transformation(extent={{-20,-10},{0,8}})));
 
   Fluid.HeatPumps.ReverseWaterToWater heaPum(
     m1_flow_nominal=mLoa_flow_nominal,
@@ -148,7 +148,7 @@ equation
           {-62,44},{-62,-1.4},{-21,-1.4}}, color={0,0,127}));
   connect(THeaSet.y, heaPumCon.TSetHea) annotation (Line(points={{-71,-40},{-64,
           -40},{-64,-6},{-21,-6}}, color={0,0,127}));
-  connect(TSouLvg.T, heaPumCon.TSouLvg) annotation (Line(
+  connect(TSouLvg.T,heaPumCon.TEvaLvg)  annotation (Line(
       points={{5,-52},{-26,-52},{-26,-10},{-21,-10}},
       color={0,0,127},
       pattern=LinePattern.Dot));

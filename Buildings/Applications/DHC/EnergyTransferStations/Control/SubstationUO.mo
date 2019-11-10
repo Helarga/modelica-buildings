@@ -53,18 +53,14 @@ model SubstationUO
       iconTransformation(extent={{-120,-20},{-100,0}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumConMin(final unit="1")
     "Condenser water supply pump control signal to assure minimum flow rate to the hot tank" annotation (
-      Placement(transformation(extent={{220,60},{240,80}}), iconTransformation(extent={{100,20},
-            {120,40}})));
+      Placement(transformation(extent={{220,60},{240,80}}), iconTransformation(extent={{100,20},{120,40}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumEvamin(final unit="1")
     "Evaporator water supply pump control signal to assure minimum flow rate to the cold tank" annotation (
-      Placement(transformation(extent={{220,-80},{240,-60}}), iconTransformation(extent={{100,0},
-            {120,20}})));
+      Placement(transformation(extent={{220,-80},{240,-60}}), iconTransformation(extent={{100,0},{120,20}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValHeaPos "Hot side valve status(1:On, 0:Off)" annotation (
-      Placement(transformation(extent={{220,120},{240,140}}), iconTransformation(extent={{100,-20},
-            {120,0}})));
+      Placement(transformation(extent={{220,120},{240,140}}), iconTransformation(extent={{100,-20},{120,0}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValCooPos "Cold side valve status(1:On, 0:Off)" annotation (
-      Placement(transformation(extent={{220,-210},{240,-190}}), iconTransformation(extent={{100,-40},
-            {120,-20}})));
+      Placement(transformation(extent={{220,-210},{240,-190}}), iconTransformation(extent={{100,-40},{120,-20}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput reqHea
     "True if heating is required from heat pump, false otherwise" annotation (Placement(transformation(extent={{220,
             200},{240,220}}), iconTransformation(extent={{100,80},{120,100}})));
@@ -81,12 +77,10 @@ model SubstationUO
       iconTransformation(extent={{100,-62},{120,-42}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValHea
     "Hot side valve status,true when rejection of part or full heating load is reuired" annotation (Placement(
-        transformation(extent={{220,150},{240,170}}), iconTransformation(extent={{100,60},
-            {120,80}})));
+        transformation(extent={{220,150},{240,170}}), iconTransformation(extent={{100,60},{120,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValCoo
     "Hot side valve status,true when rejection of part or full cooling load is reuired" annotation (Placement(
-        transformation(extent={{220,-190},{240,-170}}), iconTransformation(extent={{100,40},
-            {120,60}})));
+        transformation(extent={{220,-190},{240,-170}}), iconTransformation(extent={{100,40},{120,60}})));
 
   Buildings.Controls.Continuous.LimPID conHeaTan(
     final k=k,
@@ -148,8 +142,7 @@ equation
           -200,190},{-200,191},{-161,191}}, color={0,0,127}));
   connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{
           -180,160},{-180,181},{-161,181}}, color={0,0,127}));
-  connect(TSetCoo, conColSid.THeaSupSet) annotation (Line(points={{-240,-140},{
-          -180,-140},{-180,-192},{-162,-192}}, color={0,0,127}));
+
   connect(TTanCooTop, conColSid.TTanTop) annotation (Line(points={{-240,-180},{
           -200,-180},{-200,-195},{-161,-195}}, color={0,0,127}));
   connect(TTanCooBot, conColSid.TTanBot) annotation (Line(points={{-240,-210},{
@@ -164,8 +157,6 @@ equation
           {-60,50},{-38,50},{-38,58}},      color={255,0,255}));
   connect(not1.y, conCooTan.trigger) annotation (Line(points={{-68,112},{-60,112},
           {-60,0},{-38,0},{-38,8}},       color={255,0,255}));
-  connect(conHotSid.THeaSupSet, TSetHea) annotation (Line(points={{-162,194},{-202,
-          194},{-202,220},{-240,220}}, color={0,0,127}));
   connect(mTanHotNor, conHeaTan.u_m)
     annotation (Line(points={{-240,40},{-30,40},{-30,58}}, color={0,0,127}));
   connect(mSetHotTan.y, conHeaTan.u_s)
@@ -203,6 +194,10 @@ equation
           0,62},{158,62}}, color={0,0,127}));
   connect(conCooTan.y, pumCooCon.u3) annotation (Line(points={{-19,20},{0,20},{
           0,-78},{158,-78}}, color={0,0,127}));
+  connect(TSetCoo, conColSid.TSet) annotation (Line(points={{-240,-140},{-174,
+          -140},{-174,-191},{-161,-191}}, color={0,0,127}));
+  connect(TSetHea, conHotSid.TSet) annotation (Line(points={{-240,220},{-202,
+          220},{-202,195},{-161,195}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-220,-220},{220,220}})),
         Documentation(info="<html>

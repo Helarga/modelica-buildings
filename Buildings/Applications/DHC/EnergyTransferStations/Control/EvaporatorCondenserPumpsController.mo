@@ -2,15 +2,14 @@ within Buildings.Applications.DHC.EnergyTransferStations.Control;
 model EvaporatorCondenserPumpsController
   "The control block of the condenser and the evaporator water pumps"
      extends Modelica.Blocks.Icons.Block;
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput mCon
-    "Water mass flow rate for the condenser side "
-                                              annotation (Placement(
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput mPriHea
+    "Water mass flow rate for the primary heating side " annotation (Placement(
         transformation(extent={{-120,108},{-100,128}}), iconTransformation(
           extent={{-116,76},{-100,92}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput mSecHea
     "Water mass flow rate at the secondary building hot side" annotation (
       Placement(transformation(extent={{-120,86},{-100,106}}),
-        iconTransformation(extent={{-116,60},{-100,76}})));
+        iconTransformation(extent={{-116,50},{-100,66}})));
   Buildings.Controls.Continuous.LimPID pumCon(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     yMin=0.1,
@@ -66,32 +65,31 @@ model EvaporatorCondenserPumpsController
   Buildings.Controls.OBC.CDL.Interfaces.RealInput mSecCoo
     "Water mass flow rate at the secondary building cold side" annotation (
       Placement(transformation(extent={{-120,-42},{-100,-22}}),
-        iconTransformation(extent={{-116,-76},{-100,-60}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput mEva
-    "Water mass flow rate for the evaporator"   annotation (Placement(
-        transformation(extent={{-118,-90},{-98,-70}}),  iconTransformation(
+        iconTransformation(extent={{-116,-62},{-100,-46}})));
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput mPriEva
+    "Water mass flow rate for the primarycooling side " annotation (Placement(
+        transformation(extent={{-118,-90},{-98,-70}}), iconTransformation(
           extent={{-116,-88},{-100,-72}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput minConMasFlo(final
       displayUnit="kg/s")
     "minimum mass flow rate of the heatpump at the condenser side set by the manufacturer"
     annotation (Placement(transformation(extent={{-120,132},{-100,152}}),
-        iconTransformation(extent={{-116,-2},{-100,14}})));
+        iconTransformation(extent={{-116,6},{-100,22}})));
   Buildings.Controls.OBC.CDL.Continuous.Max max
     annotation (Placement(transformation(extent={{-38,146},{-18,126}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput minEvaMasFlo(final
       displayUnit="kg/s")
     "minimum mass flow rate of the heatpump at the evaporator side set by the manufacturer"
     annotation (Placement(transformation(extent={{-124,-20},{-100,4}}),
-        iconTransformation(extent={{-116,-18},{-100,-2}})));
+        iconTransformation(extent={{-116,-26},{-100,-10}})));
   Buildings.Controls.OBC.CDL.Continuous.Max max1
     annotation (Placement(transformation(extent={{-36,-4},{-16,-24}})));
 equation
 
   connect(max1.y,pumEva. u_s) annotation (Line(points={{-14,-14},{-2,-14},{-2,
           -42},{22,-42}},                color={0,0,127}));
-  connect(mCon,pumCon. u_m)
-    annotation (Line(points={{-110,118},{18,118},{18,124}},
-                                                          color={0,0,127}));
+  connect(mPriHea, pumCon.u_m)
+    annotation (Line(points={{-110,118},{18,118},{18,124}}, color={0,0,127}));
   connect(yPumEva,yPumEva)
     annotation (Line(points={{216,-80},{216,-80}}, color={0,0,127}));
   connect(ReqHea, or2.u1) annotation (Line(
@@ -124,7 +122,7 @@ equation
     annotation (Line(points={{-110,-32},{-66,-32}}, color={0,0,127}));
   connect(pro1.u2, con1.y)
     annotation (Line(points={{-66,-44},{-72,-44},{-72,-52}}, color={0,0,127}));
-  connect(mEva,pumEva. u_m)
+  connect(mPriEva, pumEva.u_m)
     annotation (Line(points={{-108,-80},{34,-80},{34,-54}}, color={0,0,127}));
   connect(pumCon.u_s, max.y)
     annotation (Line(points={{6,136},{-16,136}},   color={0,0,127}));

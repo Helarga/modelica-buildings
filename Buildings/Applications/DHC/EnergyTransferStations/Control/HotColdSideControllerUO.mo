@@ -7,10 +7,9 @@ block HotColdSideControllerUO
 
   parameter Modelica.SIunits.TemperatureDifference THys(min=0.1)
     "Temperature hysteresis";
-  Modelica.Blocks.Interfaces.RealInput TSetHea(final unit="K", displayUnit=
-        "degC") "Set point temperature of heating load" annotation (Placement(
-        transformation(extent={{-180,100},{-140,140}}), iconTransformation(
-          extent={{-120,80},{-100,100}})));
+  Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
+    "Set point temperature" annotation (Placement(transformation(extent={{-180,
+            100},{-140,140}}), iconTransformation(extent={{-120,80},{-100,100}})));
 
   inner Modelica.StateGraph.StateGraphRoot stateGraphRoot
     annotation (Placement(transformation(extent={{-134,130},{-114,150}})));
@@ -136,15 +135,14 @@ equation
     annotation (Line(points={{150,-80},{82,-80}}, color={255,0,255}));
   connect(yVal, booToRea.y) annotation (Line(points={{150,-100},{122,-100}},
                      color={0,0,127}));
-  connect(TSetHea, greEqu4.u2) annotation (Line(points={{-160,120},{-128,120},{-128,-120},{-62,
-          -120}},            color={0,0,127}));
-  connect(TSetHea, greEqu.u1) annotation (Line(points={{-160,120},{-128,120},{-128,38},{-100,
-          38}},           color={0,0,127}));
-  connect(addPar.u, TSetHea)
-    annotation (Line(points={{-100,2},{-128,2},{-128,120},{-160,120}}, color={0,0,127}));
-  connect(addPar1.u, TSetHea)
-    annotation (Line(points={{-102,-140},{-128,-140},{-128,120},{-160,120}},
-      color={0,0,127}));
+  connect(TSet, greEqu4.u2) annotation (Line(points={{-160,120},{-128,120},{-128,
+          -120},{-62,-120}}, color={0,0,127}));
+  connect(TSet, greEqu.u1) annotation (Line(points={{-160,120},{-128,120},{-128,
+          38},{-100,38}}, color={0,0,127}));
+  connect(addPar.u, TSet) annotation (Line(points={{-100,2},{-128,2},{-128,120},
+          {-160,120}}, color={0,0,127}));
+  connect(addPar1.u, TSet) annotation (Line(points={{-102,-140},{-128,-140},{-128,
+          120},{-160,120}}, color={0,0,127}));
   connect(addPar.y, greEqu1.u2)
     annotation (Line(points={{-76,2},{-60,2}}, color={0,0,127}));
   connect(addPar3.u, addPar.y) annotation (Line(points={{-92,-62},{-100,-62},{-100,-14},{-70,

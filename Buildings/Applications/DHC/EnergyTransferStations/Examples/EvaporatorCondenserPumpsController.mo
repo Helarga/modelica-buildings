@@ -48,12 +48,12 @@ equation
                               color={255,0,255}));
   connect(yPumMinLoa.y, pumCon.minConMasFlo) annotation (Line(points={{-18,30},{
           -18,0.6},{89.2,0.6}},     color={0,0,127}));
-  connect(mCon.y, pumCon.mCon) annotation (Line(points={{61,30},{68,30},{68,8.4},
-          {89.2,8.4}}, color={0,0,127}));
+  connect(mCon.y, pumCon.mPriHea) annotation (Line(points={{61,30},{68,30},{68,
+          8.4},{89.2,8.4}}, color={0,0,127}));
   connect(mSecHea.y,pumCon.mSecHea)  annotation (Line(points={{23,30},{30,30},{30,
           6.8},{89.2,6.8}},       color={0,0,127}));
-  connect(mEva.y,pumCon.mEva)  annotation (Line(points={{61,-30},{68,-30},{68,-8},
-          {89.2,-8}},         color={0,0,127}));
+  connect(mEva.y, pumCon.mPriEva) annotation (Line(points={{61,-30},{68,-30},{
+          68,-8},{89.2,-8}}, color={0,0,127}));
   connect(yPumMinSoa.y, pumCon.minEvaMasFlo)
     annotation (Line(points={{-18,-32},{-18,-1},{89.2,-1}},
                                                          color={0,0,127}));

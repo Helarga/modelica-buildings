@@ -17,17 +17,17 @@ model HydraulicHeader "Hydraulic header manifold."
       Medium =Medium)
    "The ports which connects the heat pump outlet to the borefield inlet"
     annotation (Placement(
-       transformation(extent={{-108,-40},{-88,40}}),iconTransformation(extent={{-10,-40},
-           {10,40}},
+       transformation(extent={{-108,-40},{-88,40}}),iconTransformation(extent={{-4,-15},
+            {4,15}},
        rotation=180,
-       origin={-108,0})));
+       origin={-102,-3})));
  Modelica.Fluid.Interfaces.FluidPorts_b ports_b[nPorts_b](redeclare package
       Medium =Medium)
     annotation (Placement(
-       transformation(extent={{88,-40},{108,40}}),iconTransformation(extent={{-10,-40},
-           {10,40}},
+       transformation(extent={{88,-40},{108,40}}),iconTransformation(extent={{-4,-15},
+            {4,15}},
        rotation=0,
-       origin={110,0})));
+       origin={104,1})));
 
 equation
   if nPorts_b>0 then
@@ -45,10 +45,10 @@ equation
      annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
        Rectangle(
          extent={{-86,6},{90,-8}},
-         lineColor={102,44,145},
+         lineColor={217,67,180},
          lineThickness=0.5,
-         fillColor={255,255,85},
-         fillPattern=FillPattern.Backward),
+          fillColor={255,255,85},
+          fillPattern=FillPattern.Solid),
        Rectangle(
          extent={{-98,18},{-86,-22}},
          lineColor={28,108,200},
