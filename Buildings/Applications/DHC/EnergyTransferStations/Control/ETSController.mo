@@ -52,12 +52,14 @@ model ETSController
     "Normalized flow rate of cold buffer tank"
     annotation (Placement(transformation(extent={{-260,-30},{-220,10}}),
       iconTransformation(extent={{-120,-20},{-100,0}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumConMin(final unit="1")
-    "Condenser water supply pump control signal to assure minimum flow rate to the hot tank" annotation (
-      Placement(transformation(extent={{220,60},{240,80}}), iconTransformation(extent={{100,20},{120,40}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumEvamin(final unit="1")
-    "Evaporator water supply pump control signal to assure minimum flow rate to the cold tank" annotation (
-      Placement(transformation(extent={{220,-80},{240,-60}}), iconTransformation(extent={{100,0},{120,20}})));
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumHeaTanMin(final unit="1")
+    "Condenser water supply pump control signal to assure minimum flow rate to the hot tank"
+    annotation (Placement(transformation(extent={{220,60},{240,80}}),
+        iconTransformation(extent={{100,20},{120,40}})));
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumCooTanMin(final unit="1")
+    "Evaporator water supply pump control signal to assure minimum flow rate to the cold tank"
+    annotation (Placement(transformation(extent={{220,-80},{240,-60}}),
+        iconTransformation(extent={{100,0},{120,20}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValHeaPos "Hot side valve status(1:On, 0:Off)" annotation (
       Placement(transformation(extent={{220,120},{240,140}}), iconTransformation(extent={{100,-20},{120,0}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValCooPos "Cold side valve status(1:On, 0:Off)" annotation (
@@ -137,8 +139,10 @@ model ETSController
 equation
   connect(mSetColTan.y, conCooTan.u_s)
     annotation (Line(points={{-78,20},{-42,20}}, color={0,0,127}));
-  connect(pumHeaCon.y, pumConMin) annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
-  connect(pumCooCon.y, pumEvamin) annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
+  connect(pumHeaCon.y, pumHeaTanMin)
+    annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
+  connect(pumCooCon.y, pumCooTanMin)
+    annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
   connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{
           -200,190},{-200,191},{-161,191}}, color={0,0,127}));
   connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{
@@ -182,7 +186,8 @@ equation
     annotation (Line(points={{-139,-200},{100,-200},{100,-180},{230,-180}}, color={255,0,255}));
   connect(conColSid.valSta, booToRea1.u)
     annotation (Line(points={{-139,-200},{118,-200}}, color={255,0,255}));
-  connect(pumConMin, pumConMin) annotation (Line(points={{230,70},{168,70},{168,70},{230,70}}, color={0,0,127}));
+  connect(pumHeaTanMin, pumHeaTanMin) annotation (Line(points={{230,70},{168,70},
+          {168,70},{230,70}}, color={0,0,127}));
   connect(pumHeaCon.u1, con4.y) annotation (Line(points={{158,78},{122,78},{122,
           90},{82,90}}, color={0,0,127}));
   connect(pumHeaCon.u2, not1.y) annotation (Line(points={{158,70},{18,70},{18,112},

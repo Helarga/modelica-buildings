@@ -10,48 +10,50 @@ model EvaporatorCondenserPumpsController
   parameter Modelica.SIunits.PressureDifference dpEva_nominal=10000
     "Nominal pressure raise";
 
-  parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal= 1.5
-     "Evaporator nominal water flow rate";
+  parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal= 1.2
+   "Evaporator nominal water flow rate";
 
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant yPumMinLoa(k=0.2)
-    "Minimum speed for the condenser side pump"
-    annotation (Placement(transformation(extent={{-40,20},{-20,40}})));
+  parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal= 1.2
+   "Evaporator nominal water flow rate";
+
+  /*parameter Modelica.SIunits.MassFlowRate mSecHea_flow_nominal= mEva_flow_nominal*0.9
+     "Secondary(building) heating circuit nominal water flow rate";
+    parameter Modelica.SIunits.MassFlowRate mSecCoo_flow_nominal= mEva_flow_nominal*0.9
+    "Secondary(building) cooling circuit nominal water flow rate";*/
+
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant conFloMin(k=0.3)
+    "Primary pump control signal to maintain the condenser minimum flow rate recommended by the manufacturer. "
+    annotation (Placement(transformation(extent={{16,18},{36,38}})));
   Modelica.Blocks.Sources.BooleanConstant heaMod(k=false) "Step control"
-    annotation (Placement(transformation(extent={{60,60},{80,80}})));
+    annotation (Placement(transformation(extent={{88,48},{108,68}})));
   Modelica.Blocks.Sources.BooleanConstant CooMod(k=true)
                                                  "Step control"
-    annotation (Placement(transformation(extent={{60,-80},{80,-60}})));
-  Modelica.Blocks.Sources.Ramp mSecCoo_flow(
+    annotation (Placement(transformation(extent={{92,-78},{112,-58}})));
+  Modelica.Blocks.Sources.Ramp mSecCoo(
     height=0.5,
     duration=200,
-    offset=1) "Secondary(building side) circuit chilled water flow rate "
-    annotation (Placement(transformation(extent={{0,-40},{20,-20}})));
-  Modelica.Blocks.Sources.Ramp mSecHea_flow(
-    height=1.2,
-    duration=200,
-    offset=0.5) "Secondary(building side) circuit heating water flow rate "
-    annotation (Placement(transformation(extent={{2,20},{22,40}})));
-  Control.EvaporatorCondenserPumpsController pumCon
-    annotation (Placement(transformation(extent={{90,-10},{110,10}})));
-  Modelica.Blocks.Sources.Ramp mCon_flow(
+    offset=0.2) "Secondary(building side) circuit chilled water flow rate "
+    annotation (Placement(transformation(extent={{44,-32},{64,-12}})));
+  Modelica.Blocks.Sources.Ramp mSecHea(
     height=0.5,
     duration=200,
-    offset=0.5) "Condenser water flow rate"
-    annotation (Placement(transformation(extent={{40,20},{60,40}})));
-  Modelica.Blocks.Sources.Ramp mEva_flow(
-    height=0.5,
-    duration=200,
-    offset=0.5) "Evaporator water flow rate"
-    annotation (Placement(transformation(extent={{40,-40},{60,-20}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant yPumMinSoa(k=0.2)
-    "Minimum speed for the evaporator side pump"
-    annotation (Placement(transformation(extent={{-40,-42},{-20,-22}})));
-   Fluid.Movers.SpeedControlled_y           pumEva(
+    offset=0.2) "Secondary(building side) circuit heating water flow rate "
+    annotation (Placement(transformation(extent={{44,18},{64,38}})));
+  Control.EvaporatorCondenserPumpsController priPumCon(mEva_flow_nominal=
+        mEva_flow_nominal, mCon_flow_nominal=mCon_flow_nominal)
+    "Primary pumps control block"
+    annotation (Placement(transformation(extent={{120,-12},{140,8}})));
+    //mSecHea_flow_nominal = mSecHea_flow_nominal,
+    //mSecCoo_flow_nominal = mSecCoo_flow_nominal)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant evaFloMin(k=0.3)
+    "Primary pump control signal to maintain the evaporator minimum flow rate recommended by the manufacturer. "
+    annotation (Placement(transformation(extent={{-10,18},{10,38}})));
+   Fluid.Movers.SpeedControlled_y pumEva(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     addPowerToMedium=false,
     show_T=show_T,
-    per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,2*mEva_flow_nominal/1000})),
+    per(pressure(dp={dpEva_nominal,0}, V_flow={0,mEva_flow_nominal/1000})),
     allowFlowReversal=false,
     use_inputFilter=false,
     riseTime=10)
@@ -59,40 +61,98 @@ model EvaporatorCondenserPumpsController
     annotation (Placement(transformation(
           extent={{-10,-10},{10,10}},
           rotation=0,
-          origin={130,-28})));
-  Modelica.Fluid.Sources.FixedBoundary heaLoa(redeclare package Medium = Medium,
-      nPorts=1) "Volume for the heating load"
-   annotation (Placement(transformation(extent={{160,18},{140,38}})));
-  Modelica.Fluid.Sources.FixedBoundary heaLoa1(redeclare package Medium =
-        Medium, nPorts=1)
-                "Volume for the heating load"
-   annotation (Placement(transformation(extent={{122,-60},{102,-40}})));
+          origin={186,-28})));
+  Modelica.Fluid.Sources.FixedBoundary sin(redeclare package Medium = Medium,
+      nPorts=1) "Sink"
+    annotation (Placement(transformation(extent={{296,-38},{276,-18}})));
+  Modelica.Fluid.Sources.FixedBoundary sou(redeclare package Medium = Medium,
+      nPorts=1) "Source volume"
+    annotation (Placement(transformation(extent={{146,-38},{166,-18}})));
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant cooTanMin(k=0.4)
+    "Primary pump speed signal to assure the minimum flow to the cold tank"
+    annotation (Placement(transformation(extent={{0,-32},{20,-12}})));
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant heaTanMin(k=0.4)
+    "Primary pump speed signal to assure the minimum flow to the hot tank"
+    annotation (Placement(transformation(extent={{-36,18},{-16,38}})));
+  Fluid.Sensors.MassFlowRate priCooFlo(redeclare package Medium = Media.Water)
+    "Primary circuit evaporator side chilled water flow rate" annotation (
+      Placement(transformation(
+        extent={{-10,10},{10,-10}},
+        rotation=0,
+        origin={246,-28})));
+   Fluid.Movers.SpeedControlled_y pumCon(
+    redeclare package Medium = Medium,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+    addPowerToMedium=false,
+    show_T=show_T,
+    per(pressure(dp={dpEva_nominal,0}, V_flow={0,mCon_flow_nominal/1000})),
+    allowFlowReversal=false,
+    use_inputFilter=false,
+    riseTime=10) "Condenser variable speed pump-primary circuit" annotation (
+      Placement(transformation(
+        extent={{-10,10},{10,-10}},
+        rotation=0,
+        origin={186,60})));
+  Modelica.Fluid.Sources.FixedBoundary sin1(redeclare package Medium = Medium,
+      nPorts=1) "Sink"
+    annotation (Placement(transformation(extent={{298,48},{278,68}})));
+  Fluid.Sensors.MassFlowRate priHeaFlo(redeclare package Medium = Media.Water)
+    "Primary circuit condenser side heating water flow rate" annotation (
+      Placement(transformation(
+        extent={{10,10},{-10,-10}},
+        rotation=180,
+        origin={246,60})));
+  Modelica.Fluid.Sources.FixedBoundary sou1(redeclare package Medium = Medium,
+      nPorts=1) "Source volume"
+    annotation (Placement(transformation(extent={{148,50},{168,70}})));
 equation
-  connect(pumCon.ReqHea, heaMod.y) annotation (Line(points={{88.6,10},{88,10},{88,
-          70},{81,70}},     color={255,0,255}));
-  connect(CooMod.y, pumCon.ReqCoo) annotation (Line(points={{81,-70},{86,-70},{
-          86,-9.8},{88.6,-9.8}},
-                              color={255,0,255}));
-  connect(yPumMinLoa.y, pumCon.minConMasFlo) annotation (Line(points={{-18,30},{
-          -18,1.4},{89.2,1.4}},     color={0,0,127}));
-  connect(mCon_flow.y, pumCon.mPriHea) annotation (Line(points={{61,30},{68,30},
-          {68,8.4},{89.2,8.4}}, color={0,0,127}));
-  connect(mSecHea_flow.y, pumCon.mSecHea) annotation (Line(points={{23,30},{30,30},
-          {30,5.8},{89.2,5.8}}, color={0,0,127}));
-  connect(mEva_flow.y, pumCon.mPriEva) annotation (Line(points={{61,-30},{68,-30},
-          {68,-8},{89.2,-8}}, color={0,0,127}));
-  connect(yPumMinSoa.y, pumCon.minEvaMasFlo)
-    annotation (Line(points={{-18,-32},{-18,-1.8},{89.2,-1.8}},
-                                                         color={0,0,127}));
-  connect(mSecCoo_flow.y, pumCon.mSecCoo) annotation (Line(points={{21,-30},{30,
-          -30},{30,-5.4},{89.2,-5.4}}, color={0,0,127}));
-  connect(pumCon.yPumEva, pumEva.y)
-    annotation (Line(points={{111,-8},{130,-8},{130,-16}}, color={0,0,127}));
-  connect(pumEva.port_b, heaLoa.ports[1]) annotation (Line(points={{140,-28},{146,
-          -28},{146,28},{140,28}}, color={0,127,255}));
-  connect(pumEva.port_a, heaLoa1.ports[1]) annotation (Line(points={{120,-28},{94,
-          -28},{94,-50},{102,-50}}, color={0,127,255}));
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+  connect(priPumCon.reqHea, heaMod.y) annotation (Line(points={{118.6,8},{112,8},
+          {112,58},{109,58}}, color={255,0,255}));
+  connect(CooMod.y, priPumCon.reqCoo) annotation (Line(points={{113,-68},{116,
+          -68},{116,-11.8},{118.6,-11.8}}, color={255,0,255}));
+  connect(conFloMin.y, priPumCon.conFloMin)
+    annotation (Line(points={{38,28},{38,2},{119.2,2}}, color={0,0,127}));
+  connect(mSecHea.y, priPumCon.mSecHea) annotation (Line(points={{65,28},{80,28},
+          {80,4},{119.2,4}}, color={0,0,127}));
+  connect(mSecCoo.y, priPumCon.mSecCoo) annotation (Line(points={{65,-22},{80,
+          -22},{80,-7.6},{119.2,-7.6}}, color={0,0,127}));
+  connect(priPumCon.yPumEva, pumEva.y) annotation (Line(
+      points={{141,-10},{186,-10},{186,-16}},
+      color={0,0,127},
+      pattern=LinePattern.Dash));
+  connect(pumEva.port_a, sou.ports[1]) annotation (Line(points={{176,-28},{166,
+          -28}},               color={0,127,255}));
+  connect(priCooFlo.port_a, pumEva.port_b)
+    annotation (Line(points={{236,-28},{196,-28}}, color={0,127,255}));
+  connect(priCooFlo.port_b, sin.ports[1])
+    annotation (Line(points={{256,-28},{276,-28}}, color={0,127,255}));
+  connect(priHeaFlo.port_a, pumCon.port_b)
+    annotation (Line(points={{236,60},{196,60}}, color={0,127,255}));
+  connect(priHeaFlo.port_b, sin1.ports[1]) annotation (Line(points={{256,60},{
+          280,60},{280,58},{278,58}},
+                                  color={0,127,255}));
+  connect(priPumCon.yPumCon, pumCon.y) annotation (Line(
+      points={{141,6},{186,6},{186,48}},
+      color={0,0,127},
+      pattern=LinePattern.Dash));
+  connect(pumCon.port_a, sou1.ports[1])
+    annotation (Line(points={{176,60},{168,60}}, color={0,127,255}));
+  connect(priPumCon.mPriCoo, priCooFlo.m_flow) annotation (Line(
+      points={{119.2,-10},{84,-10},{84,-90},{246,-90},{246,-39}},
+      color={0,0,127},
+      pattern=LinePattern.Dot));
+  connect(priPumCon.cooTanMin, cooTanMin.y) annotation (Line(points={{119.2,
+          -5.6},{24,-5.6},{24,-22},{22,-22}}, color={0,0,127}));
+  connect(priPumCon.evaFloMin, evaFloMin.y) annotation (Line(points={{119.2,
+          -0.4},{14,-0.4},{14,28},{12,28}}, color={0,0,127}));
+  connect(priPumCon.heaTanMin, heaTanMin.y) annotation (Line(points={{119.2,
+          -3.4},{-14,-3.4},{-14,28}}, color={0,0,127}));
+  connect(priHeaFlo.m_flow, priPumCon.mPriHea) annotation (Line(
+      points={{246,71},{246,86},{84,86},{84,6.4},{119.2,6.4}},
+      color={0,0,127},
+      pattern=LinePattern.Dot));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},
+            {100,100}}),                                        graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},
                 fillPattern = FillPattern.Solid,
@@ -101,10 +161,10 @@ equation
                 fillColor = {75,138,73},
                 pattern = LinePattern.None,
                 fillPattern = FillPattern.Solid,
-                points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={
-            {-100,-100},{160,100}}),
+                points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-40,
+            -100},{300,100}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
-    experiment(StopTime=10000),
+    experiment(StopTime=100000),
     __Dymola_Commands(
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/EvaporatorCondenserPumpsController.mos"
         "Simulate and plot"),
