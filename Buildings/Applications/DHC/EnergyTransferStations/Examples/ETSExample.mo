@@ -60,7 +60,7 @@ model ETSExample "ETS example first try"
     annotation (Placement(transformation(extent={{12,-120},{32,-100}})));
   Modelica.Blocks.Sources.Constant TBorMaxEnt(k=35 + 273.15)
     "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-120,0},{-100,20}})));
+    annotation (Placement(transformation(extent={{-120,-10},{-100,10}})));
   Modelica.Fluid.Sources.FixedBoundary heaLoa(redeclare package Medium = Medium)
                 "Volume for the heating load"
    annotation (Placement(transformation(extent={{80,-60},{60,-40}})));
@@ -76,10 +76,10 @@ model ETSExample "ETS example first try"
       origin={70,-8})));
   Modelica.Blocks.Sources.Constant TMaxEvaEnt(k=20 + 273.15)
     "Maximum heating set point temperature"
-    annotation (Placement(transformation(extent={{-120,40},{-100,60}})));
+    annotation (Placement(transformation(extent={{-120,20},{-100,40}})));
   Modelica.Blocks.Sources.Constant TMinConEnt(k=25 + 273.15)
     "Minimum heating set point temperature"
-    annotation (Placement(transformation(extent={{-120,78},{-100,98}})));
+    annotation (Placement(transformation(extent={{-120,90},{-100,110}})));
 
   Modelica.Fluid.Sources.FixedBoundary cooLoa(redeclare package Medium = Medium,
       nPorts=1) "Volume for the cooling load"
@@ -130,12 +130,18 @@ model ETSExample "ETS example first try"
         extent={{10,-10},{-10,10}},
         rotation=180,
         origin={-70,-10})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=2)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=1.5)
     "Secondary (building side)  heating water flow rate"
     annotation (Placement(transformation(extent={{120,-40},{100,-20}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=0)
     "Secondary (building side) cooling water flow rate."
     annotation (Placement(transformation(extent={{-120,-74},{-100,-54}})));
+  Modelica.Blocks.Sources.Constant conMinFlo(k=0.5)
+    "Condenser minimum flow rate."
+    annotation (Placement(transformation(extent={{-80,40},{-60,60}})));
+  Modelica.Blocks.Sources.Constant evaFloMin(k=0.5)
+    "Evaporator minimum flow rate."
+    annotation (Placement(transformation(extent={{-80,74},{-60,94}})));
 equation
   connect(ETS.chiWatRet, resCoo.port_a) annotation (Line(points={{-13,-21.2},{-26,
           -21.2},{-26,-48},{-30,-48}}, color={0,127,255}));
@@ -144,13 +150,15 @@ equation
   connect(resDis.port_a, ETS.disWatRet) annotation (Line(points={{12,-110},{-0.8,
           -110},{-0.8,-25}},color={0,127,255}));
   connect(TSetHeaMax.y, ETS.TSetHeaMax) annotation (Line(points={{-98,130},{-16,
-          130},{-16,-7.8},{-12.8,-7.8}}, color={0,0,127}));
-  connect(TMinConEnt.y, ETS.TMinConEnt) annotation (Line(points={{-99,88},{-18,88},
-          {-18,-10.8},{-12.8,-10.8}}, color={0,0,127}));
-  connect(TMaxEvaEnt.y, ETS.TMaxEvaEnt) annotation (Line(points={{-99,50},{-20,50},
-          {-20,-13.6},{-12.8,-13.6}}, color={0,0,127}));
-  connect(TBorMaxEnt.y, ETS.TMaxBorEnt) annotation (Line(points={{-99,10},{-22,10},
-          {-22,-16},{-12.8,-16}}, color={0,0,127}));
+          130},{-16,-6.6},{-12.8,-6.6}}, color={0,0,127}));
+  connect(TMinConEnt.y, ETS.TMinConEnt) annotation (Line(points={{-99,100},{-18,
+          100},{-18,-8.2},{-12.8,-8.2}},
+                                      color={0,0,127}));
+  connect(TMaxEvaEnt.y, ETS.TMaxEvaEnt) annotation (Line(points={{-99,30},{-24,
+          30},{-24,-13.6},{-12.8,-13.6}},
+                                      color={0,0,127}));
+  connect(TBorMaxEnt.y, ETS.TMaxBorEnt) annotation (Line(points={{-99,0},{-26,0},
+          {-26,-16},{-12.8,-16}}, color={0,0,127}));
   connect(TDisEnt.y, disPum.T_in)
     annotation (Line(points={{-98,-110},{-42,-110}},
                                                    color={0,0,127}));
@@ -177,8 +185,9 @@ equation
     annotation (Line(points={{32,-110},{40,-110}}, color={0,127,255}));
   connect(cooLoa.ports[1], resCoo.port_b) annotation (Line(points={{-60,-50},{-60,
           -48},{-50,-48}}, color={0,127,255}));
-  connect(cooPum.ports[1], ETS.chiWatSup) annotation (Line(points={{-60,-10},{-26,
-          -10},{-26,-18.8},{-13,-18.8}}, color={0,127,255}));
+  connect(cooPum.ports[1], ETS.chiWatSup) annotation (Line(points={{-60,-10},{
+          -28,-10},{-28,-18.8},{-13,-18.8}},
+                                         color={0,127,255}));
   connect(mSecHea.y, heaPum.m_flow_in) annotation (Line(points={{98,-30},{90,-30},
           {90,-16},{82,-16}}, color={0,0,127}));
   connect(TSecCooEnt.y, cooPum.T_in) annotation (Line(points={{-98,-30},{-92,-30},
@@ -189,6 +198,10 @@ equation
           {20,-18.8},{9,-18.8}}, color={0,127,255}));
   connect(heaLoa.ports[1], ETS.hotWatRet) annotation (Line(points={{60,-50},{20,
           -50},{20,-21.2},{9,-21.2}}, color={0,127,255}));
+  connect(conMinFlo.y, ETS.conFloMin) annotation (Line(points={{-59,50},{-22,50},
+          {-22,-11.6},{-12.8,-11.6}}, color={0,0,127}));
+  connect(evaFloMin.y, ETS.evaFloMin) annotation (Line(points={{-59,84},{-20,84},
+          {-20,-9.8},{-12.8,-9.8}}, color={0,0,127}));
    annotation (Dialog(tab="Borefield"),
               Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},
             {100,100}}),                                        graphics={
