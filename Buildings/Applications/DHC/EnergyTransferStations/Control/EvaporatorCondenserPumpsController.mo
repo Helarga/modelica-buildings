@@ -12,7 +12,8 @@ model EvaporatorCondenserPumpsController
         iconTransformation(extent={{-116,50},{-100,66}})));
   Buildings.Controls.Continuous.LimPID pumCon(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
-    yMin=0.1,
+    yMin=0,
+    reverseAction=true,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0.1,
     k=1,
@@ -51,7 +52,8 @@ model EvaporatorCondenserPumpsController
     annotation (Placement(transformation(extent={{-96,60},{-76,80}})));
   Buildings.Controls.Continuous.LimPID pumEva(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
-    yMin=0.1,
+    yMin=0,
+    reverseAction=true,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0.1,
     k=1,

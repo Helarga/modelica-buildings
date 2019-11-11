@@ -29,7 +29,7 @@ model Substation
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     addPowerToMedium=false,
     show_T=show_T,
-    per(pressure(dp={2*dpCon_nominal,0}, V_flow={0,2*mCon_flow_nominal/1000})),
+    per(pressure(dp={dpCon_nominal,0}, V_flow={0,mCon_flow_nominal/1000})),
     allowFlowReversal=false,
     use_inputFilter=false,
     riseTime=10)
@@ -40,7 +40,7 @@ model Substation
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       addPowerToMedium=false,
       show_T=show_T,
-      per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,2*mEva_flow_nominal/1000})),
+    per(pressure(dp={dpEva_nominal,0}, V_flow={0,mEva_flow_nominal/1000})),
       allowFlowReversal=false,
       use_inputFilter=false,
       riseTime=10)
@@ -90,16 +90,16 @@ model Substation
       "Cold Buffer tank"
       annotation (Placement(transformation(extent={{-234,48},{-210,72}})));
   //-------------------------------Design Parameters----------------
-    parameter Modelica.SIunits.Temperature THeaWatSup_nominal=314.15
+    parameter Modelica.SIunits.Temperature THeaWatSup_nominal=41+273.15
       "Nominal heating supply water temperature"
       annotation (Dialog(group="Design parameter"));
-    parameter Modelica.SIunits.Temperature THeaWatRet_nominal=303.15
+    parameter Modelica.SIunits.Temperature THeaWatRet_nominal=30+273.15
       "Nominal heating Return water temperature"
       annotation (Dialog(group="Design parameter"));
-    parameter Modelica.SIunits.Temperature TCooWatSup_max=288.15
+    parameter Modelica.SIunits.Temperature TCooWatSup_max=15+273.15
       "Maximum cooling water supply temperature"
       annotation (Dialog(group="Design parameter"));
-    parameter Modelica.SIunits.Temperature TCooWatSup_min=277.15
+    parameter Modelica.SIunits.Temperature TCooWatSup_min=4+273.15
       "Minimum cooling water supply temperature"
       annotation (Dialog(group="Design parameter"));
     parameter Modelica.SIunits.TemperatureDifference dTCooWat=4
@@ -135,9 +135,9 @@ model Substation
     parameter Modelica.SIunits.Radius rTub =  0.05
      "Outer radius of the tubes"
       annotation(Dialog(tab="Borefield"));
-   parameter Boolean allowFlowReversal = false
+   /*parameter Boolean allowFlowReversal = false
     "= true to allow flow reversal, false restricts to design direction (port_a -> port_b)"
-    annotation(Dialog(tab="Assumptions"), Evaluate=true);
+    annotation(Dialog(tab="Assumptions"), Evaluate=true);*/
    Fluid.Geothermal.Borefields.OneUTube borFie(
       redeclare package Medium = Medium,
       allowFlowReversal=false,
@@ -156,7 +156,7 @@ model Substation
       m_flow_nominal=mGeo_flow_nominal,
       addPowerToMedium=false,
       show_T=show_T,
-      per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
+    per(pressure(dp={dpBorFie_nominal,0}, V_flow={0,mGeo_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
       "Pump (or valve) that forces the flow rate to be set to the control signal"
@@ -195,7 +195,7 @@ model Substation
       m_flow_nominal=mHex_flow_nominal,
       addPowerToMedium=false,
       show_T=show_T,
-      per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
+    per(pressure(dp={dpHex_nominal,0}, V_flow={0,mHex_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
       "Pump (or valve) that forces the flow rate to be set to the control signal"
@@ -237,7 +237,6 @@ model Substation
  //-----------------------------Sensors------------------------------------
     Buildings.Fluid.Sensors.TemperatureTwoPort TConLvg(
       redeclare final package Medium = Medium,
-      allowFlowReversal=false,
       m_flow_nominal=mCon_flow_nominal,
       tau=0)
       "Condenser leaving water temperature"
@@ -246,16 +245,16 @@ model Substation
           extent={{10,10},{-10,-10}},
           rotation=180,
           origin={68,132})));
+      //allowFlowReversal=false,
     Buildings.Fluid.Sensors.TemperatureTwoPort TConEnt(
       redeclare final package Medium = Medium,
-      allowFlowReversal=false,
       m_flow_nominal=mCon_flow_nominal,
       tau=0)
       "Condenser entering water temperature"
       annotation (Placement(transformation(extent={{0,10},{-20,30}})));
+      //allowFlowReversal=false,
     Buildings.Fluid.Sensors.TemperatureTwoPort TEvaEnt(
       redeclare final package Medium = Medium,
-      allowFlowReversal=false,
       m_flow_nominal=mEva_flow_nominal,
       tau=0)
       "Evaporator entering water temperature"
@@ -264,13 +263,14 @@ model Substation
         extent={{10,10},{-10,-10}},
         rotation=180,
         origin={-20,96})));
+      //allowFlowReversal=false,
     Buildings.Fluid.Sensors.TemperatureTwoPort TEvaLvg(
       redeclare final package Medium = Medium,
-      allowFlowReversal=false,
       m_flow_nominal=mEva_flow_nominal,
       tau=30)
       "Evaporator leaving water temperature"
       annotation (Placement(transformation(extent={{-68,10},{-88,30}})));
+      //allowFlowReversal=false,
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topCooTan
       "Cold tank top temperature"
       annotation (Placement(transformation(extent={{-224,84},{-244,104}})));
@@ -284,7 +284,6 @@ model Substation
       "Hot tank bottom temperature"
       annotation (Placement(transformation(extent={{176,-42},{196,-22}})));
    Fluid.Sensors.TemperatureTwoPort TBorLvg(
-    allowFlowReversal=false,
     tau=0,
     redeclare final package Medium = Medium,
     m_flow_nominal=mGeo_flow_nominal)
@@ -293,8 +292,8 @@ model Substation
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={-30,-210})));
+    //allowFlowReversal=false,
   Fluid.Sensors.TemperatureTwoPort TDisHexLvg(
-    allowFlowReversal=false,
     redeclare final package Medium = Medium,
     tau=10,
     m_flow_nominal=mHex_flow_nominal)
@@ -304,9 +303,9 @@ model Substation
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={22,-200})));
+    //allowFlowReversal=false,
 
      Fluid.Sensors.TemperatureTwoPort TBorEnt(
-      allowFlowReversal=false,
       tau=0,
       redeclare final package Medium = Medium,
       m_flow_nominal=mGeo_flow_nominal)
@@ -316,8 +315,8 @@ model Substation
         extent={{-10,10},{10,-10}},
         rotation=270,
         origin={-70,-170})));
+      //allowFlowReversal=false,
     Fluid.Sensors.TemperatureTwoPort disRetTem(
-      allowFlowReversal=false,
       tau=0,
       redeclare final package Medium = Medium,
       m_flow_nominal=mHex_flow_nominal)
@@ -327,8 +326,8 @@ model Substation
           extent={{-10,-10},{10,10}},
           rotation=0,
           origin={230,-150})));
+      //allowFlowReversal=false,
     Fluid.Sensors.TemperatureTwoPort disSupTem(
-      allowFlowReversal=false,
       tau=0,
       redeclare final package Medium = Medium,
       m_flow_nominal=mHex_flow_nominal)
@@ -338,8 +337,8 @@ model Substation
           extent={{10,-10},{-10,10}},
           rotation=0,
           origin={230,-192})));
+
    Fluid.Sensors.TemperatureTwoPort TDisHex(
-      allowFlowReversal=false,
       redeclare final package Medium = Medium,
       tau=10,
       m_flow_nominal=mHex_flow_nominal)
@@ -687,7 +686,7 @@ equation
       pattern=LinePattern.Dash));
   connect(topHotTan.T,ETSCon. TTanHeaTop)
     annotation (Line(
-      points={{194,208},{78,208},{78,232},{-202,232},{-202,219},{-201,219}},
+      points={{194,208},{84,208},{84,232},{-204,232},{-204,219},{-201,219}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(botHotTan.T,ETSCon. TTanHeaBot)

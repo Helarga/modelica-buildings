@@ -8,11 +8,11 @@ model ETSExample "ETS example first try"
    "Load heat exchanger nominal mass flow rate";
   /*parameter Real scaling_factor=1
    "Scaling factor for heatpump capacity"; */
-  parameter Modelica.SIunits.MassFlowRate mSecHea_flow_nominal= 20
+  parameter Modelica.SIunits.MassFlowRate mSecHea_flow_nominal= 2
    "Secondary(building side) heatig water nominal mass flow rate";
-  parameter Modelica.SIunits.MassFlowRate mSecCoo_flow_nominal= 10
+  parameter Modelica.SIunits.MassFlowRate mSecCoo_flow_nominal= 2
    "Secondary(building side) cooling water mass flow rate";
-  parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal = 25
+  parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal = 5
    "District circuit water mass flow rate";
 
   parameter Modelica.SIunits.Temperature THeaWatSup_nominal=314.15
@@ -40,9 +40,9 @@ model ETSExample "ETS example first try"
     dpCon_nominal=heaPumDat.dpHeaLoa_nominal,
     dpEva_nominal=heaPumDat.dpHeaSou_nominal,
     heaPumDat=heaPumDat,
-    mGeo_flow_nominal=50,
+    mGeo_flow_nominal=3,
     dTGeo= 5,
-    mHex_flow_nominal=50,
+    mHex_flow_nominal=3,
     dTHex= 2,
     xBorFie=datGeo.lBorFie[1],
     yBorFie=datGeo.wBorFie[1],
@@ -61,9 +61,9 @@ model ETSExample "ETS example first try"
   Modelica.Blocks.Sources.Constant TBorMaxEnt(k=35 + 273.15)
     "Cooling setpoint temperature"
     annotation (Placement(transformation(extent={{-120,0},{-100,20}})));
-  Modelica.Fluid.Sources.FixedBoundary heaLoa(redeclare package Medium = Medium,
-      nPorts=1) "Volume for the heating load"
-   annotation (Placement(transformation(extent={{80,-58},{60,-38}})));
+  Modelica.Fluid.Sources.FixedBoundary heaLoa(redeclare package Medium = Medium)
+                "Volume for the heating load"
+   annotation (Placement(transformation(extent={{80,-60},{60,-40}})));
   Fluid.Sources.MassFlowSource_T heaPum(
     use_m_flow_in=true,
     m_flow=mSecHea_flow_nominal,
@@ -81,11 +81,6 @@ model ETSExample "ETS example first try"
     "Minimum heating set point temperature"
     annotation (Placement(transformation(extent={{-120,78},{-100,98}})));
 
-  Fluid.FixedResistances.PressureDrop resHea(
-    redeclare package Medium = Medium,
-    m_flow_nominal=mSecHea_flow_nominal,
-    dp_nominal=6000) "Flow resistance"
-    annotation (Placement(transformation(extent={{30,-58},{50,-38}})));
   Modelica.Fluid.Sources.FixedBoundary cooLoa(redeclare package Medium = Medium,
       nPorts=1) "Volume for the cooling load"
     annotation (Placement(transformation(extent={{-80,-60},{-60,-40}})));
@@ -135,15 +130,13 @@ model ETSExample "ETS example first try"
         extent={{10,-10},{-10,10}},
         rotation=180,
         origin={-70,-10})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=20)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=2)
     "Secondary (building side)  heating water flow rate"
     annotation (Placement(transformation(extent={{120,-40},{100,-20}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=0)
     "Secondary (building side) cooling water flow rate."
     annotation (Placement(transformation(extent={{-120,-74},{-100,-54}})));
 equation
-  connect(ETS.hotWatRet, resHea.port_a) annotation (Line(points={{9,-21.2},{22,-21.2},
-          {22,-48},{30,-48}},        color={0,127,255}));
   connect(ETS.chiWatRet, resCoo.port_a) annotation (Line(points={{-13,-21.2},{-26,
           -21.2},{-26,-48},{-30,-48}}, color={0,127,255}));
   connect(disPum.ports[1], ETS.disWatSup) annotation (Line(points={{-20,-106},{-3.2,
@@ -184,8 +177,6 @@ equation
     annotation (Line(points={{32,-110},{40,-110}}, color={0,127,255}));
   connect(cooLoa.ports[1], resCoo.port_b) annotation (Line(points={{-60,-50},{-60,
           -48},{-50,-48}}, color={0,127,255}));
-  connect(heaLoa.ports[1], resHea.port_b)
-    annotation (Line(points={{60,-48},{50,-48}}, color={0,127,255}));
   connect(cooPum.ports[1], ETS.chiWatSup) annotation (Line(points={{-60,-10},{-26,
           -10},{-26,-18.8},{-13,-18.8}}, color={0,127,255}));
   connect(mSecHea.y, heaPum.m_flow_in) annotation (Line(points={{98,-30},{90,-30},
@@ -196,6 +187,8 @@ equation
           {-88,-18},{-82,-18}}, color={0,0,127}));
   connect(heaPum.ports[1], ETS.hotWatSup) annotation (Line(points={{60,-8},{20,-8},
           {20,-18.8},{9,-18.8}}, color={0,127,255}));
+  connect(heaLoa.ports[1], ETS.hotWatRet) annotation (Line(points={{60,-50},{20,
+          -50},{20,-21.2},{9,-21.2}}, color={0,127,255}));
    annotation (Dialog(tab="Borefield"),
               Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},
             {100,100}}),                                        graphics={
