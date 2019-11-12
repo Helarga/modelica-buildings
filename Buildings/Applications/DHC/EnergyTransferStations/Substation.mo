@@ -110,10 +110,10 @@ model Substation
       "Cold Buffer tank"
       annotation (Placement(transformation(extent={{-234,48},{-210,72}})));
   //-------------------------------Design Parameters----------------
-    parameter Modelica.SIunits.Temperature THeaWatSup_nominal=41+273.15
+    parameter Modelica.SIunits.Temperature THeaWatSup_nominal=40+273.15
       "Nominal heating supply water temperature"
       annotation (Dialog(group="Design parameter"));
-    parameter Modelica.SIunits.Temperature THeaWatRet_nominal=30+273.15
+    parameter Modelica.SIunits.Temperature THeaWatRet_nominal=35+273.15
       "Nominal heating Return water temperature"
       annotation (Dialog(group="Design parameter"));
     parameter Modelica.SIunits.Temperature TCooWatSup_max=15+273.15
@@ -238,7 +238,7 @@ model Substation
 
  //-----------------------------Controllers------------------------------------
 
-    Control.ETSController ETSCon
+    Control.ETSController ETSCon(THys=2)
       "Overall control of the ETS cold and hot sides."
         annotation (Placement(transformation(extent={{-200,194},{-180,214}})));
     Control.HeatPumpController heaPumCon

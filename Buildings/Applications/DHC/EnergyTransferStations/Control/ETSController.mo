@@ -3,6 +3,8 @@ model ETSController
   "Overall controller of the ETS hot and cold sides."
   extends Modelica.Blocks.Icons.Block;
 
+  parameter Modelica.SIunits.TemperatureDifference THys(min=0.1)=THys
+    "Temperature hysteresis";
   parameter Modelica.Blocks.Types.SimpleController
     controllerType=Modelica.Blocks.Types.SimpleController.PI "Type of controller"
     annotation (Dialog(group="PID controller"));
@@ -143,17 +145,17 @@ equation
     annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
   connect(pumCooCon.y, pumCooTanMin)
     annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
-  connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{
-          -200,190},{-200,191},{-161,191}}, color={0,0,127}));
-  connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{
-          -180,160},{-180,181},{-161,181}}, color={0,0,127}));
+  connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{-200,
+          190},{-200,191},{-161,191}},      color={0,0,127}));
+  connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{-180,
+          160},{-180,181},{-161,181}},      color={0,0,127}));
 
   connect(TTanCooTop, conColSid.TTanTop) annotation (Line(points={{-240,-180},{
           -200,-180},{-200,-195},{-161,-195}}, color={0,0,127}));
   connect(TTanCooBot, conColSid.TTanBot) annotation (Line(points={{-240,-210},{
           -192,-210},{-192,-205},{-161,-205}}, color={0,0,127}));
-  connect(conHotSid.reqHea, or1.u1) annotation (Line(points={{-139,195},{-130,195},{-130,112},{
-          -122,112}},             color={255,0,255}));
+  connect(conHotSid.reqHea, or1.u1) annotation (Line(points={{-139,195},{-130,195},
+          {-130,112},{-122,112}}, color={255,0,255}));
   connect(conColSid.reqCoo, or1.u2) annotation (Line(points={{-139,-191},{-130,-191},
           {-130,104},{-122,104}}, color={255,0,255}));
   connect(or1.y, not1.u)
@@ -176,12 +178,12 @@ equation
           {230,-140}}, color={255,0,255}));
   connect(conColSid.rejFulHexBor, rejColFulLoa) annotation (Line(points={{-139,
           -194},{40,-194},{40,-160},{230,-160}}, color={255,0,255}));
-  connect(conHotSid.rejFulHexBor, rejHeaFulLoa) annotation (Line(points={{-139,192},{230,192}},
-                                               color={255,0,255}));
+  connect(conHotSid.rejFulHexBor, rejHeaFulLoa) annotation (Line(points={{-139,192},
+          {230,192}},                          color={255,0,255}));
   connect(ValHea, conHotSid.valSta)
     annotation (Line(points={{230,160},{148,160},{148,186},{-139,186}}, color={255,0,255}));
-  connect(booToRea.u, conHotSid.valSta) annotation (Line(points={{118,130},{100,130},{100,186},
-          {-139,186}},                color={255,0,255}));
+  connect(booToRea.u, conHotSid.valSta) annotation (Line(points={{118,130},{100,
+          130},{100,186},{-139,186}}, color={255,0,255}));
   connect(conColSid.valSta, ValCoo)
     annotation (Line(points={{-139,-200},{100,-200},{100,-180},{230,-180}}, color={255,0,255}));
   connect(conColSid.valSta, booToRea1.u)
@@ -202,8 +204,8 @@ equation
           0,-78},{158,-78}}, color={0,0,127}));
   connect(TSetCoo, conColSid.TSet) annotation (Line(points={{-240,-140},{-174,
           -140},{-174,-191},{-161,-191}}, color={0,0,127}));
-  connect(TSetHea, conHotSid.TSet) annotation (Line(points={{-240,220},{-202,
-          220},{-202,195},{-161,195}}, color={0,0,127}));
+  connect(TSetHea, conHotSid.TSet) annotation (Line(points={{-240,220},{-202,220},
+          {-202,195},{-161,195}},      color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-220,-220},{220,220}})),
         defaultComponentName="ETSCon",

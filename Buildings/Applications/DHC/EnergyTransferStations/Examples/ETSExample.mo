@@ -57,7 +57,7 @@ model ETSExample "ETS example first try"
       extent={{-10,-10},{10,10}},
       rotation=180,
       origin={70,-8})));
-  Modelica.Blocks.Sources.Constant TMaxEvaEnt(k=20 + 273.15)
+  Modelica.Blocks.Sources.Constant TMaxEvaEnt(k=15 + 273.15)
     "Maximum heating set point temperature"
     annotation (Placement(transformation(extent={{-120,20},{-100,40}})));
   Modelica.Blocks.Sources.Constant TMinConEnt(k=20 + 273.15)
@@ -114,10 +114,10 @@ model ETSExample "ETS example first try"
         extent={{10,-10},{-10,10}},
         rotation=180,
         origin={-70,-10})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=1)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=1.2)
     "Secondary (building side)  heating water flow rate"
     annotation (Placement(transformation(extent={{120,-40},{100,-20}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=0)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=1)
     "Secondary (building side) cooling water flow rate."
     annotation (Placement(transformation(extent={{-120,-74},{-100,-54}})));
   Modelica.Blocks.Sources.Constant conMinFlo(k=0.5)
@@ -198,7 +198,7 @@ equation
                 points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,
             -140},{140,160}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
-    experiment(StopTime=864000, __Dymola_Algorithm="Cvode"),
+    experiment(StopTime=5184000, __Dymola_Algorithm="Cvode"),
     __Dymola_Commands(
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/HeatpumpController.mos"
         "Simulate and plot"),
