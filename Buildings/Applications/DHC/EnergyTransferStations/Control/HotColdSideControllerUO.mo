@@ -16,7 +16,7 @@ block HotColdSideControllerUO
   Modelica.StateGraph.InitialStep noDemand(nIn=2)
     "State if no heat or heat rejection is required"
     annotation (Placement(transformation(extent={{-86,88},{-66,108}})));
-  Modelica.StateGraph.TransitionWithSignal t1(enableTimer=true)
+  Modelica.StateGraph.TransitionWithSignal t1(enableTimer=true, waitTime=60)
     annotation (Placement(transformation(extent={{-34,110},{-14,130}})));
   Modelica.StateGraph.StepWithSignal runHP
     "State if heat pump operation is required"
@@ -31,7 +31,7 @@ block HotColdSideControllerUO
   Modelica.StateGraph.TransitionWithSignal t4
     annotation (Placement(transformation(extent={{38,88},{58,108}})));
   Modelica.StateGraph.Alternative alternative
-    annotation (Placement(transformation(extent={{-56,42},{126,154}})));
+    annotation (Placement(transformation(extent={{-58,42},{124,154}})));
   Modelica.StateGraph.TransitionWithSignal t5(enableTimer=false)
     annotation (Placement(transformation(extent={{26,50},{46,70}})));
   Modelica.StateGraph.StepWithSignal rejFulLoa
@@ -43,30 +43,16 @@ block HotColdSideControllerUO
       iconTransformation(extent={{100,50},{120,70}})));
   Modelica.StateGraph.TransitionWithSignal t6
     annotation (Placement(transformation(extent={{66,50},{86,70}})));
-  Buildings.Controls.OBC.CDL.Continuous.GreaterEqual
-             greEqu
-    annotation (Placement(transformation(extent={{-98,28},{-78,48}})));
+
   Buildings.Controls.OBC.CDL.Continuous.AddParameter addPar(k=1, p=2*THys)
-    annotation (Placement(transformation(extent={{-98,-8},{-78,12}})));
-  Buildings.Controls.OBC.CDL.Continuous.GreaterEqual
-             greEqu1
-    annotation (Placement(transformation(extent={{-58,0},{-38,20}})));
+    annotation (Placement(transformation(extent={{-98,-10},{-78,10}})));
+
   Buildings.Controls.OBC.CDL.Continuous.AddParameter addPar2(k=1, p=THys)
     annotation (Placement(transformation(extent={{-90,-42},{-70,-22}})));
-  Buildings.Controls.OBC.CDL.Continuous.GreaterEqual
-             greEqu2
-    annotation (Placement(transformation(extent={{-58,-34},{-38,-14}})));
+
   Buildings.Controls.OBC.CDL.Continuous.AddParameter addPar3(k=1, p=0.5*THys)
     annotation (Placement(transformation(extent={{-90,-72},{-70,-52}})));
-  Buildings.Controls.OBC.CDL.Continuous.GreaterEqual
-             greEqu3
-    annotation (Placement(transformation(extent={{-60,-72},{-40,-52}})));
-  Buildings.Controls.OBC.CDL.Continuous.GreaterEqual
-             greEqu4
-    annotation (Placement(transformation(extent={{-60,-122},{-40,-102}})));
-  Buildings.Controls.OBC.CDL.Continuous.GreaterEqual
-             greEqu5
-    annotation (Placement(transformation(extent={{-60,-150},{-40,-130}})));
+
   Buildings.Controls.OBC.CDL.Continuous.AddParameter addPar1(k=1, p=THys)
     annotation (Placement(transformation(extent={{-100,-150},{-80,-130}})));
   Buildings.Controls.OBC.CDL.Logical.Or or2
@@ -90,6 +76,19 @@ block HotColdSideControllerUO
     "Temperature at bottom of tank"
     annotation (Placement(transformation(extent={{-180,-80},{-140,-40}}),
         iconTransformation(extent={{-120,-60},{-100,-40}})));
+
+  Inequality greEqu
+    annotation (Placement(transformation(extent={{-100,30},{-80,50}})));
+  Inequality greEqu1
+    annotation (Placement(transformation(extent={{-60,-2},{-40,18}})));
+  Inequality greEqu2
+    annotation (Placement(transformation(extent={{-60,-32},{-40,-12}})));
+  Inequality greEqu3
+    annotation (Placement(transformation(extent={{-60,-70},{-40,-50}})));
+  Inequality greEqu4
+    annotation (Placement(transformation(extent={{-60,-120},{-40,-100}})));
+  Inequality greEqu5
+    annotation (Placement(transformation(extent={{-60,-150},{-40,-130}})));
 equation
   connect(t1.outPort, runHP.inPort[1])
     annotation (Line(points={{-22.5,120},{-5,120}},  color={0,0,0}));
@@ -99,23 +98,20 @@ equation
   connect(t3.outPort, rejParLoa.inPort[1])
     annotation (Line(points={{-22.5,80},{-18,80},{-18,80.5},{-17,80.5}},color={0,0,0}));
   connect(alternative.inPort, noDemand.outPort[1])
-    annotation (Line(points={{-58.73,98},{-65.5,98}}, color={0,0,0}));
-  connect(t3.inPort, alternative.split[1]) annotation (Line(points={{-28,80},{
-          -32,80},{-32,98},{-36.89,98}},
-                                    color={0,0,0}));
-  connect(t1.inPort, alternative.split[2]) annotation (Line(points={{-28,120},{
-          -34,120},{-34,98},{-36.89,98}},
-                                     color={0,0,0}));
-  connect(alternative.outPort, noDemand.inPort[1]) annotation (Line(points={{127.82,
+    annotation (Line(points={{-60.73,98},{-65.5,98}}, color={0,0,0}));
+  connect(t3.inPort, alternative.split[1]) annotation (Line(points={{-28,80},{-32,
+          80},{-32,98},{-38.89,98}},color={0,0,0}));
+  connect(t1.inPort, alternative.split[2]) annotation (Line(points={{-28,120},{-34,
+          120},{-34,98},{-38.89,98}},color={0,0,0}));
+  connect(alternative.outPort, noDemand.inPort[1]) annotation (Line(points={{125.82,
           98},{120,98},{120,146},{-100,146},{-100,98.5},{-87,98.5}},
                                                                color={0,0,0}));
   connect(t5.outPort, rejFulLoa.inPort[1])
     annotation (Line(points={{37.5,60},{45,60}}, color={0,0,0}));
   connect(rejFulLoa.outPort[1], t6.inPort)
     annotation (Line(points={{66.5,60},{72,60}}, color={0,0,0}));
-  connect(t2.outPort, alternative.join[1]) annotation (Line(points={{45.5,120},
-          {96,120},{96,98},{106.89,98}},
-                                       color={0,0,0}));
+  connect(t2.outPort, alternative.join[1]) annotation (Line(points={{45.5,120},{
+          96,120},{96,98},{104.89,98}},color={0,0,0}));
   connect(t4.inPort, rejParLoa.outPort[1]) annotation (Line(points={{44,98},{14,98},{14,80.25},
           {4.5,80.25}},                 color={0,0,0}));
   connect(t5.inPort, rejParLoa.outPort[2]) annotation (Line(points={{32,60},{14,
@@ -123,10 +119,10 @@ equation
                                     color={0,0,0}));
   connect(rejParLoa.inPort[2], t6.outPort) annotation (Line(points={{-17,79.5},
           {-20,79.5},{-20,40},{86,40},{86,60},{77.5,60}},color={0,0,0}));
-  connect(t4.outPort, alternative.join[2]) annotation (Line(points={{49.5,98},{106.89,98}},
-                                   color={0,0,0}));
-  connect(greEqu.y, t1.condition) annotation (Line(points={{-76,38},{-60,38},{-60,100},{-24,
-          100},{-24,108}},           color={255,0,255}));
+  connect(t4.outPort, alternative.join[2]) annotation (Line(points={{49.5,98},{104.89,
+          98}},                    color={0,0,0}));
+  connect(greEqu.y, t1.condition) annotation (Line(points={{-78,40},{-46,40},{-46,
+          106},{-24,106},{-24,108}}, color={255,0,255}));
   connect(booToRea.u, or2.y) annotation (Line(points={{98,-100},{90,-100},{90,-80},{82,-80}},
                           color={255,0,255}));
   connect(booToRea.u,or2. y) annotation (Line(points={{98,-100},{90,-100},{90,-80},{82,-80}},
@@ -136,35 +132,37 @@ equation
   connect(yVal, booToRea.y) annotation (Line(points={{150,-100},{122,-100}},
                      color={0,0,127}));
   connect(TSet, greEqu4.u2) annotation (Line(points={{-160,120},{-128,120},{-128,
-          -120},{-62,-120}}, color={0,0,127}));
+          -118},{-62,-118}}, color={0,0,127}));
   connect(TSet, greEqu.u1) annotation (Line(points={{-160,120},{-128,120},{-128,
-          38},{-100,38}}, color={0,0,127}));
-  connect(addPar.u, TSet) annotation (Line(points={{-100,2},{-128,2},{-128,120},
+          40},{-102,40}}, color={0,0,127}));
+  connect(addPar.u, TSet) annotation (Line(points={{-100,0},{-128,0},{-128,120},
           {-160,120}}, color={0,0,127}));
   connect(addPar1.u, TSet) annotation (Line(points={{-102,-140},{-128,-140},{-128,
           120},{-160,120}}, color={0,0,127}));
   connect(addPar.y, greEqu1.u2)
-    annotation (Line(points={{-76,2},{-60,2}}, color={0,0,127}));
-  connect(addPar3.u, addPar.y) annotation (Line(points={{-92,-62},{-100,-62},{-100,-14},{-70,
-          -14},{-70,2},{-76,2}},           color={0,0,127}));
-  connect(addPar2.u, addPar.y) annotation (Line(points={{-92,-32},{-100,-32},{-100,-14},{-70,
-          -14},{-70,2},{-76,2}},           color={0,0,127}));
+    annotation (Line(points={{-76,0},{-62,0}}, color={0,0,127}));
+  connect(addPar3.u, addPar.y) annotation (Line(points={{-92,-62},{-100,-62},{-100,
+          -14},{-70,-14},{-70,0},{-76,0}}, color={0,0,127}));
+  connect(addPar2.u, addPar.y) annotation (Line(points={{-92,-32},{-100,-32},{-100,
+          -14},{-70,-14},{-70,0},{-76,0}}, color={0,0,127}));
   connect(addPar2.y, greEqu2.u2)
-    annotation (Line(points={{-68,-32},{-60,-32}}, color={0,0,127}));
+    annotation (Line(points={{-68,-32},{-66,-32},{-66,-30},{-62,-30}},
+                                                   color={0,0,127}));
   connect(addPar3.y, greEqu3.u1)
-    annotation (Line(points={{-68,-62},{-62,-62}}, color={0,0,127}));
+    annotation (Line(points={{-68,-62},{-66,-62},{-66,-60},{-62,-60}},
+                                                   color={0,0,127}));
   connect(addPar1.y, greEqu5.u1)
     annotation (Line(points={{-78,-140},{-62,-140}}, color={0,0,127}));
   connect(or2.u2, rejParLoa.active)
     annotation (Line(points={{58,-88},{-6,-88},{-6,69}},   color={255,0,255}));
-  connect(greEqu1.y, t3.condition) annotation (Line(points={{-36,10},{-28,10},{-28,34},{-24,
-          34},{-24,68}},          color={255,0,255}));
-  connect(greEqu2.y, t5.condition) annotation (Line(points={{-36,-24},{-24,-24},{-24,34},{36,
-          34},{36,48}},              color={255,0,255}));
-  connect(greEqu3.y, t6.condition) annotation (Line(points={{-38,-62},{-16,-62},{-16,30},{76,
-          30},{76,48}},              color={255,0,255}));
-  connect(greEqu4.y, t2.condition) annotation (Line(points={{-38,-112},{-12,-112},{-12,26},{
-          4,26},{4,100},{44,100},{44,108}},           color={255,0,255}));
+  connect(greEqu1.y, t3.condition) annotation (Line(points={{-38,8},{-28,8},{-28,
+          34},{-24,34},{-24,68}}, color={255,0,255}));
+  connect(greEqu2.y, t5.condition) annotation (Line(points={{-38,-22},{-24,-22},
+          {-24,34},{36,34},{36,48}}, color={255,0,255}));
+  connect(greEqu3.y, t6.condition) annotation (Line(points={{-38,-60},{-16,-60},
+          {-16,30},{76,30},{76,48}}, color={255,0,255}));
+  connect(greEqu4.y, t2.condition) annotation (Line(points={{-38,-110},{-12,-110},
+          {-12,26},{4,26},{4,100},{44,100},{44,108}}, color={255,0,255}));
   connect(greEqu5.y, t4.condition) annotation (Line(points={{-38,-140},{-8,-140},{-8,22},{8,
           22},{8,84},{48,84},{48,86}},
                                     color={255,0,255}));

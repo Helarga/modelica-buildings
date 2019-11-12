@@ -25,21 +25,22 @@ model Substation
       annotation (Dialog(tab="WSHP system"));
     parameter Modelica.SIunits.Temperature TConEnt_nominal=35+273.15
     "Nominal heating supply water temperature";
-    parameter Modelica.SIunits.Temperature TConLvg_nominal=42+273.15
+    parameter Modelica.SIunits.Temperature TConLvg_nominal=40+273.15
     "Nominal heating supply water temperature";
     parameter Modelica.SIunits.Temperature TEvaEnt_nominal=12+273.15
     "Nominal heating supply water temperature";
     parameter Modelica.SIunits.Temperature TEvaLvg_nominal=7+273.15
     "Nominal heating supply water temperature";
+    parameter Real scaling_factor
+   "Scaling factor for heat pump capacity";
   Fluid.HeatPumps.EquationFitReversible heaPum(
       allowFlowReversal1=false,
       allowFlowReversal2=false,
-      T1_start=308.15,
-      T2_start=291.15,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       per = heaPumDat,
       redeclare package Medium1 = Medium,
       redeclare package Medium2 = Medium,
-    scaling_factor=1)
+      scaling_factor=scaling_factor)
     "Reversible water to water heat pump"
       annotation (Placement(transformation(extent={{-30,116},{-10,136}})));
 
@@ -48,7 +49,7 @@ model Substation
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     addPowerToMedium=false,
     show_T=show_T,
-    per(pressure(dp={2*dpCon_nominal,0}, V_flow={0,2*mCon_flow_nominal/1000})),
+    per(pressure(dp={3*dpCon_nominal,0}, V_flow={0,3*mCon_flow_nominal/1000})),
     allowFlowReversal=false,
     use_inputFilter=false,
     riseTime=10)
@@ -59,7 +60,7 @@ model Substation
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,2*mEva_flow_nominal/1000})),
+    per(pressure(dp={3*dpEva_nominal,0}, V_flow={0,3*mEva_flow_nominal/1000})),
       allowFlowReversal=false,
       use_inputFilter=false,
       riseTime=10)
@@ -494,10 +495,10 @@ model Substation
           rotation=90,
           origin={-30,-170})));
     Fluid.FixedResistances.Junction splVal2(
-      final dp_nominal = {0, 0, 0},
+    final dp_nominal=200*{1,-1,-1},
       from_dp=false,
       tau=1,
-    m_flow_nominal={mEva_flow_nominal,-mSecCoo_flow_nominal,
+      m_flow_nominal={mEva_flow_nominal,-mSecCoo_flow_nominal,
         mSecCoo_flow_nominal - mEva_flow_nominal},
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
@@ -541,9 +542,6 @@ model Substation
       m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
       "Two way modulating valve"
       annotation (Placement(transformation(extent={{-94,-30},{-74,-10}})));
-
-
-
     Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valBor(
         redeclare package Medium = Medium,
         energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -555,31 +553,31 @@ model Substation
                                           rotation=90,
                                           origin={-70,-110})));
 
-    parameter Modelica.SIunits.MassFlowRate valEva_flow_nominal=
-      heaPumDat.coo.Q_flow/4200/(TEvaEnt_nominal-TEvaLvg_nominal)
+    parameter Modelica.SIunits.MassFlowRate valEva_flow_nominal= 1.2
     "Evaporator three way valve nominal mass flow rate";
+      //heaPumDat.coo.Q_flow/4200/(TEvaEnt_nominal-TEvaLvg_nominal)
 
     Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valEva(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       m_flow_nominal=valEva_flow_nominal,
       l={0.01,0.01},
-      dpValve_nominal=6000)
+    dpValve_nominal=1)
     "Three way valve modulated to control the entering water temperature to the evaporator."
      annotation (Placement(transformation(extent={{10,10},{-10,-10}},
                                           rotation=270,
                                           origin={-94,78})));
 
-    parameter Modelica.SIunits.MassFlowRate valCon_flow_nominal=
-      heaPumDat.hea.Q_flow/4200/(TConLvg_nominal-TConEnt_nominal)
+    parameter Modelica.SIunits.MassFlowRate valCon_flow_nominal=1.2
     "Condenser three way valve nominal mass flow rate";
+      //heaPumDat.hea.Q_flow/4200/(TConLvg_nominal-TConEnt_nominal)
 
     Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valCon(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     m_flow_nominal=mCon_flow_nominal,
     l={0.01,0.01},
-    dpValve_nominal=6000)
+    dpValve_nominal=1)
     "Three way valve modulated to control the entering water temperature to the condenser."
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
@@ -818,7 +816,8 @@ equation
       thickness=0.5));
   connect(heaRetHed.ports_a[1], hotBufTan.port_b1)
     annotation (Line(points={{122.2,19.55},{150,19.55},{150,32.4},{156,32.4}},
-                                                        color={0,127,255}));
+                                                        color={0,127,255},
+      thickness=0.5));
 
   connect(TMinConEnt, heaPumCon.TMinConEnt) annotation (Line(
       points={{-310,194},{-136,194},{-136,207.2},{-121,207.2}},
@@ -981,8 +980,8 @@ equation
   connect(TConLvg.port_a, splVal3.port_2) annotation (Line(points={{58,132},{52,132}}, color={0,127,255}));
   connect(TConLvg.port_b, heaSupHed.ports_a[1])
     annotation (Line(points={{78,132},{84,132},{84,59.7},{91.8,59.7}},
-                                                                   color={0,127,
-          255},
+                                                                   color={238,46,
+          47},
       thickness=0.5));
   connect(valCon.port_3, splVal3.port_3)
     annotation (Line(points={{-24,52},{42,52},{42,122}}, color={0,127,255},

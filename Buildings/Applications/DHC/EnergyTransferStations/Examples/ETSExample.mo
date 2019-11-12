@@ -6,8 +6,6 @@ model ETSExample "ETS example first try"
    "Source heat exchanger nominal mass flow rate";
   parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=heaPumDat.hea.mLoa_flow
    "Load heat exchanger nominal mass flow rate";
-  parameter Real scaling_factor=1
-   "Scaling factor for heatpump capacity";
   parameter Modelica.SIunits.MassFlowRate mSecHea_flow_nominal= 1
    "Secondary(building side) heatig water nominal mass flow rate";
   parameter Modelica.SIunits.MassFlowRate mSecCoo_flow_nominal= 1
@@ -20,6 +18,7 @@ model ETSExample "ETS example first try"
    annotation (Placement(transformation(extent={{100,98},{120,118}})));
 
   Substation ETS(
+    scaling_factor=1,
     mCon_flow_nominal=mCon_flow_nominal,
     mEva_flow_nominal=mEva_flow_nominal,
     mSecHea_flow_nominal=mSecHea_flow_nominal,
@@ -61,9 +60,9 @@ model ETSExample "ETS example first try"
   Modelica.Blocks.Sources.Constant TMaxEvaEnt(k=20 + 273.15)
     "Maximum heating set point temperature"
     annotation (Placement(transformation(extent={{-120,20},{-100,40}})));
-  Modelica.Blocks.Sources.Constant TMinConEnt(k=25 + 273.15)
+  Modelica.Blocks.Sources.Constant TMinConEnt(k=20 + 273.15)
     "Minimum heating set point temperature"
-    annotation (Placement(transformation(extent={{-120,90},{-100,110}})));
+    annotation (Placement(transformation(extent={{-120,88},{-100,108}})));
 
   Modelica.Fluid.Sources.FixedBoundary cooLoa(redeclare package Medium = Medium,
       nPorts=1) "Volume for the cooling load"
@@ -95,7 +94,8 @@ model ETSExample "ETS example first try"
     "Secondary (building side) return Chilled water temperature"
     annotation (Placement(transformation(extent={{-120,-40},{-100,-20}})));
 
-  SidewalkQuayside.Data.DesignDataGeothermal datGeo
+  SidewalkQuayside.Data.DesignDataGeothermal datGeo(lBorFie={70,90,40,70,120}*0.1,
+      wBorFie={44,50,40,40,40}*0.1)
     annotation (Placement(transformation(extent={{100,124},{120,144}})));
   BoundaryConditions.WeatherData.ReaderTMY3 weaDat(filNam=
         Modelica.Utilities.Files.loadResource(
@@ -135,8 +135,8 @@ equation
           -110},{-0.8,-25}},color={0,127,255}));
   connect(TSetHeaMax.y, ETS.TSetHeaMax) annotation (Line(points={{-98,130},{-16,
           130},{-16,-6.6},{-12.8,-6.6}}, color={0,0,127}));
-  connect(TMinConEnt.y, ETS.TMinConEnt) annotation (Line(points={{-99,100},{-18,
-          100},{-18,-8.2},{-12.8,-8.2}},
+  connect(TMinConEnt.y, ETS.TMinConEnt) annotation (Line(points={{-99,98},{-18,
+          98},{-18,-8.2},{-12.8,-8.2}},
                                       color={0,0,127}));
   connect(TMaxEvaEnt.y, ETS.TMaxEvaEnt) annotation (Line(points={{-99,30},{-24,30},
           {-24,-13.6},{-12.8,-13.6}}, color={0,0,127}));
@@ -198,7 +198,7 @@ equation
                 points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,
             -140},{140,160}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
-    experiment(StopTime=86400, __Dymola_Algorithm="Cvode"),
+    experiment(StopTime=864000, __Dymola_Algorithm="Cvode"),
     __Dymola_Commands(
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/HeatpumpController.mos"
         "Simulate and plot"),

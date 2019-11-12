@@ -88,7 +88,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     yMin=0,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0,
-    k=0.05,
+    k=0.1,
     Ti(displayUnit="s") = 300,
     reverseAction=true) "Evaporator three way valve PI control signal "
     annotation (Placement(transformation(extent={{32,-270},{52,-250}})));
@@ -111,7 +111,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     yMin=0,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0,
-    k=0.05,
+    k=0.1,
     Ti(displayUnit="s") = 300,
     reverseAction=true) "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{30,-322},{50,-302}})));

@@ -5,10 +5,15 @@ model ColdSideControlleUO
   extends
     Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO(
       redeclare model Inequality =
-        Buildings.Controls.OBC.CDL.Continuous.LessEqual);
+        Buildings.Controls.OBC.CDL.Continuous.LessEqual,
+          addPar(p=-2*THys),
+          addPar1(p=-THys),
+          addPar2(p=-THys),
+          addPar3(p=-0.5*THys));
 
   Modelica.Blocks.Interfaces.BooleanOutput reqCoo
-    "True if cooling is required from heat pump, false otherwise" annotation (Placement(
+    "True if cooling is required from heat pump, false otherwise"
+    annotation (Placement(
         transformation(extent={{140,132},{160,152}}),
                                                     iconTransformation(extent={{100,80},{120,100}})));
   Buildings.Controls.OBC.CDL.Logical.OnOffController frePro(bandwidth=1)
@@ -18,19 +23,6 @@ model ColdSideControlleUO
     annotation (Placement(transformation(extent={{10,-20},{30,0}})));
   Buildings.Controls.OBC.CDL.Logical.Or or1
     annotation (Placement(transformation(extent={{88,-30},{108,-10}})));
-  Buildings.Controls.OBC.CDL.Conversions.BooleanToReal booToRea
-    "Boolean to real conversion"
-    annotation (Placement(transformation(extent={{100,-110},{120,-90}})));
-  Buildings.Controls.OBC.CDL.Logical.Or or2
-    annotation (Placement(transformation(extent={{60,-90},{80,-70}})));
-  Modelica.Blocks.Interfaces.RealOutput yVal(unit="1")
-    "Control signal for valve (0: closed, or 1: open)"
-    annotation (Placement(transformation(extent={{140,-110},{160,-90}}),
-        iconTransformation(extent={{100,-70},{120,-50}})));
-  Modelica.Blocks.Interfaces.BooleanOutput valSta
-    "Valve status, true: open, false: close"
-    annotation (Placement(transformation(extent={{140,-90},{160,-70}}),
-      iconTransformation(extent={{100,-10},{120,10}})));
   Buildings.Controls.OBC.CDL.Continuous.Max max
     annotation (Placement(transformation(extent={{-100,-110},{-80,-90}})));
 equation
@@ -61,26 +53,22 @@ equation
                      color={0,0,127}));
   connect(frePro.u, TTanTop) annotation (Line(points={{48,-34},{44,-34},{44,-44},
           {-66,-44},{-66,22},{-112,22},{-112,60},{-160,60}}, color={0,0,127}));
-  connect(TTanTop, greEqu1.u1) annotation (Line(points={{-160,60},{-112,60},{
-          -112,22},{-66,22},{-66,10},{-60,10}},
-                                         color={0,0,127}));
-  connect(TTanTop, greEqu2.u1) annotation (Line(points={{-160,60},{-112,60},{
-          -112,22},{-66,22},{-66,-24},{-60,-24}},
-                                             color={0,0,127}));
-  connect(TTanTop, greEqu3.u2) annotation (Line(points={{-160,60},{-112,60},{
-          -112,22},{-66,22},{-66,-70},{-62,-70}},
-                                             color={0,0,127}));
-  connect(max.y, greEqu4.u1) annotation (Line(points={{-78,-100},{-70,-100},{
-          -70,-112},{-62,-112}}, color={0,0,127}));
+  connect(TTanTop, greEqu1.u1) annotation (Line(points={{-160,60},{-112,60},{-112,
+          22},{-66,22},{-66,8},{-62,8}}, color={0,0,127}));
+  connect(TTanTop, greEqu2.u1) annotation (Line(points={{-160,60},{-112,60},{-112,
+          22},{-66,22},{-66,-22},{-62,-22}}, color={0,0,127}));
+  connect(TTanTop, greEqu3.u2) annotation (Line(points={{-160,60},{-112,60},{-112,
+          22},{-66,22},{-66,-68},{-62,-68}}, color={0,0,127}));
+  connect(max.y, greEqu4.u1) annotation (Line(points={{-78,-100},{-70,-100},{-70,
+          -110},{-62,-110}},     color={0,0,127}));
   connect(max.u2, TTanBot) annotation (Line(points={{-102,-106},{-120,-106},{
           -120,-60},{-160,-60}},
                             color={0,0,127}));
   connect(TTanBot, greEqu5.u2) annotation (Line(points={{-160,-60},{-120,-60},{
           -120,-160},{-70,-160},{-70,-148},{-62,-148}},
                                                    color={0,0,127}));
-  connect(TTanBot, greEqu.u2) annotation (Line(points={{-160,-60},{-120,-60},{
-          -120,30},{-100,30}},
-                          color={0,0,127}));
+  connect(TTanBot, greEqu.u2) annotation (Line(points={{-160,-60},{-120,-60},{-120,
+          32},{-102,32}}, color={0,0,127}));
   annotation (
   defaultComponentName="conColSid",
   Diagram(coordinateSystem(extent={{-140,-160},{140,160}}), graphics={Text(
