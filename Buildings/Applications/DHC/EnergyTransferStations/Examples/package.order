@@ -6,3 +6,4 @@ EvaporatorCondenserPumpsController
 HeatpumpControllerBlock
 AmbientCircuitControllerBlock
 ETSExample
+AmbientCircuitControllerSidBlock

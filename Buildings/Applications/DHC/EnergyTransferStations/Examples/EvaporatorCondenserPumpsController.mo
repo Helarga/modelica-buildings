@@ -71,7 +71,7 @@ model EvaporatorCondenserPumpsController
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant cooTanMin(k=0.4)
     "Primary pump speed signal to assure the minimum flow to the cold tank"
     annotation (Placement(transformation(extent={{0,-32},{20,-12}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant heaTanMin(k=0.4)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant heaTanMin(k=0.2)
     "Primary pump speed signal to assure the minimum flow to the hot tank"
     annotation (Placement(transformation(extent={{-36,18},{-16,38}})));
   Fluid.Sensors.MassFlowRate priCooFlo(redeclare package Medium = Media.Water)
