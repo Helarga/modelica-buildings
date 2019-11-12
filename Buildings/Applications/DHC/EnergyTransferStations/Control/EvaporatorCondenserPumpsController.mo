@@ -149,28 +149,28 @@ equation
   connect(mPimHeaNor.y, pumCon.u_m)
     annotation (Line(points={{-59,82},{4,82},{4,104}}, color={0,0,127}));
   connect(mPrimCooNorAct.y, pumEva.u_m) annotation (Line(points={{-31,-68},{14,-68},{14,-54}}, color={0,0,127}));
-  connect(max1.y, max2.u2) annotation (Line(points={{52,138},{70,138},{70,96},{
-          76,96}}, color={0,0,127}));
-  connect(max4.y, max2.u1) annotation (Line(points={{66,-22},{70,-22},{70,84},{
-          76,84}}, color={0,0,127}));
+  connect(max1.y, max2.u2) annotation (Line(points={{52,138},{70,138},{70,96},{76,
+          96}}, color={0,0,127}));
+  connect(max4.y, max2.u1) annotation (Line(points={{66,-22},{70,-22},{70,84},{76,
+          84}}, color={0,0,127}));
   connect(pumCon.u_s, max.y)
     annotation (Line(points={{-8,116},{-18,116}}, color={0,0,127}));
   connect(max.u1, minConFloNor.y)
     annotation (Line(points={{-42,110},{-59,110}}, color={0,0,127}));
   connect(max.u2, mSecHeaNorReq.y) annotation (Line(points={{-42,122},{-44,122},
           {-44,131},{-59,131}}, color={0,0,127}));
-  connect(max1.u2, heaTanMin) annotation (Line(points={{28,144},{18,144},{18,
-          170},{-112,170}}, color={0,0,127}));
+  connect(max1.u2, heaTanMin) annotation (Line(points={{28,144},{18,144},{18,170},
+          {-112,170}}, color={0,0,127}));
   connect(pumCon.y, max1.u1) annotation (Line(points={{15,116},{18,116},{18,132},
           {28,132},{28,132}}, color={0,0,127}));
   connect(max4.u1, pumEva.y) annotation (Line(points={{42,-28},{38,-28},{38,-42},
           {25,-42}}, color={0,0,127}));
   connect(cooTanMin, max4.u2)
     annotation (Line(points={{-110,-16},{42,-16}}, color={0,0,127}));
-  connect(pumEva.u_s, max3.y) annotation (Line(points={{2,-42},{-12,-42},{-12,
-          -32},{-26,-32}}, color={0,0,127}));
-  connect(max3.u2, mSecCooNor.y) annotation (Line(points={{-50,-26},{-58,-26},{
-          -58,-30},{-65,-30}}, color={0,0,127}));
+  connect(pumEva.u_s, max3.y) annotation (Line(points={{2,-42},{-12,-42},{-12,-32},
+          {-26,-32}}, color={0,0,127}));
+  connect(max3.u2, mSecCooNor.y) annotation (Line(points={{-50,-26},{-58,-26},{-58,
+          -30},{-65,-30}}, color={0,0,127}));
   connect(max3.u1, minEvaFloNor.y) annotation (Line(points={{-50,-38},{-56,-38},
           {-56,-50},{-63,-50}}, color={0,0,127}));
   annotation (defaultComponentName="pumCon",Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,

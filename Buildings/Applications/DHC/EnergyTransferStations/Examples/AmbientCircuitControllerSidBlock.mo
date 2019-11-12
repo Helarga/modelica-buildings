@@ -58,12 +58,12 @@ equation
           16,-3},{16,-48},{1,-48}}, color={0,0,127}));
   connect(TBorEnt.y, ambCirCon.TBorEnt) annotation (Line(points={{1,-142},{28,-142},
           {28,-9.8},{31,-9.8}}, color={0,0,127}));
-  connect(reqHea.y, ambCirCon.requireHeat) annotation (Line(points={{1,82},{20,82},
-          {20,9.8},{31,9.8}}, color={255,0,255}));
+  connect(reqHea.y, ambCirCon.reqHea) annotation (Line(points={{1,82},{20,82},{
+          20,9.8},{31,9.8}}, color={255,0,255}));
   connect(rejFulHea.y, ambCirCon.rejHeaFulLoa) annotation (Line(points={{-35,20},
           {-24,20},{-24,3},{31,3}}, color={255,0,255}));
-  connect(reqCoo.y, ambCirCon.requireCold) annotation (Line(points={{-35,-40},{-24,
-          -40},{-24,-1},{31,-1}}, color={255,0,255}));
+  connect(reqCoo.y, ambCirCon.reqCoo) annotation (Line(points={{-35,-40},{-24,-40},
+          {-24,-1},{31,-1}}, color={255,0,255}));
   connect(ambCirCon.rejColFulLoa, rejFulCoo.y) annotation (Line(points={{31,1},{
           -30,1},{-30,-10},{-35,-10}}, color={255,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={

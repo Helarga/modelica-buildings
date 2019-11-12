@@ -7,3 +7,4 @@ HeatpumpControllerBlock
 AmbientCircuitControllerBlock
 ETSExample
 AmbientCircuitControllerSidBlock
+ThreeWayValve_HeatPumpCombined

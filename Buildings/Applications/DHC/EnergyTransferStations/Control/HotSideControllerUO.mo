@@ -2,7 +2,7 @@ within Buildings.Applications.DHC.EnergyTransferStations.Control;
 block HotSideControllerUO
   "Controller for valves on hot side, and heat demand on heat pump"
   extends
-    Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO;
+  Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO;
   Modelica.Blocks.Interfaces.BooleanOutput reqHea
     "True if heat is required from heat pump, false otherwise" annotation (
       Placement(transformation(extent={{140,128},{160,148}}),

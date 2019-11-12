@@ -79,7 +79,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     "Minimum heating setpoint temperature"
     annotation (Placement(transformation(extent={{-2,-216},{18,-196}})));
   Buildings.Controls.OBC.CDL.Logical.Not not1
-    annotation (Placement(transformation(extent={{-48,-30},{-28,-10}})));
+    annotation (Placement(transformation(extent={{-48,-36},{-28,-16}})));
   Modelica.Blocks.Logical.And heaMod "Heating only mode"
     annotation (Placement(transformation(extent={{-2,-28},{18,-8}})));
   Buildings.Controls.Continuous.LimPID valEva(
@@ -105,7 +105,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
     annotation (Placement(transformation(extent={{100,-270},{120,-250}}),
         iconTransformation(extent={{100,-38},{128,-10}})));
-  Buildings.Controls.Continuous.LimPID valEva1(
+  Buildings.Controls.Continuous.LimPID valCon(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     yMax=1,
     yMin=0,
@@ -113,7 +113,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     y_reset=0,
     k=0.05,
     Ti(displayUnit="s") = 300,
-    reverseAction=true) "Evaporator three way valve PI control signal "
+    reverseAction=true) "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{30,-322},{50,-302}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final unit="K",
       displayUnit="degC") "Condenser entering water temperature" annotation (
@@ -185,10 +185,10 @@ equation
           {42,-40},{42,-16},{58,-16}}, color={0,0,127}));
   connect(TSetHea, swi2.u1) annotation (Line(points={{-114,1.77636e-15},{-34,
           1.77636e-15},{-34,0},{58,0}}, color={0,0,127}));
-  connect(ReqCoo, not1.u) annotation (Line(points={{-114,46},{-84,46},{-84,-20},
-          {-50,-20}}, color={255,0,255}));
-  connect(not1.y, heaMod.u2) annotation (Line(points={{-26,-20},{-20,-20},{-20,
-          -26},{-4,-26}}, color={255,0,255}));
+  connect(ReqCoo, not1.u) annotation (Line(points={{-114,46},{-84,46},{-84,-26},
+          {-50,-26}}, color={255,0,255}));
+  connect(not1.y, heaMod.u2) annotation (Line(points={{-26,-26},{-4,-26}},
+                          color={255,0,255}));
   connect(ReqHea, heaMod.u1) annotation (Line(points={{-114,76},{-70,76},{-70,
           -4},{-12,-4},{-12,-18},{-4,-18}}, color={255,0,255}));
   connect(heaMod.y, swi2.u2) annotation (Line(points={{19,-18},{26,-18},{26,-8},
@@ -199,17 +199,17 @@ equation
           42,-272}}, color={0,0,127}));
   connect(valEva.y, yValEva)
     annotation (Line(points={{53,-260},{110,-260}}, color={0,0,127}));
-  connect(TMinConEnt, valEva1.u_s)
+  connect(TMinConEnt, valCon.u_s)
     annotation (Line(points={{-112,-312},{28,-312}}, color={0,0,127}));
-  connect(TConEnt, valEva1.u_m) annotation (Line(points={{-112,-340},{40,-340},
-          {40,-324}}, color={0,0,127}));
-  connect(valEva1.y, yValEva1)
+  connect(TConEnt, valCon.u_m) annotation (Line(points={{-112,-340},{40,-340},{
+          40,-324}}, color={0,0,127}));
+  connect(valCon.y, yValEva1)
     annotation (Line(points={{51,-312},{112,-312}}, color={0,0,127}));
   connect(or1.y, valEva.trigger) annotation (Line(
       points={{-25,54},{-8,54},{-8,26},{28,26},{28,-280},{34,-280},{34,-272}},
       color={255,0,255},
       pattern=LinePattern.Dash));
-  connect(or1.y, valEva1.trigger) annotation (Line(
+  connect(or1.y, valCon.trigger) annotation (Line(
       points={{-25,54},{-8,54},{-8,26},{28,26},{28,-336},{32,-336},{32,-324}},
       color={255,0,255},
       pattern=LinePattern.Dash));

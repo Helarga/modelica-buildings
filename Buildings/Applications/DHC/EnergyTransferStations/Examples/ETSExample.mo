@@ -16,44 +16,26 @@ model ETSExample "ETS example first try"
   parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal = 3
    "District circuit water mass flow rate";
 
-  parameter Modelica.SIunits.Temperature THeaWatSup_nominal=314.15
-      "Nominal heating supply water temperature"
-      annotation (Dialog(group="Design parameter"));
-  parameter Modelica.SIunits.Temperature THeaWatRet_nominal=303.15
-    "Nominal heating Return water temperature"
-    annotation (Dialog(group="Design parameter"));
-  parameter Modelica.SIunits.Temperature TCooWatSup_max=288.15
-    "Maximum cooling water supply temperature"
-    annotation (Dialog(group="Design parameter"));
-  parameter Modelica.SIunits.Temperature TCooWatSup_min=277.15
-    "Minimum cooling water supply temperature"
-    annotation (Dialog(group="Design parameter"));
-  parameter Modelica.SIunits.TemperatureDifference dTCooWat=4
-    "Cooling water supply and return temperature difference"
-    annotation (Dialog(group="Design parameter"));
-
    Fluid.HeatPumps.Data.EquationFitReversible.Trane_Axiom_EXW240 heaPumDat
    annotation (Placement(transformation(extent={{100,98},{120,118}})));
 
   Substation ETS(
     mCon_flow_nominal=mCon_flow_nominal,
     mEva_flow_nominal=mEva_flow_nominal,
+    mSecHea_flow_nominal=mSecHea_flow_nominal,
+    mSecCoo_flow_nominal=mSecCoo_flow_nominal,
     dpCon_nominal=heaPumDat.dpHeaLoa_nominal,
     dpEva_nominal=heaPumDat.dpHeaSou_nominal,
     heaPumDat=heaPumDat,
-    mGeo_flow_nominal=1,
-    dTGeo= 5,
-    mHex_flow_nominal=1,
+    dTGeo= 2,
     dTHex= 2,
+    dTHeaPum=2,
     xBorFie=datGeo.lBorFie[1],
     yBorFie=datGeo.wBorFie[1],
     dpBorFie_nominal=datGeo.dpBor_nominal)
   "Energy transfer station for the 5th generation of district heating and cooling"
    annotation (Placement(transformation(extent={{-12,-24},{8,-4}})));
-
-
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetHeaMax(k=55 +
-        273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetHeaMax(k=55 + 273.15)
    annotation (Placement(transformation(extent={{-120,120},{-100,140}})));
   Fluid.FixedResistances.PressureDrop resDis(
     redeclare package Medium = Medium,
@@ -64,7 +46,7 @@ model ETSExample "ETS example first try"
     "Cooling setpoint temperature"
     annotation (Placement(transformation(extent={{-120,-10},{-100,10}})));
   Modelica.Fluid.Sources.FixedBoundary heaLoa(redeclare package Medium = Medium)
-                "Volume for the heating load"
+    "Volume for the heating load"
    annotation (Placement(transformation(extent={{80,-60},{60,-40}})));
   Fluid.Sources.MassFlowSource_T heaPum(
     use_m_flow_in=true,
@@ -109,8 +91,7 @@ model ETSExample "ETS example first try"
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSecHeaEnt(k=35 + 273.15)
     "Secondary (building side) return heating water temperature"
     annotation (Placement(transformation(extent={{120,0},{100,20}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSecCooEnt(k=18 +
-        273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSecCooEnt(k=18 + 273.15)
     "Secondary (building side) return Chilled water temperature"
     annotation (Placement(transformation(extent={{-120,-40},{-100,-20}})));
 
@@ -136,7 +117,7 @@ model ETSExample "ETS example first try"
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecHea(k=1)
     "Secondary (building side)  heating water flow rate"
     annotation (Placement(transformation(extent={{120,-40},{100,-20}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=1)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSecCoo(k=0)
     "Secondary (building side) cooling water flow rate."
     annotation (Placement(transformation(extent={{-120,-74},{-100,-54}})));
   Modelica.Blocks.Sources.Constant conMinFlo(k=0.5)
@@ -217,7 +198,7 @@ equation
                 points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,
             -140},{140,160}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
-    experiment(StopTime=2592000),
+    experiment(StopTime=86400, __Dymola_Algorithm="Cvode"),
     __Dymola_Commands(
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/HeatpumpController.mos"
         "Simulate and plot"),

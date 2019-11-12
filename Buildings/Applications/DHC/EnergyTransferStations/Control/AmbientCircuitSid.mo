@@ -43,10 +43,10 @@ model AmbientCircuitSid "Generate control outputs for source model"
   Modelica.Blocks.Interfaces.BooleanInput valCoo "Cooling load side valve control"
     annotation (Placement(transformation(extent={{-260,200},{-220,240}}),
         iconTransformation(extent={{-120,42},{-100,62}})));
-  Modelica.Blocks.Interfaces.BooleanInput requireHeat "Require heating"
+  Modelica.Blocks.Interfaces.BooleanInput reqHea "True if heating is required."
     annotation (Placement(transformation(extent={{-260,170},{-220,210}}),
         iconTransformation(extent={{-120,88},{-100,108}})));
-  Modelica.Blocks.Interfaces.BooleanInput requireCold "Requiring cold"
+  Modelica.Blocks.Interfaces.BooleanInput reqCoo "True if cooling is required."
     annotation (Placement(transformation(extent={{-260,138},{-220,178}}),
         iconTransformation(extent={{-120,-20},{-100,0}})));
   Modelica.Blocks.Interfaces.BooleanInput rejColFulLoa
@@ -207,13 +207,13 @@ equation
           -292},{-18,-274}},                       color={255,0,255}));
   connect(valOpe.y, opeHea.u[1]) annotation (Line(points={{-158,240},{-140,240},
           {-140,193.5},{-122,193.5}}, color={255,0,255}));
-  connect(requireHeat, opeHea.u[2]) annotation (Line(points={{-240,190},{-164,
-          190},{-164,186.5},{-122,186.5}}, color={255,0,255}));
+  connect(reqHea, opeHea.u[2]) annotation (Line(points={{-240,190},{-164,190},{
+          -164,186.5},{-122,186.5}}, color={255,0,255}));
   connect(modInd.u2, opeHea.y) annotation (Line(points={{118,-138},{-60,-138},{
           -60,190},{-98,190}},   color={255,0,255}));
   connect(opeCol.u[1], valOpe.y) annotation (Line(points={{-122,163.5},{-140,
           163.5},{-140,240},{-158,240}}, color={255,0,255}));
-  connect(opeCol.u[2], requireCold) annotation (Line(points={{-122,156.5},{-164,
+  connect(opeCol.u[2], reqCoo) annotation (Line(points={{-122,156.5},{-164,
           156.5},{-164,158},{-240,158}}, color={255,0,255}));
   connect(cooModInd.u2, opeCol.y) annotation (Line(points={{80,-178},{-80,-178},
           {-80,160},{-98,160}}, color={255,0,255}));
