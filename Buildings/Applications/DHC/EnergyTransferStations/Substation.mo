@@ -529,7 +529,7 @@ model Substation
       riseTime=10,
       l=1e-8,
       m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
-      "Two way modulating valve"
+    "Two way modulating valve."
       annotation (Placement(transformation(extent={{18,-30},{-2,-10}})));
     Fluid.Actuators.Valves.TwoWayLinear valSupCoo(
       redeclare final package Medium = Medium,
@@ -562,7 +562,7 @@ model Substation
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       m_flow_nominal=valEva_flow_nominal,
       l={0.01,0.01},
-    dpValve_nominal=1)
+    dpValve_nominal=6000)
     "Three way valve modulated to control the entering water temperature to the evaporator."
      annotation (Placement(transformation(extent={{10,10},{-10,-10}},
                                           rotation=270,
@@ -577,7 +577,7 @@ model Substation
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     m_flow_nominal=mCon_flow_nominal,
     l={0.01,0.01},
-    dpValve_nominal=1)
+    dpValve_nominal=6000)
     "Three way valve modulated to control the entering water temperature to the condenser."
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
@@ -691,6 +691,8 @@ model Substation
     "Minimum evaporator flow rate as recommended by the manufacturer."
     annotation (Placement(transformation(extent={{-320,138},{-300,158}}),
         iconTransformation(extent={{-116,34},{-100,50}})));
+  parameter Modelica.SIunits.TemperatureDifference THys=2
+    "Temperature hysteresis";
 equation
   connect(heaPum.port_b1,pumCon. port_a)
     annotation (Line(points={{-10,132},{0,132}}, color={238,46,47},
@@ -699,12 +701,12 @@ equation
   connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{-98.6,211.2},{-40,211.2},{-40,126},{-31,126}},
                                                             color={255,127,0},
       pattern=LinePattern.Dash));
-  connect(ETSCon.reqHea, heaPumCon.ReqHea)
+  connect(ETSCon.reqHea,heaPumCon.reqHea)
     annotation (Line(
       points={{-179,213},{-140,213},{-140,219},{-121.4,219}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ETSCon.reqCoo, heaPumCon.ReqCoo)
+  connect(ETSCon.reqCoo,heaPumCon.reqCoo)
     annotation (Line(
       points={{-179,195},{-142,195},{-142,216},{-121.4,216}},
       color={255,0,255},
@@ -824,7 +826,8 @@ equation
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(TMaxEvaEnt, heaPumCon.TMaxEvaEnt) annotation (Line(
-      points={{-310,180},{-296,180},{-296,190},{-134,190},{-134,205.4},{-121,205.4}},
+      points={{-310,180},{-296,180},{-296,190},{-134,190},{-134,205.4},{-121,
+          205.4}},
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(TEvaLvg.T,heaPumCon.TEvaLvg)  annotation (Line(
@@ -1022,11 +1025,13 @@ equation
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TEvaEnt.T, heaPumCon.TEvaEnt) annotation (Line(
-      points={{-20,107},{-20,114},{-62,114},{-62,190},{-126,190},{-126,203.4},{-121,203.4}},
+      points={{-20,107},{-20,114},{-62,114},{-62,190},{-126,190},{-126,203.4},{
+          -121,203.4}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(heaPumCon.yValEva1, valEva.y) annotation (Line(
+  connect(heaPumCon.yValCon, valEva.y) annotation (Line(
       points={{-98.6,204.4},{-96,204.4},{-96,114},{-116,114},{-116,78},{-106,78}},
+
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(heaPumCon.yValEva, valCon.y) annotation (Line(

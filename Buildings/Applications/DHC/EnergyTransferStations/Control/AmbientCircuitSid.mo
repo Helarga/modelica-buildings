@@ -157,7 +157,7 @@ model AmbientCircuitSid "Generate control outputs for source model"
   Buildings.Controls.Continuous.LimPID borThrWay(
     final Td=Td,
     reset=Buildings.Types.Reset.Parameter,
-    reverseAction=true,
+    reverseAction=false,
     y_reset=0,
     final k=1,
     yMin=0.5,

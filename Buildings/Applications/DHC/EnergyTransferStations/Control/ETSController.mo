@@ -84,7 +84,8 @@ model ETSController
     "Hot side valve status,true when rejection of part or full heating load is reuired" annotation (Placement(
         transformation(extent={{220,150},{240,170}}), iconTransformation(extent={{100,60},{120,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValCoo
-    "Hot side valve status,true when rejection of part or full cooling load is reuired" annotation (Placement(
+    "Cold side valve status,true when rejection of part or full cooling load is reuired"
+                                                                                        annotation (Placement(
         transformation(extent={{220,-190},{240,-170}}), iconTransformation(extent={{100,40},{120,60}})));
 
   Buildings.Controls.Continuous.LimPID conHeaTan(
@@ -116,9 +117,11 @@ model ETSController
   Buildings.Controls.OBC.CDL.Logical.Switch pumCooCon
     "Cooling water supply pump control"
     annotation (Placement(transformation(extent={{160,-80},{180,-60}})));
-  HotSideControllerUO conHotSid(THys=1) "Hot side controller"
+  HotSideControllerUO conHotSid(THys=THys)
+                                        "Hot side controller"
     annotation (Placement(transformation(extent={{-160,176},{-140,196}})));
-  ColdSideControlleUO conColSid(THys=1) "Cold side controller"
+  ColdSideControlleUO conColSid(THys=THys)
+                                        "Cold side controller"
    annotation (Placement(
         transformation(extent={{-160,-210},{-140,-190}})));
   Buildings.Controls.OBC.CDL.Logical.Or or1

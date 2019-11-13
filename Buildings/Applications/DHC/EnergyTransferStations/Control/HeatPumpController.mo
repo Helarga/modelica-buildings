@@ -1,17 +1,18 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
 model HeatPumpController "The control block of the heatpump on heating mode"
+
      extends Modelica.Blocks.Icons.Block;
 
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput ReqHea
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput reqHea
     "Heating is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,62},{-100,90}}),
         iconTransformation(extent={{-128,76},{-100,104}})));
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput ReqCoo
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput reqCoo
     "Cooling is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,32},{-100,60}}),
         iconTransformation(extent={{-128,46},{-100,74}})));
 
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput           TSetCoo(final unit="K",
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCoo(final unit="K",
       displayUnit="degC") "Setpoint for cooling supply water to space loads"
                                                        annotation (Placement(transformation(extent={{-128,
             -160},{-100,-132}}),
@@ -88,7 +89,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     yMin=0,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0,
-    k=0.1,
+    k=1,
     Ti(displayUnit="s") = 300,
     reverseAction=true) "Evaporator three way valve PI control signal "
     annotation (Placement(transformation(extent={{32,-270},{52,-250}})));
@@ -100,8 +101,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
       displayUnit="degC") "Maximum evaporator entering water temperature"
     annotation (Placement(transformation(extent={{-128,-274},{-100,-246}}),
         iconTransformation(extent={{-120,-56},{-100,-36}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva(final unit="K",
-      displayUnit="degC")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva
     "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
     annotation (Placement(transformation(extent={{100,-270},{120,-250}}),
         iconTransformation(extent={{100,-38},{128,-10}})));
@@ -111,9 +111,10 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     yMin=0,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0,
-    k=0.1,
+    k=1,
     Ti(displayUnit="s") = 300,
-    reverseAction=true) "Condenser three way valve PI control signal "
+    reverseAction=false)
+                        "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{30,-322},{50,-302}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final unit="K",
       displayUnit="degC") "Condenser entering water temperature" annotation (
@@ -123,16 +124,15 @@ model HeatPumpController "The control block of the heatpump on heating mode"
       displayUnit="degC") "Minimum condenser entering water temperature"
     annotation (Placement(transformation(extent={{-126,-326},{-98,-298}}),
         iconTransformation(extent={{-120,-38},{-100,-18}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva1(final unit="K",
-      displayUnit="degC")
-    "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValCon
+    "Control signal of the modulating three way valve to maintain the condenser entering temperature above the minimum value."
     annotation (Placement(transformation(extent={{102,-322},{122,-302}}),
         iconTransformation(extent={{100,-70},{128,-42}})));
 equation
 
-  connect(ReqCoo, or1.u2)
+  connect(reqCoo, or1.u2)
     annotation (Line(points={{-114,46},{-48,46}}, color={255,0,255}));
-  connect(ReqHea, or1.u1)
+  connect(reqHea, or1.u1)
     annotation (Line(points={{-114,76},{-56,76},{-56,54},{-48,54}},
                      color={255,0,255}));
   connect(or1.y, swi1.u2)
@@ -149,9 +149,9 @@ equation
     annotation (Line(points={{24,54},{56,54}}, color={0,0,127}));
   connect(swi2.y, TSetHeaPum)
     annotation (Line(points={{82,-8},{110,-8}},   color={0,0,127}));
-  connect(ReqCoo, simHeaCoo.u2) annotation (Line(points={{-114,46},{-84,46},{
+  connect(reqCoo, simHeaCoo.u2) annotation (Line(points={{-114,46},{-84,46},{
           -84,-86},{-62,-86}}, color={255,0,255}));
-  connect(ReqHea, simHeaCoo.u1) annotation (Line(points={{-114,76},{-70,76},{
+  connect(reqHea, simHeaCoo.u1) annotation (Line(points={{-114,76},{-70,76},{
           -70,-78},{-62,-78}}, color={255,0,255}));
   connect(PI.u_s, TSetCoo)
     annotation (Line(points={{-60,-162},{-78,-162},{-78,-146},{-114,-146}},
@@ -173,9 +173,9 @@ equation
           {38,-92}}, color={255,0,255}));
   connect(simHeaCoo.y, cooOnl.u2)
     annotation (Line(points={{-39,-78},{-22,-78}}, color={255,0,255}));
-  connect(ReqCoo, cooOnl.u1) annotation (Line(points={{-114,46},{-84,46},{-84,
+  connect(reqCoo, cooOnl.u1) annotation (Line(points={{-114,46},{-84,46},{-84,
           -60},{-30,-60},{-30,-70},{-22,-70}}, color={255,0,255}));
-  connect(ReqCoo, PI.trigger) annotation (Line(points={{-114,46},{-84,46},{-84,
+  connect(reqCoo, PI.trigger) annotation (Line(points={{-114,46},{-84,46},{-84,
           -184},{-56,-184},{-56,-174}}, color={255,0,255}));
   connect(mapFun.y, swi4.u1) annotation (Line(points={{28,-138},{32,-138},{32,
           -84},{38,-84}}, color={0,0,127}));
@@ -185,11 +185,11 @@ equation
           {42,-40},{42,-16},{58,-16}}, color={0,0,127}));
   connect(TSetHea, swi2.u1) annotation (Line(points={{-114,1.77636e-15},{-34,
           1.77636e-15},{-34,0},{58,0}}, color={0,0,127}));
-  connect(ReqCoo, not1.u) annotation (Line(points={{-114,46},{-84,46},{-84,-26},
+  connect(reqCoo, not1.u) annotation (Line(points={{-114,46},{-84,46},{-84,-26},
           {-50,-26}}, color={255,0,255}));
   connect(not1.y, heaMod.u2) annotation (Line(points={{-26,-26},{-4,-26}},
                           color={255,0,255}));
-  connect(ReqHea, heaMod.u1) annotation (Line(points={{-114,76},{-70,76},{-70,
+  connect(reqHea, heaMod.u1) annotation (Line(points={{-114,76},{-70,76},{-70,
           -4},{-12,-4},{-12,-18},{-4,-18}}, color={255,0,255}));
   connect(heaMod.y, swi2.u2) annotation (Line(points={{19,-18},{26,-18},{26,-8},
           {58,-8}}, color={255,0,255}));
@@ -203,7 +203,7 @@ equation
     annotation (Line(points={{-112,-312},{28,-312}}, color={0,0,127}));
   connect(TConEnt, valCon.u_m) annotation (Line(points={{-112,-340},{40,-340},{
           40,-324}}, color={0,0,127}));
-  connect(valCon.y, yValEva1)
+  connect(valCon.y, yValCon)
     annotation (Line(points={{51,-312},{112,-312}}, color={0,0,127}));
   connect(or1.y, valEva.trigger) annotation (Line(
       points={{-25,54},{-8,54},{-8,26},{28,26},{28,-280},{34,-280},{34,-272}},
@@ -293,7 +293,6 @@ See <a href=\"Buildings.Fluid.HeatPumps.EquationFitReversible\">
 Buildings.Fluid.HeatPumps.EquationFitReversible</a> for detailed description of the heat pump theory of operation.
 </p>
 </html>", revisions="<html>
-
 <ul>
 <li>
  <br/>

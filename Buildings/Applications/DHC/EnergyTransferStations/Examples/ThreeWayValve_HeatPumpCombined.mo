@@ -53,7 +53,7 @@ model ThreeWayValve_HeatPumpCombined
           extent={{-10,10},{10,-10}},
           rotation=0,
           origin={62,8})));
-    Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valCon(
+    Fluid.Actuators.Valves.ThreeWayLinear                valCon(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     m_flow_nominal=mCon_flow_nominal,
@@ -95,28 +95,23 @@ model ThreeWayValve_HeatPumpCombined
           extent={{10,-10},{-10,10}},
           rotation=90,
           origin={-46,20})));
-  Buildings.Controls.Continuous.LimPID valCon1(
+  Modelica.Blocks.Continuous.LimPID    valCon1(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     yMax=1,
     yMin=0,
-    reset=Buildings.Types.Reset.Parameter,
-    y_reset=0,
     k=0.1,
-    Ti(displayUnit="s") = 300,
-    reverseAction=true) "Condenser three way valve PI control signal "
+    Ti(displayUnit="s") = 300)
+                        "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{-150,36},{-130,56}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TConEntMin(k=25 + 273.15)
     "Minimum condenser entering water temperature"
-    annotation (Placement(transformation(extent={{-180,58},{-160,78}})));
+    annotation (Placement(transformation(extent={{-186,58},{-166,78}})));
   Modelica.Blocks.Sources.IntegerConstant                integerConstant(k=1)
     "Primary pump control signal to maintain the condenser minimum flow rate recommended by the manufacturer. "
     annotation (Placement(transformation(extent={{-104,-20},{-84,0}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant THeasET(k=35 + 273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant THeaSet(k=35 + 273.15)
     "Heating Setpoint temperature"
     annotation (Placement(transformation(extent={{-58,82},{-38,102}})));
-  Modelica.Blocks.Sources.BooleanConstant                booleanConstant(k=true)
-    "Primary pump control signal to maintain the condenser minimum flow rate recommended by the manufacturer. "
-    annotation (Placement(transformation(extent={{-180,-20},{-160,0}})));
   Modelica.Fluid.Sources.FixedBoundary sin(redeclare package Medium = Medium,
       nPorts=1) "Source volume for heating"
     annotation (Placement(transformation(extent={{142,12},{122,-8}})));
@@ -133,8 +128,8 @@ model ThreeWayValve_HeatPumpCombined
     reverseAction=false)
                         "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{82,100},{62,120}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TConEntMin1(k=1.4)
-    "Minimum condenser entering water temperature"
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mConFlo(k=1.4)
+    "Condenser mass flow rate."
     annotation (Placement(transformation(extent={{120,100},{100,120}})));
   Fluid.Sensors.MassFlowRate priHeaFlo(redeclare package Medium = Media.Water)
     "Primary circuit condenser side heating water flow rate" annotation (
@@ -168,18 +163,17 @@ equation
           8},{-32,10},{-46,10}}, color={0,127,255}));
   connect(TConEnt.T, valCon1.u_m)
     annotation (Line(points={{-57,20},{-140,20},{-140,34}}, color={0,0,127}));
-  connect(valCon1.u_s, TConEntMin.y) annotation (Line(points={{-152,46},{-158,
-          46},{-158,68}},       color={0,0,127}));
+  connect(valCon1.u_s, TConEntMin.y) annotation (Line(points={{-152,46},{-162,
+          46},{-162,68},{-164,68}},
+                                color={0,0,127}));
   connect(integerConstant.y, heaPum.uMod) annotation (Line(points={{-83,-10},{-62,
           -10},{-62,2},{-17,2}}, color={255,127,0}));
-  connect(THeasET.y, heaPum.TSet) annotation (Line(points={{-36,92},{-24,92},{-24,
+  connect(THeaSet.y, heaPum.TSet) annotation (Line(points={{-36,92},{-24,92},{-24,
           11},{-17.4,11}}, color={0,0,127}));
   connect(valCon1.y, valCon.y)
     annotation (Line(points={{-129,46},{-94,46},{-94,52},{-58,52}},
                                                            color={0,0,127}));
-  connect(booleanConstant.y, valCon1.trigger) annotation (Line(points={{-159,-10},
-          {-148,-10},{-148,34}}, color={255,0,255}));
-  connect(valCon2.u_s, TConEntMin1.y)
+  connect(valCon2.u_s, mConFlo.y)
     annotation (Line(points={{84,110},{98,110}}, color={0,0,127}));
   connect(splVal3.port_2, priHeaFlo.port_a)
     annotation (Line(points={{72,8},{82,8},{82,4},{92,4}}, color={0,127,255}));
