@@ -22,19 +22,19 @@ package AbsorptionIndirect
     parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal
       "Nominal mass flow at condenser"
       annotation (Dialog(group="Nominal condition"));
-    parameter Real  capFunEva[ncapFunEva]
+    parameter Real capFunEva[ncapFunEva]
     "Cubic coefficients for the evaporator capacity factor as a function of temperature curve"
       annotation (Dialog(group="Performance curves"));
-    parameter Real  capFunCon[ncapFunCon]
+    parameter Real capFunCon[ncapFunCon]
     "Cubic coefficients for capFunCon for the condenser capacity factor as a function of temperature curve"
       annotation (Dialog(group="Performance curves"));
-    parameter Real GenHIR[nGenHIR]
+    parameter Real genHIR[nGenHIR]
     "Cubic coefficients for the generator heat input to chiller operating capacity"
       annotation (Dialog(group="Performance curves"));
-    parameter Real GenConT[nGenConT]
+    parameter Real genConT[nGenConT]
     "Cubic coefficients for heat input modifier based on the generator input temperature"
       annotation (Dialog(group="Performance curves"));
-    parameter Real GenEvaT[nGenEvaT]
+    parameter Real genEvaT[nGenEvaT]
     "Cubic coefficients for heat input modifier based on the evaporator input temperature"
       annotation (Dialog(group="Performance curves"));
     parameter Real EIRP[nEIRP]
@@ -66,9 +66,9 @@ package AbsorptionIndirect
       Documentation(info=
                    "<html>
 This record is used as a template for performance data
-for the chiller model
-<a href=\"Buildings.Fluid.Chillers.Absorption_Indirect_Steam\">
-Buildings.Fluid.Chillers.Absorption_Indirect_Steam</a>.
+for the absorption chiller model
+<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteam\">
+Buildings.Fluid.Chillers.AbsorptionIndirectSteam</a>.
 </html>",
   revisions="<html>
 <ul>
@@ -90,10 +90,29 @@ First implementation.
      mCon_flow_nominal=1.1,
      capFunEva={0.690571,0.065571,-0.00289,0},
      capFunCon={0.245507,0.023614,0.0000278,0.000013},
-     GenHIR={0.18892,0.968044,1.119202,-0.5034},
+     genHIR={0.18892,0.968044,1.119202,-0.5034},
      EIRP={1,0,0},
-     GenConT={0.712019,-0.00478,0.000864,-0.000013},
-     GenEvaT={0.995571,0.046821,-0.01099,0.000608});
+     genConT={0.712019,-0.00478,0.000864,-0.000013},
+     genEvaT={0.995571,0.046821,-0.01099,0.000608})
+   "EnergyPlus absorption chiller performance data"
+                                                   annotation (
+    defaultComponentName="datChi",
+    defaultComponentPrefixes="parameter",
+    Documentation(info=
+                   "<html>
+Performance data for chiller model.
+This data corresponds to the following EnergyPlus model:
+<pre>
+Chiller:absorption indirect,
+   10000,                    !- Reference Cooling Capacity {W}
+    150,                     !- Reference Power {W}
+    0.247,                   !- Reference Chilled Water Flow Rate {m3/s}
+    1.1,                     !- Reference Condenser Water Flow Rate {m3/s}
+    0.15,                    !- Minimum Part Load Ratio
+    1.0,                     !- Maximum Part Load Ratio
+    0.10,                    !- Minimum Unloading Ratio
+</pre>
+</html>"));
  annotation(preferredView="info",
  Documentation(info="<html>
 <p>

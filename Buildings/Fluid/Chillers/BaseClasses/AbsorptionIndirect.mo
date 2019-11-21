@@ -55,7 +55,7 @@ block AbsorptionIndirect
     annotation (Placement(transformation(
           extent={{100,-38},{120,-18}}), iconTransformation(extent={{100,-40},{
             120,-20}})));
-  Modelica.SIunits.Efficiency GenHIR(nominal=1)
+  Modelica.SIunits.Efficiency genHIR(nominal=1)
    "Ratio of the generator heat input to chiller operating capacity";
   Modelica.SIunits.Efficiency EIRP(min=0,nominal=1)
    "Ratio of the actual absorber pumping power to the nominal pumping power";
@@ -63,9 +63,9 @@ block AbsorptionIndirect
     "Evaporator capacity factor function of temperature curve";
   Real capFunCon(min=0,nominal=1)
    "Condenser capacity factor function of temperature curve";
-  Real GenConT( min=0,nominal=1)
+  Real genConT( min=0,nominal=1)
    "Heat input modifier based on the generator input temperature";
-  Real GenEvaT(min=0,nominal=1)
+  Real genEvaT(min=0,nominal=1)
    "Heat input modifier based on the evaporator outlet temperature";
   Real PLR(min=0, nominal=1, unit="1")
    "Part load ratio";
@@ -83,9 +83,9 @@ block AbsorptionIndirect
         iconTransformation(extent={{-120,-10},{-100,10}})));
 initial equation
   assert(per.QEva_flow_nominal < 0,
-  "Parameter QEva_flow_nominal must be lesser than zero.");
+  "In " + getInstanceName() + ": Parameter QEva_flow_nominal must be lesser than zero.");
   assert(Q_flow_small > 0,
-  "Parameter Q_flow_small must be larger than zero.");
+  "In " + getInstanceName() + ":Parameter Q_flow_small must be larger than zero.");
 
 equation
   TConEnt_degC=Modelica.SIunits.Conversions.to_degC(TConEnt);
@@ -116,28 +116,28 @@ equation
                                   x2 =  per.PLRMax,
                               deltaX =  per.PLRMax/100);
 
-    GenHIR = per.GenHIR[1]+ per.GenHIR[2]*PLR+per.GenHIR[3]*PLR^2+per.GenHIR[4]*PLR^3;
+    genHIR = per.genHIR[1]+ per.genHIR[2]*PLR+per.genHIR[3]*PLR^2+per.genHIR[4]*PLR^3;
 
-    GenConT= per.GenConT[1]+ per.GenConT[2]*(TConEnt_degC)+
-             per.GenConT[3]*(TConEnt_degC)^2+ per.GenConT[4]*(TConEnt_degC)^3;
+    genConT= per.genConT[1]+ per.genConT[2]*(TConEnt_degC)+
+             per.genConT[3]*(TConEnt_degC)^2+ per.genConT[4]*(TConEnt_degC)^3;
 
-    GenEvaT= per.GenEvaT[1]+ per.GenEvaT[2]*(TEvaLvg_degC)+
-             per.GenEvaT[3]*(TEvaLvg_degC)^2+ per.GenEvaT[4]*(TEvaLvg_degC)^3;
+    genEvaT= per.genEvaT[1]+ per.genEvaT[2]*(TEvaLvg_degC)+
+             per.genEvaT[3]*(TEvaLvg_degC)^2+ per.genEvaT[4]*(TEvaLvg_degC)^3;
 
     EIRP = per.EIRP[1]+ per.EIRP[2]*PLR+per.EIRP[3]*PLR^2;
 
     CR =  Buildings.Utilities.Math.Functions.smoothMin(
-                                  x1 =  PLR/per.PLRMin,
-                                  x2 =  1,
-                              deltaX =  0.001);
+      x1 =  PLR/per.PLRMin,
+      x2 =  1,
+      deltaX =  0.001);
 
-    QGen_flow = GenHIR*(-QEva_flow_ava)*GenConT*GenEvaT;
+    QGen_flow = genHIR*(-QEva_flow_ava)*genConT*genEvaT;
 
     P =  EIRP*(per.P_nominal)*CR;
 
     QCon_flow = -QEva_flow + QGen_flow + P;
 
-    mSte= QGen_flow/(hfg+ cpWat *DelTSubCoo);
+    mSte= QGen_flow/(hfg+ (cpWat *DelTSubCoo));
 
   else
 
@@ -146,9 +146,9 @@ equation
    QEva_flow_ava=0;
    QEva_flow = 0;
    PLR =0;
-   GenHIR =0;
-   GenConT =0;
-   GenEvaT =0;
+   genHIR =0;
+   genConT =0;
+   genEvaT =0;
    EIRP=0;
    CR =0;
    QGen_flow = 0;
@@ -165,8 +165,8 @@ equation
   defaultComponentName="absInd",
   Documentation(info="<html>
 <p>
-The Block includes the description of the performance curves method dedicated for<a href=\"Buildings.Fluid.Chillers.Absorption_Indirect_Steam\">
-Buildings.Fluid.Chillers.Absorption_Indirect_Steam</a>.
+The Block includes the description of the performance curves method dedicated for<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteam\">
+Buildings.Fluid.Chillers.AbsorptionIndirectSteam</a>.
 </p>
 <p>
 The block uses six functions to predict the chiller cooling capacity, power consumption for
@@ -193,28 +193,29 @@ EIRFP = C<sub>1</sub>+ C<sub>2</sub>PLR+C<sub>3</sub>PLR<sup>2</sup>
 <li>
 The generator heat input to cooling capacity output ratio function of part load ratio cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
-GENHIR = D<sub>1</sub>+ D<sub>2</sub>PLR+D<sub>3</sub>PLR<sup>2</sup>++D<sub>4</sub>PLR<sup>3</sup>
+genHIR = D<sub>1</sub>+ D<sub>2</sub>PLR+D<sub>3</sub>PLR<sup>2</sup>++D<sub>4</sub>PLR<sup>3</sup>
 </li>
+</ol>
 <p>
 Two additional curves are available to modifiy the heat input requirment based on the condenser inlet water temperature 
 and the evaporator outlet water temperature.
 </p>
+<ol>
 <li>
 The heat input modifier based on the condenser inlet water temperature cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
-GENCONT = E<sub>1</sub>+ E<sub>2</sub>T<sub>Con,Ent</sub>+
+genConT = E<sub>1</sub>+ E<sub>2</sub>T<sub>Con,Ent</sub>+
 E<sub>3</sub>T<sup>2</sup><sub>Con,Ent</sub>+ E<sub>4</sub></sub>T<sup>3</sup><sub>Con,Ent</sub>
 </li>
 <li>
 The heat input modifier based on the evaporator inlet water temperature cubic curve:
 <p align=\"center\" style=\"font-style:italic;\">
-GENEVAT= F<sub>1</sub>+ F<sub>2</sub>T<sub>Eva,Lvg</sub>+
+genEvaT= F<sub>1</sub>+ F<sub>2</sub>T<sub>Eva,Lvg</sub>+
 F<sub>3</sub>T<sup>2</sup><sub>Eva,Lvg</sub>+ F<sub>4</sub></sub>T<sup>3</sup><sub>Eva,Lvg</sub>
 </li>
 </ol>
 <p>
-where the performance curve coefficients from <i>F<sub>1</sub> to F<sub>4</sub> </i>
-are stored in the data record <code>per</code>.
+where all the performance curve coefficients  are stored in the data record <code>per</code>.
 </p>
 <p>
 The data record <code>per</code> is available at

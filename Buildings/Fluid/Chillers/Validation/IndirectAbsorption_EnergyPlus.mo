@@ -3,9 +3,9 @@ model IndirectAbsorption_EnergyPlus
   "Validation with EnergyPlus model"
  package Medium = Buildings.Media.Water "Medium model";
 
-  Absorption_Indirect_Steam
-    absChi( redeclare package Medium1 = Medium,
-            redeclare package Medium2 = Medium,
+  AbsorptionIndirectSteam absChi(
+    redeclare package Medium1 = Medium,
+    redeclare package Medium2 = Medium,
     per=Data.AbsorptionIndirect.EnergyPlusAbsorptionChiller(),
     allowFlowReversal1=true,
     allowFlowReversal2=true,
@@ -20,8 +20,7 @@ model IndirectAbsorption_EnergyPlus
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     T1_start=25 + 273.15,
-    T2_start=10+ 273.15)
-   "Absorption indirect chiller"
+    T2_start=10 + 273.15) "Absorption indirect chiller"
     annotation (Placement(transformation(extent={{32,-10},{52,10}})));
   parameter Data.AbsorptionIndirect.EnergyPlusAbsorptionChiller per
    "EnergyPlus chiller performance"
@@ -253,7 +252,7 @@ model IndirectAbsorption_EnergyPlus
         0; 58200,0; 58800,0; 59400,0; 60000,0; 60600,0; 61200,0; 61800,0; 62400,
         0; 63000,0; 63600,0; 64200,0; 64800,0; 65400,0; 66000,0; 66600,0; 67200,
         0; 67800,0; 68400,0; 69000,0; 69600,0; 70200,0],         offset=0)
-    "EnergyPlus: entering  water flow rate at the Evaporator"
+    "EnergyPlus: entering  water flow rate at the evaporator"
     annotation (Placement(transformation(extent={{66,-60},{86,-40}})));
 equation
   connect(evaPum.ports[1], absChi.port_a2) annotation (Line(points={{70,-8},{70,
@@ -301,8 +300,8 @@ equation
   Documentation(info="<html>
 <p>
 This model validates the model
-<a href=\"Buildings.Fluid.Chillers.Absorption_Indirect_Steam\">
-Buildings.Fluid.Chillers.Absorption_Indirect_Steam</a>.
+<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteam\">
+Buildings.Fluid.Chillers.AbsorptionIndirectSteam<a>.
 <p>
 The EnergyPlus results were generated using the example file <code>IndirectAbsorptionChiller.idf</code>
 from EnergyPlus 9.1, with a nominal cooling capacity of <i>10000</i> Watts.
