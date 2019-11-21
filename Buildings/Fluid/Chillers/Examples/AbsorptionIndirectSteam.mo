@@ -1,6 +1,6 @@
 within Buildings.Fluid.Chillers.Examples;
 model AbsorptionIndirectSteam
-                             "Test model for absorption indirect steam chiller"
+ "Test model for absorption indirect steam chiller"
   extends Modelica.Icons.Example;
 
   package Medium = Buildings.Media.Water
@@ -13,7 +13,7 @@ model AbsorptionIndirectSteam
     "Evaporator nominal mass flow rate";
   parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=perEP.mCon_flow_nominal
     "Condenser nominal mass flow rate";
-  Chillers.Absorption_Indirect_Steam absIndSte(
+  Buildings.Fluid.Chillers.AbsorptionIndirectSteam absIndSte(
     redeclare package Medium1 = Medium,
     redeclare package Medium2 = Medium,
     per=perEP,
@@ -95,9 +95,9 @@ equation
       color={0,127,255},
       smooth=Smooth.None));
   connect(TConEnt.y,conPum. T_in)
-    annotation (Line(points={{-75,66},{-60,66}}, color={0,0,127}));
+    annotation (Line(points={{-74,66},{-60,66}}, color={0,0,127}));
   connect(TEvaEnt.y,evaPum. T_in)
-    annotation (Line(points={{81,-80},{98,-80},{98,-41.4},{76.2,-41.4}},
+    annotation (Line(points={{82,-80},{98,-80},{98,-41.4},{76.2,-41.4}},
                                 color={0,0,127}));
   connect(cooVol.ports[1],res2. port_a)
     annotation (Line(points={{-74,-62},{-38,-62}}, color={0,127,255}));
@@ -110,7 +110,7 @@ equation
     annotation (Line(points={{-18,-62},{12,-62},{12,4}},
                               color={0,127,255}));
   connect(absIndSte.TEvaSet, TEvaSet.y)
-    annotation (Line(points={{10.9,1.1},{-6,1.1},{-6,-30},{-39,-30}},
+    annotation (Line(points={{10.9,1.1},{-6,1.1},{-6,-30},{-38,-30}},
                                      color={0,0,127}));
   connect(conPum.ports[1], absIndSte.port_a1)
     annotation (Line(points={{-38,70},{-20,70},{-20,16},{12,16}},
@@ -131,7 +131,7 @@ __Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/Fluid/Chil
 <p>
 Example that simulates a chiller whose efficiency is computed based on the
 condenser entering and evaporator leaving fluid temperature.
-cubic and quadratic polynomial curves are used to compute the absorption chiller part load performance.
+Cubic and quadratic polynomial curves are used to compute the absorption chiller part load performance.
 </p>
 </html>", revisions="<html>
 <ul>

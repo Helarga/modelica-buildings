@@ -1,6 +1,6 @@
 within Buildings.Fluid.Chillers;
-model Absorption_Indirect_Steam
-  "Absorption indirect chiller with performance curves model"
+model AbsorptionIndirectSteam
+  "Absorption indirect chiller with performance curves model."
     extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
      dp2_nominal=200,
      dp1_nominal=200,
@@ -15,81 +15,82 @@ model Absorption_Indirect_Steam
       vol2( V=m2_flow_nominal*tau2/rho2_nominal,
             nPorts=2,final prescribedHeatFlowRate=true));
 
-  parameter Buildings.Fluid.Chillers.Data.AbsorptionIndirect.Generic  per
+  parameter Buildings.Fluid.Chillers.Data.AbsorptionIndirect.Generic per
    "Performance data"
     annotation (choicesAllMatching= true,
        Placement(transformation(extent={{60,72},{80,92}})));
   parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal= per.mCon_flow_nominal
-   "Nominal mass flow at Condenser"
+   "Nominal mass flow at the condenser"
     annotation (Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal= per.mEva_flow_nominal
-   "Nominal mass flow at Evaorator"
+   "Nominal mass flow at the evaorator"
     annotation (Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.HeatFlowRate Q_flow_small = -per.QEva_flow_nominal*1E-9
    "Small value for heat flow rate or power, used to avoid division by zero";
-  BaseClasses.AbsorptionIndirect absBlo(per=per)
-   "Absorption indirect chiller equations block"
-    annotation (Placement(transformation(extent={{-98,-4},{-78,16}})));
-   Modelica.SIunits.SpecificEnthalpy hEvaSet=
-      Medium2.specificEnthalpy_pTX(
-       p=port_b2.p,
-       T=TEvaSet,
-       X=cat( 1,port_b2.Xi_outflow,{1 - sum(port_b2.Xi_outflow)}))
-    "Chilled water setpoint enthalpy";
 
   Modelica.Blocks.Interfaces.BooleanInput on
-   "Chiller turn On/off inout signal "
-    annotation (Placement(transformation(extent={{-168,-8},{-140,20}}),
+   "Chiller turn on/off input signal "
+     annotation (Placement(transformation(extent={{-168,-8},{-140,20}}),
                                     iconTransformation(extent={{-122,-10},{-100,12}})));
   Modelica.Blocks.Interfaces.RealInput TEvaSet(final unit="K", displayUnit="degC")
    "Evaporator setpoint leaving water temperature"
-    annotation (Placement(
+     annotation (Placement(
         transformation(extent={{-166,-92},{-140,-66}}), iconTransformation(
           extent={{-122,-100},{-100,-78}})));
+  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
+   "Chiller pump power"
+     annotation (Placement(transformation(extent={{100,0},{120,20}}),
+                            iconTransformation(extent={{100,-30},{120,-10}})));
+  Modelica.Blocks.Interfaces.RealOutput QGen_flow( final unit="W")
+  "Generator heat flow rate"
+     annotation (Placement(transformation(extent={{100,-16},{120,4}}),
+        iconTransformation(extent={{100,10},{120,30}})));
+  Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
+  "Evaporator heat flow rate"
+     annotation (Placement(transformation(extent={{100,-46},{120,-26}}),
+        iconTransformation(extent={{100,-96},{120,-76}})));
+  Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
+  "Condenser heat flow rate"
+     annotation (Placement(transformation(extent={{100,18},{120,38}}),
+        iconTransformation(extent={{100,74},{120,94}})));
+  Modelica.Blocks.Interfaces.RealOutput mSte( final unit="kg/s")
+  "Generator steam mass flow rate "
+     annotation (Placement(transformation(extent={{100,-30},{120,-10}}),
+        iconTransformation(extent={{100,10},{120,30}})));
+  BaseClasses.AbsorptionIndirect absBlo(per=per)
+   "Absorption indirect chiller equations block"
+     annotation (Placement(transformation(extent={{-98,-4},{-78,16}})));
   Modelica.Blocks.Sources.RealExpression QEvaFloSet(final y=
         Buildings.Utilities.Math.Functions.smoothMin(
             x1 = m2_flow*(hEvaSet - inStream(port_a2.h_outflow)),
             x2 = -Q_flow_small,
         deltaX = Q_flow_small/100))
    "Setpoint heat flow rate of the evaporator"
-    annotation (Placement(transformation(extent={{-138,-16},{-118,4}})));
-  Modelica.Blocks.Interfaces.RealOutput P
-   "Chiller pump power"
-     annotation (Placement(transformation(extent={{100,0},{120,20}}),
-                            iconTransformation(extent={{100,-30},{120,-10}})));
-  Modelica.Blocks.Interfaces.RealOutput QGen_flow
-    "Generator heat flow "
-     annotation (Placement(transformation(extent={{100,-16},{120,4}}),
-        iconTransformation(extent={{100,10},{120,30}})));
-  Modelica.Blocks.Interfaces.RealOutput QEva_flow
-    "Evaporator heat flow "
-     annotation (Placement(transformation(extent={{100,-46},{120,-26}}),
-        iconTransformation(extent={{100,-96},{120,-76}})));
-  Modelica.Blocks.Interfaces.RealOutput QCon_flow
-    "Condenser heat flow "
-     annotation (Placement(transformation(extent={{100,18},{120,38}}),
-        iconTransformation(extent={{100,74},{120,94}})));
+     annotation (Placement(transformation(extent={{-138,-16},{-118,4}})));
+  Modelica.SIunits.SpecificEnthalpy hEvaSet=
+      Medium2.specificEnthalpy_pTX(
+       p=port_b2.p,
+       T=TEvaSet,
+       X=cat( 1,port_b2.Xi_outflow,{1 - sum(port_b2.Xi_outflow)}))
+   "Chilled water setpoint enthalpy";
   Modelica.Blocks.Sources.RealExpression TConEnt(
         y=Medium1.temperature(
         Medium1.setState_phX(port_a1.p, inStream(port_a1.h_outflow))))
-    "Condenser entering water temperature"
+   "Condenser entering water temperature"
      annotation (Placement(transformation(extent={{-138,4},{-118,24}})));
   Modelica.Blocks.Sources.RealExpression TEvaLvg(y=vol2.heatPort.T)
    "Evaporator leaving water temperature"
-    annotation (Placement(transformation(extent={{-138,-34},{-118,-14}})));
+     annotation (Placement(transformation(extent={{-138,-34},{-118,-14}})));
   Modelica.Blocks.Sources.RealExpression TConLvg(y=vol1.heatPort.T)
     "Condenser leaving water temperature"
-    annotation (Placement(transformation(extent={{-138,20},{-118,40}})));
-  Modelica.Blocks.Interfaces.RealOutput mSte "Generator steam mass flow rate "
-    annotation (Placement(transformation(extent={{100,-30},{120,-10}}),
-        iconTransformation(extent={{100,10},{120,30}})));
+     annotation (Placement(transformation(extent={{-138,20},{-118,40}})));
 protected
   HeatTransfer.Sources.PrescribedHeatFlow preHeaFloCon
     "Prescribed heat flow rate for the condenser"
-    annotation (Placement(transformation(extent={{-57,42},{-37,62}})));
+     annotation (Placement(transformation(extent={{-57,42},{-37,62}})));
   HeatTransfer.Sources.PrescribedHeatFlow preHeaFloEva
-    "Prescribed heat flow rate for the Evaporator"
-    annotation (Placement(transformation(extent={{-55,-52},{-35,-32}})));
+    "Prescribed heat flow rate for the evaporator"
+     annotation (Placement(transformation(extent={{-55,-52},{-35,-32}})));
 
 equation
   connect(on,absBlo. on)
@@ -130,7 +131,8 @@ equation
                                     color={0,0,127}));
   connect(absBlo.P, P)
     annotation (Line(points={{-77,9.8},{-77,10},{110,10}}, color={0,0,127}));
-  connect(absBlo.mSte, mSte) annotation (Line(points={{-77,3},{-58,3},{-58,-20},
+  connect(absBlo.mSte, mSte)
+    annotation (Line(points={{-77,3},{-58,3},{-58,-20},
           {110,-20}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(extent={{-100,-100},{100,100}}),
                    graphics={
@@ -174,7 +176,7 @@ equation
         Line(points={{-22,-66},{-56,-66}}, color={238,46,47}),
         Line(points={{-24,76},{-56,76}}, color={238,46,47}),
         Line(points={{-40,76}}, color={238,46,47})}),
-                                          Diagram(coordinateSystem(extent={{-140,
+        Diagram(coordinateSystem(extent={{-140,
             -100},{100,100}})),
             defaultComponentName="absChi",
     Documentation(info="<html>
@@ -184,15 +186,15 @@ in the EnergyPlus reference: Indirect Absorption Chiller.
 </p>
 <p>
 The model uses six non-dimensional equations or curves stated in <a href=\"Buildings.Fluid.Chillers.BaseClasses.AbsorptionIndirect\">
-Buildings.Fluid.Chillers.BaseClasses.AbsorptionIndirect</a> to predict the heat pump performance in either cooling or
-heating modes.The methodology involved using the generalized least square method to create a set of performance
+Buildings.Fluid.Chillers.BaseClasses.AbsorptionIndirect</a> to predict the chiller performance.
+The methodology involved using the generalized least square method to create a set of performance
 coefficients from the catalog data at indicated reference conditions. These respective coefficients
-and indicated reference conditions are used in the model to simulate the chiller performance.
+and are used in the model to simulate the chiller performance.
 </p>
 <p>
 The performance coefficients are stored in the data record <code>per</code> and are available from <a href=\"Buildings.Fluid.Chillers.Data.AbsorptionIndirect\">
 Buildings.Fluid.Chillers.Data.AbsorptionIndirect</a>.
-The model takes as input signals; the set point the leaving water temperature for 
+The model takes as input signals; the set point of the leaving water temperature from
 the evaporator which is met if the chiller has sufficient capacity and the Boolean input <code>on</code> which turn on/off the chiller.
 </p>
 <p>
@@ -207,4 +209,4 @@ First implementation.
 </ul>
 </html>"),
     Diagram(coordinateSystem(extent={{-140,-100},{140,100}})));
-end Absorption_Indirect_Steam;
+end AbsorptionIndirectSteam;
