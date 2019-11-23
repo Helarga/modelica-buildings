@@ -72,11 +72,9 @@ equation
                 points={{-30,64},{70,4},{-30,-56},{-30,64}})}),  Diagram(coordinateSystem(preserveAspectRatio=false, extent={
             {-100,-100},{160,100}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
-    experiment(StopTime=10000),
     __Dymola_Commands(
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/EvaporatorCondenserPumpsController.mos"
-        "Simulate and plot"),
-         experiment(Tolerance=1e-6, StopTime=10000),
+        "Simulate and plot"),experiment(Tolerance=1e-6, StopTime=10000),
 Documentation(info="<html>
 <p>
 This model validates the controller block

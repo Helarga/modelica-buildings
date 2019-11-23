@@ -20,9 +20,6 @@ model AmbientCircuitControllerBlock
   Modelica.Blocks.Sources.Constant TEntCon(k=35 + 273.15)
     "Condenser entering water temperature"
     annotation (Placement(transformation(extent={{-20,72},{0,92}})));
-  Modelica.Blocks.Sources.Constant TDisHexEnt(k=18 + 273.15)
-    "District heat exchnager entering water temperature"
-    annotation (Placement(transformation(extent={{-20,-110},{0,-90}})));
   Modelica.Blocks.Sources.Pulse TBorIn(
     amplitude=-5,
     width=50,
@@ -35,12 +32,8 @@ model AmbientCircuitControllerBlock
     annotation (Placement(transformation(extent={{32,-10},{52,10}})));
   Modelica.Blocks.Sources.Constant TDisHexLvg(k=12 + 273.15)
     "District heat exchnager leaving water temperature"
-    annotation (Placement(transformation(extent={{-20,-140},{0,-120}})));
+    annotation (Placement(transformation(extent={{-20,-120},{0,-100}})));
 equation
-  connect(TEntEva.y, AmbCirCon.TEntEva) annotation (Line(points={{1,50},{16,50},
-          {16,5.8},{31,5.8}}, color={0,0,127}));
-  connect(TEntCon.y, AmbCirCon.TEntCon) annotation (Line(points={{1,82},{26,82},
-          {26,8.2},{31,8.2}}, color={0,0,127}));
   connect(valCoo.y, AmbCirCon.valCoo) annotation (Line(points={{1,-10},{12,-10},
           {12,1.2},{31,1.2}},color={255,0,255}));
   connect(valHea.y, AmbCirCon.valHea) annotation (Line(points={{1,20},{12,20},{
@@ -49,10 +42,12 @@ equation
           {16,-2},{31,-2}}, color={0,0,127}));
   connect(TBorOut.y, AmbCirCon.TBorOut) annotation (Line(points={{1,-70},{20,-70},
           {20,-4.6},{31,-4.6}}, color={0,0,127}));
-  connect(TDisHexLvg.y, AmbCirCon.TDisHexLvg) annotation (Line(points={{1,-130},
-          {26,-130},{26,-10},{31,-10}}, color={0,0,127}));
-  connect(TDisHexEnt.y, AmbCirCon.TDisHexEnt) annotation (Line(points={{1,-100},
-          {24,-100},{24,-7.6},{31,-7.6}},color={0,0,127}));
+  connect(TDisHexLvg.y, AmbCirCon.TDisHexLvg) annotation (Line(points={{1,-110},
+          {26,-110},{26,-10},{31,-10}}, color={0,0,127}));
+  connect(TEntEva.y, AmbCirCon.TEvaEnt) annotation (Line(points={{1,50},{18,50},
+          {18,5.8},{31,5.8}}, color={0,0,127}));
+  connect(TEntCon.y, AmbCirCon.TConEnt) annotation (Line(points={{1,82},{22,82},
+          {22,8.2},{31,8.2}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},
@@ -70,13 +65,12 @@ equation
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/AmbientCircuitControllerBlock.mos"
         "Simulate and plot"),
          experiment(Tolerance=1e-6, StopTime=14400),
-         Documentation(info="<html>
+Documentation(info="<html>
 <p>
 This model validates the controller block
 <a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.AmbientCircuitController\">
 Buildings.Applications.DHC.EnergyTransferStations.Control.AmbientCircuitController</a>.
 </p>
-
 </html>", revisions="<html>
 <ul>
 <li>

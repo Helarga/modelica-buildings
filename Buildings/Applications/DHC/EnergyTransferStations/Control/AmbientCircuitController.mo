@@ -71,8 +71,8 @@ model AmbientCircuitController
     final Td=Td,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=yMin,
-    reverseAction=true,
-    yMin=yMin,
+    reverseAction=false,
+    yMin=0.1,
     final controllerType=controllerType)
     "Heat exchanger pump control"
     annotation (Placement(transformation(extent={{80,-190},{100,-170}})));
@@ -102,12 +102,12 @@ model AmbientCircuitController
   Buildings.Controls.Continuous.LimPID geoPumCon(
     final Td=Td,
     reset=Buildings.Types.Reset.Parameter,
-    reverseAction=true,
+    reverseAction=false,
     y_reset=0,
     final k=1,
     yMin=0.5,
     final controllerType=controllerType,
-    Ti(displayUnit="min") = 3600)
+    Ti(displayUnit="s") = 500)
     "Geothermal pump control"
     annotation (Placement(transformation(extent={{20,130},{40,150}})));
   Buildings.Controls.OBC.CDL.Logical.Switch runBorPum
@@ -153,8 +153,8 @@ equation
     annotation (Line(points={{182,-188},{230,-188}}, color={0,0,127}));
   connect(runBorPum.y, yPumBor)
     annotation (Line(points={{204,90},{230,90}}, color={0,0,127}));
-  connect(con4.y, runBorPum.u3) annotation (Line(points={{42,-106},{60,-106},{60,0},{174,0},{174,82},{180,82}},
-                                            color={0,0,127}));
+  connect(con4.y, runBorPum.u3) annotation (Line(points={{42,-106},{60,-106},{
+          60,0},{174,0},{174,82},{180,82}}, color={0,0,127}));
   connect(valHea, valOpe.u1) annotation (Line(points={{-240,180},{-192,180},{-192,
           170},{-182,170}},      color={255,0,255}));
   connect(valCoo, valOpe.u2) annotation (Line(points={{-240,138},{-214,138},{-214,
@@ -188,8 +188,9 @@ equation
                             color={0,0,127}));
   connect(valOpe.y, runBorPum1.u1)
     annotation (Line(points={{-158,170},{58,170}}, color={255,0,255}));
-  connect(runBorPum1.y, runBorPum.u2) annotation (Line(points={{82,170},{146,170},
-          {146,90},{180,90}}, color={255,0,255}));
+  connect(runBorPum1.y, runBorPum.u2) annotation (Line(points={{82,170},{146,
+          170},{146,90},{180,90}},
+                              color={255,0,255}));
   connect(runDisPum.y, hexPumConOut.u2) annotation (Line(points={{36,-140},{140,-140},{140,-188},{158,-188}},
                                         color={255,0,255}));
   connect(valHea, heaMod.u2) annotation (Line(
@@ -215,15 +216,16 @@ equation
     annotation (Line(points={{12,-148},{-24,-148}}, color={255,0,255}));
   connect(runDisPum.y, hexPumCon.trigger) annotation (Line(points={{36,-140},{40,-140},{40,-222},{82,-222},{82,-192}},
                                                 color={255,0,255}));
-  annotation (Diagram(  coordinateSystem( extent={{-220,-280},{220,200}}, preserveAspectRatio=false),
-                        Icon(coordinateSystem(initialScale=1)),
+
+  annotation (Diagram(coordinateSystem(extent={{-220,-280},{220,200}}, preserveAspectRatio=false),
                         graphics={Text(
-                        extent={{382,176},{198,140}},
+                        extent={{282,-20},{162,148}},
                         lineColor={28,108,200},
                         textString="PI with large time constant because of long time constant
                                     of borefield.yMin=0.5 to stay turbulent")}),
                         defaultComponentName="AmbCirCon",
-                        Documentation(info="<html>
+                        Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}})),
+Documentation(info="<html>
 <h4> Ambient circuit controller theory of operation </h4>
 <p>
 This block computes the output signals to turn on/off the borefield and the heat exchanger district circuit pumps,
