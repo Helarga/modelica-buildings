@@ -18,9 +18,9 @@ model AbsorptionIndirectSteam_EnergyPlus
     genHIR={0.18892,0.968044,1.119202,-0.5034},
     EIRP={1,0,0},
     genConT={0.712019,-0.00478,0.000864,-0.000013},
-    genEvaT={0.995571,0.046821,-0.01099,0.000608}) "Chiller performance data"
+    genEvaT={0.995571,0.046821,-0.01099,0.000608})
+     "Chiller performance data"
     annotation (Placement(transformation(extent={{40,60},{60,80}})));
-
 
   Buildings.Fluid.Chillers.AbsorptionIndirectSteam absChi(
     redeclare package Medium1 = Medium,
@@ -31,43 +31,40 @@ model AbsorptionIndirectSteam_EnergyPlus
     T1_start=25 + 273.15,
     T2_start=10 + 273.15) "Absorption indirect chiller"
     annotation (Placement(transformation(extent={{22,-12},{42,8}})));
-
-  Sources.MassFlowSource_T conPum(
-      redeclare package Medium = Medium,
-      use_m_flow_in=false,
-      m_flow=per.mCon_flow_nominal,
-      use_T_in=true,
-      nPorts=1)
+  Buildings.Fluid.Sources.MassFlowSource_T conPum(
+    redeclare package Medium = Medium,
+    use_m_flow_in=false,
+    m_flow=per.mCon_flow_nominal,
+    use_T_in=true,
+    nPorts=1)
     "Condenser water pump"
       annotation (
       Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=180,
         origin={-30,50})));
-  Sources.MassFlowSource_T evaPum(
-      redeclare package Medium = Medium,
-      use_m_flow_in=true,
-      m_flow=per.mEva_flow_nominal,
-      nPorts=1,
-      use_T_in=true)
+  Buildings.Fluid.Sources.MassFlowSource_T evaPum(
+    redeclare package Medium = Medium,
+    use_m_flow_in=true,
+    m_flow=per.mEva_flow_nominal,
+    nPorts=1,
+    use_T_in=true)
     "Evaporator water pump"
       annotation (
       Placement(transformation(
         extent={{-12,-12},{12,12}},
         rotation=180,
         origin={82,-8})));
-  Sources.Boundary_pT cooVol(
-    redeclare package Medium = Medium,
-    nPorts=1)
-      "Volume for cooling load"
+  Buildings.Fluid.Sources.Boundary_pT cooVol(
+    redeclare package Medium = Medium, nPorts=1)
+     "Volume for cooling load"
        annotation (Placement(transformation(extent={{-100,-70},{-80,-50}})));
-  Sources.Boundary_pT heaVol(
-    redeclare package Medium = Medium,
-    nPorts=1)
-      "Volume for heating load"
+  Buildings.Fluid.Sources.Boundary_pT heaVol(
+    redeclare package Medium = Medium, nPorts=1)
+     "Volume for heating load"
        annotation (Placement(transformation(extent={{120,40},{100,60}})));
-    Modelica.Blocks.Math.RealToBoolean realToBoolean(threshold=1)
-         annotation (Placement(transformation(extent={{-60,10},{-40,-10}})));
+  Modelica.Blocks.Math.RealToBoolean realToBoolean(threshold=1)
+       annotation (Placement(transformation(extent={{-60,10},{-40,-10}})));
   Modelica.Blocks.Sources.CombiTimeTable datRea(
     tableOnFile=true,
     fileName=ModelicaServices.ExternalReferences.loadResource(
@@ -121,8 +118,9 @@ equation
           127}));
   connect(TEvaSet.y, absChi.TSet) annotation (Line(points={{2,-30},{10,-30},{10,
           -4},{21,-4}}, color={0,0,127}));
-  connect(absChi.port_b1, heaVol.ports[1]) annotation (Line(points={{42,4},{74,4},
-          {74,50},{100,50}}, color={0,127,255}));
+  connect(absChi.port_b1, heaVol.ports[1]) annotation (Line(points={{42,4},{74,
+          4},{74,50},{100,50}},
+                             color={0,127,255}));
   connect(absChi.port_b2, cooVol.ports[1]) annotation (Line(points={{22,-8},{20,
           -8},{20,-60},{-80,-60}}, color={0,127,255}));
    annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
@@ -136,16 +134,19 @@ equation
                 pattern = LinePattern.None,
                 fillPattern = FillPattern.Solid,
                 points={{-30,64},{70,4},{-30,-56},{-30,64}})}),
-                           Diagram(
-        coordinateSystem(preserveAspectRatio=false, extent={{-140,-100},{120,100}})),
-                 __Dymola_Commands(file= "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Chillers/Validation/AbsorptionIndirectSteam_EnergyPlus.mos"
+   Diagram(coordinateSystem(extent={{-140,-100},{120,100}})),
+  __Dymola_Commands(file= "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Chillers/Validation/AbsorptionIndirectSteam_EnergyPlus.mos"
         "Simulate and plot"),
-    experiment(StopTime=86400, Tolerance=1e-06),
+    experiment(
+      StopTime=86400,
+      __Dymola_NumberOfIntervals=5000,
+      Tolerance=1e-06,
+     __Dymola_Algorithm="Cvode"),
   Documentation(info="<html>
 <p>
 This model validates the model
-<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectChiller\">
-Buildings.Fluid.Chillers.AbsorptionIndirectChiller</a>.
+<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteam\">
+Buildings.Fluid.Chillers.AbsorptionIndirectSteam</a>.
 <p>
 The EnergyPlus results were generated using the example file <code>IndirectAbsorptionChiller.idf</code>
 from EnergyPlus 9.1, with a nominal cooling capacity of <i>10000</i> Watts.
