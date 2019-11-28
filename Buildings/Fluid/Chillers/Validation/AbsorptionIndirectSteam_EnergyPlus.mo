@@ -99,12 +99,14 @@ equation
           -8}},                  color={0,127,255}));
   connect(absChi.on, realToBoolean.y) annotation (Line(points={{21,0},{-39,0}},
                                color={255,0,255}));
-  connect(conPum.ports[1], absChi.port_a1) annotation (Line(points={{-20,50},{20,
-          50},{20,4},{22,4}}, color={0,127,255}));
+  connect(conPum.ports[1], absChi.port_a1) annotation (Line(points={{-40,50},{
+          20,50},{20,4},{22,4}},
+                              color={0,127,255}));
   connect(datRea.y[37], TConEnt.u)
     annotation (Line(points={{-119,70},{-102,70}}, color={0,0,127}));
-  connect(TConEnt.y, conPum.T_in) annotation (Line(points={{-78,70},{-60,70},{-60,
-          46},{-42,46}}, color={0,0,127}));
+  connect(TConEnt.y, conPum.T_in) annotation (Line(points={{-78,70},{-60,70},{
+          -60,46},{-62,46}},
+                         color={0,0,127}));
   connect(datRea.y[34], TEvaSet.u) annotation (Line(points={{-119,70},{-110,70},
           {-110,-30},{-22,-30}}, color={0,0,127}));
   connect(datRea.y[33], TEvaEnt.u) annotation (Line(points={{-119,70},{-110,70},
