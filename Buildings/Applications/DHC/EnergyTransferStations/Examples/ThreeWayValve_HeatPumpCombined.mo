@@ -53,7 +53,7 @@ model ThreeWayValve_HeatPumpCombined
           extent={{-10,10},{10,-10}},
           rotation=0,
           origin={62,8})));
-    Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valCon(
+    Fluid.Actuators.Valves.ThreeWayLinear                valCon(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     m_flow_nominal=mCon_flow_nominal,
@@ -94,7 +94,7 @@ model ThreeWayValve_HeatPumpCombined
           extent={{10,-10},{-10,10}},
           rotation=90,
           origin={-46,20})));
-  Buildings.Controls.Continuous.LimPID valCon1(
+  Modelica.Blocks.Continuous.LimPID    valCon1(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     yMax=1,
     yMin=0,
@@ -201,7 +201,7 @@ equation
          Documentation(info="<html>
 <p>
 This model validates the controller block
-<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.AmbientCircuitController\"> 
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.AmbientCircuitController\">
 Buildings.Applications.DHC.EnergyTransferStations.Control.AmbientCircuitController</a>.
 <p>
 
