@@ -1,0 +1,23 @@
+simulateModel("Buildings.Applications.DHC.EnergyTransferStations.Examples.ThreeWayValve_HeatPumpCombined", method="dassl",
+ tolerance=1e-6, stopTime=21600, resultFile="Heatpumplayout");
+createPlot(id = 1,
+   position = {60, 10, 600, 450},
+   y = {"valCon.port_1.m_flow","valCon.port_2.m_flow","valCon.port_3.m_flow","pumCon.m_flow"  },
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+createPlot(id = 2,
+   position = {670, 10, 600, 450},
+   y = {"TConEnt.T"},
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+

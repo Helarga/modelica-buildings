@@ -84,7 +84,8 @@ model ETSController
     "Hot side valve status,true when rejection of part or full heating load is reuired" annotation (Placement(
         transformation(extent={{220,150},{240,170}}), iconTransformation(extent={{100,60},{120,80}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValCoo
-    "Hot side valve status,true when rejection of part or full cooling load is reuired" annotation (Placement(
+    "Cold side valve status,true when rejection of part or full cooling load is reuired"
+                                                                                        annotation (Placement(
         transformation(extent={{220,-190},{240,-170}}), iconTransformation(extent={{100,40},{120,60}})));
 
   Buildings.Controls.Continuous.LimPID conHeaTan(
@@ -116,9 +117,11 @@ model ETSController
   Buildings.Controls.OBC.CDL.Logical.Switch pumCooCon
     "Cooling water supply pump control"
     annotation (Placement(transformation(extent={{160,-80},{180,-60}})));
-  HotSideControllerUO conHotSid(THys=1) "Hot side controller"
+  HotSideControllerUO conHotSid(THys=THys)
+                                        "Hot side controller"
     annotation (Placement(transformation(extent={{-160,176},{-140,196}})));
-  ColdSideControlleUO conColSid(THys=1) "Cold side controller"
+  ColdSideControlleUO conColSid(THys=THys)
+                                        "Cold side controller"
    annotation (Placement(
         transformation(extent={{-160,-210},{-140,-190}})));
   Buildings.Controls.OBC.CDL.Logical.Or or1
@@ -145,15 +148,15 @@ equation
     annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
   connect(pumCooCon.y, pumCooTanMin)
     annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
-  connect(TTanHeaTop, conHotSid.TTanTop) annotation (Line(points={{-240,190},{-200,
-          190},{-200,191},{-161,191}},      color={0,0,127}));
-  connect(TTanHeaBot, conHotSid.TTanBot) annotation (Line(points={{-240,160},{-180,
-          160},{-180,181},{-161,181}},      color={0,0,127}));
+  connect(TTanHeaTop, conHotSid.TTop) annotation (Line(points={{-240,190},{-200,
+          190},{-200,191},{-161,191}}, color={0,0,127}));
+  connect(TTanHeaBot, conHotSid.TBot) annotation (Line(points={{-240,160},{-180,
+          160},{-180,181},{-161,181}}, color={0,0,127}));
 
-  connect(TTanCooTop, conColSid.TTanTop) annotation (Line(points={{-240,-180},{
-          -200,-180},{-200,-195},{-161,-195}}, color={0,0,127}));
-  connect(TTanCooBot, conColSid.TTanBot) annotation (Line(points={{-240,-210},{
-          -192,-210},{-192,-205},{-161,-205}}, color={0,0,127}));
+  connect(TTanCooTop, conColSid.TTop) annotation (Line(points={{-240,-180},{-200,
+          -180},{-200,-195},{-161,-195}}, color={0,0,127}));
+  connect(TTanCooBot, conColSid.TBot) annotation (Line(points={{-240,-210},{-192,
+          -210},{-192,-205},{-161,-205}}, color={0,0,127}));
   connect(conHotSid.reqHea, or1.u1) annotation (Line(points={{-139,195},{-130,195},
           {-130,112},{-122,112}}, color={255,0,255}));
   connect(conColSid.reqCoo, or1.u2) annotation (Line(points={{-139,-191},{-130,-191},
@@ -176,10 +179,10 @@ equation
     annotation (Line(points={{-139,195},{50,195},{50,210},{230,210}}, color={255,0,255}));
   connect(conColSid.reqCoo, reqCoo) annotation (Line(points={{-139,-191},{-130,-191},{-130,-180},{20,-180},{20,-140},
           {230,-140}}, color={255,0,255}));
-  connect(conColSid.rejFulHexBor, rejColFulLoa) annotation (Line(points={{-139,
-          -194},{40,-194},{40,-160},{230,-160}}, color={255,0,255}));
-  connect(conHotSid.rejFulHexBor, rejHeaFulLoa) annotation (Line(points={{-139,192},
-          {230,192}},                          color={255,0,255}));
+  connect(conColSid.rejFulLoa, rejColFulLoa) annotation (Line(points={{-139,-194},
+          {40,-194},{40,-160},{230,-160}}, color={255,0,255}));
+  connect(conHotSid.rejFulLoa, rejHeaFulLoa)
+    annotation (Line(points={{-139,192},{230,192}}, color={255,0,255}));
   connect(ValHea, conHotSid.valSta)
     annotation (Line(points={{230,160},{148,160},{148,186},{-139,186}}, color={255,0,255}));
   connect(booToRea.u, conHotSid.valSta) annotation (Line(points={{118,130},{100,

@@ -51,7 +51,7 @@ equation
   connect(TBorOut.y, AmbCirCon.TBorOut) annotation (Line(points={{1,-70},{20,-70},
           {20,-4.6},{31,-4.6}}, color={0,0,127}));
   connect(TDisHexLvg.y, AmbCirCon.TDisHexLvg) annotation (Line(points={{1,-130},
-          {26,-130},{26,-10},{31,-10}}, color={0,0,127}));
+          {28,-130},{28,-10},{31,-10}}, color={0,0,127}));
   connect(TDisHexEnt.y, AmbCirCon.TDisHexEnt) annotation (Line(points={{1,-100},
           {24,-100},{24,-7.6},{31,-7.6}},color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={

@@ -1,6 +1,6 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
 block HotSideControllerUO
-  "Controller for valves on hot side, and heat demand on heat pump"
+  "State machine controls the operation of the heatpump, two way heating valve, borfield and district pumps "
   extends
   Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO;
 
@@ -12,62 +12,81 @@ block HotSideControllerUO
   Buildings.Controls.OBC.CDL.Continuous.Min min
     annotation (Placement(transformation(extent={{-96,-110},{-76,-90}})));
 equation
-  connect(rejFulLoa.active, rejFulHexBor)
+  connect(rejFulLoasta.active, rejFulLoa)
     annotation (Line(points={{56,49},{56,-48},{150,-48}}, color={255,0,255}));
-  connect(min.u1, TTanTop) annotation (Line(points={{-98,-94},{-120,-94},{-120,60},
-          {-160,60}},color={0,0,127}));
-  connect(TTanTop, greEqu.u2) annotation (Line(points={{-160,60},{-120,60},{-120,
-          32},{-102,32}}, color={0,0,127}));
-  connect(TTanTop, greEqu5.u2) annotation (Line(points={{-160,60},{-120,60},{-120,
+  connect(min.u1, TTop) annotation (Line(points={{-98,-94},{-120,-94},{-120,60},
+          {-160,60}}, color={0,0,127}));
+  connect(TTop, greEqu.u2) annotation (Line(points={{-160,60},{-120,60},{-120,32},
+          {-102,32}}, color={0,0,127}));
+  connect(TTop, greEqu5.u2) annotation (Line(points={{-160,60},{-120,60},{-120,
           -160},{-70,-160},{-70,-148},{-62,-148}}, color={0,0,127}));
-  connect(min.u2, TTanBot) annotation (Line(points={{-98,-106},{-112,-106},{-112,
-          -60},{-160,-60}}, color={0,0,127}));
-  connect(TTanBot, greEqu1.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,
+  connect(min.u2, TBot) annotation (Line(points={{-98,-106},{-112,-106},{-112,-60},
+          {-160,-60}}, color={0,0,127}));
+  connect(TBot, greEqu1.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,
           18},{-66,18},{-66,8},{-62,8}}, color={0,0,127}));
-  connect(TTanBot, greEqu2.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,
+  connect(TBot, greEqu2.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,
           18},{-66,18},{-66,-22},{-62,-22}}, color={0,0,127}));
-  connect(TTanBot, greEqu3.u2) annotation (Line(points={{-160,-60},{-112,-60},{-112,
+  connect(TBot, greEqu3.u2) annotation (Line(points={{-160,-60},{-112,-60},{-112,
           18},{-66,18},{-66,-68},{-62,-68}}, color={0,0,127}));
   connect(min.y, greEqu4.u1) annotation (Line(points={{-74,-100},{-70,-100},{-70,
           -110},{-62,-110}},     color={0,0,127}));
   connect(runHP.active, reqHea) annotation (Line(points={{6,109},{6,106},{24,
           106},{24,138},{150,138}}, color={255,0,255}));
-  connect(rejFulLoa.active, or2.u1)
+  connect(rejFulLoasta.active, or2.u1)
     annotation (Line(points={{56,49},{56,-80},{58,-80}}, color={255,0,255}));
-  annotation (
-  defaultComponentName="conHotSid",
-  Diagram(coordinateSystem(extent={{-140,-180},{140,160}})),
-    Documentation(info="<html>
+  annotation ( Icon(coordinateSystem(extent={{-100,-100},{100,100}})),
+                    defaultComponentName="conHotSid",
+                    Diagram(coordinateSystem(extent={{-140,-180},{140,160}})),
+Documentation(info="<html>
 <p>
-This block is a finite state machine controller which transitions hot side operational modes for
-<a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.EnergyTransferStation.Substation\">
-Buildings.DistrictHeatingCooling.EnergyTransferStations.EnergyTransferStation.Substation</a> by generating the status of
+The finite state machines controller as illustrated in the figure below transitions hot side operational modes for
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Substation\">
+Buildings.Applications.DHC.EnergyTransferStations.Substation</a> by generating the status of
 <ol>
 <li>
-The boolean output signal<code>reqHea</code>, when it is true means that the top level water temperature of the hot buffer tank <code>T<sub>HeaTop</sub></code> is
-lower than the heating setpoint temperature <code>T<sub>HeaSet</sub></code>
+The boolean output signal <code>reqHea</code>, true when the top level water temperature of the hot buffer tank <code>T<sub>Top</sub></code> is
+lower than or equal to the heating setpoint temperature <code>T<sub>Set</sub></code>.
 </li>
 <li>
-The boolean output signal <code>valSta</code>, when it is true means that the rejection of surplus heating energy
-is required either to the borefiled or to the district system.
+The boolean/real output signals <code>valSta</code>, true when the bottom level water temperature of the hot buffer tank <code>T<sub>Bot</sub></code> is
+higher than the heating setpoint temperature <code>T<sub>Set</sub></code> plus the defined hystresis. In addition,
+it indicates that the  rejection of surplus heating energy is required, first to the borefiled followed by the district system.
 </li>
 <li>
-The rejection to the borefield signal <code> </code> is constrained by three simultaneous conditions<code>reqCoo</code> is true which indicates that necessity to reject heat through the heatpump condenser,
-the minimum temperature inside the hot buffer tank is higher than the set point temperature<code>T<sub>HeaSet</sub></code>
-and finally the borfield water inlet temperature is lower than heating charging setpoint temperature
-<code>T<sub>BorHeaSet</code>.
-</li>
-
-
-<li>
-
-
-
-<li>
-Reject surplus load to both the borefiled and the district system on and off.
-</li>
+The boolean output signal <code>rejFulHexBor </code> indicates the heat rejection to the borefield and district system, true 
+when the bottom level water temperature of the hot buffer tank <code>T<sub>Bot</sub></code> is
+higher than or equal to the heating setpoint temperature <code>T<sub>Set</sub></code> plus the defined hystresis.
 </ol>
+<h4>Note</h4>
+The parameter &Delta;T is the implemented hystresis to transit from state to another.  
 
+<p align= \"center\">
+<img alt=\"State finite machine for the hot side\"
+src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/hotTanCon.png\"/>
+</p>      
+
+<table class=\"releaseTable\" summary=\"summary\" border=\"1\" cellspacing=0 cellpadding=2>
+     <tr><td align=\"center\"><b>State</b> 
+        </td>
+        <td align=\"center\"><b>Action</b>
+        </td>
+        </tr>
+    <tr><td align=\"center\">reqHea:true
+        </td>
+        <td align=\"center\">Heating generating:On
+        </td>
+        </tr>
+    <tr><td align=\"center\">rejHeaParLoa:true
+        </td>
+        <td align=\"center\">yVal:true, BorPum:On
+        </td>
+        </tr>
+    <tr><td align=\"center\">rejHeaFulLoa:true
+        </td>
+        <td align=\"center\">yVal:true, BorPum:On, DisPum:On
+        </td>
+        </tr>     
+        </table>
 
 </html>", revisions="<html>
 
@@ -76,6 +95,5 @@ Reject surplus load to both the borefiled and the district system on and off.
 
 </li>
 </ul>
-</html>"),
-    Icon(coordinateSystem(extent={{-100,-100},{100,100}})));
+</html>"));
 end HotSideControllerUO;

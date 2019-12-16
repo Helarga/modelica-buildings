@@ -1,0 +1,13 @@
+simulateModel("Buildings.Applications.DHC.EnergyTransferStations.Examples.AmbientCircuitControllerSidBlock", method="dassl",
+ tolerance=1e-6, stopTime=1500, resultFile="AmbientCircuitControllerSidBlock");
+createPlot(id = 1,
+   position = {60, 10, 600, 450},
+   y = {"ambCirCon.yBorPum","ambCirCon.yDisHexPum"},
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+

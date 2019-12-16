@@ -271,26 +271,49 @@ equation
                                     of borefield.yMin=0.5 to stay turbulent")}),
                         defaultComponentName="AmbCirCon",
                         Documentation(info="<html>
-<h4> Ambient circuit controller theory of operation </h4>
+<h4>Ambient circuit controller</h4>
 <p>
 This block computes the output signals to turn on and off the borefield, the heat exchanger district circuit pumps, and also
 it computes the output integer <code>ModInd</code> which indicates the energy rejection index, i.e. heating or cooling energy is rejected.
 The controller includes two operational modes
 </p>
-<h4>Reject to borefield system</h4>
+<ol>
+<li>
+Reject to borefield system
+</li>
 <p>
 The controller computes the real signal <code>yPumBor</code> to turn on and off the pump,
 if either the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true
 and the difference between <CODE>TBorIn</code> and <CODE>TBorIn</code> is larger
 than &#8807;1&deg;C.
+<li>
+Reject to the district heat exchanger system
+</li>
+<p>
+In order to maximize overall system exergy, the heat rejection to the heat exchanger system stars only when  the borefiled is charged.
+</p>
+</ol>
+
+<h4> The energy rejection mode index </h4>
+<p>
+The controller computes the energy rejection mode <code>ModInd</code> to either the borfield or district heat exchanger system.
+i.e. the controller computes <code>ModInd</code> =1, if the thermal energy rejection occurs through the heat pump condenser side,
+and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
+</p>
+
+
+<h4>Borfield pump</h4>
 In addition, the controller modulates the <code>pumBor</code> speed, by a reverse acting PI loop with
 a setpoint temperature <code>TConEnt</code> or<code>TConEnt</code> depending on the rejection heat mode and
 and the outlet water from the borefield <code>TBorOut</code>.
 
-<h4>Reject to the district heat exchanger system</h4>
+<h4>Three way valve at borefield inlet</h4>
 <p>
-In order to maximize overall system exergy, the heat rejection to the heat exchanger system stars only when  the borefiled is charged.
+The three way valve at the inlet stream of the borfield system is controlled with 
+a P or PI controller to track a constant, minimum borfield  water inlet temperature.
 </p>
+
+<h4>Heat exchanger district pump</h4>
 <p>
 The controller turns on heat exchanger district pump <code>pumHexDis</code> if either
 the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true and
@@ -302,12 +325,7 @@ the <code>pumHexDis</code> pump speed to maintain the difference between
 entering and leaving water temperature of the district heat exchanger <code>TDisHexEnt</code> and
 <code>TDisHexLvg</code> equals to <code>dTHex</code>.
 </p>
-<h4> The energy rejection mode index </h4>
-<p>
-The controller computes the energy rejection mode <code>ModInd</code> to either the borfield or district heat exchanger system.
-i.e. the controller computes <code>ModInd</code> =1, if the thermal energy rejection occurs through the heat pump condenser side,
-and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
-</p>
+
 
 </html>", revisions="<html>
 <ul>

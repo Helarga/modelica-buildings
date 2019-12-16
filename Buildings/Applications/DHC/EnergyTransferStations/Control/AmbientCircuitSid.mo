@@ -49,12 +49,12 @@ model AmbientCircuitSid "Generate control outputs for source model"
   Modelica.Blocks.Interfaces.BooleanInput reqCoo "True if cooling is required."
     annotation (Placement(transformation(extent={{-260,138},{-220,178}}),
         iconTransformation(extent={{-120,-20},{-100,0}})));
-  Modelica.Blocks.Interfaces.BooleanInput rejColFulLoa
-    "true if cold side requires heat rejection with geothermal plus substation hex"
+  Modelica.Blocks.Interfaces.BooleanInput rejCooFulLoa
+    "True if cold side requires heat rejection with geothermal plus substation hex"
     annotation (Placement(transformation(extent={{-260,-262},{-220,-222}}),
         iconTransformation(extent={{-120,0},{-100,20}})));
   Modelica.Blocks.Interfaces.BooleanInput rejHeaFulLoa
-    "true if hot side requires heat rejection with geothermal plus substation hex"
+    "True if hot side requires heat rejection with geothermal plus substation hex"
     annotation (Placement(transformation(extent={{-260,-212},{-220,-172}}),
         iconTransformation(extent={{-120,20},{-100,40}})));
   Modelica.Blocks.Interfaces.IntegerOutput yModInd "Mode index"
@@ -157,7 +157,7 @@ model AmbientCircuitSid "Generate control outputs for source model"
   Buildings.Controls.Continuous.LimPID borThrWay(
     final Td=Td,
     reset=Buildings.Types.Reset.Parameter,
-    reverseAction=true,
+    reverseAction=false,
     y_reset=0,
     final k=1,
     yMin=0.5,
@@ -229,11 +229,11 @@ equation
           -214},{-192,44},{160,44},{160,160},{142,160}}, color={255,0,255}));
   connect(runHex.u2, rejHeaFulLoa) annotation (Line(points={{-182,-222},{-208,
           -222},{-208,-192},{-240,-192}}, color={255,0,255}));
-  connect(rejColFulLoa, runHex.u3) annotation (Line(points={{-240,-242},{-200,
+  connect(rejCooFulLoa, runHex.u3) annotation (Line(points={{-240,-242},{-200,
           -242},{-200,-230},{-182,-230}}, color={255,0,255}));
   connect(runBorFie.u3, or3.y) annotation (Line(points={{78,102},{60,102},{60,
           90},{-18,90}},     color={255,0,255}));
-  connect(runBorFie.u2, rejColFulLoa) annotation (Line(points={{78,110},{-200,
+  connect(runBorFie.u2,rejCooFulLoa)  annotation (Line(points={{78,110},{-200,
           110},{-200,-242},{-240,-242}}, color={255,0,255}));
   connect(runBorFie.u1, rejHeaFulLoa) annotation (Line(points={{78,118},{-208,
           118},{-208,-192},{-240,-192}}, color={255,0,255}));
@@ -286,7 +286,7 @@ equation
   connect(runFulLoa.u1, rejHeaFulLoa) annotation (Line(points={{-182,-182},{
           -204,-182},{-204,-192},{-240,-192}},
                                          color={255,0,255}));
-  connect(runFulLoa.u2, rejColFulLoa) annotation (Line(points={{-182,-190},{
+  connect(runFulLoa.u2,rejCooFulLoa)  annotation (Line(points={{-182,-190},{
           -200,-190},{-200,-242},{-240,-242}},
                                          color={255,0,255}));
   connect(geoPumCon.y, modInd3.u3)
@@ -326,7 +326,7 @@ equation
           {-96,-12}}, color={0,0,127}));
   annotation (Diagram(
             coordinateSystem(preserveAspectRatio=false, extent={{-220,-340},{220,260}}),
-              graphics={Text(extent={{336,56},{458,44}},
+              graphics={Text(extent={{242,64},{354,-220}},
                                       lineColor={28,108,200},
             textString="PI with large time constant because of long time constant of borefield.
                        yMin=0.5 to stay turbulent")}),
@@ -334,24 +334,28 @@ equation
 Documentation(info="<html>
 <h4> Ambient circuit controller theory of operation </h4>
 <p>
-This block computes the output signals to turn on and off the borefield, the heat exchanger district circuit pumps, and also
-it computes the output integer <code>ModInd</code> which indicates the energy rejection index, i.e. heating or cooling energy is rejected.
-The controller includes two operational modes
+This block computes the output integer <code>ModInd</code> which indicates the energy rejection index, i.e. 
+heating or cooling energy is rejected and it computes the control signals to turn
+on/off and modulates the 
 </p>
-<h4>Reject to borefield system</h4>
-<p>
-The controller computes the real signal <code>yPumBor</code> to turn on and off the pump,
-if either the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true
-and the difference between <CODE>TBorIn</code> and <CODE>TBorIn</code> is larger
-than &#8807;1&deg;C.
-In addition, the controller modulates the <code>pumBor</code> speed, by a reverse acting PI loop with
-a setpoint temperature <code>TConEnt</code> or<code>TConEnt</code> depending on the rejection heat mode and
-and the outlet water from the borefield <code>TBorOut</code>.
 
-<h4>Reject to the district heat exchanger system</h4>
+
+<h4>Borfield pump</h4>
 <p>
-In order to maximize overall system exergy, the heat rejection to the heat exchanger system stars only when  the borefiled is charged.
+The borfield pump <code>pumBor</code> is variable speed pump, the speed is modulated
+using a reverse acting PI loop with
+
+In addition, the controller switiches between modulating the <code>pumBor</code> speed implementing a reverse acting 
+PI loop and run on full speed if <code>rejFulLoa</code> is true.
 </p>
+
+<h4>Three way valve at borefield inlet</h4>
+<p>
+The three way valve at the inlet stream of the borfield system is controlled with 
+a P or PI controller to track a constant, minimum borfield  water inlet temperature.
+</p>
+
+<h4>Heat exchanger district pump</h4>
 <p>
 The controller turns on heat exchanger district pump <code>pumHexDis</code> if either
 the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true and
@@ -363,12 +367,53 @@ the <code>pumHexDis</code> pump speed to maintain the difference between
 entering and leaving water temperature of the district heat exchanger <code>TDisHexEnt</code> and
 <code>TDisHexLvg</code> equals to <code>dTHex</code>.
 </p>
+
+
+
+
+
+
+
+
+
+
+
+The controller includes two operational modes
+</p>
+
 <h4> The energy rejection mode index </h4>
 <p>
 The controller computes the energy rejection mode <code>ModInd</code> to either the borfield or district heat exchanger system.
 i.e. the controller computes <code>ModInd</code> =1, if the thermal energy rejection occurs through the heat pump condenser side,
 and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
 </p>
+
+
+
+</p>
+<h4>Reject to borefield system</h4>
+<p>
+The controller computes the real signal <code>yPumBor</code> to turn on and off the pump,
+if either the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true.
+</p>
+
+<h4>Reject to the district heat exchanger system</h4>
+<p>
+The controller turns on heat exchanger district pump <code>pumHexDis</code> if either
+the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code>
+and <code>rejFulHealoa</code> or <code>rejFulCooLoa</code> is true.
+</p>
+<p>
+Accordingly, the reverse acting PI loop modulates
+the <code>pumHexDis</code> pump speed to maintain the difference between
+entering and leaving water temperature of the district heat exchanger <code>TDisHexEnt</code> and
+<code>TDisHexLvg</code> equals to <code>dTHex</code>.
+</p>
+
+
+
+
+
 </html>", revisions="<html>
 <ul>
 <li>

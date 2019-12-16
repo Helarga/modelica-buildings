@@ -33,6 +33,8 @@ model Substation
     "Nominal heating supply water temperature";
     parameter Real scaling_factor
    "Scaling factor for heat pump capacity";
+
+
   Fluid.HeatPumps.EquationFitReversible heaPum(
       allowFlowReversal1=false,
       allowFlowReversal2=false,
@@ -49,7 +51,7 @@ model Substation
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     addPowerToMedium=false,
     show_T=show_T,
-    per(pressure(dp={3*dpCon_nominal,0}, V_flow={0,3*mCon_flow_nominal/1000})),
+    per(pressure(dp={2*dpCon_nominal,0}, V_flow={0,2*mCon_flow_nominal/1000})),
     allowFlowReversal=false,
     use_inputFilter=false,
     riseTime=10)
@@ -60,7 +62,7 @@ model Substation
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={3*dpEva_nominal,0}, V_flow={0,3*mEva_flow_nominal/1000})),
+    per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,2*mEva_flow_nominal/1000})),
       allowFlowReversal=false,
       use_inputFilter=false,
       riseTime=10)
@@ -168,7 +170,7 @@ model Substation
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       show_T=show_T,
       dT_dz=0,
-      TExt0_start=285.95)
+    TExt0_start=285.95)
       "Geothermal borefield"
       annotation (Placement(transformation(extent={{-10,-10},{10,10}},
           rotation=270,
@@ -240,7 +242,7 @@ model Substation
 
     Control.ETSController ETSCon(THys=2)
       "Overall control of the ETS cold and hot sides."
-        annotation (Placement(transformation(extent={{-200,194},{-180,214}})));
+        annotation (Placement(transformation(extent={{-198,194},{-178,214}})));
     Control.HeatPumpController heaPumCon
       "Control of the heatpump model and associated three way valves"
         annotation (Placement(transformation(extent={{-120,200},{-100,220}})));
@@ -444,19 +446,6 @@ model Substation
       nPorts_a=1,
       nPorts_b=2) "Supply chilled water header. " annotation (Placement(transformation(extent={{-108,10},{-128,30}})));
 
-    BaseClasses.SupplyTemperatureSet supTemSet(
-      THeaWatSup_nominal=THeaWatSup_nominal,
-      THeaWatRet_nominal=THeaWatRet_nominal,
-      TCooWatSup_max=TCooWatSup_max,
-      TCooWatSup_min=TCooWatSup_min,
-      dTCooWat=dTCooWat)
-      "Calculation of heating and cooling setpoint temperature"
-      annotation (Placement(transformation(extent={{-248,266},{-228,286}})));
-    Buildings.BoundaryConditions.WeatherData.Bus weaBus
-      "Data bus that stores weather data"
-      annotation (Placement(transformation(extent={{-330,256},{-290,296}}),
-        iconTransformation(extent={{-120,86},{-100,106}})));
-
      BaseClasses.HydraulicHeader ambRetHed(
       redeclare package Medium = Medium,
       m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
@@ -487,7 +476,7 @@ model Substation
       final dp_nominal = {0, 0, 0},
       from_dp=false,
       tau=1,
-      m_flow_nominal={mGeo_flow_nominal,-mCon_flow_nominal,-mGeo_flow_nominal + mCon_flow_nominal},
+    m_flow_nominal={mGeo_flow_nominal,-mGeo_flow_nominal,-mGeo_flow_nominal},
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
       "Flow splitter" annotation (Placement(transformation(
@@ -498,8 +487,7 @@ model Substation
     final dp_nominal=200*{1,-1,-1},
       from_dp=false,
       tau=1,
-      m_flow_nominal={mEva_flow_nominal,-mSecCoo_flow_nominal,
-        mSecCoo_flow_nominal - mEva_flow_nominal},
+    m_flow_nominal={mEva_flow_nominal,-mEva_flow_nominal,-mEva_flow_nominal},
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
       "Flow splitter" annotation (Placement(transformation(
@@ -510,8 +498,7 @@ model Substation
       final dp_nominal = {0, 0, 0},
       from_dp=false,
       tau=1,
-      m_flow_nominal={mCon_flow_nominal,-mSecHea_flow_nominal,
-      mSecHea_flow_nominal - mCon_flow_nominal},
+    m_flow_nominal={mCon_flow_nominal,-mCon_flow_nominal,-mCon_flow_nominal},
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
       "Flow splitter" annotation (Placement(transformation(
@@ -529,7 +516,7 @@ model Substation
       riseTime=10,
       l=1e-8,
       m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
-      "Two way modulating valve"
+    "Two way modulating valve."
       annotation (Placement(transformation(extent={{18,-30},{-2,-10}})));
     Fluid.Actuators.Valves.TwoWayLinear valSupCoo(
       redeclare final package Medium = Medium,
@@ -562,7 +549,7 @@ model Substation
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       m_flow_nominal=valEva_flow_nominal,
       l={0.01,0.01},
-    dpValve_nominal=1)
+    dpValve_nominal=6000)
     "Three way valve modulated to control the entering water temperature to the evaporator."
      annotation (Placement(transformation(extent={{10,10},{-10,-10}},
                                           rotation=270,
@@ -577,7 +564,7 @@ model Substation
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     m_flow_nominal=mCon_flow_nominal,
     l={0.01,0.01},
-    dpValve_nominal=1)
+    dpValve_nominal=6000)
     "Three way valve modulated to control the entering water temperature to the condenser."
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
@@ -623,21 +610,22 @@ model Substation
 
   //---------------------------I/O interfaces-----------------------------------
 
-    Modelica.Blocks.Interfaces.RealInput TSetHeaMax "Maximum heating setpoint temperature"
+    Modelica.Blocks.Interfaces.RealInput TSetHeaMax(final unit="K",displayUnit="degC")
+    "Maximum heating setpoint temperature"
     annotation (Placement(transformation(extent={{-320,218},{-300,238}}),
                     iconTransformation(extent={{-116,66},{-100,82}})));
 
 
-    Modelica.Blocks.Interfaces.RealInput TMaxBorEnt
+    Modelica.Blocks.Interfaces.RealInput TMaxBorEnt(final unit="K",displayUnit="degC")
       "Maximum allowed enetring water temperature to the borefiled holes."
-         annotation (Placement(transformation(extent={{-320,-86},{-300,-66}}),
+         annotation (Placement(transformation(extent={{-320,-84},{-300,-64}}),
                                iconTransformation(extent={{-116,-28},{-100,-12}})));
 
-    Modelica.Blocks.Interfaces.RealInput TMinConEnt
+    Modelica.Blocks.Interfaces.RealInput TMinConEnt(final unit="K",displayUnit="degC")
       "Minimum condenser entering water temperature"
          annotation (Placement(transformation(extent={{-320,184},{-300,204}}),
                      iconTransformation(extent={{-116,50},{-100,66}})));
-    Modelica.Blocks.Interfaces.RealInput TMaxEvaEnt
+    Modelica.Blocks.Interfaces.RealInput TMaxEvaEnt(final unit="K",displayUnit="degC")
     "Maximum evaporator entering water temperature"
         annotation (
       Placement(transformation(extent={{-320,170},{-300,190}}), iconTransformation(extent={{-116,-4},
@@ -683,14 +671,24 @@ model Substation
       annotation (Dialog(tab="SolarCollector"));
  */
 
-    Modelica.Blocks.Interfaces.RealInput conFloMin
+    Modelica.Blocks.Interfaces.RealInput conFloMin(final unit="kg/s",displayUnit="kg/s")
     "Minimum condenser flow rate as recommended by the manufacturer."
     annotation (Placement(transformation(extent={{-320,154},{-300,174}}),
         iconTransformation(extent={{-116,16},{-100,32}})));
-    Modelica.Blocks.Interfaces.RealInput evaFloMin
+    Modelica.Blocks.Interfaces.RealInput evaFloMin(final unit="kg/s",displayUnit="kg/s")
     "Minimum evaporator flow rate as recommended by the manufacturer."
     annotation (Placement(transformation(extent={{-320,138},{-300,158}}),
         iconTransformation(extent={{-116,34},{-100,50}})));
+  parameter Modelica.SIunits.TemperatureDifference THys=2
+    "Temperature hysteresis";
+    Modelica.Blocks.Interfaces.RealInput TSetHea( final unit="K",displayUnit="degC")
+     "Heating setpoint temperature"
+    annotation (Placement(transformation(extent={{-320,270},{-300,290}}),
+        iconTransformation(extent={{-116,80},{-100,96}})));
+    Modelica.Blocks.Interfaces.RealInput TSetCoo( final unit="K",displayUnit="degC")
+     "Cooling setpoint temperature"
+    annotation (Placement(transformation(extent={{-320,256},{-300,276}}),
+        iconTransformation(extent={{-116,94},{-100,110}})));
 equation
   connect(heaPum.port_b1,pumCon. port_a)
     annotation (Line(points={{-10,132},{0,132}}, color={238,46,47},
@@ -699,14 +697,14 @@ equation
   connect(heaPumCon.yHeaPumMod, heaPum.uMod) annotation (Line(points={{-98.6,211.2},{-40,211.2},{-40,126},{-31,126}},
                                                             color={255,127,0},
       pattern=LinePattern.Dash));
-  connect(ETSCon.reqHea, heaPumCon.ReqHea)
+  connect(ETSCon.reqHea,heaPumCon.reqHea)
     annotation (Line(
-      points={{-179,213},{-140,213},{-140,219},{-121.4,219}},
+      points={{-177,213},{-140,213},{-140,219},{-121.4,219}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ETSCon.reqCoo, heaPumCon.ReqCoo)
+  connect(ETSCon.reqCoo,heaPumCon.reqCoo)
     annotation (Line(
-      points={{-179,195},{-142,195},{-142,216},{-121.4,216}},
+      points={{-177,195},{-142,195},{-142,216},{-121.4,216}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(pumEva.port_b,TEvaEnt. port_a) annotation (Line(
@@ -743,48 +741,29 @@ equation
       pattern=LinePattern.Dash));
   connect(topHotTan.T,ETSCon. TTanHeaTop)
     annotation (Line(
-      points={{194,208},{84,208},{84,246},{-204,246},{-204,213},{-201,213}},
+      points={{194,208},{84,208},{84,246},{-204,246},{-204,213},{-199,213}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(botHotTan.T,ETSCon. TTanHeaBot)
     annotation (Line(
-      points={{196,-32},{224,-32},{224,250},{-206,250},{-206,211},{-201,211}},
+      points={{196,-32},{224,-32},{224,250},{-206,250},{-206,211},{-199,211}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(topCooTan.T,ETSCon. TTanCooTop)
     annotation (Line(
-      points={{-244,94},{-266,94},{-266,195},{-201,195}},
+      points={{-244,94},{-266,94},{-266,195},{-199,195}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(botCooTan.T,ETSCon. TTanCooBot)
     annotation (Line(
-      points={{-250,0},{-274,0},{-274,197},{-201,197}},
+      points={{-250,0},{-274,0},{-274,197},{-199,197}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(hotBufTan.mNor_flow,ETSCon. mTanHotNor)
     annotation (Line(points={{181.2,46.8},{236,46.8},{236,260},{-210,260},{-210,
-          205},{-201,205}},
+          205},{-199,205}},
         color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(weaBus, supTemSet.weaBus)
-    annotation (Line(
-      points={{-310,276},{-248,276}},
-      color={255,204,51},
-      thickness=0.5), Text(
-      string="%first",
-      index=-1,
-      extent={{-6,3},{-6,3}},
-      horizontalAlignment=TextAlignment.Right));
-  connect(supTemSet.THeaSupSet,ETSCon. TSetHea)
-    annotation (Line(
-      points={{-227,280},{-208,280},{-208,209},{-201,209}},
-      color={238,46,47},
-      pattern=LinePattern.DashDot));
-  connect(supTemSet.TCooSupSet,ETSCon. TSetCoo)
-    annotation (Line(
-      points={{-227,272},{-212,272},{-212,199},{-201,199}},
-      color={85,170,255},
-      pattern=LinePattern.DashDot));
   connect(hex.port_a1, pumHexDis.port_b)
     annotation (Line(points={{104,-160},{104,-120},{110,-120}},                         color={0,127,
           255},
@@ -824,7 +803,8 @@ equation
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(TMaxEvaEnt, heaPumCon.TMaxEvaEnt) annotation (Line(
-      points={{-310,180},{-296,180},{-296,190},{-134,190},{-134,205.4},{-121,205.4}},
+      points={{-310,180},{-296,180},{-296,190},{-134,190},{-134,205.4},{-121,
+          205.4}},
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(TEvaLvg.T,heaPumCon.TEvaLvg)  annotation (Line(
@@ -834,17 +814,9 @@ equation
   connect(heaPumCon.TSetHeaPum, heaPum.TSet) annotation (Line(points={{-98.6,214.6},{-38,214.6},{-38,135},{-31.4,135}},
                                                      color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(ETSCon.reqHea,pumPrimCon.reqHea)  annotation (Line(points={{-179,213},
+  connect(ETSCon.reqHea,pumPrimCon.reqHea)  annotation (Line(points={{-177,213},
           {-140,213},{-140,162},{-121.4,162}},              color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(supTemSet.THeaSupSet, heaPumCon.TSetHea) annotation (Line(
-      points={{-227,280},{-132,280},{-132,213},{-121,213}},
-      color={238,46,47},
-      pattern=LinePattern.DashDot));
-  connect(supTemSet.TCooSupSet, heaPumCon.TSetCoo) annotation (Line(
-      points={{-227,272},{-134,272},{-134,211},{-121,211}},
-      color={85,170,255},
-      pattern=LinePattern.DashDot));
   connect(colBufTan.port_b1, secCooFlo.port_a) annotation (Line(points={{-234,50.4},{-234,40},{-244,40}},
                                       color={0,127,255}));
   connect(chiWatSup, secCooFlo.port_b) annotation (Line(
@@ -884,7 +856,7 @@ equation
   connect(borFie.port_a, TBorEnt.port_b) annotation (Line(points={{-70,-180},{
           -70,-180}},                                                                     color={0,127,255}));
   connect(TMaxBorEnt, ambCon.TBorMaxEnt) annotation (Line(
-      points={{-310,-76},{-172,-76},{-172,-73},{-145,-73}},
+      points={{-310,-74},{-172,-74},{-172,-73},{-145,-73}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TBorEnt.T, ambCon.TBorEnt) annotation (Line(
@@ -900,7 +872,7 @@ equation
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(ETSCon.mTanColNor, colBufTan.mNor_flow)
-    annotation (Line(points={{-201,203},{-204,203},{-204,64.8},{-208.8,64.8}}, color={0,0,127},
+    annotation (Line(points={{-199,203},{-204,203},{-204,64.8},{-208.8,64.8}}, color={0,0,127},
       pattern=LinePattern.Dash));
 
   connect(TEvaLvg.port_b, cooSupHed.ports_a[1]) annotation (Line(points={{-88,20},{-88,19.7},{-107.8,19.7}},
@@ -1022,19 +994,22 @@ equation
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TEvaEnt.T, heaPumCon.TEvaEnt) annotation (Line(
-      points={{-20,107},{-20,114},{-62,114},{-62,190},{-126,190},{-126,203.4},{-121,203.4}},
+      points={{-20,107},{-20,114},{-62,114},{-62,190},{-126,190},{-126,203.4},{
+          -121,203.4}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(heaPumCon.yValEva1, valEva.y) annotation (Line(
+  connect(heaPumCon.yValCon, valEva.y) annotation (Line(
       points={{-98.6,204.4},{-96,204.4},{-96,114},{-116,114},{-116,78},{-106,78}},
       color={0,0,127},
       pattern=LinePattern.Dash));
+
   connect(heaPumCon.yValEva, valCon.y) annotation (Line(
       points={{-98.6,207.6},{-54,207.6},{-54,52},{-46,52}},
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(pumPrimCon.mSecHea, secHeaFlo.m_flow)
-    annotation (Line(points={{-120.8,158},{-130,158},{-130,190},{274,190},{274,63}},     color={0,140,72},
+    annotation (Line(points={{-120.8,158},{-130,158},{-130,190},{274,190},{274,
+          63}},                                                                          color={0,140,72},
       pattern=LinePattern.DashDot));
 
   connect(priLoaFlo.m_flow, pumPrimCon.mPriHea)
@@ -1047,45 +1022,45 @@ equation
       pattern=LinePattern.DashDot));
 
   connect(ETSCon.reqCoo,pumPrimCon.reqCoo)  annotation (Line(
-      points={{-179,195},{-166,195},{-166,142.2},{-121.4,142.2}},
+      points={{-177,195},{-166,195},{-166,142.2},{-121.4,142.2}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.ValHeaPos, valSupHea.y)
     annotation (Line(
-      points={{-179,203},{-152,203},{-152,-2},{8,-2},{8,-8}},
+      points={{-177,203},{-152,203},{-152,-2},{8,-2},{8,-8}},
       color={28,108,200},
       pattern=LinePattern.DashDot));
   connect(ETSCon.ValCooPos, valSupCoo.y)
     annotation (Line(
-      points={{-179,201},{-154,201},{-154,-8},{-84,-8}},
+      points={{-177,201},{-154,201},{-154,-8},{-84,-8}},
       color={28,108,200},
       pattern=LinePattern.DashDot));
   connect(ETSCon.reqCoo, ambCon.reqCoo) annotation (Line(
-      points={{-179,195},{-166,195},{-166,-71},{-145,-71}},
+      points={{-177,195},{-166,195},{-166,-71},{-145,-71}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ambCon.reqHea, ETSCon.reqHea) annotation (Line(
-      points={{-145,-60.2},{-156,-60.2},{-156,213},{-179,213}},
+      points={{-145,-60.2},{-156,-60.2},{-156,213},{-177,213}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.ValHea, ambCon.valHea) annotation (Line(
-      points={{-179,211},{-158,211},{-158,-62.4},{-145,-62.4}},
+      points={{-177,211},{-158,211},{-158,-62.4},{-145,-62.4}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.ValCoo, ambCon.valCoo) annotation (Line(
-      points={{-179,209},{-160,209},{-160,-64.8},{-145,-64.8}},
+      points={{-177,209},{-160,209},{-160,-64.8},{-145,-64.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ambCon.rejColFulLoa,ETSCon. rejColFulLoa) annotation (Line(
-      points={{-145,-69},{-164,-69},{-164,196.8},{-179,196.8}},
+  connect(ambCon.rejCooFulLoa,ETSCon. rejColFulLoa) annotation (Line(
+      points={{-145,-69},{-164,-69},{-164,196.8},{-177,196.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.rejHeaFulLoa, ambCon.rejHeaFulLoa) annotation (Line(
-      points={{-179,198.8},{-162,198.8},{-162,-67},{-145,-67}},
+      points={{-177,198.8},{-162,198.8},{-162,-67},{-145,-67}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(pumPrimCon.yPumCon, pumCon.y) annotation (Line(points={{-99,160},{10,160},
-          {10,144}},                                                                           color={0,0,127},
+  connect(pumPrimCon.yPumCon, pumCon.y) annotation (Line(points={{-99,160},{10,
+          160},{10,144}},                                                                      color={0,0,127},
       pattern=LinePattern.Dot));
 
   connect(pumPrimCon.yPumEva, pumEva.y) annotation (Line(points={{-99,144},{-76,
@@ -1100,11 +1075,11 @@ equation
       color={0,127,255},
       thickness=0.5));
   connect(ETSCon.pumCooTanMin, pumPrimCon.cooTanMin) annotation (Line(
-      points={{-179,205},{-148,205},{-148,148.4},{-120.8,148.4}},
+      points={{-177,205},{-148,205},{-148,148.4},{-120.8,148.4}},
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(ETSCon.pumHeaTanMin, pumPrimCon.heaTanMin) annotation (Line(
-      points={{-179,207},{-146,207},{-146,150.6},{-120.8,150.6}},
+      points={{-177,207},{-146,207},{-146,150.6},{-120.8,150.6}},
       color={0,0,127},
       pattern=LinePattern.Dash));
   connect(evaFloMin, pumPrimCon.evaFloMin) annotation (Line(
@@ -1115,6 +1090,26 @@ equation
       points={{-310,164},{-216,164},{-216,156},{-120.8,156}},
       color={0,0,127},
       pattern=LinePattern.Dash));
+  connect(TSetHea, ETSCon.TSetHea) annotation (Line(
+      points={{-310,280},{-214,280},{-214,209},{-199,209}},
+      color={238,46,47},
+      pattern=LinePattern.Dash,
+      thickness=0.5));
+  connect(TSetCoo, ETSCon.TSetCoo) annotation (Line(
+      points={{-310,266},{-228,266},{-228,199},{-199,199}},
+      color={0,128,255},
+      pattern=LinePattern.Dash,
+      thickness=0.5));
+  connect(TSetHea, heaPumCon.TSetHea) annotation (Line(
+      points={{-310,280},{-126,280},{-126,213},{-121,213}},
+      color={238,46,47},
+      pattern=LinePattern.Dash,
+      thickness=0.5));
+  connect(TSetCoo, heaPumCon.TSetCoo) annotation (Line(
+      points={{-310,266},{-130,266},{-130,211},{-121,211}},
+      color={0,128,255},
+      pattern=LinePattern.Dash,
+      thickness=0.5));
    annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
                                 Rectangle(
         extent={{-100,-100},{100,100}},

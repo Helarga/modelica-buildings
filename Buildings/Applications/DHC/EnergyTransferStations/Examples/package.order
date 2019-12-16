@@ -1,7 +1,8 @@
 HeatingSupplyHeader_PortsExample
 HeatingRecoveryChillerController
 CondenserandEvaporatorPumpsController
-HeatpumpController
+HeatpumpControllerHeaOnly
+HeatpumpControllerHeaCooSim
 EvaporatorCondenserPumpsController
 HeatpumpControllerBlock
 AmbientCircuitControllerBlock
@@ -9,3 +10,4 @@ ETSExample
 AmbientCircuitControllerSidBlock
 ThreeWayValve_HeatPumpCombined
 BufferTanksValidation
+ETSExampleChillerConstantSpeedPump

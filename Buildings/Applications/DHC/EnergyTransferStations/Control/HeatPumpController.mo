@@ -1,18 +1,21 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-model HeatPumpController "The control block of the heatpump on heating mode"
+model HeatPumpController "Controller of the heatpump and the evaporator and condenser
+                          three way valves"
+
      extends Modelica.Blocks.Icons.Block;
 
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput ReqHea
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput reqHea
     "Heating is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,62},{-100,90}}),
         iconTransformation(extent={{-128,76},{-100,104}})));
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput ReqCoo
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput reqCoo
     "Cooling is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,32},{-100,60}}),
         iconTransformation(extent={{-128,46},{-100,74}})));
 
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput           TSetCoo(final unit="K",
-      displayUnit="degC") "Setpoint for cooling supply water to space loads"
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCoo(final unit="K",
+      displayUnit="degC")
+    "Setpoint temperature for cooling supply water to space loads"
                                                        annotation (Placement(transformation(extent={{-128,
             -160},{-100,-132}}),
                      iconTransformation(extent={{-120,0},{-100,20}})));
@@ -32,7 +35,8 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     "Heatpump operational mode" annotation (Placement(transformation(extent={{102,44},
             {122,64}}),     iconTransformation(extent={{100,-2},{128,26}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput TSetHeaPum(final unit="K",
-      displayUnit="degC") "Setpint temperture for the heatpump" annotation (
+      displayUnit="degC") "Setpoint temperature for the heatpump"
+                                                                annotation (
       Placement(transformation(extent={{100,-18},{120,2}}),
         iconTransformation(extent={{100,32},{128,60}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi2
@@ -56,7 +60,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     annotation (Placement(transformation(extent={{-58,-172},{-38,-152}})));
   Buildings.Controls.OBC.CDL.Continuous.Line mapFun
     "Mapping control function to reset the TsetHea"
-    annotation (Placement(transformation(extent={{6,-148},{26,-128}})));
+    annotation (Placement(transformation(extent={{2,-148},{22,-128}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X1(k=0)
     "PI minimum error"
     annotation (Placement(transformation(extent={{-34,-118},{-14,-98}})));
@@ -68,7 +72,8 @@ model HeatPumpController "The control block of the heatpump on heating mode"
       Placement(transformation(extent={{-128,-228},{-100,-200}}),
         iconTransformation(extent={{-120,-22},{-100,-2}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHea(final unit="K",
-      displayUnit="degC") "Setpoint for heating supply water to space loads"
+      displayUnit="degC")
+    "Setpoint temperature for heating supply water to space loads"
     annotation (Placement(transformation(extent={{-128,-14},{-100,14}}),
         iconTransformation(extent={{-120,20},{-100,40}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi4
@@ -89,8 +94,9 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0,
     k=0.1,
-    Ti(displayUnit="s") = 300,
-    reverseAction=true) "Evaporator three way valve PI control signal "
+    Ti(displayUnit="s") = 100,
+    reverseAction=false)
+                        "Evaporator three way valve PI control signal "
     annotation (Placement(transformation(extent={{32,-270},{52,-250}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaEnt(final unit="K",
       displayUnit="degC") "Evaporator entering water temperature" annotation (
@@ -100,8 +106,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
       displayUnit="degC") "Maximum evaporator entering water temperature"
     annotation (Placement(transformation(extent={{-128,-274},{-100,-246}}),
         iconTransformation(extent={{-120,-56},{-100,-36}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva(final unit="K",
-      displayUnit="degC")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva
     "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
     annotation (Placement(transformation(extent={{100,-270},{120,-250}}),
         iconTransformation(extent={{100,-38},{128,-10}})));
@@ -112,7 +117,7 @@ model HeatPumpController "The control block of the heatpump on heating mode"
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0,
     k=0.1,
-    Ti(displayUnit="s") = 300,
+    Ti(displayUnit="s") = 100,
     reverseAction=true) "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{30,-322},{50,-302}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final unit="K",
@@ -123,16 +128,15 @@ model HeatPumpController "The control block of the heatpump on heating mode"
       displayUnit="degC") "Minimum condenser entering water temperature"
     annotation (Placement(transformation(extent={{-126,-326},{-98,-298}}),
         iconTransformation(extent={{-120,-38},{-100,-18}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValEva1(final unit="K",
-      displayUnit="degC")
-    "Control signal of the modulating three way valve to maintain the evaporator entering temperature below the maximum value."
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValCon
+    "Control signal of the modulating three way valve to maintain the condenser entering temperature above the minimum value."
     annotation (Placement(transformation(extent={{102,-322},{122,-302}}),
         iconTransformation(extent={{100,-70},{128,-42}})));
 equation
 
-  connect(ReqCoo, or1.u2)
+  connect(reqCoo, or1.u2)
     annotation (Line(points={{-114,46},{-48,46}}, color={255,0,255}));
-  connect(ReqHea, or1.u1)
+  connect(reqHea, or1.u1)
     annotation (Line(points={{-114,76},{-56,76},{-56,54},{-48,54}},
                      color={255,0,255}));
   connect(or1.y, swi1.u2)
@@ -149,35 +153,35 @@ equation
     annotation (Line(points={{24,54},{56,54}}, color={0,0,127}));
   connect(swi2.y, TSetHeaPum)
     annotation (Line(points={{82,-8},{110,-8}},   color={0,0,127}));
-  connect(ReqCoo, simHeaCoo.u2) annotation (Line(points={{-114,46},{-84,46},{
+  connect(reqCoo, simHeaCoo.u2) annotation (Line(points={{-114,46},{-84,46},{
           -84,-86},{-62,-86}}, color={255,0,255}));
-  connect(ReqHea, simHeaCoo.u1) annotation (Line(points={{-114,76},{-70,76},{
+  connect(reqHea, simHeaCoo.u1) annotation (Line(points={{-114,76},{-70,76},{
           -70,-78},{-62,-78}}, color={255,0,255}));
   connect(PI.u_s, TSetCoo)
     annotation (Line(points={{-60,-162},{-78,-162},{-78,-146},{-114,-146}},
                                                     color={0,0,127}));
-  connect(X1.y, mapFun.x1) annotation (Line(points={{-12,-108},{-12,-130},{4,
+  connect(X1.y, mapFun.x1) annotation (Line(points={{-12,-108},{-12,-130},{0,
           -130}},     color={0,0,127}));
   connect(PI.y, mapFun.u)
-    annotation (Line(points={{-37,-162},{-12,-162},{-12,-138},{4,-138}},
+    annotation (Line(points={{-37,-162},{-12,-162},{-12,-138},{0,-138}},
                                                    color={0,0,127}));
   connect(TSetHeaMax, mapFun.f2) annotation (Line(points={{-114,-214},{-4,-214},
-          {-4,-146},{4,-146}},  color={0,0,127}));
-  connect(X2.y, mapFun.x2) annotation (Line(points={{-6,-192},{-6,-142},{4,-142}},
+          {-4,-146},{0,-146}},  color={0,0,127}));
+  connect(X2.y, mapFun.x2) annotation (Line(points={{-6,-192},{-6,-142},{0,-142}},
                       color={0,0,127}));
   connect(TEvaLvg, PI.u_m) annotation (Line(points={{-114,-190},{-48,-190},{-48,
           -174}}, color={0,0,127}));
   connect(TSetHea, mapFun.f1) annotation (Line(points={{-114,1.77636e-15},{-96,
-          1.77636e-15},{-96,-134},{4,-134}}, color={0,0,127}));
+          1.77636e-15},{-96,-134},{0,-134}}, color={0,0,127}));
   connect(cooOnl.y, swi4.u2) annotation (Line(points={{1,-70},{24,-70},{24,-92},
           {38,-92}}, color={255,0,255}));
   connect(simHeaCoo.y, cooOnl.u2)
     annotation (Line(points={{-39,-78},{-22,-78}}, color={255,0,255}));
-  connect(ReqCoo, cooOnl.u1) annotation (Line(points={{-114,46},{-84,46},{-84,
+  connect(reqCoo, cooOnl.u1) annotation (Line(points={{-114,46},{-84,46},{-84,
           -60},{-30,-60},{-30,-70},{-22,-70}}, color={255,0,255}));
-  connect(ReqCoo, PI.trigger) annotation (Line(points={{-114,46},{-84,46},{-84,
+  connect(reqCoo, PI.trigger) annotation (Line(points={{-114,46},{-84,46},{-84,
           -184},{-56,-184},{-56,-174}}, color={255,0,255}));
-  connect(mapFun.y, swi4.u1) annotation (Line(points={{28,-138},{32,-138},{32,
+  connect(mapFun.y, swi4.u1) annotation (Line(points={{24,-138},{32,-138},{32,
           -84},{38,-84}}, color={0,0,127}));
   connect(X3.y, swi4.u3) annotation (Line(points={{20,-206},{36,-206},{36,-100},
           {38,-100}}, color={0,0,127}));
@@ -185,13 +189,13 @@ equation
           {42,-40},{42,-16},{58,-16}}, color={0,0,127}));
   connect(TSetHea, swi2.u1) annotation (Line(points={{-114,1.77636e-15},{-34,
           1.77636e-15},{-34,0},{58,0}}, color={0,0,127}));
-  connect(ReqCoo, not1.u) annotation (Line(points={{-114,46},{-84,46},{-84,-26},
+  connect(reqCoo, not1.u) annotation (Line(points={{-114,46},{-84,46},{-84,-26},
           {-50,-26}}, color={255,0,255}));
   connect(not1.y, heaMod.u2) annotation (Line(points={{-26,-26},{-4,-26}},
                           color={255,0,255}));
-  connect(ReqHea, heaMod.u1) annotation (Line(points={{-114,76},{-70,76},{-70,
+  connect(reqHea, heaMod.u1) annotation (Line(points={{-114,76},{-70,76},{-70,
           -4},{-12,-4},{-12,-18},{-4,-18}}, color={255,0,255}));
-  connect(heaMod.y, swi2.u2) annotation (Line(points={{19,-18},{26,-18},{26,-8},
+  connect(heaMod.y, swi2.u2) annotation (Line(points={{19,-18},{36,-18},{36,-8},
           {58,-8}}, color={255,0,255}));
   connect(TMaxEvaEnt, valEva.u_s)
     annotation (Line(points={{-114,-260},{30,-260}}, color={0,0,127}));
@@ -203,14 +207,14 @@ equation
     annotation (Line(points={{-112,-312},{28,-312}}, color={0,0,127}));
   connect(TConEnt, valCon.u_m) annotation (Line(points={{-112,-340},{40,-340},{
           40,-324}}, color={0,0,127}));
-  connect(valCon.y, yValEva1)
+  connect(valCon.y, yValCon)
     annotation (Line(points={{51,-312},{112,-312}}, color={0,0,127}));
   connect(or1.y, valEva.trigger) annotation (Line(
-      points={{-25,54},{-8,54},{-8,26},{28,26},{28,-280},{34,-280},{34,-272}},
+      points={{-25,54},{-10,54},{-10,26},{26,26},{26,-280},{34,-280},{34,-272}},
       color={255,0,255},
       pattern=LinePattern.Dash));
   connect(or1.y, valCon.trigger) annotation (Line(
-      points={{-25,54},{-8,54},{-8,26},{28,26},{28,-336},{32,-336},{32,-324}},
+      points={{-25,54},{-10,54},{-10,26},{26,26},{26,-336},{32,-336},{32,-324}},
       color={255,0,255},
       pattern=LinePattern.Dash));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
@@ -266,7 +270,7 @@ and the leaving chilled water from the evaporator floats depending on the enteri
 </li>
 <li> 
 Simultaneous cooling and heating and cooling only modes, the control sequence resets the heating set point<code>TReSetHea</code> till the leaving chilled water temperature
-from the evaporator side meets the cooling set point<code>TSetCoo</code> as shown below in the figure
+from the evaporator side meets the cooling set point<code>TSetCoo</code> as shown in 
 </li>
 </ul>
 <p align=\"center\">
@@ -278,11 +282,7 @@ The required leverage in <code>TSetHea</code> is estimated by a reverse acting P
 and measured temperature value of <code>TSouLvg</code>. Hence, when the evaporator leaving water temperature is higher than <code>TSetCoo</code>, 
 TSetHea is increased.
 </p>
-<p>
-During the simultaneous cooling and heating mode, the minimum re-set value of <code>TReSetHea</code> is considered equal to
-<code>TsetHea</code> to assure that heating loads are covered. However, in case of cooling only mode, the minimum re-set value is considered <code>TSetHeaMin</code>
-i.e. minimum leaving water temperature from the condenser, in order to reduce the heat pump compressor lift and improve the COP. The control mapping function
-is illustrated below
+The temperature reset control mapping function is illustrated in 
 </p>
 <p align=\"center\">
 <img alt=\"Image Control Mapping function of resetting TsetHea\"
@@ -293,7 +293,6 @@ See <a href=\"Buildings.Fluid.HeatPumps.EquationFitReversible\">
 Buildings.Fluid.HeatPumps.EquationFitReversible</a> for detailed description of the heat pump theory of operation.
 </p>
 </html>", revisions="<html>
-
 <ul>
 <li>
  <br/>

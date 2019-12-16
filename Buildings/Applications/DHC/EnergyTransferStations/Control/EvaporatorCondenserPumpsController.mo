@@ -69,7 +69,7 @@ model EvaporatorCondenserPumpsController
     Ti(displayUnit="s") = 100) "Controller for controller pump speed"
     annotation (Placement(transformation(extent={{-6,106},{14,126}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant shuOffSig(k=0)
-  "HeatPump, condenser pump  and evaporator pump shut off signal =0"
+    "HeatPump, condenser pump  and evaporator pump shut off signal =0"
    annotation (Placement(transformation(extent={{80,4},{100,24}})));
   Buildings.Controls.OBC.CDL.Continuous.Max max2
     annotation (Placement(transformation(extent={{78,100},{98,80}})));

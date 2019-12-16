@@ -1,11 +1,11 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
 block HotColdSideControllerUO
-  "Controller for valves on hot or cold side, and heat demand on heat pump"
+ "State machine "
   extends Modelica.Blocks.Icons.Block;
   replaceable model Inequality =
     Buildings.Controls.OBC.CDL.Continuous.GreaterEqual;
 
-  parameter Modelica.SIunits.TemperatureDifference THys(min=0.1)
+  parameter Modelica.SIunits.TemperatureDifference DeltaT(min=0.1)
     "Temperature hysteresis";
   Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
     "Set point temperature" annotation (Placement(transformation(extent={{-180,
@@ -34,13 +34,13 @@ block HotColdSideControllerUO
     annotation (Placement(transformation(extent={{-58,42},{124,154}})));
   Modelica.StateGraph.TransitionWithSignal t5(enableTimer=false)
     annotation (Placement(transformation(extent={{26,50},{46,70}})));
-  Modelica.StateGraph.StepWithSignal rejFulLoa
-    "Reject heat using both, borefield and district hex"
+  Modelica.StateGraph.StepWithSignal rejFulLoasta
+    "Reject heat using both, borefield and district heat exchanger state."
     annotation (Placement(transformation(extent={{46,50},{66,70}})));
-  Modelica.Blocks.Interfaces.BooleanOutput rejFulHexBor
-    "Reject load using borefield and heat exchanger"
-    annotation (Placement(transformation(extent={{140,-58},{160,-38}}),
-      iconTransformation(extent={{100,50},{120,70}})));
+  Modelica.Blocks.Interfaces.BooleanOutput rejFulLoa
+    "Reject load using borefield and heat exchanger" annotation (Placement(
+        transformation(extent={{140,-58},{160,-38}}), iconTransformation(extent
+          ={{100,50},{120,70}})));
   Modelica.StateGraph.TransitionWithSignal t6
     annotation (Placement(transformation(extent={{66,50},{86,70}})));
 
@@ -68,14 +68,13 @@ block HotColdSideControllerUO
     "Control signal for valve (0: closed, or 1: open)"
     annotation (Placement(transformation(extent={{140,-110},{160,-90}}),
         iconTransformation(extent={{100,-70},{120,-50}})));
-  Modelica.Blocks.Interfaces.RealInput TTanTop(final unit="K", displayUnit="degC")
-    "Temperature at top of tank"
-    annotation (Placement(transformation(extent={{-180,40},{-140,80}}),
-        iconTransformation(extent={{-120,40},{-100,60}})));
-  Modelica.Blocks.Interfaces.RealInput TTanBot(final unit="K", displayUnit="degC")
-    "Temperature at bottom of tank"
-    annotation (Placement(transformation(extent={{-180,-80},{-140,-40}}),
-        iconTransformation(extent={{-120,-60},{-100,-40}})));
+  Modelica.Blocks.Interfaces.RealInput TTop(final unit="K", displayUnit="degC")
+    "Temperature at top of tank" annotation (Placement(transformation(extent={{
+            -180,40},{-140,80}}), iconTransformation(extent={{-120,40},{-100,60}})));
+  Modelica.Blocks.Interfaces.RealInput TBot(final unit="K", displayUnit="degC")
+    "Temperature at bottom of tank" annotation (Placement(transformation(extent=
+           {{-180,-80},{-140,-40}}), iconTransformation(extent={{-120,-60},{-100,
+            -40}})));
 
   Inequality greEqu
     annotation (Placement(transformation(extent={{-100,30},{-80,50}})));
@@ -106,9 +105,9 @@ equation
   connect(alternative.outPort, noDemand.inPort[1]) annotation (Line(points={{125.82,
           98},{120,98},{120,146},{-100,146},{-100,98.5},{-87,98.5}},
                                                                color={0,0,0}));
-  connect(t5.outPort, rejFulLoa.inPort[1])
+  connect(t5.outPort, rejFulLoasta.inPort[1])
     annotation (Line(points={{37.5,60},{45,60}}, color={0,0,0}));
-  connect(rejFulLoa.outPort[1], t6.inPort)
+  connect(rejFulLoasta.outPort[1], t6.inPort)
     annotation (Line(points={{66.5,60},{72,60}}, color={0,0,0}));
   connect(t2.outPort, alternative.join[1]) annotation (Line(points={{45.5,120},{
           96,120},{96,98},{104.89,98}},color={0,0,0}));
@@ -174,5 +173,33 @@ equation
           lineColor={0,0,0}),
         Polygon(
           points={{62,-60},{82,-48},{82,-70},{62,-60}},
-          lineColor={0,0,0})}));
+          lineColor={0,0,0})}),
+ Documentation(info="<html>
+<table class=\"releaseTable\" summary=\"summary\" border=\"1\" cellspacing=0 cellpadding=2>
+     <tr><td align=\"center\"><b>State</b> 
+        </td>
+        <td align=\"center\"><b>Action</b>
+        </td>
+        </tr>
+    <tr><td align=\"center\">reqHea
+        </td>
+        <td align=\"center\">HeatPump on
+        </td>
+        </tr>
+    <tr><td align=\"center\">rejHeaParLoa
+        </td>
+        <td align=\"center\">valHeaOn, BorPumOn
+        </td>
+        </tr>
+    <tr><td align=\"center\">rejHeaFulLoa 
+        </td>
+        <td align=\"center\">valHeaOn, BorPumOn, DisPumOn
+        </td>
+        </tr>     
+</table>
+    
+    
+     
+
+</html>"));
 end HotColdSideControllerUO;
