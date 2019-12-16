@@ -260,34 +260,34 @@ and resets the water temperature setpoint input signal to the heat pump <code>TR
 <h4>Heat pump status</h4>
 <p>
 If either <code>reqHea</code> or <code>reqCoo</code> is true, the controller outputs the integer output
-<code>yHeaPumMod</code> to switch on the heat pump, other wise it switches off. 
+<code>yHeaPumMod</code> to switch on the heat pump, other wise it switches off.
 </p>
-<h4>Modes of operation</h4> 
+<h4>Modes of operation</h4>
 <ul>
-<li> 
+<li>
 Heating-only mode, the leaving water form the heat pump condenser side tracks the heating set point<code>TSetHea</code>
 and the leaving chilled water from the evaporator floats depending on the entering water temperature and flow rate.
 </li>
-<li> 
+<li>
 Simultaneous cooling and heating and cooling only modes, the control sequence resets the heating set point<code>TReSetHea</code> till the leaving chilled water temperature
-from the evaporator side meets the cooling set point<code>TSetCoo</code> as shown in 
+from the evaporator side meets the cooling set point<code>TSetCoo</code> as shown in
 </li>
 </ul>
 <p align=\"center\">
 <img alt=\"Image PI controller to reset the TSetHea\"
 src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/resetTsetHea.png\"/>
-</p> 
+</p>
 <p>
 The required leverage in <code>TSetHea</code> is estimated by a reverse acting PI loop , with a reference set point of <code>TSetCoo</code>
-and measured temperature value of <code>TSouLvg</code>. Hence, when the evaporator leaving water temperature is higher than <code>TSetCoo</code>, 
+and measured temperature value of <code>TSouLvg</code>. Hence, when the evaporator leaving water temperature is higher than <code>TSetCoo</code>,
 TSetHea is increased.
 </p>
-The temperature reset control mapping function is illustrated in 
+The temperature reset control mapping function is illustrated in
 </p>
 <p align=\"center\">
 <img alt=\"Image Control Mapping function of resetting TsetHea\"
 src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/controlMappingFunction.png\"/>
-</p>  
+</p>
 <p>
 See <a href=\"Buildings.Fluid.HeatPumps.EquationFitReversible\">
 Buildings.Fluid.HeatPumps.EquationFitReversible</a> for detailed description of the heat pump theory of operation.

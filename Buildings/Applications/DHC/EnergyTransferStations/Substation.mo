@@ -1000,6 +1000,7 @@ equation
       pattern=LinePattern.Dot));
   connect(heaPumCon.yValCon, valEva.y) annotation (Line(
       points={{-98.6,204.4},{-96,204.4},{-96,114},{-116,114},{-116,78},{-106,78}},
+
       color={0,0,127},
       pattern=LinePattern.Dash));
 
@@ -1162,7 +1163,7 @@ to implement the energy storage concept within the hot and cold buffer tanks and
 <p align=\"center\">
 <img alt=\"Image the 5th generation of district heating and cooling substation\"
 src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/SubstationLayout.png\"/>
-</p>          
+</p>
 <p>
 The layout consists of three main water circuits categorized by the water temperature and accordingly three interfaces with both the building and district system
 </p>
