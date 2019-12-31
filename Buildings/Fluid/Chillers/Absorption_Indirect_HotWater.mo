@@ -45,14 +45,12 @@ model Absorption_Indirect_HotWater
   final parameter Modelica.SIunits.HeatFlowRate Q_flow_small = -QEva_heatflow_nominal*1E-9
     "Small value for heat flow rate or power, used to avoid division by zero";
 
-  /*
-  hot water flow rate
   parameter Modelica.SIunits.SpecificHeatCapacity cpWat=
     Medium1.specificHeatCapacityCp(Medium.setState_pTX(
       p = Medium1.p,
       T = Medium1.T,
       X = Medium1.X));
-  */
+
 
 
 
