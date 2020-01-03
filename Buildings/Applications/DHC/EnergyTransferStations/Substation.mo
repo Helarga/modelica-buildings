@@ -220,7 +220,7 @@ model Substation
       m_flow_nominal=mHex_flow_nominal,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
+      per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
       "Pump (or valve) that forces the flow rate to be set to the control signal"
@@ -252,8 +252,8 @@ model Substation
       "Control of the primary circuit pumps"
         annotation (Placement(transformation(extent={{-120,142},{-100,162}})));
     Control.AmbientCircuitSid  ambCon(
-        dTGeo=dTGeo,
-        dTHex=dTHex)
+        dTHex=dTHex,
+        dTGeo=dTGeo)
       "control of the ambient hydraulic circuit"
         annotation (Placement(transformation(extent={{-144,-80},{-124,-60}})));
     Buildings.Controls.OBC.CDL.Continuous.Gain gaiBor(k=mGeo_flow_nominal)
@@ -278,7 +278,7 @@ model Substation
 
     Buildings.Fluid.Sensors.TemperatureTwoPort TConEnt(
       redeclare final package Medium = Medium,
-           allowFlowReversal=false,
+      allowFlowReversal=false,
       m_flow_nominal=mCon_flow_nominal,
       tau=0)
       "Condenser entering water temperature"
@@ -1000,7 +1000,6 @@ equation
       pattern=LinePattern.Dot));
   connect(heaPumCon.yValCon, valEva.y) annotation (Line(
       points={{-98.6,204.4},{-96,204.4},{-96,114},{-116,114},{-116,78},{-106,78}},
-
       color={0,0,127},
       pattern=LinePattern.Dash));
 
@@ -1075,11 +1074,11 @@ equation
       points={{-50.4,-47.15},{-70,-47.15},{-70,-100}},
       color={0,127,255},
       thickness=0.5));
-  connect(ETSCon.pumCooTanMin, pumPrimCon.cooTanMin) annotation (Line(
+  connect(ETSCon.pumEvaTanMin, pumPrimCon.cooTanMin) annotation (Line(
       points={{-177,205},{-148,205},{-148,148.4},{-120.8,148.4}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(ETSCon.pumHeaTanMin, pumPrimCon.heaTanMin) annotation (Line(
+  connect(ETSCon.pumConTanMin, pumPrimCon.heaTanMin) annotation (Line(
       points={{-177,207},{-146,207},{-146,150.6},{-120.8,150.6}},
       color={0,0,127},
       pattern=LinePattern.Dash));
@@ -1243,6 +1242,41 @@ The heat exchanger district pump <code>pumHexDis</code>, where its mass flow rat
 For more detailed description of the energy rejection control see
 <a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.AmbientCircuitController\"> Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.AmbientCircuitController </a>
 </p>
+<h4>Note for Hagar </h4>
+this part was in ambient circuit controller check it and update ETS layout accordingly 
+</p>
+The controller includes two operational modes
+</p>
+
+
+<h4> The energy rejection mode index </h4>
+<p>
+The controller computes the energy rejection mode <code>ModInd</code> to either the borfield or district heat exchanger system.
+i.e. the controller computes <code>ModInd</code> =1, if the thermal energy rejection occurs through the heat pump condenser side,
+and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
+</p>
+</p>
+<h4>Reject to borefield system</h4>
+<p>
+The controller computes the real signal <code>yPumBor</code> to turn on and off the pump,
+if either the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true.
+</p>
+
+<h4>Reject to the district heat exchanger system</h4>
+<p>
+The controller turns on heat exchanger district pump <code>pumHexDis</code> if either
+the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code>
+and <code>rejFulHealoa</code> or <code>rejFulCooLoa</code> is true.
+</p>
+<p>
+Accordingly, the reverse acting PI loop modulates
+the <code>pumHexDis</code> pump speed to maintain the difference between
+entering and leaving water temperature of the district heat exchanger <code>TDisHexEnt</code> and
+<code>TDisHexLvg</code> equals to <code>dTHex</code>.
+</p>
+
+
+
 
 </html>", revisions="<html>
 <ul>

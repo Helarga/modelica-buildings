@@ -87,14 +87,14 @@ equation
           0},{-70,-30},{-62,-30}}, color={0,127,255}));
   connect(conPum.ports[1], senCon.port_a)
     annotation (Line(points={{-26,74},{-8,74},{-8,58}}, color={0,127,255}));
-  connect(senCon.port_b, HeaSupHed.ports_a[1]) annotation (Line(points={{-8,38},
-          {-8,0.45},{-6.2,0.45}}, color={0,127,255}));
-  connect(senTem1.port_b, HeaSupHed.ports_a[2]) annotation (Line(points={{-46,0},
-          {-26,0},{-26,-1.05},{-6.2,-1.05}}, color={0,127,255}));
   connect(solPum.ports[1], HeaSupHed.ports_b[1]) annotation (Line(points={{40,-52},
           {28,-52},{28,-0.65},{14.4,-0.65}}, color={0,127,255}));
   connect(HeaSupHed.ports_b[2], senHotTan.port_b) annotation (Line(points={{14.4,
           0.85},{14.4,36},{20,36}}, color={0,127,255}));
+  connect(senCon.port_b, HeaSupHed.ports_a[1]) annotation (Line(points={{-8,38},
+          {-8,0.45},{-6.2,0.45}}, color={0,127,255}));
+  connect(senTem1.port_b, HeaSupHed.ports_a[2]) annotation (Line(points={{-46,0},
+          {-12,0},{-12,-1.05},{-6.2,-1.05}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},

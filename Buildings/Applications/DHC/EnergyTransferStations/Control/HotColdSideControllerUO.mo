@@ -5,7 +5,7 @@ block HotColdSideControllerUO
   replaceable model Inequality =
     Buildings.Controls.OBC.CDL.Continuous.GreaterEqual;
 
-  parameter Modelica.SIunits.TemperatureDifference DeltaT(min=0.1)
+  parameter Modelica.SIunits.TemperatureDifference THys(min=0.1)
     "Temperature hysteresis";
   Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
     "Set point temperature" annotation (Placement(transformation(extent={{-180,
@@ -39,8 +39,8 @@ block HotColdSideControllerUO
     annotation (Placement(transformation(extent={{46,50},{66,70}})));
   Modelica.Blocks.Interfaces.BooleanOutput rejFulLoa
     "Reject load using borefield and heat exchanger" annotation (Placement(
-        transformation(extent={{140,-58},{160,-38}}), iconTransformation(extent
-          ={{100,50},{120,70}})));
+        transformation(extent={{140,-58},{160,-38}}), iconTransformation(extent=
+           {{100,50},{120,70}})));
   Modelica.StateGraph.TransitionWithSignal t6
     annotation (Placement(transformation(extent={{66,50},{86,70}})));
 

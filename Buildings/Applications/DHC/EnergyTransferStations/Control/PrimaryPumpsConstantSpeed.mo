@@ -1,6 +1,6 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-model PrimaryPumpsConstantSpeedController
-  "The control block of the condenser and the evaporator water pumps"
+model PrimaryPumpsConstantSpeed
+  "The control block of the constant speed condenser and the evaporator water pumps."
      extends Modelica.Blocks.Icons.Block;
 
   parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal( final displayUnit="kg/s")
@@ -64,43 +64,28 @@ equation
   annotation (defaultComponentName="pumCon",Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}})),                                  Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{200,180}})),
-          Documentation(info="<html>
-<p> 
-The applied pumping configuration is variable flow primary-secondary systems. The primary
-<code>pumEva</code> and <code>pumCon</code> pumps are interlocked and controlled to satisfiy 
-the thermal requirments at the building(secondary) side considering the following
-</p>
-<ul>
-<li>
-The mass flow rate of the primary pumps is 10% higher than the secondary pumps to avoid 
-the cross circulation through the hot and cold buffer tanks form the secondary side i.e. the return water 
-from the secondary side is mixed with the supply water.
-
-<p align=\"center\">
-<img alt=\"Image BufferTankCrossCirculation\"
-src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/BufferTankCrossCirculation.png\"/>
-</p>  
-</li>
-<li>
-Maintain the heat pump flow rate between the minimum and maximum limit of the heat pump as advised by the manufacturer.
-</li>
-<li>
-Maintain the hydraulic balance between the primary <code>pumEva</code>, <code>pumCon</code> 
-, borefield pump <code>pumBor</code> and distrcit heat exchanger pump <code>pumDis</code> 
-once the system is switched to reject heat to district network mode.
-</li>
-</ul>
+        Documentation(info="<html>
 <p>
-The PI reverse action loop outputs the evaporator and condesner sides pumps rotating speed, taking
-real inputs of primary and secondary flow rates. Whilest, the Boolean inputs <code>reqHea</code> and 
-<code>reqCoo</code> are to turn on/off the pumps.
+The block computes the control signals for 
 </p>
+<h4>Chiller condenser pump</h4>
+<p>
+The heat pump condenser pump is constant speed and switched on and off based on a supervisory control signal.
+</p>
+
+<h4>Chiller evaporator pump</h4>
+<p>
+The chiller evaporator pump is constant speed and switched on and off based on a supervisory control signal.
+</p>
+
 
 </html>", revisions="<html>
 <ul>
 <li>
- <br/>
+November 25, 2019, by Hagar Elarga:<br/>
+First implementation. 
+</li>
 </li>
 </ul>
 </html>"));
-end PrimaryPumpsConstantSpeedController;
+end PrimaryPumpsConstantSpeed;

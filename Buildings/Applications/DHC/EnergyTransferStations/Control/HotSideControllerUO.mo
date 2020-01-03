@@ -2,7 +2,7 @@ within Buildings.Applications.DHC.EnergyTransferStations.Control;
 block HotSideControllerUO
   "State machine controls the operation of the heatpump, two way heating valve, borfield and district pumps "
   extends
-  Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO;
+    Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO(THys=THys);
 
   Modelica.Blocks.Interfaces.BooleanOutput reqHea
     "True if heat is required from heat pump, false otherwise" annotation (
@@ -22,8 +22,8 @@ equation
           -160},{-70,-160},{-70,-148},{-62,-148}}, color={0,0,127}));
   connect(min.u2, TBot) annotation (Line(points={{-98,-106},{-112,-106},{-112,-60},
           {-160,-60}}, color={0,0,127}));
-  connect(TBot, greEqu1.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,
-          18},{-66,18},{-66,8},{-62,8}}, color={0,0,127}));
+  connect(TBot, greEqu1.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,18},
+          {-66,18},{-66,8},{-62,8}}, color={0,0,127}));
   connect(TBot, greEqu2.u1) annotation (Line(points={{-160,-60},{-112,-60},{-112,
           18},{-66,18},{-66,-22},{-62,-22}}, color={0,0,127}));
   connect(TBot, greEqu3.u2) annotation (Line(points={{-160,-60},{-112,-60},{-112,

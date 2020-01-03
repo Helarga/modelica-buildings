@@ -150,6 +150,78 @@ Hystresis were included wherever needed to avoid system cycling.
 </ul>
 </i>
 
+
+
+<p>
+I removed this part from ETS control 
+</p>
+<p>
+This block generates the status of: the two way valves<code>valHeaPos</code> and
+<code>valCooPos</code>,  heating,cooling or both are required by the building,
+the part load and full load rejection to the borefield and district system in accordance
+with the following operational modes:
+</p>
+<h4>Heating or cooling is required</h4>
+<p>
+The mode is identified based on the difference between the setpoint temperature <code>TSetHea</code> and the
+tank top temperature <code>TTanHeaTop</code> for the hot buffer tank and between the setpoint temperature <code>TSetCoo</code> and the tank bottom temperature
+<code>TTanCooBot</code> for the cold buffer tank, where the heatpump and both the condenser and evaporator water pumps turn on if either the boolean outputs <cod> heaReq</code> or <code>cooReq</code> is true.
+</p>
+<h4>Part load rejection</h4>
+<p>
+Two scenarios are considered in order to activate the part load rejection to the borefield system only:
+</p>
+<p>
+In case heating is required:
+</p>
+<p>
+The condenser is controlled and the heatpump operates to satisfy the condenser setpoint temperature <code>TSetCon</code> and accordingly the
+building heating loads. While the evaporator is not controlled, the ETS controller operates to assure
+that the water temperature inside the cold buffer tank reached the setpoint temperature <code>TSetCoo</code>.
+When the water temperature exceeds the setpoint value added to the design hysteresis, the part load rejection to the borefield starts.
+</p>
+<p>
+In case cooling is required:
+</p>
+<p>
+The evaporator is controlled and the heatpump operates to satisfy the evaporator setpoint temperature <code>TSetEva</code> and accordingly the
+building cooling loads. While the condenser is not controlled the ETS controller operates to assure
+that the water temperature inside the hot buffer tank reaches the setpoint temperature <code>TSetHea</code>.
+When the water temperature exceeds the setpoint value added to the design hysteresis, the part load rejection to the borefield system initiates.
+</p>
+<p>
+<b>
+see more detailed description regarding the heat pump model in:
+<a href=\"Buildings.Fluid.HeatPumps.EquationFitWaterToWater\"> Buildings.Fluid.HeatPumps.EquationFitWaterToWater </a>.
+</b>
+</p>
+<h4>Full load rejection</h4>
+<p>
+Two scenarios are considered in order to activate the full load rejection to the district heat exchnager system:
+</p>
+<p>
+In case of heating is required:
+</p>
+<p>
+The full load rejection to the district system initiates if the top level temperature inside the
+tank <code>TTanHeaBot</code> remains higher than the setpoint temperature <code>TSetHea</code> added to the design hysteresis.
+</p>
+<p>
+In case of cooling is required:
+</p>
+<p>
+The full load rejection to the district system initiates if the bottom temperature inside the
+tank <code>TTanCooTop</code> remains lower than the setpoint temperature <code>TSetCoot</code> added to the design hysteresis.
+</p>
+<p>
+<b>
+See more detailed description regarding energy rejection in:
+<a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.AmbientCircuitController\">
+Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.AmbientCircuitController.</a>
+</b>
+</p>
+
+
 </html>", revisions="<html>
 <ul>
 <li>

@@ -3,20 +3,18 @@ model SubstationWithConstPrimPum_OnOffChiller
   "5th generation of district heating and cooling plant"
    package Medium = Buildings.Media.Water "Medium model";
 
-  //--------------------------WSHP system------------------------
+  //--------------------------Chiller system------------------------
 
-  parameter Fluid.Chillers.Data.ElectricEIR.Generic chiDat(PLRMin=1)
-   "Performance data of the water to water heat pump" annotation (
-    choicesAllMatching=true, Placement(transformation(extent={{-292,-282},{-272,
-          -262}})));
-  parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=chiDat.mCon_flow_nominal
+  parameter Buildings.Fluid.Chillers.Data.ElectricEIR.Generic datChi
+    annotation (Placement(transformation(extent={{-290,-284},{-270,-264}})));
+  parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal=datChi.mEva_flow_nominal
    "Condenser nominal water flow rate" annotation (Dialog(tab="WSHP system"));
-  parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=chiDat.mEva_flow_nominal
+  parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=datChi.mEva_flow_nominal
    "Evaporator nominal water flow rate" annotation (Dialog(tab="WSHP system"));
-  parameter Modelica.SIunits.MassFlowRate mSecHea_flow_nominal
+  parameter Modelica.SIunits.MassFlowRate mSecHea_flow_nominal=5
    "Condenser nominal water flow rate"
     annotation (Dialog(tab="WSHP system"));
-  parameter Modelica.SIunits.MassFlowRate mSecCoo_flow_nominal
+  parameter Modelica.SIunits.MassFlowRate mSecCoo_flow_nominal=5
    "Evaporator nominal water flow rate"
     annotation (Dialog(tab="WSHP system"));
   parameter Modelica.SIunits.PressureDifference dpCon_nominal=33530
@@ -25,26 +23,16 @@ model SubstationWithConstPrimPum_OnOffChiller
   parameter Modelica.SIunits.PressureDifference dpEva_nominal=32460
     "Pressure difference accross the evaporator"
     annotation (Dialog(tab="WSHP system"));
-  parameter Modelica.SIunits.Temperature TConEnt_nominal=35+273.15
-  "Nominal heating supply water temperature";
-  parameter Modelica.SIunits.Temperature TConLvg_nominal=40+273.15
-  "Nominal heating supply water temperature";
-  parameter Modelica.SIunits.Temperature TEvaEnt_nominal=12+273.15
-  "Nominal heating supply water temperature";
-  parameter Modelica.SIunits.Temperature TEvaLvg_nominal=7+273.15
-  "Nominal heating supply water temperature";
-  parameter Real scaling_factor
-   "Scaling factor for heat pump capacity";
 
   Fluid.Chillers.ElectricEIR chi(
     allowFlowReversal1=false,
     allowFlowReversal2=false,
     show_T=true,
-    dp1_nominal=6000,
-    dp2_nominal=6000,
-    per=chiDat,
+    dp1_nominal=dpCon_nominal,
+    dp2_nominal=dpEva_nominal,
+    per=datChi,
     redeclare package Medium1 = Medium,
-    redeclare package Medium2 = Medium) "Reversible water to water heat pump"
+    redeclare package Medium2 = Medium) "Water cooled EIR chiller."
     annotation (Placement(transformation(extent={{-30,116},{-10,136}})));
 
   Buildings.Fluid.Movers.SpeedControlled_y pumCon(
@@ -52,7 +40,7 @@ model SubstationWithConstPrimPum_OnOffChiller
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     addPowerToMedium=false,
     show_T=show_T,
-    per(pressure(dp={2*dpCon_nominal,0}, V_flow={0,mCon_flow_nominal/1000})),
+    per(pressure(dp={dpCon_nominal,0}, V_flow={0,0.5*mCon_flow_nominal/1000})),
     allowFlowReversal=false,
     use_inputFilter=false,
     riseTime=10)
@@ -63,7 +51,7 @@ model SubstationWithConstPrimPum_OnOffChiller
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={2*dpEva_nominal,0}, V_flow={0,mEva_flow_nominal/1000})),
+    per(pressure(dp={dpEva_nominal,0}, V_flow={0,mEva_flow_nominal/1000})),
       allowFlowReversal=false,
       use_inputFilter=false,
       riseTime=10)
@@ -99,7 +87,9 @@ model SubstationWithConstPrimPum_OnOffChiller
       show_T=show_T,
       energyDynamics=fixedEnergyDynamics,
       m_flow_nominal=mCon_flow_nominal,
-      T_start=313.15)
+    T_start=293.15,
+    TFlu_start=(20 + 273.15)*ones(nSegTan),
+    tau(displayUnit="s"))
       "Hot buffer tank"
       annotation (Placement(transformation(extent={{156,30},{180,54}})));
     BaseClasses.StratifiedTank colBufTan(
@@ -109,11 +99,14 @@ model SubstationWithConstPrimPum_OnOffChiller
       dIns=dIns,
       nSeg=nSegTan,
       show_T=show_T,
-      T_start=293.15,
-      m_flow_nominal=mEva_flow_nominal)
+      m_flow_nominal=mEva_flow_nominal,
+    T_start=280.15,
+    TFlu_start=(7 + 273.15)*ones(nSegTan),
+    tau(displayUnit="s"))
       "Cold Buffer tank"
       annotation (Placement(transformation(extent={{-234,48},{-210,72}})));
   //-------------------------------Design Parameters----------------
+
     parameter Modelica.SIunits.Temperature THeaWatSup_nominal=40+273.15
       "Nominal heating supply water temperature"
       annotation (Dialog(group="Design parameter"));
@@ -129,13 +122,16 @@ model SubstationWithConstPrimPum_OnOffChiller
     parameter Modelica.SIunits.TemperatureDifference dTCooWat=4
       "Cooling water supply and return temperature difference"
       annotation (Dialog(group="Design parameter"));
-    parameter Modelica.SIunits.TemperatureDifference dTHeaPum = 2
+    parameter Modelica.SIunits.TemperatureDifference dTHeaPum=2
       "Temperature difference in and out of heat pump";
 
  //----------------------------Borefield system----------------------------------
-   parameter Modelica.SIunits.TemperatureDifference dTGeo
+   parameter Modelica.SIunits.TemperatureDifference dTGeo=5
     "Temperature difference in and out of borefield";
    parameter Modelica.SIunits.MassFlowRate mGeo_flow_nominal= m_flow_nominal*dTHeaPum/dTGeo
+    "Borefiled nominal water flow rate"
+      annotation (Dialog(tab="Borefield"));
+   parameter Modelica.SIunits.MassFlowRate mBor_flow_nominal= mGeo_flow_nominal/(nXBorHol*nYBorHol)
     "Borefiled nominal water flow rate"
       annotation (Dialog(tab="Borefield"));
    parameter Modelica.SIunits.Length xBorFie
@@ -162,28 +158,28 @@ model SubstationWithConstPrimPum_OnOffChiller
     parameter Modelica.SIunits.Radius rTub =  0.05
      "Outer radius of the tubes"
       annotation(Dialog(tab="Borefield"));
-   /*parameter Boolean allowFlowReversal = false
+   parameter Boolean allowFlowReversal = false
     "= true to allow flow reversal, false restricts to design direction (port_a -> port_b)"
-    annotation(Dialog(tab="Assumptions"), Evaluate=true);*/
+    annotation(Dialog(tab="Assumptions"), Evaluate=true);
    Fluid.Geothermal.Borefields.OneUTube borFie(
       redeclare package Medium = Medium,
       allowFlowReversal=false,
       borFieDat=borFieDat,
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
       show_T=show_T,
-      dT_dz=0,
-    TExt0_start=285.95)
+    TExt0_start=285.95,
+      dT_dz=0)
       "Geothermal borefield"
       annotation (Placement(transformation(extent={{-10,-10},{10,10}},
           rotation=270,
-          origin={-70,-190})));
+          origin={-70,-198})));
     Fluid.Movers.FlowControlled_m_flow pumBor(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      m_flow_nominal=mGeo_flow_nominal,
+    m_flow_nominal=mCon_flow_nominal,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={2*dpBorFie_nominal,0}, V_flow={0,2*mGeo_flow_nominal/1000})),
+    per(pressure(dp={dpBorFie_nominal,0}, V_flow={0,mGeo_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
       "Pump (or valve) that forces the flow rate to be set to the control signal"
@@ -199,7 +195,7 @@ model SubstationWithConstPrimPum_OnOffChiller
     parameter Modelica.SIunits.PressureDifference dpHex_nominal(displayUnit="Pa")=50000
       "Pressure difference across heat exchanger"
       annotation (Dialog(tab="DistrictHeatExchanger"));
-    parameter Modelica.SIunits.TemperatureDifference dTHex
+    parameter Modelica.SIunits.TemperatureDifference dTHex=5
       "Temperature difference in and out of substation heat exchanger";
 
     BaseClasses.WaterWaterHeatExchanger hex(
@@ -219,10 +215,10 @@ model SubstationWithConstPrimPum_OnOffChiller
     Fluid.Movers.FlowControlled_m_flow pumHexDis(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      m_flow_nominal=mHex_flow_nominal,
+    m_flow_nominal=mHex_flow_nominal,
       addPowerToMedium=false,
       show_T=show_T,
-    per(pressure(dp={2*dpHex_nominal,0}, V_flow={0,2*mHex_flow_nominal/1000})),
+    per(pressure(dp={dpHex_nominal,0}, V_flow={0,mHex_flow_nominal/1000})),
       use_inputFilter=false,
       riseTime=10)
       "Pump (or valve) that forces the flow rate to be set to the control signal"
@@ -242,21 +238,20 @@ model SubstationWithConstPrimPum_OnOffChiller
 
  //-----------------------------Controllers------------------------------------
 
-    Control.ETSController ETSCon(THys=2)
+    Control.SubstationMainController ETSCon(THys=THys)
       "Overall control of the ETS cold and hot sides."
-        annotation (Placement(transformation(extent={{-198,194},{-178,214}})));
-  Control.ChillerControllerOnOff heaPumCon
-    "Control of the heatpump model and associated three way valves"
+        annotation (Placement(transformation(extent={{-200,200},{-180,220}})));
+  Control.ChillerOnOff chiCon
+    "Control of the EIR chiller model and associated three way valves"
     annotation (Placement(transformation(extent={{-120,200},{-100,220}})));
-    Control.PrimaryPumpsConstantSpeedController pumPrimCon(
-        mCon_flow_nominal=mCon_flow_nominal,
-        mEva_flow_nominal=mEva_flow_nominal)
-      "Control of the primary circuit pumps"
-        annotation (Placement(transformation(extent={{-120,142},{-100,162}})));
-    Control.AmbientCircuitSid  ambCon(
-        dTGeo=dTGeo,
-        dTHex=dTHex)
-      "control of the ambient hydraulic circuit"
+  Control.PrimaryPumpsConstantSpeed pumPrimCon(
+    mCon_flow_nominal = mCon_flow_nominal, mEva_flow_nominal=mEva_flow_nominal)
+    "Control of the primary circuit pumps"
+    annotation (Placement(transformation(extent={{-120,142},{-100,162}})));
+    Control.AmbientCircuitSid ambCon(
+    dTGeo=dTGeo,
+    dTHex=dTHex)
+    "control of the ambient hydraulic circuit"
         annotation (Placement(transformation(extent={{-144,-80},{-124,-60}})));
     Buildings.Controls.OBC.CDL.Continuous.Gain gaiBor(k=mGeo_flow_nominal)
       "Gain for mass flow rate of borefield"
@@ -290,8 +285,7 @@ model SubstationWithConstPrimPum_OnOffChiller
       redeclare final package Medium = Medium,
        allowFlowReversal=false,
       m_flow_nominal=mEva_flow_nominal,
-      tau=0)
-      "Evaporator entering water temperature"
+      tau=0) "Evaporator entering water temperature"
       annotation (Placement(
         transformation(
         extent={{10,10},{-10,-10}},
@@ -308,10 +302,10 @@ model SubstationWithConstPrimPum_OnOffChiller
 
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topCooTan
       "Cold tank top temperature"
-      annotation (Placement(transformation(extent={{-224,84},{-244,104}})));
+      annotation (Placement(transformation(extent={{-230,90},{-250,110}})));
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor botCooTan
       "Cold tank bottom temperature"
-      annotation (Placement(transformation(extent={{-230,-10},{-250,10}})));
+      annotation (Placement(transformation(extent={{-230,10},{-250,30}})));
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor topHotTan
       "Hot tank top temperature"
       annotation (Placement(transformation(extent={{214,198},{194,218}})));
@@ -321,7 +315,7 @@ model SubstationWithConstPrimPum_OnOffChiller
    Fluid.Sensors.TemperatureTwoPort TBorLvg(
     tau=0,
     redeclare final package Medium = Medium,
-          allowFlowReversal=false,
+    allowFlowReversal=false,
     m_flow_nominal=mGeo_flow_nominal)
     "Borefield system leaving water temperature"
     annotation (Placement(transformation(
@@ -329,34 +323,32 @@ model SubstationWithConstPrimPum_OnOffChiller
         rotation=90,
         origin={-30,-210})));
 
-  Fluid.Sensors.TemperatureTwoPort TDisHexLvg(
-    redeclare final package Medium = Medium,
-          allowFlowReversal=false,
-    tau=10,
-    m_flow_nominal=mHex_flow_nominal)
+     Fluid.Sensors.TemperatureTwoPort TDisHexLvg(
+      redeclare final package Medium = Medium,
+      allowFlowReversal=false,
+      tau=10,
+      m_flow_nominal=mHex_flow_nominal)
      "District heat exchanger leaving water temperature"
      annotation (Placement(
         transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={22,-200})));
-
      Fluid.Sensors.TemperatureTwoPort TBorEnt(
       tau=0,
       redeclare final package Medium = Medium,
-              allowFlowReversal=false,
+      allowFlowReversal=false,
       m_flow_nominal=mGeo_flow_nominal)
       "Entering water temperature to the borefield system"
       annotation (Placement(
         transformation(
         extent={{-10,10},{10,-10}},
         rotation=270,
-        origin={-70,-170})));
-
+        origin={-70,-174})));
     Fluid.Sensors.TemperatureTwoPort disRetTem(
       tau=0,
       redeclare final package Medium = Medium,
-              allowFlowReversal=false,
+      allowFlowReversal=false,
       m_flow_nominal=mHex_flow_nominal)
       "District system return water temperature"
        annotation (Placement(
@@ -364,11 +356,10 @@ model SubstationWithConstPrimPum_OnOffChiller
           extent={{-10,-10},{10,10}},
           rotation=0,
           origin={230,-150})));
-
     Fluid.Sensors.TemperatureTwoPort disSupTem(
       tau=0,
       redeclare final package Medium = Medium,
-              allowFlowReversal=false,
+      allowFlowReversal=false,
       m_flow_nominal=mHex_flow_nominal)
       "District system supply water temperature"
        annotation (Placement(
@@ -379,71 +370,68 @@ model SubstationWithConstPrimPum_OnOffChiller
 
    Fluid.Sensors.TemperatureTwoPort TDisHex(
       redeclare final package Medium = Medium,
-              allowFlowReversal=false,
+      allowFlowReversal=false,
       tau=10,
       m_flow_nominal=mHex_flow_nominal)
-      "Entering water tmperature to the district heat exchanger"
+    "Entering water tmperature to the district heat exchanger"
        annotation (Placement(transformation(extent={{-10,10},{10,-10}},
                                             rotation=270,
                                             origin={110,-70})));
-  Fluid.Sensors.MassFlowRate secCooFlo(redeclare package Medium = Medium)
-    "Secondary circuit chilled water flow rate"
-    annotation (Placement(transformation(extent={{-252,70},{-272,90}})));
   Fluid.Sensors.MassFlowRate secHeaFlo(redeclare package Medium = Medium)
     "Secondary circuit heating water flow rate"
-    annotation (Placement(transformation(extent={{266,4},{286,24}})));
+    annotation (Placement(transformation(extent={{248,8},{268,28}})));
   Fluid.Sensors.MassFlowRate priCooFlo(redeclare package Medium =Medium)
     "Primary circuit evaporator side chilled water flow rate"
     annotation (Placement(transformation(extent={{-174,10},{-194,30}})));
   Fluid.Sensors.MassFlowRate priLoaFlo(redeclare package Medium = Medium)
     "Primary circuit load side heating water flow rate"
-    annotation (Placement(transformation(extent={{126,50},{146,70}})));
+    annotation (Placement(transformation(extent={{120,50},{140,70}})));
 
  //-----------------------------Fluid Interfaces and headers------------------------------------
-    Modelica.Fluid.Interfaces.FluidPort_a chiWatSup(
-    h_outflow(start=Medium.h_default, nominal=Medium.h_default),
-    redeclare final package Medium = Medium,
-    p(start=Medium.p_default)) "Chilled water supply to the building."
-    annotation (Placement(transformation(extent={{-312,70},{-292,90}}),
-        iconTransformation(extent={{-120,-58},{-100,-38}})));
-    Modelica.Fluid.Interfaces.FluidPort_b chiWatRet(
+    Modelica.Fluid.Interfaces.FluidPort_a chiWatRet(
     h_outflow(start=Medium.h_default, nominal=Medium.h_default),
     redeclare final package Medium = Medium,
     p(start=Medium.p_default)) "Chilled water return from the building."
-    annotation (Placement(transformation(extent={{-292,50},{-312,70}}),
-        iconTransformation(extent={{-100,-82},{-120,-62}})));
+    annotation (Placement(transformation(extent={{-314,66},{-294,86}}),
+        iconTransformation(extent={{-120,-82},{-100,-62}})));
+    Modelica.Fluid.Interfaces.FluidPort_b chiWatSup(
+    h_outflow(start=Medium.h_default, nominal=Medium.h_default),
+    redeclare final package Medium = Medium,
+    p(start=Medium.p_default)) "Chilled watersupply to the building."
+    annotation (Placement(transformation(extent={{-294,50},{-314,70}}),
+        iconTransformation(extent={{-98,-60},{-118,-40}})));
   BaseClasses.HydraulicHeader heaSupHed(
     redeclare package Medium = Medium,
     m_flow_nominal=mCon_flow_nominal,
     nPorts_b=2,
-    nPorts_a=2) "Heating supply water header" annotation (Placement(transformation(extent={{92,50},{112,70}})));
+    nPorts_a=1) "Heating supply water header" annotation (Placement(transformation(extent={{92,50},{112,70}})));
   BaseClasses.HydraulicHeader heaRetHed(
     redeclare package Medium = Medium,
     m_flow_nominal=mCon_flow_nominal,
-    nPorts_a=2,
-    nPorts_b=1) "Heating return water header" annotation (Placement(transformation(extent={{122,30},{102,10}})));
-    Modelica.Fluid.Interfaces.FluidPort_a hotWatSup(
-    h_outflow(start=Medium.h_default, nominal=Medium.h_default),
-    redeclare final package Medium = Medium,
-    p(start=Medium.p_default)) "Hot water supply to the building."
-      annotation (Placement(transformation(extent={{294,4},{314,24}}),  iconTransformation(
-          extent={{100,-58},{120,-38}})));
-    Modelica.Fluid.Interfaces.FluidPort_b hotWatRet(
+    nPorts_a=1,
+    nPorts_b=2) "Heating return water header" annotation (Placement(transformation(extent={{122,30},{102,10}})));
+    Modelica.Fluid.Interfaces.FluidPort_a hotWatRet(
     h_outflow(start=Medium.h_default, nominal=Medium.h_default),
     redeclare final package Medium = Medium,
     p(start=Medium.p_default)) "Hot water return from the building."
-    annotation (Placement(transformation(extent={{312,24},{292,44}}),
-        iconTransformation(extent={{120,-82},{100,-62}})));
+      annotation (Placement(transformation(extent={{292,8},{312,28}}),  iconTransformation(
+          extent={{100,-58},{120,-38}})));
+    Modelica.Fluid.Interfaces.FluidPort_b hotWatSup(
+    h_outflow(start=Medium.h_default, nominal=Medium.h_default),
+    redeclare final package Medium = Medium,
+    p(start=Medium.p_default)) "Hot water supply to the building." annotation (
+      Placement(transformation(extent={{310,32},{290,52}}), iconTransformation(
+          extent={{120,-82},{100,-62}})));
      BaseClasses.HydraulicHeader cooRetHed(
       redeclare package Medium = Medium,
       m_flow_nominal=mEva_flow_nominal,
       nPorts_a=2,
-      nPorts_b=1) "Return chilled water header.  " annotation (Placement(transformation(extent={{-148,70},
+    nPorts_b=1)   "Return chilled water header.  " annotation (Placement(transformation(extent={{-148,70},
             {-128,50}})));
     BaseClasses.HydraulicHeader cooSupHed(
       redeclare package Medium = Medium,
       m_flow_nominal=mEva_flow_nominal,
-      nPorts_a=2,
+      nPorts_a=1,
       nPorts_b=2) "Supply chilled water header. " annotation (Placement(transformation(extent={{-108,10},{-128,30}})));
 
      BaseClasses.HydraulicHeader ambRetHed(
@@ -452,7 +440,7 @@ model SubstationWithConstPrimPum_OnOffChiller
       nPorts_a=2,
       nPorts_b=2) "ambient circuit return header" annotation (Placement(transformation(extent={{-30,-58},{-50,-38}})));
 
-     BaseClasses.HydraulicHeader ambHedSup(
+     BaseClasses.HydraulicHeader ambSupHed(
       redeclare package Medium = Medium,
       m_flow_nominal=mHex_flow_nominal + mGeo_flow_nominal,
       nPorts_a=2,
@@ -473,7 +461,7 @@ model SubstationWithConstPrimPum_OnOffChiller
           iconTransformation(extent={{22,-120},{2,-100}})));
 
     Fluid.FixedResistances.Junction splVal1(
-      final dp_nominal = {0, 0, 0},
+    final dp_nominal=200*{1,-1,-1},
       from_dp=false,
       tau=1,
     m_flow_nominal={mGeo_flow_nominal,-mGeo_flow_nominal,-mGeo_flow_nominal},
@@ -495,7 +483,7 @@ model SubstationWithConstPrimPum_OnOffChiller
           rotation=270,
           origin={-60,78})));
     Fluid.FixedResistances.Junction splVal3(
-      final dp_nominal = {0, 0, 0},
+    final dp_nominal=200*{1,-1,-1},
       from_dp=false,
       tau=1,
     m_flow_nominal={mCon_flow_nominal,-mCon_flow_nominal,-mCon_flow_nominal},
@@ -547,9 +535,9 @@ model SubstationWithConstPrimPum_OnOffChiller
     Fluid.Actuators.Valves.ThreeWayEqualPercentageLinear valEva(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    m_flow_nominal=mEva_flow_nominal,
+      m_flow_nominal=mEva_flow_nominal,
       l={0.01,0.01},
-    dpValve_nominal=6000)
+      dpValve_nominal=6000)
     "Three way valve modulated to control the entering water temperature to the evaporator."
      annotation (Placement(transformation(extent={{10,10},{-10,-10}},
                                           rotation=270,
@@ -580,10 +568,11 @@ model SubstationWithConstPrimPum_OnOffChiller
       cSoi=1210)
       "Soil data"
       annotation (Placement(transformation(extent={{-292,-208},{-272,-188}})));
+
     final parameter Buildings.Fluid.Geothermal.Borefields.Data.Configuration.Template conDat(
       final borCon=Buildings.Fluid.Geothermal.Borefields.Types.BoreholeConfiguration.SingleUTube,
       final use_Rb=false,
-      final mBor_flow_nominal=mGeo_flow_nominal/(nXBorHol*nYBorHol),
+      final mBor_flow_nominal=mBor_flow_nominal,
       final mBorFie_flow_nominal=mGeo_flow_nominal,
       final hBor=244,
       final dBor=1,
@@ -592,7 +581,7 @@ model SubstationWithConstPrimPum_OnOffChiller
       final kTub=0.5,
       final eTub=0.002,
       final cooBor={{dBorHol*mod((i - 1), nXBorHol),dBorHol*floor((i - 1)/
-          nXBorHol)} for i in 1:nBorHol},
+                     nXBorHol)} for i in 1:nBorHol},
       final xC=0.075,
       final dp_nominal=dpBorFie_nominal)
     "Borefield configuration"
@@ -608,7 +597,7 @@ model SubstationWithConstPrimPum_OnOffChiller
 
     Modelica.Blocks.Interfaces.RealInput TSetCooMin(final unit="K",displayUnit="degC")
     "Minimum cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-322,218},{-302,238}}),
+    annotation (Placement(transformation(extent={{-320,244},{-300,264}}),
                     iconTransformation(extent={{-116,66},{-100,82}})));
 
     Modelica.Blocks.Interfaces.RealInput TMaxBorEnt(final unit="K",displayUnit="degC")
@@ -618,76 +607,59 @@ model SubstationWithConstPrimPum_OnOffChiller
 
     Modelica.Blocks.Interfaces.RealInput TMinConEnt(final unit="K",displayUnit="degC")
       "Minimum condenser entering water temperature"
-         annotation (Placement(transformation(extent={{-320,184},{-300,204}}),
+         annotation (Placement(transformation(extent={{-320,230},{-300,250}}),
                      iconTransformation(extent={{-116,50},{-100,66}})));
     Modelica.Blocks.Interfaces.RealInput TMaxEvaEnt(final unit="K",displayUnit="degC")
     "Maximum evaporator entering water temperature"
         annotation (
-      Placement(transformation(extent={{-320,170},{-300,190}}), iconTransformation(extent={{-116,-4},
+      Placement(transformation(extent={{-320,216},{-300,236}}), iconTransformation(extent={{-116,-4},
             {-100,12}})));
-
-  /*
-  //-------------------------SolarCollector------------------------
-    parameter Integer nSeg(min=3)
-     "Number of segments used to discretize the collector model"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.Angle lat
-     "Latitude"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.Angle azi
-     "Surface azimuth (0 for south-facing; -90 degree for east-facing; +90 degree for west facing"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.Angle til
-     "Surface tilt (0 for horizontally mounted collector)"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Real rho
-     "Ground reflectance"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Fluid.SolarCollectors.Types.NumberSelection nColType=Buildings.Fluid.SolarCollectors.Types.NumberSelection.Number
-     "Selection of area specification format"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Fluid.SolarCollectors.Types.SystemConfiguration sysConfig=Buildings.Fluid.SolarCollectors.Types.SystemConfiguration.Series
-     "Selection of system configuration"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Real shaCoe
-      "Shading coefficient. 0.0: no shading, 1.0: full shading"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Integer nPanels
-     "Desired number of panels in the simulation"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.HeatCapacity C=385*solColDat.mDry
-     "Heat capacity of solar collector without fluid (default: cp_copper*mDry*nPanels)"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.MassFlowRate mSol_flow_nominal
-     "Solar thermal collecDialogtor nominal water flow rate"
-      annotation (Dialog(tab="SolarCollector"));
-    parameter Modelica.SIunits.PressureDifference dpSol_nominal
-      "Pressure difference accross the sollar colletor"
-      annotation (Dialog(tab="SolarCollector"));
- */
-
-  parameter Modelica.SIunits.TemperatureDifference THys=2
+    parameter Modelica.SIunits.TemperatureDifference THys=THys
     "Temperature hysteresis";
     Modelica.Blocks.Interfaces.RealInput TSetHea( final unit="K",displayUnit="degC")
      "Heating setpoint temperature"
-    annotation (Placement(transformation(extent={{-320,270},{-300,290}}),
+    annotation (Placement(transformation(extent={{-320,272},{-300,292}}),
         iconTransformation(extent={{-116,80},{-100,96}})));
     Modelica.Blocks.Interfaces.RealInput TSetCoo( final unit="K",displayUnit="degC")
      "Cooling setpoint temperature"
-    annotation (Placement(transformation(extent={{-320,256},{-300,276}}),
+    annotation (Placement(transformation(extent={{-320,258},{-300,278}}),
         iconTransformation(extent={{-116,94},{-100,110}})));
-  Fluid.Sources.Boundary_pT           bouCoo(redeclare package Medium = Medium,
-      nPorts=1) "Pressure boundary condition in cooling load side" annotation (
-      Placement(transformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={-188,-32})));
-  Fluid.Sources.Boundary_pT bouHea(redeclare package Medium = Medium, nPorts=1)
-    "Pressure boundary condition in heating load side" annotation (Placement(
+    Buildings.Controls.OBC.CDL.Interfaces.IntegerOutput yRejHeaInd
+    "Heat rejection index"      annotation (Placement(transformation(extent={{300,
+            -100},{320,-80}}),
+                            iconTransformation(extent={{100,-2},{128,26}})));
+
+    Fluid.Actuators.Valves.TwoWayLinear valSupHea1(
+    redeclare final package Medium = Medium,
+    use_inputFilter=false,
+    dpFixed_nominal=0,
+    show_T=true,
+    dpValve_nominal=dp_nominal,
+    riseTime=10,
+    l=1e-8,
+    m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
+    "Two way modulating valve."
+      annotation (Placement(transformation(extent={{36,-142},{56,-122}})));
+    Fluid.Actuators.Valves.TwoWayLinear valSupCoo1(
+    redeclare final package Medium = Medium,
+    use_inputFilter=false,
+    dpFixed_nominal=0,
+    show_T=true,
+    dpValve_nominal=dp_nominal,
+    riseTime=10,
+    l=1e-8,
+    m_flow_nominal=mGeo_flow_nominal + mHex_flow_nominal)
+      "Two way modulating valve"
+      annotation (Placement(transformation(extent={{-4,-98},{16,-78}})));
+    Fluid.Sensors.TemperatureTwoPort TValEnt(
+    redeclare final package Medium = Medium,
+    allowFlowReversal=false,
+    m_flow_nominal=mEva_flow_nominal,
+    tau=0) "Evaporator entering water temperature" annotation (Placement(
         transformation(
         extent={{10,10},{-10,-10}},
-        rotation=90,
-        origin={112,90})));
+        rotation=180,
+        origin={-106,60})));
 equation
   connect(chi.port_b1, pumCon.port_a) annotation (Line(
       points={{-10,132},{0,132}},
@@ -705,10 +677,11 @@ equation
       pattern=LinePattern.Dash,
       thickness=0.5));
   connect(colBufTan.heaPorVol[1], topCooTan.port)
-    annotation (Line(points={{-222,60},{-222,94},{-224,94}},color={191,0,0},
+    annotation (Line(points={{-222,60},{-222,100},{-230,100}},
+                                                            color={191,0,0},
       pattern=LinePattern.Dash));
   connect(colBufTan.heaPorVol[nSegTan], botCooTan.port)
-    annotation (Line(points={{-222,60},{-222,0},{-230,0}},
+    annotation (Line(points={{-222,60},{-222,20},{-230,20}},
                                      color={191,0,0},
       pattern=LinePattern.Dash));
   connect(hotBufTan.heaPorVol[nSegTan], botHotTan.port)
@@ -720,29 +693,24 @@ equation
       pattern=LinePattern.Dash));
   connect(topHotTan.T,ETSCon. TTanHeaTop)
     annotation (Line(
-      points={{194,208},{84,208},{84,246},{-204,246},{-204,213},{-199,213}},
+      points={{194,208},{84,208},{84,246},{-204,246},{-204,219},{-201,219}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(botHotTan.T,ETSCon. TTanHeaBot)
     annotation (Line(
-      points={{196,-32},{224,-32},{224,250},{-206,250},{-206,211},{-199,211}},
+      points={{196,-32},{224,-32},{224,250},{-206,250},{-206,217},{-201,217}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(topCooTan.T,ETSCon. TTanCooTop)
     annotation (Line(
-      points={{-244,94},{-266,94},{-266,195},{-199,195}},
+      points={{-250,100},{-266,100},{-266,201},{-201,201}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(botCooTan.T,ETSCon. TTanCooBot)
     annotation (Line(
-      points={{-250,0},{-274,0},{-274,197},{-199,197}},
+      points={{-250,20},{-274,20},{-274,203},{-201,203}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(hotBufTan.mNor_flow,ETSCon. mTanHotNor)
-    annotation (Line(points={{181.2,46.8},{236,46.8},{236,260},{-210,260},{-210,
-          205},{-199,205}},
-        color={0,0,127},
-      pattern=LinePattern.Dash));
   connect(hex.port_a1, pumHexDis.port_b)
     annotation (Line(points={{104,-160},{104,-120},{110,-120}},                         color={0,127,
           255},
@@ -763,7 +731,7 @@ equation
     annotation (Line(points={{240,-150},{300,-150}}, color={238,46,47},
       thickness=0.5));
   connect(TBorLvg.port_a, borFie.port_b) annotation (Line(
-      points={{-30,-220},{-70,-220},{-70,-200}},
+      points={{-30,-220},{-70,-220},{-70,-208}},
       color={28,108,200},
       thickness=0.5,
       pattern=LinePattern.DashDotDot));
@@ -773,62 +741,44 @@ equation
       pattern=LinePattern.DashDotDot,
       thickness=0.5));
 
-  connect(TMinConEnt, heaPumCon.TMinConEnt) annotation (Line(
-      points={{-310,194},{-136,194},{-136,207.2},{-121,207.2}},
+  connect(TMinConEnt, chiCon.TMinConEnt) annotation (Line(
+      points={{-310,240},{-136,240},{-136,207.2},{-121,207.2}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(TMaxEvaEnt, heaPumCon.TMaxEvaEnt) annotation (Line(
-      points={{-310,180},{-296,180},{-296,190},{-134,190},{-134,205.4},{-121,
-          205.4}},
+  connect(TMaxEvaEnt, chiCon.TMaxEvaEnt) annotation (Line(
+      points={{-310,226},{-292,226},{-292,236},{-138,236},{-138,205.4},{-121,205.4}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(ETSCon.reqHea,pumPrimCon.reqHea)  annotation (Line(points={{-177,213},
-          {-140,213},{-140,162},{-121.4,162}},              color={255,0,255},
+
+  connect(ETSCon.reqHea,pumPrimCon.reqHea)  annotation (Line(points={{-179,219},
+          {-140,219},{-140,162},{-121.4,162}},              color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(chiWatSup, secCooFlo.port_b) annotation (Line(
-      points={{-302,80},{-272,80}},
-      color={0,127,255},
-      thickness=0.5));
-  connect(hotWatSup, secHeaFlo.port_b)
-    annotation (Line(points={{304,14},{286,14}}, color={238,46,47}));
-  connect(hotBufTan.port_a, priLoaFlo.port_b)
-    annotation (Line(points={{156,42},{150,42},{150,60},{146,60}},
-                                                 color={238,46,47}));
+  connect(hotWatRet, secHeaFlo.port_b)
+    annotation (Line(points={{302,18},{268,18}}, color={238,46,47}));
 
   connect(pumHexDis.port_a, TDisHex.port_b)
     annotation (Line(points={{110,-100},{110,-80}},color={0,127,255},
       thickness=0.5));
-  connect(ambCon.yBorThrVal, valBor.y)
-    annotation (Line(points={{-123,-64.2},{-123,-64},{-100,-64},{-100,-110},{
-          -82,-110}},                                                                    color={0,0,127},
-      pattern=LinePattern.Dash));
 
-  connect(pumBor.port_b, TBorEnt.port_a) annotation (Line(points={{-70,-160},{
-          -70,-160}},                                                                     color={0,127,255}));
-  connect(borFie.port_a, TBorEnt.port_b) annotation (Line(points={{-70,-180},{
-          -70,-180}},                                                                     color={0,127,255}));
   connect(TMaxBorEnt, ambCon.TBorMaxEnt) annotation (Line(
       points={{-310,-74},{-172,-74},{-172,-73},{-145,-73}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TBorEnt.T, ambCon.TBorEnt) annotation (Line(
-      points={{-81,-170},{-154,-170},{-154,-79.8},{-145,-79.8}},
+      points={{-81,-174},{-154,-174},{-154,-79.8},{-145,-79.8}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(TDisHexLvg.T, ambCon.TDisHexLvg) annotation (Line(
-      points={{11,-200},{0,-200},{0,-282},{-160,-282},{-160,-77.2},{-145,-77.2}},
+      points={{11,-200},{4,-200},{4,-282},{-156,-282},{-156,-77.2},{-145,-77.2}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(ambCon.TDisHexEnt, TDisHex.T) annotation (Line(
       points={{-145,-75.2},{-162,-75.2},{-162,-288},{90,-288},{90,-70},{99,-70}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(ETSCon.mTanColNor, colBufTan.mNor_flow)
-    annotation (Line(points={{-199,203},{-202,203},{-202,64.8},{-208.8,64.8}}, color={0,0,127},
-      pattern=LinePattern.Dash));
 
   connect(TEvaLvg.port_b, cooSupHed.ports_a[1]) annotation (Line(points={{-88,20},
-          {-88,20.45},{-107.8,20.45}},                                                          color={0,127,
+          {-88,19.7},{-107.8,19.7}},                                                            color={0,127,
           255},
       thickness=0.5));
   connect(priCooFlo.port_a, cooSupHed.ports_b[2]) annotation (Line(points={{-174,20},
@@ -844,11 +794,6 @@ equation
           47},
       thickness=0.5,
       pattern=LinePattern.Dash));
-  connect(cooRetHed.ports_b[1], valEva.port_1)
-    annotation (Line(points={{-127.6,59.9},{-94,59.9},{-94,68}}, color={238,46,
-          47},
-      thickness=0.5,
-      pattern=LinePattern.Dash));
   connect(splVal2.port_3, valEva.port_3) annotation (Line(points={{-70,78},{-84,78}}, color={0,127,255}));
   connect(chi.port_b2, splVal2.port_1) annotation (Line(
       points={{-30,120},{-60,120},{-60,88}},
@@ -857,7 +802,7 @@ equation
   connect(splVal2.port_2, TEvaLvg.port_a) annotation (Line(points={{-60,68},{-60,20},{-68,20}}, color={0,127,
           255},
       thickness=0.5));
-  connect(TDisHexLvg.port_b, ambHedSup.ports_a[1]) annotation (Line(points={{22,-190},
+  connect(TDisHexLvg.port_b,ambSupHed. ports_a[1]) annotation (Line(points={{22,-190},
           {22,-168},{-8,-168},{-8,-131.495},{-0.2,-131.495}},
                             color={0,127,255},
       thickness=0.5));
@@ -880,23 +825,14 @@ equation
       thickness=0.5));
   connect(TBorLvg.port_b, splVal1.port_1) annotation (Line(points={{-30,-200},{
           -30,-180}},                                                                      color={0,127,255}));
-  connect(splVal1.port_2, ambHedSup.ports_a[2])
+  connect(splVal1.port_2,ambSupHed. ports_a[2])
     annotation (Line(points={{-30,-160},{-30,-129.845},{-0.2,-129.845}}, color={0,127,
           255},
-      thickness=0.5));
-  connect(cooRetHed.ports_a[1], ambHedSup.ports_b[1]) annotation (Line(points={{-148.2,
-          59.55},{-148.2,2},{28,2},{28,-130.285},{20.4,-130.285}},
-                            color={238,46,47},
-      thickness=0.5,
-      pattern=LinePattern.Dash));
-  connect(ambHedSup.ports_b[2], heaRetHed.ports_a[1]) annotation (Line(points={{20.4,
-          -131.935},{72,-131.935},{72,2},{122.2,2},{122.2,19.55}},
-                             color={0,127,255},
       thickness=0.5));
   connect(pumCon.port_b, splVal3.port_1) annotation (Line(points={{20,132},{32,132}}, color={0,127,255}));
   connect(TConLvg.port_a, splVal3.port_2) annotation (Line(points={{58,132},{52,132}}, color={0,127,255}));
   connect(TConLvg.port_b, heaSupHed.ports_a[1])
-    annotation (Line(points={{78,132},{84,132},{84,60.45},{91.8,60.45}},
+    annotation (Line(points={{78,132},{84,132},{84,59.7},{91.8,59.7}},
                                                                    color={238,46,
           47},
       thickness=0.5));
@@ -904,8 +840,7 @@ equation
     annotation (Line(points={{-24,52},{42,52},{42,122}}, color={0,127,255},
       thickness=0.5));
   connect(heaSupHed.ports_b[2], priLoaFlo.port_a)
-    annotation (Line(points={{112.4,60.85},{120,60.85},{120,60},{126,60}},
-                                                                   color={0,127,255}));
+    annotation (Line(points={{112.4,60.85},{120,60.85},{120,60}},  color={0,127,255}));
   connect(valSupCoo.port_b, ambRetHed.ports_a[1])
     annotation (Line(points={{-74,-20},{-24,-20},{-24,-47.55},{-29.8,-47.55}},
                                                                          color={0,127,
@@ -916,80 +851,66 @@ equation
                                                                         color={0,127,
           255},
       thickness=0.5));
-  connect(ambRetHed.ports_b[1], TDisHex.port_a)
-    annotation (Line(points={{-50.4,-48.65},{-56,-48.65},{-56,-60},{110,-60}},
+  connect(ambRetHed.ports_b[1], TDisHex.port_a) annotation (Line(points={{-50.4,-48.65},{-56,-48.65},{-56,-60},{110,-60}},
                                                                        color={0,127,
           255},
       thickness=0.5));
   connect(pumBor.m_flow_in, gaiBor.y) annotation (Line(points={{-82,-150},{-88,-150}}, color={0,0,127}));
-  connect(ambCon.yBorPum, gaiBor.u) annotation (Line(
-      points={{-123,-75.2},{-116,-75.2},{-116,-150},{-112,-150}},
-      color={0,0,127},
-      pattern=LinePattern.Dash));
-  connect(ambCon.yDisHexPum, gaiMDisHex.u) annotation (Line(
-      points={{-123,-78.8},{-120,-78.8},{-120,-252},{38,-252}},
-      color={0,0,127},
-      pattern=LinePattern.Dash));
   connect(gaiMDisHex.y, pumHexDis.m_flow_in) annotation (Line(
       points={{62,-252},{80,-252},{80,-110},{98,-110}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(TConEnt.T, heaPumCon.TConEnt) annotation (Line(
-      points={{-10,31},{-10,40},{-122,40},{-122,200.2},{-121,200.2}},
+  connect(TConEnt.T, chiCon.TConEnt) annotation (Line(
+      points={{-10,31},{-10,40},{-126,40},{-126,200.2},{-121,200.2}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(TEvaEnt.T, heaPumCon.TEvaEnt) annotation (Line(
+  connect(TEvaEnt.T, chiCon.TEvaEnt) annotation (Line(
       points={{-20,107},{-20,116},{-62,116},{-62,192},{-126,192},{-126,203.4},{-121,
           203.4}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-
   connect(ETSCon.reqCoo,pumPrimCon.reqCoo)  annotation (Line(
-      points={{-177,195},{-166,195},{-166,142.2},{-121.4,142.2}},
+      points={{-179,201},{-166,201},{-166,142.2},{-121.4,142.2}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ETSCon.ValHeaPos, valSupHea.y)
-    annotation (Line(
-      points={{-177,203},{-152,203},{-152,-2},{8,-2},{8,-8}},
+  connect(ETSCon.ValHeaPos, valSupHea.y) annotation (Line(
+      points={{-179,209},{-152,209},{-152,-2},{8,-2},{8,-8}},
       color={28,108,200},
       pattern=LinePattern.DashDot));
-  connect(ETSCon.ValCooPos, valSupCoo.y)
-    annotation (Line(
-      points={{-177,201},{-154,201},{-154,-8},{-84,-8}},
+  connect(ETSCon.ValCooPos, valSupCoo.y) annotation (Line(
+      points={{-179,207},{-152,207},{-152,-8},{-84,-8}},
       color={28,108,200},
       pattern=LinePattern.DashDot));
   connect(ETSCon.reqCoo, ambCon.reqCoo) annotation (Line(
-      points={{-177,195},{-166,195},{-166,-71},{-145,-71}},
+      points={{-179,201},{-166,201},{-166,-71},{-145,-71}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ambCon.reqHea, ETSCon.reqHea) annotation (Line(
-      points={{-145,-60.2},{-156,-60.2},{-156,213},{-177,213}},
+      points={{-145,-60.2},{-156,-60.2},{-156,219},{-179,219}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.ValHea, ambCon.valHea) annotation (Line(
-      points={{-177,211},{-158,211},{-158,-62.4},{-145,-62.4}},
+      points={{-179,217},{-158,217},{-158,-62.4},{-145,-62.4}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.ValCoo, ambCon.valCoo) annotation (Line(
-      points={{-177,209},{-160,209},{-160,-64.8},{-145,-64.8}},
+      points={{-179,215},{-160,215},{-160,-64.8},{-145,-64.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ambCon.rejCooFulLoa,ETSCon. rejColFulLoa) annotation (Line(
-      points={{-145,-69},{-164,-69},{-164,196.8},{-177,196.8}},
+      points={{-145,-69},{-164,-69},{-164,202.8},{-179,202.8}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(ETSCon.rejHeaFulLoa, ambCon.rejHeaFulLoa) annotation (Line(
-      points={{-177,198.8},{-162,198.8},{-162,-67},{-145,-67}},
+      points={{-179,204.8},{-162,204.8},{-162,-67},{-145,-67}},
       color={255,0,255},
       pattern=LinePattern.Dot));
   connect(pumPrimCon.yPumCon, pumCon.y) annotation (Line(points={{-99,160},{10,
           160},{10,144}},                                                                      color={0,0,127},
       pattern=LinePattern.Dot));
-
   connect(pumPrimCon.yPumEva, pumEva.y) annotation (Line(points={{-99,144},{-76,
           144},{-76,142}},                                                                       color={0,0,127},
       pattern=LinePattern.Dot));
-
   connect(valBor.port_2, pumBor.port_a) annotation (Line(points={{-70,-120},{
           -70,-140}},            color={0,127,255},
       thickness=0.5));
@@ -998,71 +919,103 @@ equation
       color={0,127,255},
       thickness=0.5));
   connect(TSetHea, ETSCon.TSetHea) annotation (Line(
-      points={{-310,280},{-214,280},{-214,209},{-199,209}},
+      points={{-310,282},{-214,282},{-214,215},{-201,215}},
       color={238,46,47},
       pattern=LinePattern.Dash,
       thickness=0.5));
   connect(TSetCoo, ETSCon.TSetCoo) annotation (Line(
-      points={{-310,266},{-228,266},{-228,199},{-199,199}},
+      points={{-310,268},{-228,268},{-228,205},{-201,205}},
       color={0,128,255},
       pattern=LinePattern.Dash,
       thickness=0.5));
-  connect(TSetHea, heaPumCon.TSetHea) annotation (Line(
-      points={{-310,280},{-126,280},{-126,211},{-121,211}},
+  connect(TSetHea, chiCon.TSetHea) annotation (Line(
+      points={{-310,282},{-126,282},{-126,211},{-121,211}},
       color={238,46,47},
       pattern=LinePattern.Dash,
       thickness=0.5));
-  connect(TSetCoo, heaPumCon.TSetCoo) annotation (Line(
-      points={{-310,266},{-130,266},{-130,213},{-121,213}},
+  connect(TSetCoo, chiCon.TSetCoo) annotation (Line(
+      points={{-310,268},{-130,268},{-130,213},{-121,213}},
       color={0,128,255},
       pattern=LinePattern.Dash,
       thickness=0.5));
-  connect(ETSCon.reqHea, heaPumCon.reqHea) annotation (Line(
-      points={{-177,213},{-140,213},{-140,216},{-121.4,216}},
+  connect(ETSCon.reqHea, chiCon.reqHea) annotation (Line(
+      points={{-179,219},{-156,219},{-156,219},{-121.4,219}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(ETSCon.reqCoo, heaPumCon.reqCoo) annotation (Line(
-      points={{-177,195},{-166,195},{-166,219},{-121.4,219}},
+  connect(ETSCon.reqCoo, chiCon.reqCoo) annotation (Line(
+      points={{-179,201},{-150,201},{-150,215.4},{-121.4,215.4}},
       color={255,0,255},
       pattern=LinePattern.Dot));
-  connect(TSetCooMin, heaPumCon.TSetCooMin) annotation (Line(
-      points={{-312,228},{-134,228},{-134,210},{-121,210},{-121,208.8}},
+  connect(TSetCooMin, chiCon.TSetCooMin) annotation (Line(
+      points={{-310,254},{-134,254},{-134,208.8},{-121,208.8}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(TConLvg.T, heaPumCon.TConLvg) annotation (Line(
+  connect(TConLvg.T, chiCon.TConLvg) annotation (Line(
       points={{68,143},{68,194},{-124,194},{-124,201.6},{-121,201.6}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(heaPumCon.ychiMod, chi.on) annotation (Line(points={{-98.6,211.2},{-46,
-          211.2},{-46,130},{-32,130},{-32,129}}, color={255,0,255}));
-  connect(heaPumCon.TSetChi, chi.TSet) annotation (Line(points={{-98.6,214.6},{-42,
+  connect(chiCon.ychiMod, chi.on) annotation (Line(points={{-98.6,211.2},{-46,211.2},
+          {-46,130},{-32,130},{-32,129}}, color={255,0,255}));
+  connect(chiCon.TSetChi, chi.TSet) annotation (Line(points={{-98.6,214.6},{-42,
           214.6},{-42,123},{-32,123}}, color={0,0,127}));
-  connect(TConEnt.port_a, heaRetHed.ports_b[1]) annotation (Line(points={{0,20},
-          {50,20},{50,19.9},{101.6,19.9}}, color={0,127,255}));
-  connect(priCooFlo.port_b, colBufTan.port_a1) annotation (Line(points={{-194,20},
-          {-204,20},{-204,50.4},{-210,50.4}}, color={0,127,255}));
-  connect(colBufTan.port_b, secCooFlo.port_a) annotation (Line(points={{-210,60},
-          {-204,60},{-204,80},{-252,80}}, color={0,127,255}));
-  connect(chiWatRet, colBufTan.port_a)
-    annotation (Line(points={{-302,60},{-234,60}}, color={0,127,255}));
-  connect(colBufTan.port_b1, cooRetHed.ports_a[2]) annotation (Line(points={{-234,
-          50.4},{-246,50.4},{-246,40},{-180,40},{-180,61.05},{-148.2,61.05}},
-        color={0,127,255}));
-  connect(heaRetHed.ports_a[2], hotBufTan.port_b) annotation (Line(points={{122.2,
-          21.05},{192,21.05},{192,42},{180,42}}, color={0,127,255}));
-  connect(hotWatRet, hotBufTan.port_a1) annotation (Line(points={{302,34},{242,34},
-          {242,32.4},{180,32.4}}, color={0,127,255}));
-  connect(hotBufTan.port_b1, secHeaFlo.port_a) annotation (Line(points={{156,32.4},
-          {148,32.4},{148,14},{266,14}}, color={0,127,255}));
-  connect(heaPumCon.yValEva, valEva.y) annotation (Line(points={{-98.6,203.6},{-96,
+  connect(TConEnt.port_a, heaRetHed.ports_b[1]) annotation (Line(points={{0,20},{
+          50,20},{50,20.65},{101.6,20.65}},color={0,127,255}));
+  connect(chiCon.yValEva, valEva.y) annotation (Line(points={{-98.6,203.6},{-96,
           203.6},{-96,130},{-114,130},{-114,78},{-106,78}}, color={0,0,127}));
-  connect(heaPumCon.yValCon, valCon.y) annotation (Line(points={{-98.6,206},{-52,
-          206},{-52,52},{-46,52}}, color={0,0,127}));
-  connect(cooSupHed.ports_a[2], bouCoo.ports[1]) annotation (Line(points={{
-          -107.8,18.95},{-107.8,18},{-108,18},{-108,-22},{-188,-22}}, color={0,
+  connect(chiCon.yValCon, valCon.y) annotation (Line(points={{-98.6,206},{-52,206},
+          {-52,52},{-46,52}}, color={0,0,127}));
+  connect(ambCon.yModInd, yRejHeaInd) annotation (Line(points={{-123,-70},{60,-70},
+          {60,-90},{310,-90}}, color={255,127,0}));
+  connect(pumBor.port_b, TBorEnt.port_a)
+    annotation (Line(points={{-70,-160},{-70,-164}}, color={0,127,255}));
+  connect(TBorEnt.port_b, borFie.port_a)
+    annotation (Line(points={{-70,-184},{-70,-188}}, color={0,127,255}));
+  connect(ambCon.yBorThrVal, valBor.y) annotation (Line(points={{-123,-64.2},{-94,
+          -64.2},{-94,-110},{-82,-110}}, color={0,0,127}));
+  connect(ambCon.yBorPum, gaiBor.u) annotation (Line(points={{-123,-75.2},{-116,
+          -75.2},{-116,-150},{-112,-150}}, color={0,0,127}));
+  connect(ambCon.yDisHexPum, gaiMDisHex.u) annotation (Line(points={{-123,-78.8},
+          {-120,-78.8},{-120,-252},{38,-252}}, color={0,0,127}));
+  connect(chiWatSup, colBufTan.port_a)
+    annotation (Line(points={{-304,60},{-234,60}}, color={0,127,255}));
+  connect(colBufTan.port_b1, cooRetHed.ports_a[1]) annotation (Line(points={{-234,
+          50.4},{-234,50},{-242,50},{-242,80},{-192,80},{-192,59.55},{-148.2,
+          59.55}},                color={0,127,255}));
+  connect(priCooFlo.port_b, colBufTan.port_a1) annotation (Line(points={{-194,
+          20},{-202,20},{-202,50.4},{-210,50.4}}, color={0,127,255}));
+  connect(colBufTan.port_b, chiWatRet) annotation (Line(points={{-210,60},{-202,
+          60},{-202,76},{-304,76}}, color={0,127,255}));
+  connect(priLoaFlo.port_b, hotBufTan.port_a) annotation (Line(points={{140,60},
+          {148,60},{148,42},{156,42}}, color={0,127,255}));
+  connect(hotBufTan.port_b, heaRetHed.ports_a[1]) annotation (Line(points={{180,42},
+          {188,42},{188,10},{128,10},{128,20.3},{122.2,20.3}},       color={0,
           127,255}));
-  connect(heaSupHed.ports_a[2], bouHea.ports[1]) annotation (Line(points={{91.8,
-          58.95},{102,58.95},{102,80},{112,80}}, color={0,127,255}));
+  connect(ETSCon.ValHeaPos, valSupHea1.y) annotation (Line(points={{-179,209},{
+          -152,209},{-152,-2},{46,-2},{46,-120}}, color={0,0,127}));
+  connect(ETSCon.ValCooPos, valSupCoo1.y) annotation (Line(
+      points={{-179,207},{-152,207},{-152,-54},{6,-54},{6,-76}},
+      color={0,0,127},
+      pattern=LinePattern.Dot));
+  connect(secHeaFlo.port_a, hotBufTan.port_a1) annotation (Line(points={{248,18},
+          {200,18},{200,32.4},{180,32.4}}, color={0,127,255}));
+  connect(hotBufTan.port_b1, hotWatSup) annotation (Line(points={{156,32.4},{
+          152,32.4},{152,76},{258,76},{258,40},{300,40},{300,42}}, color={0,127,
+          255}));
+  connect(valSupCoo1.port_a, ambSupHed.ports_b[1]) annotation (Line(points={{-4,-88},
+          {-6,-88},{-6,-118},{20.4,-118},{20.4,-130.285}},      color={0,127,
+          255}));
+  connect(cooRetHed.ports_a[2], valSupCoo1.port_b) annotation (Line(points={{
+          -148.2,61.05},{-148.2,-56},{28,-56},{28,-88},{16,-88}}, color={0,127,
+          255}));
+  connect(ambSupHed.ports_b[2], valSupHea1.port_a) annotation (Line(points={{
+          20.4,-131.935},{28.2,-131.935},{28.2,-132},{36,-132}}, color={0,127,
+          255}));
+  connect(valSupHea1.port_b, heaRetHed.ports_b[2]) annotation (Line(points={{56,
+          -132},{78,-132},{78,19.15},{101.6,19.15}}, color={0,127,255}));
+  connect(cooRetHed.ports_b[1], TValEnt.port_a) annotation (Line(points={{-127.6,
+          59.9},{-122,59.9},{-122,60},{-116,60}}, color={0,127,255}));
+  connect(valEva.port_1, TValEnt.port_b) annotation (Line(points={{-94,68},{-94,
+          64},{-94,60},{-96,60}}, color={0,127,255}));
    annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
                                 Rectangle(
         extent={{-100,-100},{100,100}},
@@ -1109,63 +1062,76 @@ equation
  Documentation(info="<html>
  <h4> Energy Transfer Station </h4>
 <p>
-This models represents a 5<sup>th</sup> generation district heating and cooling energy transfer station 5GDHC-ETS, where the main purposes are; to exploit the available renewable energy i.e. solar thermal energy modules,
-to implement the energy storage concept within the hot and cold buffer tanks and to successfully integrate the low temperature or ambient district circuit with the building thermal requirements.
+This models represents a 5<sup>th</sup> generation district heating and cooling energy transfer station 5GDHC-ETS, 
+where the main purposes are; to exploit the available renewable energy i.e. solar thermal energy modules,
+to implement the energy storage concept within the borefield system and to successfully integrate the low temperature or
+ambient district circuit with the building thermal operational modes.
 </p>
 <p align=\"center\">
 <img alt=\"Image the 5th generation of district heating and cooling substation\"
-src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/SubstationLayout.png\"/>
+src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/SubstationModifiedLayout.png\"/>
 </p>          
 <p>
-The layout consists of three main water circuits categorized by the water temperature and accordingly three interfaces with both the building and district system
+The substation layout consists of three water circuits categorized by the water temperature and accordingly three interfaces with
+<ul>
+<li>
+The building i.e. heating and cooling requirments
+</li>
+<li>
+The borfiled storage system
+</li>
+<li>
+The district system
+</li>
+</ul>
 </p>
-<h4> Hot water circuit, interface with ETS and the building heating requirements</h4>
+<h4> Hot water circuit, the interface between the substation and the building heating requirements</h4>
 <p>
-The hot water circuit operates to satisfy the building heating requirements. It consists of four main systems:
+It operates to satisfy the building heating requirements. It consists of three systems:
 </p>
 <ol>
 <li>
-The heatpump condenser loop, where the heatpump operates to satisfy the setpoint of the condenser leaving water temperature <code>TSetHea</code>.
+The heating generating source, where the EIR chiller i.e. condenser heat exchanger operates to satisfy the heating setpoint
+<code>TSetHea</code>.
 </li>
 <li>
-The condenser water pump <code>pumCon</code>, where pump the speed is modulated using a PI controller.
+The condenser water pump <code>pumCon</code>, where pump speed is constant.
 </li>
 <li>
-The solar thermal system, where the solar pump  <code>pumSol</code> turns on when both the incident solar radiation is large enough to produce useful energy gain to heat the water and the top level water temperature is below the
-solar setpoint temperature<code>TSetsolHotTan</code>.
-</li>
-<li>
-The hot buffer tank, where it is implemented to provide hydraulic separations between the primary and secondary water circulators i.e. pumps,store heat/cool supplied using lower cost time-use of electrical rates, reduce the size of the heat source relative to the peak load.
+The hot buffer tank, is implemented to provide hydraulic separations between the primary and secondary water circulators 
+i.e. pumps and eleminte the cycling of the heat generating source machine i.e EIR chiller.
 </ol>
-<h4> Cold water circuit, interface with ETS and the building cooling requirements</h4>
-The cold water circuit operates to satisfy the building cooling requirements and it consists of:
+<h4> Chilled water circuit, the interface between the substation and the building cooling requirements</h4>
+It operates to satisfy the building cooling requirements and it consists of three systems:
 </p>
 <ol>
 <li>
-The heatpump evaporator loop, where the heatpump operates to satisfy the setpoint of the evaporator leaving water temperature, <code>TSetCoo</code>.
+The cooling generating source, where the  EIR chiller i.e evaoporator heat exchanger operates to satisfy the cooling setpoint
+<code>TSetCoo</code>.
 </li>
 <li>
-The evaporator water pump <code>pumCon</code>, where pump the speed is modulated using a PI controller.
+The evaporator water pump <code>pumEva</code>, where pump speed is constant.
 </li>
 <li>The cold buffer tank, is implemented obviously for the same mentioned reasons of the hot buffer tank.
 </li>
 </ol>
-<h4>Notices for the cold and hot water circuits </h4>
+<h4>Notices for the hot and chilled water circuits</h4>
 <ol>
 <li>
-There are two finite state machine that transitions the mode of operation of
-the heatpump i.e. required heating or cooling and energy rejection to the borefield and district heat exchanger systems between the modes
-<i>part load rejection i.e. only to the borefield</i>, <i>full load rejection to both the borefield and district heat exchanger system</i>, <i>rejection to only the district heat exchanger system </i>.
-See more detailed description in <a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.SubstationUO\">
-Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.SubstationUO</a>
+<p>
+See more detailed description for the two finite state machine that transitions the mode of operation between
+required heating or cooling and energy rejection to either the borefield  or district heat exchanger
+or both in <a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.SubstationMainController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.SubstationMainController</a>
+</p>
 </li>
 <li>
-See more detailed description of the heat pump, <code>pumEva</code> and <code>pumCon</code> systems control in
-<a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.HeatPumpUO\"> Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.HeatPumpUO </a>.
-</li>
-<li>
-See more detailed description of the solar thermal module control in
-<a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.EnergyTransferStation.SolarThermalModule\"> Buildings.DistrictHeatingCooling.EnergyTransferStations.EnergyTransferStation.SolarThermalModule </a>.
+See more detailed description for the controller of heating/cooling generating source, <code>pumEva</code>,
+<code>pumCon</code>, <code>valEva</code>, <code>valCon</code> in
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.ChillerControllerOnOff\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.ChillerControllerOnOff</a> and
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.PrimaryPumpsConstantSpeed\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.PrimaryPumpsConstantSpeed.
 </li>
 </ol>
 <h4> Ambient water circuit, interface with ETS and the low temperature district network</h4>
@@ -1178,7 +1144,8 @@ It consists of two main systems
 The borefield pump <code>pumBor</code>, where its mass flow rate is modulated using a PI controller and it turns on and off based on:
 </li>
 <p>
-The difference between the measured and setpoint temperature of the buffer tank i.e. cold or hot buffer tank is identified using the finite state machine in
+The difference between the measured and setpoint temperature of the buffer tank i.e. cold or 
+hot buffer tank is identified using the finite state machine in
 <a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.ColdSideControlleUO\">
 Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.HotSideControlleUO</a> and <a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.ColdSideControlleUO\">
 Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.HotSideControlleUO</a>.
@@ -1204,7 +1171,7 @@ For more detailed description of the energy rejection control see
 </ul>
 </html>"),
     experiment(
-      StopTime=7776000,
+      StopTime=31104000,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"));
 end SubstationWithConstPrimPum_OnOffChiller;

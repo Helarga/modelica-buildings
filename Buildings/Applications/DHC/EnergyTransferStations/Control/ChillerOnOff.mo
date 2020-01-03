@@ -1,16 +1,17 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-model ChillerControllerOnOff "The control block of the EIR chiller."
+model ChillerOnOff
+  "The control block of the EIR chiller with constant speed compressor."
 
      extends Modelica.Blocks.Icons.Block;
 
   Buildings.Controls.OBC.CDL.Interfaces.BooleanInput reqCoo
     "Cooling is required Boolean signal" annotation (Placement(transformation(
-          extent={{-128,62},{-100,90}}), iconTransformation(extent={{-128,76},{
-            -100,104}})));
+          extent={{-128,62},{-100,90}}), iconTransformation(extent={{-128,40},{
+            -100,68}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanInput reqHea
     "Heating is required Boolean signal"
     annotation (Placement(transformation(extent={{-128,32},{-100,60}}),
-        iconTransformation(extent={{-128,46},{-100,74}})));
+        iconTransformation(extent={{-128,76},{-100,104}})));
 
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetHea(final unit="K",
       displayUnit="degC") "Setpoint for heating supply water to space loads"
@@ -32,16 +33,19 @@ model ChillerControllerOnOff "The control block of the EIR chiller."
     "Chiller operational mode." annotation (Placement(transformation(extent={{
             102,44},{122,64}}), iconTransformation(extent={{100,-2},{128,26}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput TSetChi(final unit="K",
-      displayUnit="degC") "Setpint temperture for the chiller" annotation (
+      displayUnit="degC") "Setpoint temperture for the chiller"
+                                                               annotation (
       Placement(transformation(extent={{100,-18},{120,2}}), iconTransformation(
           extent={{100,32},{128,60}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi2
     annotation (Placement(transformation(extent={{70,-18},{90,2}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TConLvg(final unit="K", displayUnit=
-        "degC") "Condenser leaving water temperature"  annotation (Placement(
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TConLvg(final
+     unit="K", displayUnit="degC")
+   "Condenser leaving water temperature"  annotation (Placement(
         transformation(extent={{-128,-204},{-100,-176}}), iconTransformation(
           extent={{-120,-94},{-100,-74}})));
-  Modelica.Blocks.Logical.And simHeaCoo "Simultaneous heating and cooling mode"
+  Modelica.Blocks.Logical.And simHeaCoo
+   "Simultaneous heating and cooling mode"
     annotation (Placement(transformation(extent={{-60,-88},{-40,-68}})));
   Buildings.Controls.Continuous.LimPID PI(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
@@ -51,7 +55,7 @@ model ChillerControllerOnOff "The control block of the EIR chiller."
     y_reset=0,
     k=0.1,
     Ti(displayUnit="s") = 300,
-    reverseAction=true)
+    reverseAction=false)
     "Resetting of heating set point tempearture in case reqCoo or (reqCoo and reqHea) are true."
     annotation (Placement(transformation(extent={{-58,-172},{-38,-152}})));
   Buildings.Controls.OBC.CDL.Continuous.Line mapFun
@@ -63,19 +67,22 @@ model ChillerControllerOnOff "The control block of the EIR chiller."
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X2(k=1)
     "PI maximum error"
     annotation (Placement(transformation(extent={{-28,-202},{-8,-182}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCooMin(final unit="K",
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCooMin(final
+      unit="K",
       displayUnit="degC") "Minimum setpoint for chilled water." annotation (
       Placement(transformation(extent={{-128,-228},{-100,-200}}),
         iconTransformation(extent={{-120,-22},{-100,-2}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCoo(final unit="K",
-      displayUnit="degC") "Setpoint for cooling supply water to space loads"
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TSetCoo(final
+      unit="K",
+      displayUnit="degC")
+   "Setpoint for cooling supply water to space loads"
     annotation (Placement(transformation(extent={{-128,-14},{-100,14}}),
         iconTransformation(extent={{-120,20},{-100,40}})));
   Buildings.Controls.OBC.CDL.Logical.Switch swi4
     annotation (Placement(transformation(extent={{40,-102},{60,-82}})));
   Modelica.Blocks.Logical.Or heaOnl "Heating only mode"
     annotation (Placement(transformation(extent={{-20,-80},{0,-60}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X3(k=25 + 273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X3(k=20 + 273.15)
     "Minimum heating setpoint temperature"
     annotation (Placement(transformation(extent={{-2,-216},{18,-196}})));
   Buildings.Controls.OBC.CDL.Logical.Not not1
@@ -91,13 +98,16 @@ model ChillerControllerOnOff "The control block of the EIR chiller."
     k=0.1,
     Ti(displayUnit="s") = 100,
     reverseAction=false)
-                        "Evaporator three way valve PI control signal "
+   "Evaporator three way valve PI control signal "
     annotation (Placement(transformation(extent={{32,-270},{52,-250}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaEnt(final unit="K",
-      displayUnit="degC") "Evaporator entering water temperature" annotation (
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaEnt(final
+      unit="K",
+      displayUnit="degC")
+   "Evaporator entering water temperature" annotation (
       Placement(transformation(extent={{-128,-302},{-100,-274}}),
         iconTransformation(extent={{-120,-76},{-100,-56}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TMaxEvaEnt(final unit="K",
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TMaxEvaEnt(final
+      unit="K",
       displayUnit="degC") "Maximum evaporator entering water temperature"
     annotation (Placement(transformation(extent={{-128,-274},{-100,-246}}),
         iconTransformation(extent={{-120,-56},{-100,-36}})));
@@ -115,12 +125,16 @@ model ChillerControllerOnOff "The control block of the EIR chiller."
     Ti(displayUnit="s") = 100,
     reverseAction=true) "Condenser three way valve PI control signal "
     annotation (Placement(transformation(extent={{30,-322},{50,-302}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final unit="K",
-      displayUnit="degC") "Condenser entering water temperature" annotation (
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(final
+      unit="K",
+      displayUnit="degC")
+    "Condenser entering water temperature" annotation (
       Placement(transformation(extent={{-126,-354},{-98,-326}}),
         iconTransformation(extent={{-120,-108},{-100,-88}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealInput TMinConEnt(final unit="K",
-      displayUnit="degC") "Minimum condenser entering water temperature"
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TMinConEnt(final
+      unit="K",
+      displayUnit="degC")
+   "Minimum condenser entering water temperature"
     annotation (Placement(transformation(extent={{-126,-326},{-98,-298}}),
         iconTransformation(extent={{-120,-38},{-100,-18}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput yValCon
@@ -241,56 +255,64 @@ equation
           fillColor={215,215,215},
           fillPattern=FillPattern.None,
           textString="Evaporator and Condenser three way valves control")}),
-          defaultComponentName="heaPumCon",
+          defaultComponentName="chiCon",
 Documentation(info="<html>
 <p>
-The block is applied for the reversible heat pump control. It outputs the heat pump status
-and resets the water temperature setpoint input signal to the heat pump <code>TReSetHea</code> based on the operational mode.
+The block resets the chilled water temperature <code>TReSetCoo</code> based on the system operational mode
+and computes the control signals for 
+<h4>EIR Chiller status</h4>
+<p>The chiller compressor is constant speed and switched on or off based on either <code>reqHea</code> or
+<code>reqCoo</code> is true, the controller outputs the integer output
+<code>ychiMod</code> =1 to switch on the chiller compressor.
 </p>
-<h4>Heat pump status</h4>
+<h4>Three way valve at the evaporator inlet</h4>
 <p>
-If either <code>reqHea</code> or <code>reqCoo</code> is true, the controller outputs the integer output
-<code>yHeaPumMod</code> to switch on the heat pump, other wise it switches off. 
+The three way valve at the inlet stream of the evaporator side is controlled with 
+a P or PI controller to track a constant, maximum water inlet temperature.
 </p>
-<h4>Modes of operation</h4> 
+<h4>Three way valve at the condenser inlet</h4>
+<p>
+The three way valve at the inlet stream of the condenser side is controlled with 
+a P or PI controller to track a constant, minimum water inlet temperature.
+</p>
+<h4>Reset of Chilled water setpoint temperature</h4>
+<p>
+As shown in the control scheme below during 
 <ul>
 <li> 
-Heating-only mode, the leaving water form the heat pump condenser side tracks the heating set point<code>TSetHea</code>
-and the leaving chilled water from the evaporator floats depending on the entering water temperature and flow rate.
+Simultaneous cooling and heating and heating only operational modes, the control sequence resets the cooling setpoint <code>TReSetCoo</code> till the leaving heating water temperature
+from the condenser side meets the heating setpoint <code>TSetHea</code> as shown below in the figure
 </li>
-<li> 
-Simultaneous cooling and heating and cooling only modes, the control sequence resets the heating set point<code>TReSetHea</code> till the leaving chilled water temperature
-from the evaporator side meets the cooling set point<code>TSetCoo</code> as shown below in the figure
-</li>
-</ul>
 <p align=\"center\">
-<img alt=\"Image PI controller to reset the TSetHea\"
-src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/resetTsetHea.png\"/>
+<img alt=\"Image PI controller to reset the TSetCoo\"
+src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/chillerControlDiagram.png\"/>
 </p> 
+</ul>
+
 <p>
-The required leverage in <code>TSetHea</code> is estimated by a reverse acting PI loop , with a reference set point of <code>TSetCoo</code>
-and measured temperature value of <code>TSouLvg</code>. Hence, when the evaporator leaving water temperature is higher than <code>TSetCoo</code>, 
-TSetHea is increased.
-</p>
-<p>
-During the simultaneous cooling and heating mode, the minimum re-set value of <code>TReSetHea</code> is considered equal to
-<code>TsetHea</code> to assure that heating loads are covered. However, in case of cooling only mode, the minimum re-set value is considered <code>TSetHeaMin</code>
-i.e. minimum leaving water temperature from the condenser, in order to reduce the heat pump compressor lift and improve the COP. The control mapping function
-is illustrated below
+The required decrement in <code>TSetCoo</code> is estimated by a reverse acting PI loop , with a reference set point of <code>TSetHea</code>
+and measured temperature value of <code>TConLvg</code>. Hence, when the condenser leaving water temperature is lower than <code>TSetHea</code>, 
+TSetCoo is decreased. The control mapping function is shown in 
 </p>
 <p align=\"center\">
-<img alt=\"Image Control Mapping function of resetting TsetHea\"
-src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/controlMappingFunction.png\"/>
+<img alt=\"Image Control Mapping function of resetting TsetCoo\"
+src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/chillerMappingFunction.png\"/>
 </p>  
 <p>
-See <a href=\"Buildings.Fluid.HeatPumps.EquationFitReversible\">
-Buildings.Fluid.HeatPumps.EquationFitReversible</a> for detailed description of the heat pump theory of operation.
+However if cooling only is required 
 </p>
+<ul>
+<li>
+The leaving water form the chiller evaporator side tracks the cooling setpoint <code>TSetCoo</code>
+and the leaving water from the condenser floats depending on the entering water temperature and flow rate.
+</li>
+</ul>
 </html>", revisions="<html>
 <ul>
 <li>
- <br/>
+November 25, 2019, by Hagar Elarga:<br/>
+First implementation. 
 </li>
 </ul>
 </html>"));
-end ChillerControllerOnOff;
+end ChillerOnOff;

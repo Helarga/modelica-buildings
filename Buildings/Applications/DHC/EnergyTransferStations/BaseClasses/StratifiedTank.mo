@@ -1,6 +1,7 @@
 within Buildings.Applications.DHC.EnergyTransferStations.BaseClasses;
 model StratifiedTank "Buffer tank model"
-  extends Buildings.Fluid.Storage.Stratified;
+  extends Buildings.Fluid.Storage.Stratified(show_T=true);
+
   Modelica.Fluid.Interfaces.FluidPort_a port_a1(
     p(start=Medium.p_default),
     redeclare final package Medium = Medium,

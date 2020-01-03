@@ -11,5 +11,6 @@ HeatRecoveryChillerController
 EvaporatorCondenserPumpsController
 AmbientCircuitSid
 HeatPumpController
-ChillerControllerOnOff
-PrimaryPumpsConstantSpeedController
+ChillerOnOff
+PrimaryPumpsConstantSpeed
+SubstationMainController

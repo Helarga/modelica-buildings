@@ -76,14 +76,15 @@ equation
 Documentation(info="<html>
  <h4> Water hydraulic header </h4>
  <p>
- The model represents a hydraulic header or a common pipe which connects different components at the system such as the heat pump, solar module etc. and it 
- assures the delivery of the flow in the quantities required at design conditions and at all other operational modes.
+ The model represents a header or a common pipe which hydraulically decouples
+ different connected components at the system such as the EIR chiller and  stratified tanks, etc. 
 </p>
 
 </html>", revisions="<html>
 <ul>
 <li>
- <br/>
+September 10, 2019 by Hagar Elarga:<br/>
+First implementation.
 </li>
 </ul>
 </html>"));

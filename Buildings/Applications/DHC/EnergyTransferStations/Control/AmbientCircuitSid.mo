@@ -3,9 +3,9 @@ model AmbientCircuitSid "Generate control outputs for source model"
   extends Modelica.Blocks.Icons.Block;
 
   parameter Modelica.SIunits.TemperatureDifference dTGeo
-    "Temperature difference in and out of borefield";
+    "Temperature difference between entering and leaving water to the borefield";
   parameter Modelica.SIunits.TemperatureDifference dTHex
-    "Temperature difference in and out of substation heat exchanger";
+    "Temperature difference  between entering and leaving water to the district heat exchanger";
   parameter Modelica.Blocks.Types.SimpleController
     controllerType=Modelica.Blocks.Types.SimpleController.PI "Type of controller"
     annotation (Dialog(group="PID controller"));
@@ -35,7 +35,7 @@ model AmbientCircuitSid "Generate control outputs for source model"
           extent={{-120,-62},{-100,-42}})));
   Modelica.Blocks.Interfaces.RealInput TDisHexLvg(final unit="K")
     "District heat exchanger entering water temperature" annotation (Placement(
-        transformation(extent={{-260,-342},{-220,-302}}), iconTransformation(
+        transformation(extent={{-260,-338},{-220,-298}}), iconTransformation(
           extent={{-120,-82},{-100,-62}})));
   Modelica.Blocks.Interfaces.BooleanInput valHea "Heating load side valve control"
     annotation (Placement(transformation(extent={{-260,230},{-220,270}}),
@@ -50,11 +50,11 @@ model AmbientCircuitSid "Generate control outputs for source model"
     annotation (Placement(transformation(extent={{-260,138},{-220,178}}),
         iconTransformation(extent={{-120,-20},{-100,0}})));
   Modelica.Blocks.Interfaces.BooleanInput rejCooFulLoa
-    "True if cold side requires heat rejection with geothermal plus substation hex"
+    "True if cold side requires heat rejection with borfield plus substation hex"
     annotation (Placement(transformation(extent={{-260,-262},{-220,-222}}),
         iconTransformation(extent={{-120,0},{-100,20}})));
   Modelica.Blocks.Interfaces.BooleanInput rejHeaFulLoa
-    "True if hot side requires heat rejection with geothermal plus substation hex"
+    "True if hot side requires heat rejection with borfield plus substation hex"
     annotation (Placement(transformation(extent={{-260,-212},{-220,-172}}),
         iconTransformation(extent={{-120,20},{-100,40}})));
   Modelica.Blocks.Interfaces.IntegerOutput yModInd "Mode index"
@@ -132,7 +132,7 @@ model AmbientCircuitSid "Generate control outputs for source model"
     annotation (Placement(transformation(extent={{0,-92},{20,-72}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant con1(k=dTGeo)
     annotation (Placement(transformation(extent={{40,-60},{60,-40}})));
-  Buildings.Controls.Continuous.LimPID geoPumCon(
+  Buildings.Controls.Continuous.LimPID borPumCon(
     final Td=Td,
     reset=Buildings.Types.Reset.Parameter,
     reverseAction=true,
@@ -141,12 +141,12 @@ model AmbientCircuitSid "Generate control outputs for source model"
     yMin=0.5,
     final controllerType=controllerType,
     Ti(displayUnit="min") = 3600)
-    "Geothermal pump control"
+    "Borfield pump control"
     annotation (Placement(transformation(extent={{80,-60},{100,-40}})));
   Buildings.Controls.OBC.CDL.Logical.Not not2
     annotation (Placement(transformation(extent={{120,100},{140,120}})));
   Buildings.Controls.OBC.CDL.Logical.Or runFulLoa
-    "Output true if geothermal need to run at full load to reject heat"
+    "Output true if borfield need to run at full load to reject heat"
     annotation (Placement(transformation(extent={{-180,-192},{-160,-172}})));
   Buildings.Controls.OBC.CDL.Logical.Switch modInd3 "Mode index"
     annotation (Placement(transformation(extent={{140,-52},{160,-32}})));
@@ -160,8 +160,8 @@ model AmbientCircuitSid "Generate control outputs for source model"
     reverseAction=false,
     y_reset=0,
     final k=1,
-    yMin=0.5,
-    final controllerType=controllerType,
+    yMin=0.1,
+    final controllerType=Modelica.Blocks.Types.SimpleController.PI,
     Ti(displayUnit="min") = 3600)
     "Valve which controls the enetring water tempearture to the borefield holes."
     annotation (Placement(transformation(extent={{-106,-10},{-86,10}})));
@@ -182,8 +182,8 @@ equation
     annotation (Line(points={{-58,-262},{-22,-262}}, color={0,0,127}));
   connect(TDisHexEnt, add4.u1) annotation (Line(points={{-240,-282},{-200,-282},
           {-200,-306},{-162,-306}}, color={0,0,127}));
-  connect(TDisHexLvg, add4.u2) annotation (Line(points={{-240,-322},{-200,-322},
-          {-200,-318},{-162,-318}}, color={0,0,127}));
+  connect(TDisHexLvg, add4.u2) annotation (Line(points={{-240,-318},{-162,-318}},
+                                    color={0,0,127}));
   connect(con2.y, modInd.u1)
     annotation (Line(points={{102,-116},{110,-116},{110,-130},{118,-130}},
                                                   color={0,0,127}));
@@ -275,12 +275,12 @@ equation
                                                 color={0,0,127}));
   connect(runBorFie.y, not2.u)
     annotation (Line(points={{102,110},{118,110}}, color={255,0,255}));
-  connect(con1.y, geoPumCon.u_s)
+  connect(con1.y,borPumCon. u_s)
     annotation (Line(points={{62,-50},{78,-50}},color={0,0,127}));
-  connect(abs1.y, geoPumCon.u_m)
+  connect(abs1.y,borPumCon. u_m)
     annotation (Line(points={{22,-82},{90,-82},{90,-62}},
                                                        color={0,0,127}));
-  connect(not2.y, geoPumCon.trigger) annotation (Line(points={{142,110},{150,
+  connect(not2.y,borPumCon. trigger) annotation (Line(points={{142,110},{150,
           110},{150,-6},{72,-6},{72,-70},{82,-70},{82,-62}},
                                                           color={255,0,255}));
   connect(runFulLoa.u1, rejHeaFulLoa) annotation (Line(points={{-182,-182},{
@@ -289,7 +289,7 @@ equation
   connect(runFulLoa.u2,rejCooFulLoa)  annotation (Line(points={{-182,-190},{
           -200,-190},{-200,-242},{-240,-242}},
                                          color={255,0,255}));
-  connect(geoPumCon.y, modInd3.u3)
+  connect(borPumCon.y, modInd3.u3)
     annotation (Line(points={{101,-50},{138,-50}},
                                                  color={0,0,127}));
   connect(modInd3.u2, runFulLoa.y) annotation (Line(points={{138,-42},{132,-42},
@@ -334,88 +334,39 @@ equation
 Documentation(info="<html>
 <h4> Ambient circuit controller theory of operation </h4>
 <p>
-This block computes the output integer <code>ModInd</code> which indicates the energy rejection index, i.e. 
-heating or cooling energy is rejected and it computes the control signals to turn
-on/off and modulates the 
+This block computes the output integer <code>ModInd</code> which indicates the energy 
+rejection index, i.e. heating or cooling energy is rejected and the control signals to turn
+on/off and modulates the followings
 </p>
-
-
 <h4>Borfield pump</h4>
 <p>
 The borfield pump <code>pumBor</code> is variable speed pump, the speed is modulated
-using a reverse acting PI loop with
-
-In addition, the controller switiches between modulating the <code>pumBor</code> speed implementing a reverse acting 
-PI loop and run on full speed if <code>rejFulLoa</code> is true.
+using a reverse acting PI loop with a reference &Delta;<code>dTBor</code> and the absolute
+measured temperatue difference between the <code>TBorEnt</code> and <code>TDisHexEnt</code>.
+The controller in addition switches between modulating the <code>pumBor</code> speed or
+run on full speed if <code>rejFulLoa</code> is true.
 </p>
-
 <h4>Three way valve at borefield inlet</h4>
 <p>
 The three way valve at the inlet stream of the borfield system is controlled with 
 a P or PI controller to track a constant, minimum borfield  water inlet temperature.
 </p>
-
 <h4>Heat exchanger district pump</h4>
 <p>
-The controller turns on heat exchanger district pump <code>pumHexDis</code> if either
-the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true and
-&Delta;(TBorOut-TBorIn) is &#8806;1&deg;C.
+The exchanger district <code>pumHexDis</code> is a variable speed pump.It turns on if either
+the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> and
+<code>rejFulLoa</code> are true, and the speed is modulated using a reverse acting PI loop
+to maintain the absolute measured temperature difference between <code>TDisHexEnt</code> and
+<code>TDisHexLvg</code> equals to &Delta;<code>dTHex</code>.
 </p>
-<p>
-Accordingly, the reverse acting PI loop modulates
-the <code>pumHexDis</code> pump speed to maintain the difference between
-entering and leaving water temperature of the district heat exchanger <code>TDisHexEnt</code> and
-<code>TDisHexLvg</code> equals to <code>dTHex</code>.
-</p>
-
-
-
-
-
-
-
-
-
-
-
-The controller includes two operational modes
-</p>
-
-<h4> The energy rejection mode index </h4>
-<p>
-The controller computes the energy rejection mode <code>ModInd</code> to either the borfield or district heat exchanger system.
-i.e. the controller computes <code>ModInd</code> =1, if the thermal energy rejection occurs through the heat pump condenser side,
-and <code>ModInd</code> =-1, if it occurs through the evaporator  side.
-</p>
-
-
-
-</p>
-<h4>Reject to borefield system</h4>
-<p>
-The controller computes the real signal <code>yPumBor</code> to turn on and off the pump,
-if either the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code> is true.
-</p>
-
-<h4>Reject to the district heat exchanger system</h4>
-<p>
-The controller turns on heat exchanger district pump <code>pumHexDis</code> if either
-the Boolean signal of the two way valve status <code>valHea</code> or <code>valCoo</code>
-and <code>rejFulHealoa</code> or <code>rejFulCooLoa</code> is true.
-</p>
-<p>
-Accordingly, the reverse acting PI loop modulates
-the <code>pumHexDis</code> pump speed to maintain the difference between
-entering and leaving water temperature of the district heat exchanger <code>TDisHexEnt</code> and
-<code>TDisHexLvg</code> equals to <code>dTHex</code>.
-</p>
-
-
-
-
-
 </html>", revisions="<html>
 <ul>
+<li>
+November 2, 2019, by Hagar Elarga:<br/>
+Added the three way valve contoller and info section.
+</li>
+<li>
+
 <li>
  <br/>
 </li>

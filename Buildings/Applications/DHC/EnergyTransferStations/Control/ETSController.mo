@@ -1,6 +1,6 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
 model ETSController
-  "Overall controller of the ETS hot and cold sides."
+  "Overall controller of the 5thG substation "
   extends Modelica.Blocks.Icons.Block;
 
   parameter Modelica.SIunits.TemperatureDifference THys(min=0.1)=THys
@@ -54,11 +54,11 @@ model ETSController
     "Normalized flow rate of cold buffer tank"
     annotation (Placement(transformation(extent={{-260,-30},{-220,10}}),
       iconTransformation(extent={{-120,-20},{-100,0}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumHeaTanMin(final unit="1")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumConTanMin(final unit="1")
     "Condenser water supply pump control signal to assure minimum flow rate to the hot tank"
     annotation (Placement(transformation(extent={{220,60},{240,80}}),
         iconTransformation(extent={{100,20},{120,40}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumCooTanMin(final unit="1")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput pumEvaTanMin(final unit="1")
     "Evaporator water supply pump control signal to assure minimum flow rate to the cold tank"
     annotation (Placement(transformation(extent={{220,-80},{240,-60}}),
         iconTransformation(extent={{100,0},{120,20}})));
@@ -128,25 +128,21 @@ model ETSController
     annotation (Placement(transformation(extent={{-120,102},{-100,122}})));
   Buildings.Controls.OBC.CDL.Logical.Not not1
     annotation (Placement(transformation(extent={{-90,102},{-70,122}})));
-  Buildings.Controls.OBC.CDL.Conversions.BooleanToReal booToRea
-    annotation (Placement(transformation(extent={{120,120},{140,140}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSetHotTan(k=0.2)
     "Miniumim setpoint value of the normalized flow charging the hot tank"
     annotation (Placement(transformation(extent={{-100,60},{-80,80}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant mSetColTan(k=-0.2) "Miniumim setpoint value of the normalized flow charging the cold buffer tank,
    (negative value indicates the discharge flow direction)."
     annotation (Placement(transformation(extent={{-100,10},{-80,30}})));
-  Buildings.Controls.OBC.CDL.Conversions.BooleanToReal booToRea1
-    annotation (Placement(transformation(extent={{120,-210},{140,-190}})));
 
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant           con1(k=0)
     annotation (Placement(transformation(extent={{62,-58},{82,-38}})));
 equation
   connect(mSetColTan.y, conCooTan.u_s)
     annotation (Line(points={{-78,20},{-42,20}}, color={0,0,127}));
-  connect(pumHeaCon.y, pumHeaTanMin)
+  connect(pumHeaCon.y,pumConTanMin)
     annotation (Line(points={{182,70},{230,70}}, color={0,0,127}));
-  connect(pumCooCon.y, pumCooTanMin)
+  connect(pumCooCon.y,pumEvaTanMin)
     annotation (Line(points={{182,-70},{230,-70}}, color={0,0,127}));
   connect(TTanHeaTop, conHotSid.TTop) annotation (Line(points={{-240,190},{-200,
           190},{-200,191},{-161,191}}, color={0,0,127}));
@@ -173,8 +169,6 @@ equation
     annotation (Line(points={{-78,70},{-42,70}}, color={0,0,127}));
   connect(conCooTan.u_m, mTanColNor) annotation (Line(points={{-30,8},{-30,-10},{-240,-10}},
                                          color={0,0,127}));
-  connect(booToRea.y, ValHeaPos) annotation (Line(points={{142,130},{230,130}}, color={0,0,127}));
-  connect(booToRea1.y, ValCooPos) annotation (Line(points={{142,-200},{230,-200}}, color={0,0,127}));
   connect(conHotSid.reqHea, reqHea)
     annotation (Line(points={{-139,195},{50,195},{50,210},{230,210}}, color={255,0,255}));
   connect(conColSid.reqCoo, reqCoo) annotation (Line(points={{-139,-191},{-130,-191},{-130,-180},{20,-180},{20,-140},
@@ -185,13 +179,9 @@ equation
     annotation (Line(points={{-139,192},{230,192}}, color={255,0,255}));
   connect(ValHea, conHotSid.valSta)
     annotation (Line(points={{230,160},{148,160},{148,186},{-139,186}}, color={255,0,255}));
-  connect(booToRea.u, conHotSid.valSta) annotation (Line(points={{118,130},{100,
-          130},{100,186},{-139,186}}, color={255,0,255}));
   connect(conColSid.valSta, ValCoo)
     annotation (Line(points={{-139,-200},{100,-200},{100,-180},{230,-180}}, color={255,0,255}));
-  connect(conColSid.valSta, booToRea1.u)
-    annotation (Line(points={{-139,-200},{118,-200}}, color={255,0,255}));
-  connect(pumHeaTanMin, pumHeaTanMin) annotation (Line(points={{230,70},{168,70},
+  connect(pumConTanMin,pumConTanMin)  annotation (Line(points={{230,70},{168,70},
           {168,70},{230,70}}, color={0,0,127}));
   connect(pumHeaCon.u1, con4.y) annotation (Line(points={{158,78},{122,78},{122,
           90},{82,90}}, color={0,0,127}));
@@ -209,90 +199,39 @@ equation
           -140},{-174,-191},{-161,-191}}, color={0,0,127}));
   connect(TSetHea, conHotSid.TSet) annotation (Line(points={{-240,220},{-202,220},
           {-202,195},{-161,195}},      color={0,0,127}));
+  connect(conHotSid.yVal, ValHeaPos) annotation (Line(points={{-139,180},{118,180},
+          {118,130},{230,130}}, color={0,0,127}));
+  connect(conColSid.yVal, ValCooPos) annotation (Line(points={{-139,-206},{120,-206},
+          {120,-200},{230,-200}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-220,-220},{220,220}})),
         defaultComponentName="ETSCon",
         Documentation(info="<html>
+<p>
+The block generates the s       
 
-<h4> ETS-control theory of operation </h4>
-<p>
-This block controls the status of: the condenser water pump <code>pumCon</code>, the evaporator water pump <code>pumEva</code> and
-the position of the two way valves<code>valHeaPos</code>, <code>valCooPos</code>. It outputs also if heating,cooling or both are required by the building, the part load and full load rejection to the borefield and district system in accordance with the following operational modes:
-</p>
-<h4>Heating or cooling is required</h4>
-<p>
-The mode is identified based on the difference between the setpoint temperature <code>TSetHea</code> and the
-tank top temperature <code>TTanHeaTop</code> for the hot buffer tank and between the setpoint temperature <code>TSetCoo</code> and the tank bottom temperature
-<code>TTanCooBot</code> for the cold buffer tank, where the heatpump and both the condenser and evaporator water pumps turn on if either the boolean outputs <cod> heaReq</code> or <code>cooReq</code> is true.
-</p>
-<h4>Part load rejection</h4>
-<p>
-Two scenarios are considered in order to activate the part load rejection to the borefield system only:
-</p>
-<p>
-In case heating is required:
-</p>
-<p>
-The condenser is controlled and the heatpump operates to satisfy the condenser setpoint temperature <code>TSetCon</code> and accordingly the
-building heating loads. While the evaporator is not controlled, the ETS controller operates to assure
-that the water temperature inside the cold buffer tank reached the setpoint temperature <code>TSetCoo</code>.
-When the water temperature exceeds the setpoint value added to the design hysteresis, the part load rejection to the borefield starts.
-</p>
-<p>
-In case cooling is required:
-</p>
-<p>
-The evaporator is controlled and the heatpump operates to satisfy the evaporator setpoint temperature <code>TSetEva</code> and accordingly the
-building cooling loads. While the condenser is not controlled the ETS controller operates to assure
-that the water temperature inside the hot buffer tank reaches the setpoint temperature <code>TSetHea</code>.
-When the water temperature exceeds the setpoint value added to the design hysteresis, the part load rejection to the borefield system initiates.
-</p>
-<p>
-<b>
-see more detailed description regarding the heat pump model in:
-<a href=\"Buildings.Fluid.HeatPumps.EquationFitWaterToWater\"> Buildings.Fluid.HeatPumps.EquationFitWaterToWater </a>.
-</b>
-</p>
-<h4>Full load rejection</h4>
-<p>
-Two scenarios are considered in order to activate the full load rejection to the district heat exchnager system:
-</p>
-<p>
-In case of heating is required:
-</p>
-<p>
-The full load rejection to the district system initiates if the top level temperature inside the
-tank <code>TTanHeaBot</code> remains higher than the setpoint temperature <code>TSetHea</code> added to the design hysteresis.
-</p>
-<p>
-In case of cooling is required:
-</p>
-<p>
-The full load rejection to the district system initiates if the bottom temperature inside the
-tank <code>TTanCooTop</code> remains lower than the setpoint temperature <code>TSetCoot</code> added to the design hysteresis.
-</p>
-<p>
-<b>
-See more detailed description regarding energy rejection in:
-<a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.AmbientCircuitController\">
-Buildings.DistrictHeatingCooling.EnergyTransferStations.ETSControl.AmbientCircuitController.</a>
-</b>
-</p>
+
+
 <h4>Notice</h4>
 <p>
 <b>
 This controller assures that both the evaporator and condenser pumps are controlled to maintain a minimum water flow rate
-to the hot and cold buffer tanks based on two real input signals of the normalized water mass flow rate.</b></p>
+to the hot and cold buffer tanks based on two real input signals of the normalized water mass flow rate.
+</b>
+</p>
 </P>
 <p>
-<b>It is important to mention that water flow direction during discharging at the cold buffer tank is from bottom to top which indicates a negative flow direction.
+<b>
+It is important to mention that water flow direction during discharging at the cold buffer tank is from bottom
+to top which indicates a negative flow direction.
 While in case of the hot buffer tank the discharging direction is from top to bottom which indicates a positive flow direction.
 </b>
 </p>
 </html>", revisions="<html>
 <ul>
 <li>
- <br/>
+November 25, 2019, by Hagar Elarga:<br/>
+Added the info section. 
 </li>
 </ul>
 </html>"));

@@ -3,9 +3,10 @@ model ColdSideControlleUO
   "Controller for valves on cold side, and heat demand on heat pump"
      extends Modelica.Blocks.Icons.Block;
   extends
-    Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO(
+  Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO(
+    THys=THys,
       redeclare model Inequality =
-        Buildings.Controls.OBC.CDL.Continuous.LessEqual,
+  Buildings.Controls.OBC.CDL.Continuous.LessEqual,
           addPar(p=-2*THys),
           addPar1(p=-THys),
           addPar2(p=-THys),
@@ -52,8 +53,8 @@ equation
           {-160,60}}, color={0,0,127}));
   connect(frePro.u, TTop) annotation (Line(points={{48,-34},{44,-34},{44,-44},{
           -66,-44},{-66,22},{-112,22},{-112,60},{-160,60}}, color={0,0,127}));
-  connect(TTop, greEqu1.u1) annotation (Line(points={{-160,60},{-112,60},{-112,
-          22},{-66,22},{-66,8},{-62,8}}, color={0,0,127}));
+  connect(TTop, greEqu1.u1) annotation (Line(points={{-160,60},{-112,60},{-112,22},{-66,
+          22},{-66,8},{-62,8}}, color={0,0,127}));
   connect(TTop, greEqu2.u1) annotation (Line(points={{-160,60},{-112,60},{-112,
           22},{-66,22},{-66,-22},{-62,-22}}, color={0,0,127}));
   connect(TTop, greEqu3.u2) annotation (Line(points={{-160,60},{-112,60},{-112,
@@ -76,33 +77,49 @@ by 3*THys",
           horizontalAlignment=TextAlignment.Left)}),
   Documentation(info="<html>
   
-  <p>
-The finite state machines controller as illustrated in the figure below transitions hot side operational modes for
-<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Substation\">
-Buildings.Applications.DHC.EnergyTransferStations.Substation</a> by generating the status of
+<p>
+  This block is a state machine controller which transitions the <a href=\"Buildings.Applications.DHC.EnergyTransferStations.SubstationWithConstPrimPum_OnOffChiller\">
+Buildings.Applications.DHC.EnergyTransferStations.SubstationWithConstPrimPum_OnOffChiller</a> operational modes:
+<ul>
+<li>
+Cooling generation i.e. HeatPump on and off.
+</li>
+</ul>
+<ul>
+<li>
+First stage reject part load i.e. to the borefiled system.
+</li>
+</ul>
+<ul>
+<li>
+Second stage reject full load i.e. to both the borefiled and the district system.
+</li>
+</ul>
+</p>
+<h4> Controller elaboration</h4> 
+<p>
+The scheme below represents the substation cold side state machine which generates the status of
 <ol>
 <li>
-The boolean output signal <code>reqCoo</code>, true when the bottom level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
+The Boolean output signal <code>reqCoo</code>, true when the bottom level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
 higher than or equal to the cooling setpoint temperature <code>T<sub>Set</sub></code>.
 </li>
 <li>
 The boolean/real output signals <code>valSta</code>, true when the top level water temperature of the cold buffer tank <code>T<sub>Bot</sub></code> is
-lower than the cooling setpoint temperature <code>T<sub>Set</sub></code> plus the defined hystresis. In addition,
+lower than the cooling setpoint temperature <code>T<sub>Set</sub></code> minus the defined hysteresis. In addition,
 it indicates that the  rejection of surplus cooling energy is required, first to the borefiled followed by the district system.
 </li>
 <li>
-The boolean output signal <code>rejFulHexBor </code> indicates the heat rejection to the borefield and district system, true 
+The Boolean output signal <code>rejFulHexBor </code> indicates the heat rejection to the borefield and district system, true 
 when the top level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
-lower than or equal to the cooling setpoint temperature <code>T<sub>Set</sub></code> plus the defined hystresis.
+lower than or equal to the cooling setpoint temperature <code>T<sub>Set</sub></code> minus the defined hysteresis.
 </ol>
-<h4>Note</h4>
-The parameter &Delta;T is the implemented hystresis to transit from state to another.  
-
 <p align= \"center\">
 <img alt=\"State finite machine for the hot side\"
 src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStations/colTanCon.png\"/>
 </p>      
 
+The table clarifies the states and associated actions
 <table class=\"releaseTable\" summary=\"summary\" border=\"1\" cellspacing=0 cellpadding=2>
      <tr><td align=\"center\"><b>State</b> 
         </td>
@@ -125,34 +142,27 @@ src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStati
         </td>
         </tr>     
         </table>
-  
-  <p>
-This block is a finite stat machine controller which transitions the <a href=\"Buildings.DistrictHeatingCooling.EnergyTransferStations.EnergyTransferStation.Substation\">
-Buildings.DistrictHeatingCooling.EnergyTransferStations.EnergyTransferStation.Substation</a> operational modes:
+<h4>Note</h4>
 <ul>
 <li>
-Heatpump on and off.
-</li>
-</ul>
-<ul>
-<li>
-Reject part load to the borefiled system on and off.
-</li>
-</ul>
-<ul>
-<li>
-Reject full load to both the borefiled and the district system on and off.
-</li>
-</ul>
+<p>      
+The parameter &Delta;T is the implemented hysteresis to transit from state to another. 
 </p>
+</li>
+<li>
 <p>
-An on-off override controller was used to start the full load rejection once the water inside the tank reaches 3.5degC to avoid frezzing.
+An on-off override controller used to start the full load rejection once the water inside the tank reaches 3.5degC to avoid freezing.
 </p>
+</li>
+</ul>   
 </html>", revisions="<html>
 <ul>
 <li>
- <br/>
-
+November 2, 2019, by Hagar Elarga:<br/>
+Added the info section.
+</li>
+<li>
+<br/>
 </li>
 </ul>
 </html>"),

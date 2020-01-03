@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Examples;
-model ETSExample "ETS example first try"
+model ETSVariableSpeedPumps "ETS example first try"
   package Medium = Buildings.Media.Water "Medium model";
 
   parameter Modelica.SIunits.MassFlowRate mEva_flow_nominal=heaPumDat.hea.mSou_flow
@@ -208,4 +208,4 @@ equation
   file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/ETSExample.mos"
         "Simulate and plot"),
          experiment(Tolerance=1e-6,StopTime=31536000, __Dymola_Algorithm="Cvode"));
-end ETSExample;
+end ETSVariableSpeedPumps;
