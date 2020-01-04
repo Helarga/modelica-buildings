@@ -34,7 +34,7 @@ block HotColdSideControllerUO
     annotation (Placement(transformation(extent={{-58,42},{124,154}})));
   Modelica.StateGraph.TransitionWithSignal t5(enableTimer=false)
     annotation (Placement(transformation(extent={{26,50},{46,70}})));
-  Modelica.StateGraph.StepWithSignal rejFulLoasta
+  Modelica.StateGraph.StepWithSignal rejFulLoaSta
     "Reject heat using both, borefield and district heat exchanger state."
     annotation (Placement(transformation(extent={{46,50},{66,70}})));
   Modelica.Blocks.Interfaces.BooleanOutput rejFulLoa
@@ -105,9 +105,9 @@ equation
   connect(alternative.outPort, noDemand.inPort[1]) annotation (Line(points={{125.82,
           98},{120,98},{120,146},{-100,146},{-100,98.5},{-87,98.5}},
                                                                color={0,0,0}));
-  connect(t5.outPort, rejFulLoasta.inPort[1])
+  connect(t5.outPort,rejFulLoaSta. inPort[1])
     annotation (Line(points={{37.5,60},{45,60}}, color={0,0,0}));
-  connect(rejFulLoasta.outPort[1], t6.inPort)
+  connect(rejFulLoaSta.outPort[1], t6.inPort)
     annotation (Line(points={{66.5,60},{72,60}}, color={0,0,0}));
   connect(t2.outPort, alternative.join[1]) annotation (Line(points={{45.5,120},{
           96,120},{96,98},{104.89,98}},color={0,0,0}));

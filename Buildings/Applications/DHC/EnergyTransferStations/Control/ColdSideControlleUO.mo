@@ -33,7 +33,7 @@ equation
           40,-22},{48,-22}}, color={0,0,127}));
   connect(or1.u2, frePro.y)
     annotation (Line(points={{86,-28},{72,-28}}, color={255,0,255}));
-  connect(or1.u1, rejFulLoasta.active) annotation (Line(points={{86,-20},{76,-20},
+  connect(or1.u1,rejFulLoaSta.active)  annotation (Line(points={{86,-20},{76,-20},
           {76,12},{56,12},{56,49}}, color={255,0,255}));
   connect(or1.y, rejFulLoa) annotation (Line(points={{110,-20},{116,-20},{116,-48},
           {150,-48}}, color={255,0,255}));

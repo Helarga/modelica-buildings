@@ -22,8 +22,8 @@ model StratifiedTank "Buffer tank model"
         VTan/1000*3600)
     "Normalized flow rate through tank, positive if from top to bottom"
     annotation (Placement(transformation(extent={{60,78},{80,98}})));
-  Modelica.Blocks.Interfaces.RealOutput mNor_flow
-    "Normalized flow rate through tank, positive if from top to bottom"
+  Modelica.Blocks.Interfaces.RealOutput wch
+    "Normalized flow rate by the tank volume, positive if from top to bottom"
     annotation (Placement(transformation(extent={{100,30},{120,50}}),
         iconTransformation(extent={{100,30},{120,50}})));
 equation
@@ -32,6 +32,6 @@ equation
   connect(port_a1, vol[nSeg].ports[3]) annotation (Line(points={{100,-60},{16,
           -60},{16,-16}},
                 color={0,127,255}));
-  connect(mRelative.y, mNor_flow) annotation (Line(points={{81,88},{96,88},{96,
-          40},{110,40}}, color={0,0,127}));
+  connect(mRelative.y, wch) annotation (Line(points={{81,88},{96,88},{96,40},{
+          110,40}}, color={0,0,127}));
 end StratifiedTank;
