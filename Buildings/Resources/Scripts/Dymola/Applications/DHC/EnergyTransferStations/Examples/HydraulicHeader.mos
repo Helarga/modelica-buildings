@@ -1,0 +1,24 @@
+simulateModel("Buildings.Applications.DHC.EnergyTransferStations.Examples.HydraulicHeader", method="dassl",
+ tolerance=1e-6, stopTime=500, resultFile="HydraulicHeader");
+createPlot(id = 1,
+   position = {60, 10, 600, 450},
+   y = {"HeaSupHed.ports_a[1].m_flow","HeaSupHed.ports_a[2].m_flow","HeaSupHed.ports_b[1].m_flow","HeaSupHed.ports_b[2].m_flow" },
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+createPlot(id = 1,
+   position = {60, 460, 600, 450},
+   y = {"HeaSupHed.sta_a[1].T","HeaSupHed.sta_a[2].T","HeaSupHed.sta_b[1].T","HeaSupHed.sta_b[2].T"},
+   subPlot=2,
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+
