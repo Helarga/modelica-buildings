@@ -1,6 +1,7 @@
 within Buildings.Applications.DHC.EnergyTransferStations.BaseClasses;
 model HydraulicHeader "Hydraulic header manifold"
- replaceable package Medium = Modelica.Media.Interfaces.PartialMedium;
+ replaceable package Medium = Modelica.Media.Interfaces.PartialMedium
+  "Medium model";
 
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal
    "Nominal mass flow rate";
@@ -21,7 +22,7 @@ model HydraulicHeader "Hydraulic header manifold"
     allowFlowReversal=allowFlowReversal,
     m_flow_nominal=m_flow_nominal)
     "Dummy pipe component used to model ideal mixing at each port"
-    annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
+    annotation (Placement(transformation(extent={{10,-10},{-10,10}})));
   Modelica.Fluid.Interfaces.FluidPorts_a ports_a[nPorts_a](
     redeclare package Medium=Medium,
     each m_flow(max=if allowFlowReversal then +Modelica.Constants.inf else 0),
@@ -42,34 +43,33 @@ model HydraulicHeader "Hydraulic header manifold"
        iconTransformation(extent={{-10,-40}, {10,40}},
        rotation=0,
        origin={100,0})));
-
 // Thermodynamic states for each individual connected port
 
   Medium.ThermodynamicState sta_a[nPorts_a]=
                   {Medium.setState_phX(ports_a[i].p,
                           noEvent(actualStream(ports_a[i].h_outflow)),
                           noEvent(actualStream(ports_a[i].Xi_outflow)))
-                                      for i in 1:nPorts_a} if show_T;
+                                      for i} if   show_T;
 
   Medium.ThermodynamicState sta_b [nPorts_b]=
                          {Medium.setState_phX(ports_b[i].p,
                            noEvent(actualStream(ports_b[i].h_outflow)),
                            noEvent(actualStream(ports_b[i].Xi_outflow)))
-                                        for i in 1:nPorts_b} if show_T;
+                                      for i} if   show_T;
 equation
     for i in 1:nPorts_a loop
-      connect(pip.port_a, ports_a[i])
+      connect(pip.port_b, ports_a[i])
         annotation (Line(points={{-10,0},{-100,0}},color={0,127,255}));
     end for;
 
     for i in 1:nPorts_b loop
-      connect(pip.port_b, ports_b[i])
+      connect(pip.port_a, ports_b[i])
         annotation (Line(points={{10,0},{100,0}},   color={0,127,255}));
     end for;
 
     annotation (Icon(graphics={
        Rectangle(
-         extent={{-92,8},{88,-6}},
+         extent={{-90,20},{88,-20}},
          lineColor={255,170,255},
          lineThickness=0.5,
          fillColor={255,255,170},

@@ -1,6 +1,7 @@
 within Buildings.Controls.OBC.CDL.Continuous.Sources;
 block Constant "Output constant signal of type Real"
-  parameter Real k "Constant output value";
+  parameter Real k=5
+                   "Constant output value";
 
   Interfaces.RealOutput y
     "Connector of Real output signal"

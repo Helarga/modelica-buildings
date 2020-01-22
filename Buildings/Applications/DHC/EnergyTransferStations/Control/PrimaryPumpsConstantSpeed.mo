@@ -70,12 +70,16 @@ The block computes the control signals for
 </p>
 <h4>Chiller condenser pump</h4>
 <p>
-The heat pump condenser pump is constant speed and switched on and off based on a supervisory control signal.
+The heat pump condenser pump is constant speed and switched on and off based on a supervisory control signal 
+generated from the <a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideController</a> 
 </p>
 
 <h4>Chiller evaporator pump</h4>
 <p>
 The chiller evaporator pump is constant speed and switched on and off based on a supervisory control signal.
+generated from the <a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideController</a>
 </p>
 
 

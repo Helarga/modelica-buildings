@@ -139,8 +139,8 @@ model ETSVariableSpeedPumps "ETS example first try"
     final show_T=false,
     final dp_nominal=200) "Flow resistance"
     annotation (Placement(transformation(extent={{12,-118},{32,-98}})));
-  Data.DesignDataGeothermal                                                   datGeo(lBorFie={
-        70,90,40,70,120}*0.1, wBorFie={44,50,40,40,40}*0.1)
+  Data.DesignDataGeothermal datGeo(lBorFie={70,90,40,70,120}*0.1, wBorFie={44,
+        50,40,40,40}*0.1)
     annotation (Placement(transformation(extent={{100,124},{120,144}})));
 equation
   connect(TSetHeaMax.y, ETS.TSetHeaMax) annotation (Line(points={{-98,130},{-16,

@@ -156,7 +156,7 @@ model HeatpumpControllerHeaCooSim
   Fluid.Sources.Boundary_pT            sou(
     redeclare package Medium = Medium,
     T=291.15,
-    nPorts=1)   "Source volume"
+    nPorts=1) "Source volume"
     annotation (Placement(transformation(extent={{198,8},{178,-12}})));
   Buildings.Controls.Continuous.LimPID valCon2(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,

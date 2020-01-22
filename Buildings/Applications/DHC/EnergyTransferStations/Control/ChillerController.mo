@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-model ChillerOnOff
+model ChillerController
   "The control block of the EIR chiller with constant speed compressor."
 
      extends Modelica.Blocks.Icons.Block;
@@ -82,7 +82,7 @@ model ChillerOnOff
     annotation (Placement(transformation(extent={{40,-102},{60,-82}})));
   Modelica.Blocks.Logical.Or heaOnl "Heating only mode"
     annotation (Placement(transformation(extent={{-20,-80},{0,-60}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X3(k=20 + 273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X3(k=10 + 273.15)
     "Minimum heating setpoint temperature"
     annotation (Placement(transformation(extent={{-2,-216},{18,-196}})));
   Buildings.Controls.OBC.CDL.Logical.Not not1
@@ -258,8 +258,7 @@ equation
           defaultComponentName="chiCon",
 Documentation(info="<html>
 <p>
-The block resets the chilled water temperature <code>TReSetCoo</code> based on the system operational mode
-and computes the control signals for 
+The block computes the control signals for 
 <h4>EIR Chiller status</h4>
 <p>The chiller compressor is constant speed and switched on or off based on either <code>reqHea</code> or
 <code>reqCoo</code> is true, the controller outputs the integer output
@@ -275,13 +274,17 @@ a P or PI controller to track a constant, maximum water inlet temperature.
 The three way valve at the inlet stream of the condenser side is controlled with 
 a P or PI controller to track a constant, minimum water inlet temperature.
 </p>
+<p>
+The block in addition, resets <code>TSetCoo</code> based on the thermal operational mode i.e. cooling only, heating only or
+simultaneous heating and cooling.
+</p> 
 <h4>Reset of Chilled water setpoint temperature</h4>
 <p>
 As shown in the control scheme below during 
 <ul>
 <li> 
-Simultaneous cooling and heating and heating only operational modes, the control sequence resets the cooling setpoint <code>TReSetCoo</code> till the leaving heating water temperature
-from the condenser side meets the heating setpoint <code>TSetHea</code> as shown below in the figure
+During simultaneous heating and cooling and heating only operational modes, the control sequence resets the cooling setpoint <code>TReSetCoo</code> till the leaving heating water temperature
+from the condenser side meets the heating setpoint <code>TSetHea</code>
 </li>
 <p align=\"center\">
 <img alt=\"Image PI controller to reset the TSetCoo\"
@@ -315,4 +318,4 @@ First implementation.
 </li>
 </ul>
 </html>"));
-end ChillerOnOff;
+end ChillerController;

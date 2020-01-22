@@ -1,6 +1,5 @@
-within Buildings.Applications.DHC.EnergyTransferStations.Control;
-block HotColdSideControllerUO
- "State machine "
+within Buildings.Applications.DHC.EnergyTransferStations.BaseClasses;
+block HotColdSideController "State machine"
   extends Modelica.Blocks.Icons.Block;
   replaceable model Inequality =
     Buildings.Controls.OBC.CDL.Continuous.GreaterEqual;
@@ -25,8 +24,8 @@ block HotColdSideControllerUO
     annotation (Placement(transformation(extent={{34,110},{54,130}})));
   Modelica.StateGraph.TransitionWithSignal t3(enableTimer=false)
     annotation (Placement(transformation(extent={{-34,70},{-14,90}})));
-  Modelica.StateGraph.StepWithSignal rejParLoa(nOut=2, nIn=2)
-    "Open valves and reject heat with either borefield or hex"
+  Modelica.StateGraph.StepWithSignal rejParLoaSta(nOut=2, nIn=2)
+    "Reject part load status, true: open valves and reject heat to either borefield or district heat exchanger."
     annotation (Placement(transformation(extent={{-16,70},{4,90}})));
   Modelica.StateGraph.TransitionWithSignal t4
     annotation (Placement(transformation(extent={{38,88},{58,108}})));
@@ -35,10 +34,11 @@ block HotColdSideControllerUO
   Modelica.StateGraph.TransitionWithSignal t5(enableTimer=false)
     annotation (Placement(transformation(extent={{26,50},{46,70}})));
   Modelica.StateGraph.StepWithSignal rejFulLoaSta
-    "Reject heat using both, borefield and district heat exchanger state."
+    "Reject full load status: true: reject heat to both the borefield and district heat exchanger."
     annotation (Placement(transformation(extent={{46,50},{66,70}})));
   Modelica.Blocks.Interfaces.BooleanOutput rejFulLoa
-    "Reject load using borefield and heat exchanger" annotation (Placement(
+    "Reject surplus load using the borefield and the district heat exchanger systems."
+                                                     annotation (Placement(
         transformation(extent={{140,-58},{160,-38}}), iconTransformation(extent=
            {{100,50},{120,70}})));
   Modelica.StateGraph.TransitionWithSignal t6
@@ -94,8 +94,8 @@ equation
   connect(runHP.outPort[1], t2.inPort)
     annotation (Line(points={{16.5,120},{40,120}},
                                                  color={0,0,0}));
-  connect(t3.outPort, rejParLoa.inPort[1])
-    annotation (Line(points={{-22.5,80},{-18,80},{-18,80.5},{-17,80.5}},color={0,0,0}));
+  connect(t3.outPort, rejParLoaSta.inPort[1]) annotation (Line(points={{-22.5,
+          80},{-18,80},{-18,80.5},{-17,80.5}}, color={0,0,0}));
   connect(alternative.inPort, noDemand.outPort[1])
     annotation (Line(points={{-60.73,98},{-65.5,98}}, color={0,0,0}));
   connect(t3.inPort, alternative.split[1]) annotation (Line(points={{-28,80},{-32,
@@ -105,19 +105,18 @@ equation
   connect(alternative.outPort, noDemand.inPort[1]) annotation (Line(points={{125.82,
           98},{120,98},{120,146},{-100,146},{-100,98.5},{-87,98.5}},
                                                                color={0,0,0}));
-  connect(t5.outPort,rejFulLoaSta. inPort[1])
+  connect(t5.outPort, rejFulLoaSta.inPort[1])
     annotation (Line(points={{37.5,60},{45,60}}, color={0,0,0}));
   connect(rejFulLoaSta.outPort[1], t6.inPort)
     annotation (Line(points={{66.5,60},{72,60}}, color={0,0,0}));
   connect(t2.outPort, alternative.join[1]) annotation (Line(points={{45.5,120},{
           96,120},{96,98},{104.89,98}},color={0,0,0}));
-  connect(t4.inPort, rejParLoa.outPort[1]) annotation (Line(points={{44,98},{14,98},{14,80.25},
-          {4.5,80.25}},                 color={0,0,0}));
-  connect(t5.inPort, rejParLoa.outPort[2]) annotation (Line(points={{32,60},{14,
-          60},{14,79.75},{4.5,79.75}},
-                                    color={0,0,0}));
-  connect(rejParLoa.inPort[2], t6.outPort) annotation (Line(points={{-17,79.5},
-          {-20,79.5},{-20,40},{86,40},{86,60},{77.5,60}},color={0,0,0}));
+  connect(t4.inPort, rejParLoaSta.outPort[1]) annotation (Line(points={{44,98},
+          {14,98},{14,80.25},{4.5,80.25}}, color={0,0,0}));
+  connect(t5.inPort, rejParLoaSta.outPort[2]) annotation (Line(points={{32,60},
+          {14,60},{14,79.75},{4.5,79.75}}, color={0,0,0}));
+  connect(rejParLoaSta.inPort[2], t6.outPort) annotation (Line(points={{-17,
+          79.5},{-20,79.5},{-20,40},{86,40},{86,60},{77.5,60}}, color={0,0,0}));
   connect(t4.outPort, alternative.join[2]) annotation (Line(points={{49.5,98},{104.89,
           98}},                    color={0,0,0}));
   connect(greEqu.y, t1.condition) annotation (Line(points={{-78,40},{-46,40},{-46,
@@ -152,8 +151,8 @@ equation
                                                    color={0,0,127}));
   connect(addPar1.y, greEqu5.u1)
     annotation (Line(points={{-78,-140},{-62,-140}}, color={0,0,127}));
-  connect(or2.u2, rejParLoa.active)
-    annotation (Line(points={{58,-88},{-6,-88},{-6,69}},   color={255,0,255}));
+  connect(or2.u2, rejParLoaSta.active)
+    annotation (Line(points={{58,-88},{-6,-88},{-6,69}}, color={255,0,255}));
   connect(greEqu1.y, t3.condition) annotation (Line(points={{-38,8},{-28,8},{-28,
           34},{-24,34},{-24,68}}, color={255,0,255}));
   connect(greEqu2.y, t5.condition) annotation (Line(points={{-38,-22},{-24,-22},
@@ -175,31 +174,21 @@ equation
           points={{62,-60},{82,-48},{82,-70},{62,-60}},
           lineColor={0,0,0})}),
  Documentation(info="<html>
-<table class=\"releaseTable\" summary=\"summary\" border=\"1\" cellspacing=0 cellpadding=2>
-     <tr><td align=\"center\"><b>State</b> 
-        </td>
-        <td align=\"center\"><b>Action</b>
-        </td>
-        </tr>
-    <tr><td align=\"center\">reqHea
-        </td>
-        <td align=\"center\">HeatPump on
-        </td>
-        </tr>
-    <tr><td align=\"center\">rejHeaParLoa
-        </td>
-        <td align=\"center\">valHeaOn, BorPumOn
-        </td>
-        </tr>
-    <tr><td align=\"center\">rejHeaFulLoa 
-        </td>
-        <td align=\"center\">valHeaOn, BorPumOn, DisPumOn
-        </td>
-        </tr>     
-</table>
-    
-    
-     
+<p>
+This is a base class of the state finite state machine implemeneted in
+ <a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideController</a> or
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideController</a>.
+</p>
 
+</html>", revisions="<html>
+<ul>
+<li>
+<li>
+November 25, 2019, by Hagar Elarga:<br/>
+Added the info section.
+</li>
+</ul>
 </html>"));
-end HotColdSideControllerUO;
+end HotColdSideController;

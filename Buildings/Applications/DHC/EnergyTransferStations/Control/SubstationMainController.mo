@@ -47,9 +47,9 @@ model SubstationMainController "Overall controller of the 5thG substation"
     "Setpoint for heating supply water to space loads" annotation (Placement(transformation(extent={{-260,
             110},{-220,150}}),
                     iconTransformation(extent={{-120,40},{-100,60}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValHeaPos "Hot side valve status(1:On, 0:Off)" annotation (
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput valHeaPos "Hot side valve status(1:On, 0:Off)" annotation (
       Placement(transformation(extent={{220,30},{240,50}}),   iconTransformation(extent={{100,-20},{120,0}})));
-  Buildings.Controls.OBC.CDL.Interfaces.RealOutput ValCooPos "Cold side valve status(1:On, 0:Off)" annotation (
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput valCooPos "Cold side valve status(1:On, 0:Off)" annotation (
       Placement(transformation(extent={{220,-110},{240,-90}}),  iconTransformation(extent={{100,-40},{120,-20}})));
   Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput reqHea
     "True if heating is required, false otherwise"                annotation (Placement(transformation(extent={{220,110},
@@ -65,22 +65,19 @@ model SubstationMainController "Overall controller of the 5thG substation"
     "True if hot side requires heat rejection with borefield and district heat exchanger"
     annotation (Placement(transformation(extent={{220,92},{240,112}}),
       iconTransformation(extent={{100,-62},{120,-42}})));
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValHea
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput valHea
     "Hot side valve status, true when rejection of part or full heating load is required"
                                                                                         annotation (Placement(
         transformation(extent={{220,60},{240,80}}),   iconTransformation(extent={{100,60},{120,80}})));
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ValCoo
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput valCoo
     "Cold side valve status, true when rejection of part or full cooling load is required"
                                                                                         annotation (Placement(
         transformation(extent={{220,-90},{240,-70}}),   iconTransformation(extent={{100,40},{120,60}})));
 
-  HotSideControllerUO conHotSid(THys=THys)
-                                        "Hot side controller"
+  HotSideController conHotSid(THys=THys) "Hot side controller"
     annotation (Placement(transformation(extent={{-160,86},{-140,106}})));
-  ColdSideControlleUO conColSid(THys=THys)
-                                        "Cold side controller"
-   annotation (Placement(
-        transformation(extent={{-160,-110},{-140,-90}})));
+  ColdSideController conColSid(THys=THys) "Cold side controller"
+    annotation (Placement(transformation(extent={{-160,-110},{-140,-90}})));
 
 equation
   connect(TTanHeaTop, conHotSid.TTop) annotation (Line(points={{-240,100},{-200,
@@ -101,30 +98,30 @@ equation
           {40,-94},{40,-60},{230,-60}},    color={255,0,255}));
   connect(conHotSid.rejFulLoa, rejHeaFulLoa)
     annotation (Line(points={{-139,102},{230,102}}, color={255,0,255}));
-  connect(ValHea, conHotSid.valSta)
+  connect(valHea, conHotSid.valSta)
     annotation (Line(points={{230,70},{148,70},{148,96},{-139,96}},     color={255,0,255}));
-  connect(conColSid.valSta, ValCoo)
+  connect(conColSid.valSta,valCoo)
     annotation (Line(points={{-139,-100},{100,-100},{100,-80},{230,-80}},   color={255,0,255}));
   connect(TSetCoo, conColSid.TSet) annotation (Line(points={{-240,-40},{-174,-40},
           {-174,-91},{-161,-91}},         color={0,0,127}));
   connect(TSetHea, conHotSid.TSet) annotation (Line(points={{-240,130},{-202,130},
           {-202,105},{-161,105}},      color={0,0,127}));
-  connect(conHotSid.yVal, ValHeaPos) annotation (Line(points={{-139,90},{118,90},
+  connect(conHotSid.yVal,valHeaPos)  annotation (Line(points={{-139,90},{118,90},
           {118,40},{230,40}},   color={0,0,127}));
-  connect(conColSid.yVal, ValCooPos) annotation (Line(points={{-139,-106},{120,-106},
+  connect(conColSid.yVal,valCooPos)  annotation (Line(points={{-139,-106},{120,-106},
           {120,-100},{230,-100}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-220,-220},{220,220}})),
         defaultComponentName="ETSCon",
         Documentation(info="<html>
 <p>
-The block combines the generated control signals of the 
+The block combines the generated control signals of the ETS chilled and hot water circuits respectively
 
-<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideControlleUO\">
-Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideControlleUO</a> and
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.ColdSideController</a> and
 
-<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideControllerUO\">
-Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideControllerUO</a>.
+<a href=\"Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideController\">
+Buildings.Applications.DHC.EnergyTransferStations.Control.HotSideController</a>.
 </p>
 </html>", revisions="<html>
 <ul>

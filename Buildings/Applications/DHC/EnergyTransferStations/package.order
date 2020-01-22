@@ -1,6 +1,7 @@
 SolarThermalModule
 Substation
 SubstationWithConstPrimPum_OnOffChiller
+SubstationWithConstPrimPum_OnOffChiller_twoVal
 Control
 BaseClasses
 Data

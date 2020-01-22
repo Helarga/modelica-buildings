@@ -20,9 +20,9 @@ model ETSChillerConstantSpeedPump
     mEva_flow_nominal=mEva_flow_nominal,
     mSecHea_flow_nominal=mSecHea_flow_nominal,
     mSecCoo_flow_nominal=mSecCoo_flow_nominal,
-    dTGeo=5,
-    dTHex=2,
-    dTHeaPum=2,
+    dTChi=2,
+    dTGeo=2,
+    dTHex=5,
     xBorFie=datGeo.lBorFie[1],
     yBorFie=datGeo.wBorFie[1],
     dpBorFie_nominal=datGeo.dpBor_nominal,
@@ -31,14 +31,13 @@ model ETSChillerConstantSpeedPump
     annotation (Placement(transformation(extent={{-6,-24},{14,-4}})));
     //dpCon_nominal=chiDat.dpHeaLoa_nominal,
     //dpEva_nominal=chiDat.dpHeaSou_nominal,
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetCooMin(k=4 +
-        273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetCooMin(k=5 + 273.15)
     "Minimum cooling setpoint temperature"
-   annotation (Placement(transformation(extent={{-120,84},{-100,104}})));
+   annotation (Placement(transformation(extent={{-120,100},{-100,120}})));
   Modelica.Blocks.Sources.Constant TBorMaxEnt(k=40 + 273.15)
     "Cooling setpoint temperature"
     annotation (Placement(transformation(extent={{-120,-10},{-100,10}})));
-  Modelica.Fluid.Sources.FixedBoundary heaLoa(
+  Fluid.Sources.Boundary_pT            heaLoa(
     redeclare package Medium = Medium, nPorts=1)
     "Volume for the heating load"
    annotation (Placement(transformation(extent={{100,-60},{80,-40}})));
@@ -56,12 +55,12 @@ model ETSChillerConstantSpeedPump
     annotation (Placement(transformation(extent={{-120,22},{-100,42}})));
   Modelica.Blocks.Sources.Constant TMinConEnt(k=12 + 273.15)
     "Minimum heating set point temperature"
-    annotation (Placement(transformation(extent={{-120,52},{-100,72}})));
+    annotation (Placement(transformation(extent={{-120,60},{-100,80}})));
 
-  Modelica.Fluid.Sources.FixedBoundary cooLoa(redeclare package Medium = Medium,
+  Fluid.Sources.Boundary_pT            cooLoa(redeclare package Medium = Medium,
       nPorts=1) "Volume for the cooling load"
     annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
-  Modelica.Fluid.Sources.Boundary_pT   disLoa(redeclare package Medium = Medium,
+  Fluid.Sources.Boundary_pT            disLoa(redeclare package Medium = Medium,
       nPorts=1) "Volume for the district system"
     annotation (Placement(transformation(extent={{80,-120},{60,-100}})));
   Fluid.Sources.MassFlowSource_T disPum(
@@ -76,25 +75,27 @@ model ETSChillerConstantSpeedPump
     "District entering water temperature"
     annotation (Placement(transformation(extent={{-120,-120},{-100,-100}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Pulse    TSecHeaEnt(
-    amplitude=1,
-    period=86400*2,
-    offset=33 + 273.15)
+    amplitude=2,
+    width=0.3,
+    period=3*3600,
+    offset=20 + 273.15)
     "Secondary (building side) return heating water temperature"
     annotation (Placement(transformation(extent={{120,60},{100,80}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Pulse    TSecCooEnt(
-    amplitude=3,
-    period=86400,
-    offset=12 + 273.15,
-    startTime=0)
+    amplitude=0.5,
+    width=0.75,
+    period=2*3600,
+    offset=14 + 273.15,
+    startTime=2*3600)
     "Secondary (building side) return Chilled water temperature"
-    annotation (Placement(transformation(extent={{-120,-44},{-100,-24}})));
+    annotation (Placement(transformation(extent={{-120,-40},{-100,-20}})));
 
-  Buildings.Applications.DHC.EnergyTransferStations.Data.DesignDataGeothermal datGeo(
-    lBorFie={70,90,40,70,120}*0.5,
-    wBorFie={44,50,40,40,40})
+  Buildings.Applications.DHC.EnergyTransferStations.Data.DesignDataGeothermal
+    datGeo(lBorFie={70,90,40,70,120}*0.5, wBorFie={44,50,40,40,40})
     "Borfield system performance data"
     annotation (Placement(transformation(extent={{100,120},{120,140}})));
-  Buildings.Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_McQuay_WSC_816kW_6_74COP_Vanes datChi
+  Buildings.Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_McQuay_WSC_816kW_6_74COP_Vanes datChi(PLRMinUnl=
+       1, PLRMin=1)
      annotation (Placement(transformation(extent={{100,92},{120,112}})));
   Fluid.Sources.MassFlowSource_T cooPum(
     use_m_flow_in=true,
@@ -105,7 +106,7 @@ model ETSChillerConstantSpeedPump
         extent={{10,-10},{-10,10}},
         rotation=180,
         origin={-50,-70})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetHea(k=40 + 273.15)
+  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetHea(k=25 + 273.15)
     "Heating setpoint temperature"
     annotation (Placement(transformation(extent={{20,80},{0,100}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant TSetCoo(k=10 + 273.15)
@@ -138,15 +139,17 @@ model ETSChillerConstantSpeedPump
     "Heat rejection index"      annotation (Placement(transformation(extent={{140,-20},
             {160,0}}),      iconTransformation(extent={{100,-2},{128,26}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Pulse mSecHea(
-    amplitude=0,
-    period=86400*2,
+    amplitude=15,
+    width=0.3,
+    period=3*3600,
     offset=0)  "Secondary (building side) heating water flow rate"
     annotation (Placement(transformation(extent={{120,10},{100,30}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Pulse mSecCoo(
-    amplitude=2,
-    period=86400,
-    offset=5,
-    startTime=0)
+    amplitude=7,
+    width=0.75,
+    period=2*3600,
+    offset=0,
+    startTime=2*3600)
               "Secondary (building side) cooling water flow rate"
     annotation (Placement(transformation(extent={{-120,-80},{-100,-60}})));
 equation
@@ -156,9 +159,8 @@ equation
   connect(TSecHeaEnt.y, heaPum.T_in)
     annotation (Line(points={{98,70},{90,70},{90,46},{82,46}},
                                                             color={0,0,127}));
-  connect(TSecCooEnt.y, cooPum.T_in) annotation (Line(points={{-98,-34},{-86,
-          -34},{-86,-74},{-62,-74}},
-                                color={0,0,127}));
+  connect(TSecCooEnt.y, cooPum.T_in) annotation (Line(points={{-98,-30},{-86,-30},
+          {-86,-74},{-62,-74}}, color={0,0,127}));
   connect(ETS.disWatSup, disPum.ports[1]) annotation (Line(points={{2.8,-25},{
           2.8,-110},{-20,-110}},
                              color={0,127,255}));
@@ -174,10 +176,11 @@ equation
           {-42,-16},{-6.8,-16}}, color={0,0,127}));
   connect(TMaxEvaEnt.y, ETS.TMaxEvaEnt) annotation (Line(points={{-99,32},{-36,32},
           {-36,-13.6},{-6.8,-13.6}}, color={0,0,127}));
-  connect(TMinConEnt.y, ETS.TMinConEnt) annotation (Line(points={{-99,62},{-30,62},
+  connect(TMinConEnt.y, ETS.TMinConEnt) annotation (Line(points={{-99,70},{-30,70},
           {-30,-8.2},{-6.8,-8.2}}, color={0,0,127}));
-  connect(TSetCooMin.y, ETS.TSetCooMin) annotation (Line(points={{-98,94},{-26,94},
-          {-26,-6.6},{-6.8,-6.6}}, color={0,0,127}));
+  connect(TSetCooMin.y, ETS.TSetCooMin) annotation (Line(points={{-98,110},{-26,
+          110},{-26,-6.6},{-6.8,-6.6}},
+                                   color={0,0,127}));
   connect(TSetCoo.y, ETS.TSetCoo) annotation (Line(points={{-2,30},{-14,30},{-14,
           -3.8},{-6.8,-3.8}}, color={0,0,127}));
   connect(TSetHea.y, ETS.TSetHea) annotation (Line(points={{-2,90},{-20,90},{-20,
@@ -216,10 +219,10 @@ equation
             -140},{140,160}}),
         graphics={Line(points={{-22,22}}, color={28,108,200})}),
     __Dymola_Commands(
-  file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Control/ETSChillerConstantSpeedPump.mos"
+  file="modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/EnergyTransferStations/Examples/ETSChillerConstantSpeedPump.mos"
         "Simulate and plot"),
         experiment(
-      StopTime=345600,
+      StopTime=18000,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"));
 end ETSChillerConstantSpeedPump;

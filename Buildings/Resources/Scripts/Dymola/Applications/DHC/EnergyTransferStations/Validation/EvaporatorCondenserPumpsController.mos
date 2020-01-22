@@ -1,0 +1,23 @@
+simulateModel("Buildings.Applications.DHC.EnergyTransferStations.Examples.EvaporatorCondenserPumpsController", method="dassl",
+tolerance=1e-6, stopTime=4000, resultFile="EvaporatorCondenserPumpsController");
+createPlot(id = 1,
+   position = {60, 10, 600, 450},
+   y = {"priPumCon.yPumEva","priPumCon.yPumCon" },
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+createPlot(id = 1,
+   position = {60, 470, 600, 450},
+   y = {"pumEva.m_flow","pumCon.m_flow", "mSecCoo.y" },
+   subPlot =2,
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);

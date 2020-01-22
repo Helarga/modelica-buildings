@@ -1,4 +1,4 @@
-HeatingSupplyHeader_PortsExample
+HydraulicHeader
 HeatingRecoveryChillerController
 HeatpumpControllerHeaOnly
 HeatpumpControllerHeaCooSim
@@ -8,3 +8,9 @@ ETSChillerConstantSpeedPump
 ETSVariableSpeedPumps
 StartifiedTank
 BorfieldSystem
+ETSChillerConstantSpeedPumpTwoValvesPumps
+ETSChillerConstantSpeedPumpTwoValvesReserve
+ETSChillerConstantSpeedPumpTwoValvesComniTable
+ETS_ClosedLoop
+ETSChillerConstantSpeedPumpTwoValves
+ETS_ClosedLoopTRials

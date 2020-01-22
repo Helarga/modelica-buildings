@@ -13,6 +13,7 @@ partial model PartialElectric
     vol1(
       final prescribedHeatFlowRate=true));
 
+  Real fixme = m2_flow*(hSet-inStream(port_a2.h_outflow));
   Modelica.Blocks.Interfaces.BooleanInput on
     "Set to true to enable compressor, or false to disable compressor"
     annotation (Placement(transformation(extent={{-140,10},{-100,50}}),

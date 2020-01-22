@@ -117,13 +117,10 @@ model ETSController
   Buildings.Controls.OBC.CDL.Logical.Switch pumCooCon
     "Cooling water supply pump control"
     annotation (Placement(transformation(extent={{160,-80},{180,-60}})));
-  HotSideControllerUO conHotSid(THys=THys)
-                                        "Hot side controller"
+  HotSideController conHotSid(THys=THys) "Hot side controller"
     annotation (Placement(transformation(extent={{-160,176},{-140,196}})));
-  ColdSideControlleUO conColSid(THys=THys)
-                                        "Cold side controller"
-   annotation (Placement(
-        transformation(extent={{-160,-210},{-140,-190}})));
+  ColdSideController conColSid(THys=THys) "Cold side controller"
+    annotation (Placement(transformation(extent={{-160,-210},{-140,-190}})));
   Buildings.Controls.OBC.CDL.Logical.Or or1
     annotation (Placement(transformation(extent={{-120,102},{-100,122}})));
   Buildings.Controls.OBC.CDL.Logical.Not not1

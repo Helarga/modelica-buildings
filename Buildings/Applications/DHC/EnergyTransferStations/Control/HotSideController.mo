@@ -1,8 +1,8 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-block HotSideControllerUO
-  "State machine controls the operation of the heatpump, two way heating valve, borfield and district pumps "
-  extends
-    Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO(THys=THys);
+block HotSideController
+  "State machine controls the operation of the EIR chiller, two way heating valve, borfield and district pumps"
+  extends Buildings.Applications.DHC.EnergyTransferStations.BaseClasses.HotColdSideController(
+        THys=THys);
 
   Modelica.Blocks.Interfaces.BooleanOutput reqHea
     "True if heat is required from heat pump, false otherwise" annotation (
@@ -12,8 +12,6 @@ block HotSideControllerUO
   Buildings.Controls.OBC.CDL.Continuous.Min min
     annotation (Placement(transformation(extent={{-96,-110},{-76,-90}})));
 equation
-  connect(rejFulLoasta.active, rejFulLoa)
-    annotation (Line(points={{56,49},{56,-48},{150,-48}}, color={255,0,255}));
   connect(min.u1, TTop) annotation (Line(points={{-98,-94},{-120,-94},{-120,60},
           {-160,60}}, color={0,0,127}));
   connect(TTop, greEqu.u2) annotation (Line(points={{-160,60},{-120,60},{-120,32},
@@ -32,7 +30,9 @@ equation
           -110},{-62,-110}},     color={0,0,127}));
   connect(runHP.active, reqHea) annotation (Line(points={{6,109},{6,106},{24,
           106},{24,138},{150,138}}, color={255,0,255}));
-  connect(rejFulLoasta.active, or2.u1)
+  connect(rejFulLoaSta.active, rejFulLoa)
+    annotation (Line(points={{56,49},{56,-48},{150,-48}}, color={255,0,255}));
+  connect(rejFulLoaSta.active, or2.u1)
     annotation (Line(points={{56,49},{56,-80},{58,-80}}, color={255,0,255}));
   annotation ( Icon(coordinateSystem(extent={{-100,-100},{100,100}})),
                     defaultComponentName="conHotSid",
@@ -89,11 +89,11 @@ src=\"modelica://Buildings/Resources/Images/Applications/DHC/EnergyTransferStati
         </table>
 
 </html>", revisions="<html>
-
+<ul>
 <li>
- <br/>
-
+November 2, 2019, by Hagar Elarga:<br/>
+Added the info section.
 </li>
 </ul>
 </html>"));
-end HotSideControllerUO;
+end HotSideController;

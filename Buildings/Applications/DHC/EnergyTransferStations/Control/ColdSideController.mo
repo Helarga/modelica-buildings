@@ -1,9 +1,7 @@
 within Buildings.Applications.DHC.EnergyTransferStations.Control;
-model ColdSideControlleUO
-  "Controller for valves on cold side, and heat demand on heat pump"
-     extends Modelica.Blocks.Icons.Block;
-  extends
-  Buildings.Applications.DHC.EnergyTransferStations.Control.HotColdSideControllerUO(
+model ColdSideController "State machine controls the operation of the EIR chiller, two way cooling valve, borfield and district pumps "
+
+  extends Buildings.Applications.DHC.EnergyTransferStations.BaseClasses.HotColdSideController(
     THys=THys,
       redeclare model Inequality =
   Buildings.Controls.OBC.CDL.Continuous.LessEqual,
@@ -33,7 +31,7 @@ equation
           40,-22},{48,-22}}, color={0,0,127}));
   connect(or1.u2, frePro.y)
     annotation (Line(points={{86,-28},{72,-28}}, color={255,0,255}));
-  connect(or1.u1,rejFulLoaSta.active)  annotation (Line(points={{86,-20},{76,-20},
+  connect(or1.u1, rejFulLoaSta.active) annotation (Line(points={{86,-20},{76,-20},
           {76,12},{56,12},{56,49}}, color={255,0,255}));
   connect(or1.y, rejFulLoa) annotation (Line(points={{110,-20},{116,-20},{116,-48},
           {150,-48}}, color={255,0,255}));
@@ -43,8 +41,8 @@ equation
                      color={0,0,127}));
   connect(valSta,or2. y)
     annotation (Line(points={{150,-80},{82,-80}}, color={255,0,255}));
-  connect(or2.u2, rejParLoa.active)
-    annotation (Line(points={{58,-88},{-6,-88},{-6,69}},   color={255,0,255}));
+  connect(or2.u2, rejParLoaSta.active)
+    annotation (Line(points={{58,-88},{-6,-88},{-6,69}}, color={255,0,255}));
   connect(booToRea.u,or2. y) annotation (Line(points={{98,-100},{90,-100},{90,
           -80},{82,-80}}, color={255,0,255}));
   connect(or1.y,or2. u1) annotation (Line(points={{110,-20},{116,-20},{116,-48},
@@ -72,27 +70,27 @@ equation
   Diagram(coordinateSystem(extent={{-140,-160},{140,160}}), graphics={Text(
           extent={{-36,-32},{40,-40}},
           lineColor={28,108,200},
-          textString="reject full load if tank exceeds setpoint
-by 3*THys",
+          textString="reject full load if tank exceeds setpoint by 3*THys",
           horizontalAlignment=TextAlignment.Left)}),
-  Documentation(info="<html>
+          Icon(coordinateSystem(extent={{-100,-100},{100,100}})),
+Documentation(info="<html>
   
 <p>
   This block is a state machine controller which transitions the <a href=\"Buildings.Applications.DHC.EnergyTransferStations.SubstationWithConstPrimPum_OnOffChiller\">
 Buildings.Applications.DHC.EnergyTransferStations.SubstationWithConstPrimPum_OnOffChiller</a> operational modes:
 <ul>
 <li>
-Cooling generation i.e. HeatPump on and off.
+Cooling generation i.e. EIR chiller/ heat pump on and off.
 </li>
 </ul>
 <ul>
 <li>
-First stage reject part load i.e. to the borefiled system.
+First stage reject part load i.e. to the borefield system.
 </li>
 </ul>
 <ul>
 <li>
-Second stage reject full load i.e. to both the borefiled and the district system.
+Second stage reject full load i.e. to both the borefield and the district system.
 </li>
 </ul>
 </p>
@@ -101,18 +99,26 @@ Second stage reject full load i.e. to both the borefiled and the district system
 The scheme below represents the substation cold side state machine which generates the status of
 <ol>
 <li>
-The Boolean output signal <code>reqCoo</code>, true when the bottom level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
+The Boolean output signal <code>reqCoo</code>, true when the bottom level water temperature of the cold buffer tank <code>T<sub>Bot</sub></code> is
 higher than or equal to the cooling setpoint temperature <code>T<sub>Set</sub></code>.
 </li>
 <li>
-The boolean/real output signals <code>valSta</code>, true when the top level water temperature of the cold buffer tank <code>T<sub>Bot</sub></code> is
+The Boolean/real output signals <code>valSta</code>, true when the top level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
 lower than the cooling setpoint temperature <code>T<sub>Set</sub></code> minus the defined hysteresis. In addition,
-it indicates that the  rejection of surplus cooling energy is required, first to the borefiled followed by the district system.
+it indicates that the rejection of surplus cooling energy is partially required to the borefield.
 </li>
 <li>
-The Boolean output signal <code>rejFulHexBor </code> indicates the heat rejection to the borefield and district system, true 
-when the top level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
-lower than or equal to the cooling setpoint temperature <code>T<sub>Set</sub></code> minus the defined hysteresis.
+The Boolean output signal <code>rejFulHexBor </code>, true when the top level water temperature of the cold buffer tank <code>T<sub>Top</sub></code> is
+lower than or equal to the cooling setpoint temperature <code>T<sub>Set</sub></code> minus the defined hysteresis. 
+The full heat rejection indicates two simultaneous steps
+<ul>
+<li>
+The borefield pump runs on its maximum flow rate.
+</li>
+<li>
+The district heat exchanger pump switches on.
+</li> 
+
 </ol>
 <p align= \"center\">
 <img alt=\"State finite machine for the hot side\"
@@ -161,10 +167,6 @@ An on-off override controller used to start the full load rejection once the wat
 November 2, 2019, by Hagar Elarga:<br/>
 Added the info section.
 </li>
-<li>
-<br/>
-</li>
 </ul>
-</html>"),
-    Icon(coordinateSystem(extent={{-100,-100},{100,100}})));
-end ColdSideControlleUO;
+</html>"));
+end ColdSideController;
