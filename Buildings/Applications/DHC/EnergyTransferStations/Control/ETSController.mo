@@ -30,11 +30,11 @@ model ETSController
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanCooTop(final unit="K",displayUnit="degC")
     "Top temperature of cooling buffer tank"
     annotation (Placement(transformation(extent={{-260,-200},{-220,-160}}),
-      iconTransformation(extent={{-120,-100},{-100,-80}})));
+      iconTransformation(extent={{-120,-80},{-100,-60}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanCooBot(final unit="K",displayUnit="degC")
     "Bottom temperature of cooling buffer tank"
     annotation (Placement(transformation(extent={{-260,-230},{-220,-190}}),
-      iconTransformation(extent={{-120,-80},{-100,-60}})));
+      iconTransformation(extent={{-120,-102},{-100,-82}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanHeaTop(final unit="K",displayUnit="degC")
     "Top temperature of heating buffer tank"
     annotation (Placement(transformation(extent={{-260,170},{-220,210}}),

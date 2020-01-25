@@ -43,17 +43,17 @@ equation
   connect(TEntCon.y, AmbCirCon.TEntCon) annotation (Line(points={{1,82},{26,82},
           {26,8.2},{31,8.2}}, color={0,0,127}));
   connect(valCoo.y, AmbCirCon.valCoo) annotation (Line(points={{1,-10},{12,-10},
-          {12,1.2},{31,1.2}},color={255,0,255}));
+          {12,5.2},{31,5.2}},color={255,0,255}));
   connect(valHea.y, AmbCirCon.valHea) annotation (Line(points={{1,20},{12,20},{
-          12,3.2},{31,3.2}},color={255,0,255}));
+          12,7.6},{31,7.6}},color={255,0,255}));
   connect(TBorIn.y, AmbCirCon.TBorIn) annotation (Line(points={{1,-40},{16,-40},
           {16,-2},{31,-2}}, color={0,0,127}));
   connect(TBorOut.y, AmbCirCon.TBorOut) annotation (Line(points={{1,-70},{20,-70},
           {20,-4.6},{31,-4.6}}, color={0,0,127}));
   connect(TDisHexLvg.y, AmbCirCon.TDisHexLvg) annotation (Line(points={{1,-130},
-          {28,-130},{28,-10},{31,-10}}, color={0,0,127}));
+          {28,-130},{28,-7},{31,-7}},   color={0,0,127}));
   connect(TDisHexEnt.y, AmbCirCon.TDisHexEnt) annotation (Line(points={{1,-100},
-          {24,-100},{24,-7.6},{31,-7.6}},color={0,0,127}));
+          {24,-100},{24,-5},{31,-5}},    color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},

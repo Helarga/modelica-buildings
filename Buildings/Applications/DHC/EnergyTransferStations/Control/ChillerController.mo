@@ -29,7 +29,7 @@ model ChillerController
   Buildings.Controls.OBC.CDL.Logical.Sources.Constant chiOff(k=false)
     "Chiller shut off signal =0"
     annotation (Placement(transformation(extent={{-46,18},{-26,38}})));
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput ychiMod
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput yChiMod
     "Chiller operational mode." annotation (Placement(transformation(extent={{
             102,44},{122,64}}), iconTransformation(extent={{100,-2},{128,26}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput TSetChi(final unit="K",
@@ -83,7 +83,7 @@ model ChillerController
   Modelica.Blocks.Logical.Or heaOnl "Heating only mode"
     annotation (Placement(transformation(extent={{-20,-80},{0,-60}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant X3(k=10 + 273.15)
-    "Minimum heating setpoint temperature"
+    "Minimum cooling setpoint temperature"
     annotation (Placement(transformation(extent={{-2,-216},{18,-196}})));
   Buildings.Controls.OBC.CDL.Logical.Not not1
     annotation (Placement(transformation(extent={{-48,-36},{-28,-16}})));
@@ -215,7 +215,7 @@ equation
       points={{-25,54},{-10,54},{-10,26},{26,26},{26,-336},{32,-336},{32,-324}},
       color={255,0,255},
       pattern=LinePattern.Dash));
-  connect(logSwi.y, ychiMod)
+  connect(logSwi.y,yChiMod)
     annotation (Line(points={{24,54},{112,54}}, color={255,0,255}));
   connect(chiON.y, logSwi.u1) annotation (Line(points={{-24,84},{-14,84},{-14,
           62},{0,62}}, color={255,0,255}));

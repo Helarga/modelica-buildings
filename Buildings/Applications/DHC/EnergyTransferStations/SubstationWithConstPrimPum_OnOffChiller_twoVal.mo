@@ -680,12 +680,12 @@ equation
       pattern=LinePattern.Dot));
   connect(topCooTan.T,ETSCon. TTanCooTop)
     annotation (Line(
-      points={{-250,100},{-266,100},{-266,201},{-199,201}},
+      points={{-250,100},{-266,100},{-266,202.8},{-199,202.8}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(botCooTan.T,ETSCon. TTanCooBot)
     annotation (Line(
-      points={{-250,20},{-274,20},{-274,203},{-199,203}},
+      points={{-250,20},{-274,20},{-274,200.6},{-199,200.6}},
       color={0,0,127},
       pattern=LinePattern.Dot));
   connect(hex.port_a1, pumHexDis.port_b)
@@ -914,7 +914,7 @@ equation
       points={{68,143},{68,194},{-124,194},{-124,201.6},{-121,201.6}},
       color={0,0,127},
       pattern=LinePattern.Dot));
-  connect(chiCon.ychiMod, chi.on) annotation (Line(points={{-98.6,211.2},{-46,211.2},
+  connect(chiCon.yChiMod, chi.on) annotation (Line(points={{-98.6,211.2},{-46,211.2},
           {-46,130},{-32,130},{-32,129}}, color={255,0,255}));
   connect(chiCon.TSetChi, chi.TSet) annotation (Line(points={{-98.6,214.6},{-42,
           214.6},{-42,123},{-32,123}}, color={0,0,127}));

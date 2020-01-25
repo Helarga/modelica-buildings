@@ -1,0 +1,25 @@
+simulateModel("Buildings.Applications.DHC.EnergyTransferStations.Validation.ETSController", method="dassl",
+ tolerance=1e-6, stopTime=2000, resultFile="ETSController");
+createPlot(id = 1,
+   position = {60, 10, 600, 450},
+   y = {"ETSCon.TSetHeaPum"},
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+createPlot(id = 1,
+   position = {60, 470, 600, 450},
+   y = {"heaMod.y","cooMod.y","heaPumCon.yHeaPumMod"},
+   subPlot =2, 
+   autoscale = true,
+   autoerase = true,
+   autoreplot = true,
+   grid = true,
+   color = true,
+   leftTitleType = 1,
+   bottomTitleType = 1);
+
+

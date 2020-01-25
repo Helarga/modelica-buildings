@@ -6,3 +6,4 @@ AmbientCircuitControllerSidBlock
 BufferTanksValidation
 ETSController
 ChillerController
+PrimaryPumpsController

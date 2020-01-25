@@ -30,11 +30,11 @@ model SubstationMainController "Overall controller of the 5thG substation"
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanCooTop(final unit="K",displayUnit="degC")
     "Top temperature of cooling buffer tank"
     annotation (Placement(transformation(extent={{-260,-100},{-220,-60}}),
-      iconTransformation(extent={{-120,-100},{-100,-80}})));
+      iconTransformation(extent={{-120,-82},{-100,-62}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanCooBot(final unit="K",displayUnit="degC")
     "Bottom temperature of cooling buffer tank"
     annotation (Placement(transformation(extent={{-260,-130},{-220,-90}}),
-      iconTransformation(extent={{-120,-80},{-100,-60}})));
+      iconTransformation(extent={{-120,-104},{-100,-84}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput TTanHeaTop(final unit="K",displayUnit="degC")
     "Top temperature of heating buffer tank"
     annotation (Placement(transformation(extent={{-260,80},{-220,120}}),
