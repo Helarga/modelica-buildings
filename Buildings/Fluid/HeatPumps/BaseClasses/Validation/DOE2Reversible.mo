@@ -4,65 +4,71 @@ model DOE2Reversible
 
    package Medium = Buildings.Media.Water "Medium model";
 
-   parameter Modelica.SIunits.MassFlowRate mSou_flow_nominal=per.mEva_flow_nominal
+   parameter Modelica.SIunits.MassFlowRate mSou_flow_nominal=per.coo.mSou_flow
    "Source heat exchanger nominal mass flow rate";
-   parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal=per.mCon_flow_nominal
+   parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal=per.coo.mLoa_flow
    "Load heat exchanger nominal mass flow rate";
-   parameter Buildings.Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_McQuay_WSC_471kW_5_89COP_Vanes per
-    "Performance data"
-    annotation (Placement(transformation(extent={{60,40},{80,60}})));
 
   Buildings.Fluid.HeatPumps.BaseClasses.DOE2Reversible doe2(
     per=per,
     scaling_factor=1)
     "Performance model for DOE2 method"
-    annotation (Placement(transformation(extent={{40,-20},{60,0}})));
+    annotation (Placement(transformation(extent={{40,6},{60,26}})));
   Modelica.Blocks.Math.RealToInteger reaToInt
     "Real to integer conversion"
     annotation (Placement(transformation(extent={{-20,-20},{0,0}})));
   Modelica.Blocks.Sources.Sine  uMod(amplitude=1, freqHz=1/2600)
                  "Heat pump operates in heating mode"
     annotation (Placement(transformation(extent={{-60,-20},{-40,0}})));
-  Modelica.Blocks.Sources.Sine Q_flow_set(
-    amplitude=400000,
-    freqHz=1/2600,
-    offset=0)
+  Modelica.Blocks.Sources.Constant
+                               Q_flow_set(k=-40000)
     "Set point for heat flow rate"
     annotation (Placement(transformation(extent={{-60,70},{-40,90}})));
-  Controls.OBC.CDL.Continuous.Sources.Constant mLoa_flow(k=10.35)
-    "Mass flow rate entering load heat exchanger side"
-    annotation (Placement(transformation(extent={{-60,40},{-40,60}})));
   Controls.OBC.CDL.Continuous.Sources.Sine TLoaLvg(
-    amplitude=3,
+    amplitude=5,
     freqHz=1/2600,
-    offset=26 + 273.15,
+    offset=30 + 273.15,
     startTime=0) "Load side entering water temperature"
+    annotation (Placement(transformation(extent={{-60,40},{-40,60}})));
+  Controls.OBC.CDL.Continuous.Sources.Sine TLoaEnt(
+    amplitude=5,
+    freqHz=1/2600,
+    offset=25 + 273.15,
+    startTime=0) "Load side entering water temperature"
+    annotation (Placement(transformation(extent={{-60,-90},{-40,-70}})));
+  parameter Data.DOE2Reversible.EnergyPlus per
+    annotation (Placement(transformation(extent={{52,74},{72,94}})));
+  Controls.OBC.CDL.Continuous.Sources.Sine TSouLvg(
+    amplitude=2,
+    freqHz=1/2600,
+    offset=6 + 273.15,
+    startTime=0) "Source side leaving water temperature"
     annotation (Placement(transformation(extent={{-60,10},{-40,30}})));
-  Controls.OBC.CDL.Continuous.Sources.Constant mSou_flow(k=10.35)
-    "Mass flow rate entering source heat exchanger side"
-    annotation (Placement(transformation(extent={{-60,-80},{-40,-60}})));
   Controls.OBC.CDL.Continuous.Sources.Sine TSouEnt(
-    amplitude=3,
+    amplitude=2,
     freqHz=1/2600,
     offset=12 + 273.15,
     startTime=0) "Source side entering water temperature"
-    annotation (Placement(transformation(extent={{-60,-50},{-40,-30}})));
+    annotation (Placement(transformation(extent={{-60,-60},{-40,-40}})));
 equation
   connect(reaToInt.u,uMod. y)
     annotation (Line(points={{-22,-10},{-39,-10}},
                                              color={0,0,127}));
-  connect(reaToInt.y, doe2.uMod) annotation (Line(points={{1,-10},{26,-10},{26,-10.2},
-          {39,-10.2}}, color={255,127,0}));
-  connect(Q_flow_set.y, doe2.Q_flow_set) annotation (Line(points={{-39,80},{34,80},
-          {34,-1},{39,-1}}, color={0,0,127}));
-  connect(mLoa_flow.y, doe2.mLoa_flow) annotation (Line(points={{-38,50},{28,50},
-          {28,-4},{39,-4}}, color={0,0,127}));
-  connect(mSou_flow.y, doe2.mSou_flow) annotation (Line(points={{-38,-70},{30,-70},
-          {30,-18},{39,-18}}, color={0,0,127}));
-  connect(TSouEnt.y, doe2.TSouEnt) annotation (Line(points={{-38,-40},{24,-40},{
-          24,-14},{39,-14}}, color={0,0,127}));
-  connect(TLoaLvg.y, doe2.TLoaLvg) annotation (Line(points={{-38,20},{22,20},{22,
-          -7},{39,-7}}, color={0,0,127}));
+  connect(reaToInt.y, doe2.uMod)
+    annotation (Line(points={{1,-10},{20,-10},{20,16},{39,16}},
+                       color={255,127,0}));
+  connect(Q_flow_set.y, doe2.Q_flow_set)
+    annotation (Line(points={{-39,80},{34,80},{34,25},{39,25}},
+                            color={0,0,127}));
+  connect(TLoaLvg.y, doe2.TLoaLvg)
+    annotation (Line(points={{-38,50},{22,50},{22,20.8},{39,20.8}},
+                        color={0,0,127}));
+  connect(TLoaEnt.y, doe2.TLoaEnt) annotation (Line(points={{-38,-80},{30,-80},
+          {30,8},{39,8}},     color={0,0,127}));
+  connect(TSouLvg.y, doe2.TSouLvg) annotation (Line(points={{-38,20},{22,20},{
+          22,18},{39,18}},    color={0,0,127}));
+  connect(TSouEnt.y, doe2.TSouEnt) annotation (Line(points={{-38,-50},{26,-50},
+          {26,12},{39,12}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,
             -100},{100,100}}),
                graphics={
@@ -80,8 +86,7 @@ equation
             100}})),
                  __Dymola_Commands(file= "modelica://Buildings/Resources/Scripts/Dymola/Fluid/HeatPumps/BaseClasses/Validation/DOE2Reversible.mos"
         "Simulate and plot"),
-    experiment(
-      Tolerance=1e-6, StopTime=86400),
+    experiment(StopTime=5000, Tolerance=1e-06),
 Documentation(info="<html>
 <p>
 This model implements a validation of the block

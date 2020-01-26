@@ -1,118 +1,110 @@
 within Buildings.Fluid.HeatPumps;
 model DOE2Reversible
   "Model for a reversible heat pump based on the DOE2 method"
-  extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
-          show_T=true,
-          final m1_flow_nominal=per.mCon_flow_nominal*scaling_factor,
-          final m2_flow_nominal=per.mEva_flow_nominal*scaling_factor,
-           dp1_nominal = 200,
-           dp2_nominal = 200,
-       redeclare final Buildings.Fluid.MixingVolumes.MixingVolume
-          vol1(final prescribedHeatFlowRate=true),
-       redeclare final Buildings.Fluid.MixingVolumes.MixingVolume
-          vol2(final prescribedHeatFlowRate=true));
+extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
+        dp2_nominal=200,
+        dp1_nominal=200,
+        show_T=true,
+      redeclare final Buildings.Fluid.MixingVolumes.MixingVolume
+        vol2( V=m2_flow_nominal*tau2/rho2_nominal,
+              nPorts=2,
+              final prescribedHeatFlowRate=true),
+        vol1( V=m1_flow_nominal*tau1/rho1_nominal,
+              nPorts=2,
+              final prescribedHeatFlowRate=true));
 
-  parameter Buildings.Fluid.Chillers.Data.ElectricEIR.Generic per
+  parameter Buildings.Fluid.HeatPumps.Data.DOE2Reversible.Generic per
    "Performance data"
     annotation (choicesAllMatching=true, Placement(transformation(extent={{50,72},
             {70,92}})));
   parameter Real scaling_factor = 1
    "Scaling factor for heat pump capacity";
-  parameter Boolean reverseCycle=true
-  "= true, if reversing the heatpump to cooling mode is required"
+
+  parameter Boolean reverseCycle
+    "= true, if reversing the heatpump to cooling mode is required"
     annotation(Evaluate=true, HideResult=true, Dialog(group="Conditional inputs"));
-  Modelica.Blocks.Interfaces.IntegerInput uMod
-   "Control input signal, cooling mode=-1, off=0, heating mode=+1"
-    annotation (Placement(transformation(extent={{-124,-12},{-100,12}}),
-          iconTransformation(extent={{-120,-10},{-100,10}})));
-  Modelica.Blocks.Interfaces.RealInput TSet(
-    final unit="K",
-    displayUnit="degC")
-   "Set point for leaving fluid temperature at port b1"
-    annotation (Placement(transformation(extent={{-140,70},{-100,110}}),
-          iconTransformation(extent={{-128,76},{-100,104}})));
+  output Real PLR(min=0, nominal=1, unit="1") = doe2.PLR1
+    "Part load ratio";
 
-  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
-   "Compressor power "
-    annotation (Placement(transformation(extent={{100,-10},{120,10}}),
-        iconTransformation(extent={{100,-12},{120,8}})));
-  Modelica.Blocks.Interfaces.RealOutput QSou_flow(final unit="W")
-   "Heat flow rate at the source heat exchanger"
-    annotation (Placement(transformation(extent={{100,-98},{120,-78}}),
-        iconTransformation(extent={{100,-100},{120,-80}})));
-  Modelica.Blocks.Interfaces.RealOutput QLoa_flow(final unit="W")
-   "Heat flow rate at the load heat exchanger"
-    annotation (Placement(transformation(extent={{100,78},{120,98}}),
-        iconTransformation(extent={{100,80},{120,100}})));
-  Modelica.Blocks.Interfaces.RealOutput COP(
-    final min=0,
-    final unit="1")
-    "Coefficient of performance, assuming useful heat is at load side (at Medium 1)"
-    annotation (Placement(transformation(extent={{100,-50},{120,-30}}),
-        iconTransformation(extent={{100,-40},{120,-20}})));
-
-protected
   constant Modelica.SIunits.SpecificEnergy h1_default=
      Medium1.specificEnthalpy_pTX(
        Medium1.p_default,
        Medium1.T_default,
        Medium1.X_default)
   "Default enthalpy for Medium 1";
-
-  Modelica.Blocks.Sources.RealExpression mLoa_flow(y=port_a1.m_flow)
-   "Load-side mass flow rate"
-    annotation (Placement(transformation(extent={{-80,16},{-60,36}})));
-  Modelica.Blocks.Sources.RealExpression mSou_flow(y=port_a2.m_flow)
-   "Source-side mass flow rate"
-    annotation (Placement(transformation(extent={{-80,-20},{-60,0}})));
   Modelica.SIunits.SpecificEnthalpy hSet=
     if uMod == 0
-    then
-      h1_default
-    else
-      Medium1.specificEnthalpy_pTX(
+      then
+        h1_default
+    elseif uMod ==-1
+      then
+        Medium1.specificEnthalpy_pTX(
               p=port_b1.p,
-              T=TSet,
+              T=reSet.chiTSet,
               X=cat(1,
                     port_b1.Xi_outflow,
                     {1 - sum(port_b1.Xi_outflow)}))
+    else
+        Medium1.specificEnthalpy_pTX(
+              p=port_b2.p,
+              T=reSet.chiTSet,
+              X=cat(1,
+                    port_b2.Xi_outflow,
+                    {1 - sum(port_b2.Xi_outflow)}))
    "Enthalpy corresponding to set point";
-  Modelica.Blocks.Sources.RealExpression TSouEnt(
-    final y=Medium2.temperature(
-        Medium2.setState_phX(
-          port_a2.p,
-          inStream(port_a2.h_outflow),
-          inStream(port_a2.Xi_outflow))))
-   "Source side entering fluid temperature"
-    annotation (Placement(transformation(extent={{-80,-36},{-60,-16}})));
-  Modelica.Blocks.Sources.RealExpression TLoaLvg(
-    final y=Medium1.temperature(
-        Medium1.setState_phX(
-          port_b1.p,
-          inStream(port_b1.h_outflow),
-          inStream(port_b1.Xi_outflow))))
-    "Load side leaving fluid temperature"
-    annotation (Placement(transformation(extent={{-80,-2},{-60,18}})));
-  Modelica.Blocks.Sources.RealExpression Q_flow_set(
-    final y= if (uMod == 0)
-      then
-        0
-      else
-        m1_flow*(hSet - inStream(port_a1.h_outflow)))
-    "Required heat flow rate to meet set point"
-    annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
+
+  Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
+    "Set point for leaving fluid temperature at port b1"
+     annotation (Placement(transformation(extent={{-120,44},{-100,64}}),
+          iconTransformation(extent={{-120,80},{-100,100}})));
+  BaseClasses.ReSetTSetCoo reSet
+    "Built-in controller to reset of the cooling set point tempeatue in case heating mode is selected."
+     annotation (Placement(transformation(extent={{-48,50},{-28,70}})));
+  Modelica.Blocks.Interfaces.IntegerInput uMod
+   "Control input signal, cooling mode=-1, off=0, heating mode=+1"
+     annotation (Placement(transformation(extent={{-124,-12},{-100,12}}),
+          iconTransformation(extent={{-120,-10},{-100,10}})));
+  Modelica.Blocks.Interfaces.RealOutput QLoa_flow(final unit="W")
+   "Heat flow rate at the load heat exchanger"
+     annotation (Placement(transformation(extent={{100,78},{120,98}}),
+        iconTransformation(extent={{100,80},{120,100}})));
+  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
+   "Compressor power "
+     annotation (Placement(transformation(extent={{100,-10},{120,10}}),
+        iconTransformation(extent={{100,-12},{120,8}})));
+  Modelica.Blocks.Interfaces.RealOutput COP(final min=0, final unit="1")
+    "Coefficient of performance, assuming useful heat is at load side (at Medium 1)"
+     annotation (Placement(transformation(extent={{100,-50},{120,-30}}),
+        iconTransformation(extent={{100,-40},{120,-20}})));
+  Modelica.Blocks.Interfaces.RealOutput QSou_flow(final unit="W")
+   "Heat flow rate at the source heat exchanger"
+     annotation (Placement(transformation(extent={{100,-98},{120,-78}}),
+        iconTransformation(extent={{100,-100},{120,-80}})));
+  Modelica.Blocks.Interfaces.RealInput TSouMinLvg(final
+      unit="K",
+      displayUnit="degC")
+    "Minimum leaving water temperature at the source side"
+     annotation (Placement(transformation(extent={{-120,90},{-100,110}}),
+        iconTransformation(extent={{-120,-100},{-100,-80}})));
+  Modelica.Blocks.Interfaces.RealInput TSouMaxLvg(final
+     unit="K",
+     displayUnit="degC") "Maximum source leaving water temperature"
+    annotation (Placement(
+        transformation(extent={{-120,76},{-100,96}}), iconTransformation(extent=
+           {{-120,30},{-100,50}})));
+  Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor TSouLvg
+    "Leaving water temperature form source heat exchanger"
+    annotation (Placement(transformation(extent={{0,-40},{-20,-20}})));
+  Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor TLoaLvg
+    "Leaving water temperature form load heat exchanger"
+    annotation (Placement(transformation(extent={{-28,20},{-48,40}})));
+
+protected
    BaseClasses.DOE2Reversible doe2(
      final per=per,
      final scaling_factor=scaling_factor)
    "Performance model"
-    annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
-
-  Buildings.HeatTransfer.Sources.PrescribedHeatFlow preHeaFloLoa
-   "Prescribed load side heat flow rate"
-    annotation (Placement(transformation(extent={{59,10},{39,30}})));
-  Buildings.HeatTransfer.Sources.PrescribedHeatFlow preHeaFloSou
-   "Prescribed source side heat flow rate"
-    annotation (Placement(transformation(extent={{59,-70},{39,-50}})));
+    annotation (Placement(transformation(extent={{-6,-10},{14,10}})));
 
   Buildings.Controls.OBC.CDL.Integers.LessThreshold lesThr(
     final threshold=0) if
@@ -125,52 +117,112 @@ protected
          not reverseCycle
     "Generate alert message if control input is not valid"
     annotation (Placement(transformation(extent={{-52,-90},{-32,-70}})));
+  Modelica.Blocks.Sources.RealExpression Q_flow_set(
+    final y=
+    if     (uMod == 1)
+      then m2_flow*(hSet-inStream(port_a2.h_outflow))
+    elseif (uMod == -1)
+      then m1_flow*(hSet -inStream(port_a1.h_outflow))
+    else   0)
+    "Required heat flow rate to meet set point"
+    annotation (Placement(transformation(extent={{-80,20},{-60,40}})));
+  Modelica.Blocks.Sources.RealExpression TSouEnt(
+    final y=Medium2.temperature(
+        Medium2.setState_phX(
+        port_a2.p,
+        inStream(port_a2.h_outflow),
+        inStream(port_a2.Xi_outflow)))) "Source side leaving fluid temperature"
+    annotation (Placement(transformation(extent={{-80,-22},{-60,-2}})));
+  Modelica.Blocks.Sources.RealExpression TLoaEnt(
+    final y=Medium1.temperature(
+        Medium1.setState_phX(
+        port_a1.p,
+        inStream(port_a1.h_outflow),
+        inStream(port_a1.Xi_outflow)))) "Load side entering fluid temperature"
+    annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
+  HeatTransfer.Sources.PrescribedHeatFlow preHeaFloLoa
+   "Prescribed load side heat flow rate"
+    annotation (Placement(transformation(extent={{61,10},{41,30}})));
+  HeatTransfer.Sources.PrescribedHeatFlow preHeaFloSou
+   "Prescribed source side heat flow rate"
+    annotation (Placement(transformation(extent={{59,-70},{39,-50}})));
 
 equation
-  connect(doe2.QSou_flow,QSou_flow)
-  annotation (Line(points={{11,-2},{32,-2},{32,-88},{110,-88}}, color={0,0,127}));
-  connect(mSou_flow.y, doe2.mSou_flow)
-  annotation (Line(points={{-59,-10},{
-          -54,-10},{-54,-8},{-11,-8}},
-                                   color={0,0,127}));
-  connect(mLoa_flow.y, doe2.mLoa_flow)
-  annotation (Line(points={{-59,26},{-48,
-          26},{-48,6},{-11,6}}, color={0,0,127}));
-  connect(doe2.QLoa_flow,QLoa_flow)
-  annotation (Line(points={{11,6},{80,6},{80,88},{110,88}},color={0,0,127}));
-  connect(doe2.QLoa_flow,preHeaFloLoa.Q_flow)
-  annotation (Line(points={{11,6},{80,6},{80,20},{59,20}},color={0,0,127}));
-  connect(TSouEnt.y,doe2.TSouEnt)
-  annotation (Line(points={{-59,-26},{-50,-26},{-50,-4},{-11,-4}},    color={0,0,127}));
-  connect(doe2.P, P)
-  annotation (Line(points={{11,2},{60,2},{60,0},{110,0}},
-                                           color={0,0,127}));
-  connect(uMod, doe2.uMod)
-  annotation (Line(points={{-112,0},{-62,0},{-62,-0.2},{-11,-0.2}},
-                                              color={255,127,0}));
-  connect(doe2.QSou_flow, preHeaFloSou.Q_flow)
-  annotation (Line(points={{11,-2},{32,-2},{32,-44},{74,-44},{74,-60},{59,-60}},
-                                                               color={0,0,127}));
-  connect(vol1.heatPort, preHeaFloLoa.port)
-  annotation (Line(points={{-10,60},{-14,60},{-14,20},{39,20}}, color={191,0,0}));
-  connect(vol2.heatPort, preHeaFloSou.port)
-  annotation (Line(points={{12,-60},{39,-60}},                   color={191,0,0}));
-  connect(aleMes.u, lesThr.y)
+  connect(aleMes.u,lesThr.y)
   annotation (Line(points={{-54,-80},{-58,-80}}, color={255,0,255}));
-  connect(lesThr.u, uMod)
-  annotation (Line(points={{-82,-80},{-88,-80},{-88,0},{
-          -112,0}}, color={255,127,0}));
-  connect(doe2.Q_flow_set, Q_flow_set.y)
-  annotation (Line(points={{-11,9},{
-          -44,9},{-44,40},{-59,40}},
-                                 color={0,0,127}));
+  connect(uMod, doe2.uMod)
+  annotation (Line(points={{-112,0},{-7,0}},  color={255,127,0}));
+  connect(uMod, lesThr.u)
+  annotation (Line(points={{-112,0},{-88,0},{-88,-80},{-82,
+          -80}}, color={255,127,0}));
+  connect(Q_flow_set.y, doe2.Q_flow_set)
+  annotation (Line(points={{-59,30},{-58,30},{-58,5.4},{-7,5.4}},
+                                color={0,0,127}));
+  connect(doe2.QLoa_flow, QLoa_flow)
+  annotation (Line(
+      points={{15,3},{84,3},{84,88},{110,88}},
+      color={0,0,127},
+      pattern=LinePattern.Dash));
+  connect(doe2.P, P)
+  annotation (Line(
+      points={{15,0},{110,0}},
+      color={0,0,127},
+      pattern=LinePattern.Dash));
   connect(doe2.COP, COP)
-  annotation (Line(points={{11,-6},{36,-6},{36,-40},{
-          110,-40}}, color={0,0,127}));
-  connect(TLoaLvg.y, doe2.TLoaLvg)
-  annotation (Line(points={{-59,8},{-54,8},{-54,
-          3},{-11,3}}, color={0,0,127}));
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false),
+  annotation (Line(
+      points={{15,-3},{84,-3},{84,-40},{110,-40}},
+      color={0,0,127},
+      pattern=LinePattern.Dash));
+  connect(doe2.QSou_flow, QSou_flow)
+  annotation (Line(
+      points={{15,-6},{82,-6},{82,-88},{110,-88}},
+      color={0,0,127},
+      pattern=LinePattern.Dash));
+  connect(doe2.QLoa_flow, preHeaFloLoa.Q_flow)
+  annotation (Line(points={{15,3},{68,3},{68,20},{61,20}}, color={0,0,127}));
+  connect(doe2.QSou_flow, preHeaFloSou.Q_flow)
+  annotation (Line(points={{15,-6},{68,-6},{68,-60},{59,-60}},
+                                      color={0,0,127}));
+  connect(TSet,reSet. TSet)
+  annotation (Line(points={{-110,54},{-56,54},{-56,62.8},{-49,62.8}},
+                     color={0,0,127}));
+  connect(uMod,reSet. uMod)
+  annotation (Line(points={{-112,0},{-88,0},{-88,60},{
+          -49,60}}, color={255,127,0}));
+  connect(preHeaFloLoa.port, vol1.heatPort)
+  annotation (Line(points={{41,20},{-20,
+          20},{-20,60},{-10,60}},     color={191,0,0}));
+  connect(preHeaFloSou.port, vol2.heatPort)
+  annotation (Line(points={{39,-60},{12,-60}}, color={191,0,0}));
+  connect(TLoaEnt.y, doe2.TLoaEnt)
+  annotation (Line(points={{-59,-30},{-48,-30},{-48,-6.4},{-7,-6.4}},
+                             color={0,0,127}));
+  connect(TSouEnt.y, doe2.TSouEnt)
+  annotation (Line(points={{-59,-12},{-52,-12},{-52,-2.6},{-7,-2.6}},
+                             color={0,0,127}));
+  connect(TSouMinLvg,reSet.TSouLvgMin)
+  annotation (Line(points={{-110,100},{
+          -52,100},{-52,69.2},{-49,69.2}},
+                                       color={0,0,127}));
+  connect(TSouMaxLvg,reSet.TSouLvgMax)
+  annotation (Line(points={{-110,86},{-56,
+          86},{-56,66},{-49,66}}, color={0,0,127}));
+  connect(vol2.heatPort, TSouLvg.port)
+  annotation (Line(points={{12,-60},{20,-60},
+          {20,-30},{0,-30}}, color={191,0,0}));
+  connect(TSouLvg.T, doe2.TSouLvg)
+  annotation (Line(points={{-20,-30},{-34,-30},{-34,-9.8},{-7,-9.8}},
+                           color={0,0,127}));
+  connect(vol1.heatPort, TLoaLvg.port)
+  annotation (Line(points={{-10,60},{-20,60},
+          {-20,30},{-28,30}}, color={191,0,0}));
+  connect(TLoaLvg.T, reSet.TLoaLvg)
+  annotation (Line(points={{-48,30},{-54,30},{
+          -54,52},{-49,52}}, color={0,0,127}));
+  connect(TLoaLvg.T, doe2.TLoaLvg)
+  annotation (Line(points={{-48,30},{-54,30},{-54,8.4},{-7,8.4}},
+                          color={0,0,127}));
+annotation (Icon(coordinateSystem(preserveAspectRatio=false),
      graphics={
         Ellipse(
           extent={{32,12},{68,-22}},
@@ -258,12 +310,11 @@ equation
         Ellipse(extent={{22,2},{28,10}}, lineColor={255,0,0}),
         Ellipse(extent={{22,-22},{28,-14}}, lineColor={255,0,0}),
         Line(points={{32,-4},{26,-4},{26,-4}}, color={255,0,0}),
-        Line(points={{70,-30},{108,-30}},
-                                      color={28,108,200})}),
+        Line(points={{70,-30},{108,-30}},color={28,108,200})}),
         Diagram(coordinateSystem(extent={{-100,-100},{100,100}},
-          preserveAspectRatio=false)),
-  defaultComponentName="heaPum",
-  Documentation(info="<html>
+                 preserveAspectRatio=false)),
+        defaultComponentName="heaPumDOE2",
+Documentation(info="<html>
 
 <p>
 Model for a reversible heat pump using the DOE2 method and that takes as an
@@ -294,14 +345,22 @@ If <code>reverseCycle = true</code> the signal can take on the values
 If <code>reverseCycle = false</code> and <code>uMod = -1</code>, the model stops with an error message.
 </li>
 <li>
-The input <code>TSet</code> is the set point for the leaving fluid temperature at port <code>port_b1</code>.
+The input <code>TchiSet</code> is the set point for the leaving fluid temperature at port <code>port_b1</code> or 
+port <code>port_b2</code> based on teh operational mode.
 </li>
 </ul>
+<p>
+<code>TchiSet</code> is generated from the built-in controller <code>reSet</code>, 
+if <code>uMode</code> = +1, using a PI contrller it resets the <code>TSet</code> to <code>TchiSet</code>
+till the load leaving water temperature meets <code>TSet</code>. 
+While if <code>uMode</code> = -1, it outputs that <code>TchiSet</code> equals to <code>TSet</code>.
+More details are available at <a href=\"Buildings.Fluid.HeatPumps.BaseClasses.ReSetTSetCoo\">
+Buildings.Fluid.HeatPumps.BaseClasses.ReSetTSetCoo</a>.
+</p> 
 <p>
 The electric power only includes the power for the compressor, but not any power for pumps, as the pumps must be modeled outside
 of this component.
 </p>
-
 <h4>Main equations</h4>
 <p>
 The model uses three performance curves to determine the heat pump operational capacity and efficiency as follows
@@ -395,7 +454,13 @@ power draw does not change.
 The performance of the heat pump is computed as follows:
 <ul>
 <li>
-If <code>uMod = 1</code>, the heat pump is in heating mode and the load side available heat is
+It is important to highlight that the DOE2 equations are assoiciated only to the evaporator 
+perfromance. Hence in case of <code>uMod</code>=+1, the evaporator is the source heat exchanger and
+Q&#775;<sub>0</sub> &nbsp is multiplied by a load ratio<code>loaRat</code> as stated
+in EnergyPlus-InputOutput Reference.
+</li>
+<li>
+If <code>uMod = 1</code>, the heat pump is in heating mode and the source side (Evaporator) available heat is
 <p align=\"center\" style=\"font-style:italic;\">
 Q&#775;<sub>ava</sub> = CapFT &nbsp; Q&#775;<sub>0</sub> &nbsp; s,
 </p>
@@ -404,14 +469,16 @@ where <i>Q&#775;<sub>0</sub></i> is the design capacity as specified by the para
 <code>QHea_flow</code> and <i>s</i> is the scaling factor specified by the parameter <code>scaling_factor</code>.
 </p>
 <p>
-The actual thermal capacity provided at the load side is
+The actual thermal capacity provided at the source side is
 <p align=\"center\" style=\"font-style:italic;\">
 Q&#775; = min(Q&#775;<sub>ava</sub> , Q&#775;<sub>set</sub>),
 </p>
 <p>
-where <i>Q&#775;<sub>set</sub></i> is the heat required to meet the temperature setpoint
-for the leaving fluid on the load side.
+where <i>Q&#775;<sub>set</sub></i> is the heat required to meet the <code>chiTSet</code> i.e. re setted temperature setpoint
+for the leaving fluid on the source side until the Load side leaving water temperature meets the setpoint <code>TSet</code>
+for heating loads.
 </p>
+
 <p>
 The corresponding power consumption is
 <p align=\"center\" style=\"font-style:italic;\">
@@ -419,12 +486,12 @@ P= Q&#775;<sub>ava</sub> &nbsp; &nbsp; EIRFT &nbsp; EIRFPLR &nbsp; CR &nbsp; P<s
 </p>
 <p>
 where <i>P<sub>0</sub></i> is the design power consumption as specified by the parameter
-<code>P_nominal</code>.
+<code>P_nominal</code>. While in case of <code>uMod</code> =+1, it is multiplied by 
+<code>PowRat</code> as stated in EnergyPlus-InputOutput Reference
 </li>
 <li>
-If <code>uMod = -1</code>, the heat pump is in cooling mode, and the governing equations are as above, but
-with <code>QCoo_flow</code> rather than <code>QHea_flow</code> used for the performance data, and the <i>min(&middot; &middot;)</i> function
-replaced with <i>max(&middot; &middot;)</i>.
+If <code>uMod = -1</code>, the heat pump is in cooling mode, and the governing equations are as above,
+taking into account the evaporator is considered as the load heat exhanger.
 </li>
 <li>
 If <code>uMod = 0</code>, the model sets <i>Q&#775; = 0</i> and <i>P = 0</i>.
@@ -443,14 +510,16 @@ EnergyPlus-EngineeringReference-chapter16.6.3.
 EIR Formulated Water To Water Heat Pump Model.
 </i>
 </p>
+<p>
+EnergyPlus-InputOutputReference-chapter1.22.26.
+<i>
+ChillerHeaterPerformance:Electric:EIR.
+</i>
+</p>
 </html>", revisions="<html>
 <ul>
 <li>
-September 16, 2019 by Michael Wetter:<br/>
-Refactored implementation.
-</li>
-<li>
-September 2, 2019, by Hagar Elarga:<br/>
+November 27, 2019, by Hagar Elarga:<br/>
 First implementation.
 </li>
 </ul>
