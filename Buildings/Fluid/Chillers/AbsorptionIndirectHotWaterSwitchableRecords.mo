@@ -34,7 +34,6 @@ model AbsorptionIndirectHotWaterSwitchableRecords
       m1_flow_nominal=mCon_flow_nominal,
       m2_flow_nominal=mEva_flow_nominal,
       m3_flow_nominal=mGen_flow_nominal);
-
   final parameter Modelica.SIunits.HeatFlowRate QEva_heatflow_nominal= per.QEva_flow_nominal
     "Nominal heat flow at the evaporator"
     annotation (Dialog(group="Nominal condition"));
@@ -51,7 +50,7 @@ model AbsorptionIndirectHotWaterSwitchableRecords
     "Small value for heat flow rate or power, used to avoid division by zero";
 
   Modelica.Blocks.Interfaces.BooleanInput on
-   "Chiller turn On/off inout signal "
+    "Chiller turn On/off input signal "
     annotation (Placement(transformation(extent={{-128,26},{-100,54}}),
                                     iconTransformation(extent={{-140,70},{-120,90}})));
   Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
