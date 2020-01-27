@@ -188,11 +188,11 @@ implementing either hot water or steam as a heat source for the generator .
 The real input <code>TGenEnt</code> is provided via a conditional connector if the 
 Boolean parameter <code>hotWater</code> is true.
 For a description of the indirect steam absorption chiller see 
-<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteamRemovableRecords\">
-Buildings.Fluid.Chillers.AbsorptionIndirectSteamRemovableRecords</a>. and for indirect hot
+<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteamSwitchableRecords\">
+Buildings.Fluid.Chillers.AbsorptionIndirectSteamSwitchableRecords</a>. and for indirect hot
 water absorption chiller see
-<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectHotWaterRemovableRecords\">
-Buildings.Fluid.Chillers.AbsorptionIndirectHotWaterRemovableRecords</a>. 
+<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectHotWaterSwitchableRecords\">
+Buildings.Fluid.Chillers.AbsorptionIndirectHotWaterSwitchableRecords</a>. 
 </p>
 </html>",
 revisions="<html>
