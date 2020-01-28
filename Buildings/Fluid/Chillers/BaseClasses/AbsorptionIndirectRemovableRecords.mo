@@ -14,62 +14,57 @@ block AbsorptionIndirectRemovableRecords
     "Small value for heat flow rate or power, used to avoid division by zero"
     annotation(HideResult=true);
 
-  Modelica.Blocks.Interfaces.RealInput TGenEnt(
-  final unit="K",
-  displayUnit="degC") if hotWater
-  "Generator entering water temperature"
-   annotation (Placement(transformation(
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TGenEnt(
+    final unit="K",
+    displayUnit="degC") if hotWater
+    "Generator entering water temperature"
+     annotation (Placement(transformation(
         extent={{-124,-12},{-100,12}}), iconTransformation(extent={{-120,20},{
           -100,40}})));
-  Modelica.Blocks.Interfaces.BooleanInput on
-    "Set to true to enable the absorption chiller"
-    annotation (Placement(transformation(extent={{-124,48},{-100,72}}),
-        iconTransformation(extent={{-120,60},{-100,80}})));
-  Modelica.Blocks.Interfaces.RealInput TConEnt(
-    final unit="K",
-    displayUnit="degC") "Condenser entering water temperature"
+   Buildings.Controls.OBC.CDL.Interfaces.RealInput TConEnt(
+     final unit="K",
+     displayUnit="degC") "Condenser entering water temperature"
      annotation (Placement(transformation(extent={{-124,16},{-100,40}}),iconTransformation(extent={{-120,
             -10},{-100,10}})));
-  Modelica.Blocks.Interfaces.RealInput TEvaLvg(
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TEvaLvg(
     final unit="K",
     displayUnit="degC")
     "Evaporator leaving water temperature"
      annotation (Placement(transformation(extent={{-124,-84},{-100,-60}}),
                                     iconTransformation(extent={{-120,-80},{-100,
             -60}})));
-
-  Modelica.Blocks.Interfaces.RealInput QEva_flow_set(final unit="W")
-    "Evaporator setpoint heat flow rate" annotation (Placement(transformation(
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput QEva_flow_set(final unit="W")
+    "Evaporator setpoint heat flow rate"
+     annotation (Placement(transformation(
           extent={{-124,-44},{-100,-20}}), iconTransformation(extent={{-120,-50},
             {-100,-30}})));
-
-  Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput on
+    "Set to true to enable the absorption chiller"
+     annotation (Placement(transformation(extent={{-124,48},{-100,72}}),
+        iconTransformation(extent={{-120,60},{-100,80}})));
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput QCon_flow(final unit="W")
     "Condenser heat flow rate "
      annotation (Placement(transformation(extent={{100,70},{120,90}}),
                             iconTransformation(extent={{100,70},{120,90}})));
-
-  Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput QEva_flow(final unit="W")
     "Evaporator heat flow rate"
      annotation (Placement(transformation(extent={{100,-30},{120,-10}}),
                               iconTransformation(extent={{100,-30},{120,-10}})));
-
-  Modelica.Blocks.Interfaces.RealOutput QGen_flow(final unit="W")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput QGen_flow(final unit="W")
     "Required generator heat flow rate"
      annotation (Placement(transformation(extent={{100,10},{120,30}}),
                               iconTransformation(extent={{100,10},{120,30}})));
-
-  Modelica.Blocks.Interfaces.RealOutput P(final unit="W")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput P(final unit="W")
     "Pump power"
      annotation (Placement(transformation(extent={{100,40},{120,60}}), iconTransformation(extent={{100,40},
             {120,60}})));
-
-  Modelica.Blocks.Interfaces.RealOutput PLR(min=0, final unit="1")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput PLR(min=0, final unit="1")
    "Part load ratio"
-   annotation (Placement(transformation(extent={{100,-60},{120,-40}}),iconTransformation(extent={{100,-60},
+     annotation (Placement(transformation(extent={{100,-60},{120,-40}}),iconTransformation(extent={{100,-60},
             {120,-40}})));
-  Modelica.Blocks.Interfaces.RealOutput CR(min=0, final unit="1")
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput CR(min=0, final unit="1")
    "Cycling ratio"
-   annotation (Placement(transformation(extent={{100,-90},{120,-70}}), iconTransformation(extent={{100,-90},
+     annotation (Placement(transformation(extent={{100,-90},{120,-70}}), iconTransformation(extent={{100,-90},
             {120,-70}})));
 
   Modelica.SIunits.Efficiency genHIR
@@ -97,7 +92,7 @@ protected
    "Evaporator leaving water temperature in degC";
   Modelica.SIunits.Conversions.NonSIunits.Temperature_degC TGenEnt_degC
    "Generator entering water temperature in degC";
-  Modelica.Blocks.Interfaces.RealInput TGenEnt_internal(final unit="K")
+  Buildings.Controls.OBC.CDL.Interfaces.RealInput TGenEnt_internal(final unit="K")
     "Needed to connect to conditional connector";
 
 initial equation
@@ -112,7 +107,7 @@ equation
   TEvaLvg_degC=Modelica.SIunits.Conversions.to_degC(TEvaLvg);
   TGenEnt_degC=Modelica.SIunits.Conversions.to_degC(TGenEnt_internal);
   // TGenEnt removed conditionally when the heat source is steam.
-  // In this case TGenEnt_internal will not be included in the simulation.
+  // In this case TGenEnt_internal is not included in the simulation.
     if not hotWater then
       TGenEnt_internal =0;
     end if;

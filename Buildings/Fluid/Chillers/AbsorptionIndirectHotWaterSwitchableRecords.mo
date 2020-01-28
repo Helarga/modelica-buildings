@@ -34,8 +34,9 @@ model AbsorptionIndirectHotWaterSwitchableRecords
       m1_flow_nominal=mCon_flow_nominal,
       m2_flow_nominal=mEva_flow_nominal,
       m3_flow_nominal=mGen_flow_nominal);
+
   final parameter Modelica.SIunits.HeatFlowRate QEva_heatflow_nominal= per.QEva_flow_nominal
-    "Nominal heat flow at the evaporator"
+   "Nominal heat flow at the evaporator"
     annotation (Dialog(group="Nominal condition"));
   final parameter Modelica.SIunits.MassFlowRate mCon_flow_nominal = per.mCon_flow_nominal
    "Nominal mass flow at Condenser"
@@ -49,23 +50,24 @@ model AbsorptionIndirectHotWaterSwitchableRecords
   final parameter Modelica.SIunits.HeatFlowRate Q_flow_small = -QEva_heatflow_nominal*1E-9
     "Small value for heat flow rate or power, used to avoid division by zero";
 
+  Modelica.Blocks.Interfaces.RealInput TSet(final
+    unit="K",
+    displayUnit="degC")
+   "Evaporator setpoint leaving water temperature"
+    annotation (Placement(transformation(extent={{-126,-64},{-100,-38}}), iconTransformation(
+          extent={{-140,-50},{-120,-30}})));
   Modelica.Blocks.Interfaces.BooleanInput on
     "Chiller turn On/off input signal "
     annotation (Placement(transformation(extent={{-128,26},{-100,54}}),
-                                    iconTransformation(extent={{-140,70},{-120,90}})));
-  Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
-   "Evaporator setpoint leaving water temperature"
-    annotation (Placement(
-        transformation(extent={{-126,-64},{-100,-38}}), iconTransformation(
-          extent={{-140,-50},{-120,-30}})));
-
+                            iconTransformation(extent={{-140,70},{-120,90}})));
   Modelica.SIunits.SpecificEnthalpy hEvaSet=Medium2.specificEnthalpy_pTX(
       p=evaLvg.p,
       T=TSet,
       X=cat(
         1,
         evaLvg.Xi_outflow,
-        {1 - sum(evaLvg.Xi_outflow)})) "Chilled water setpoint enthalpy";
+        {1 - sum(evaLvg.Xi_outflow)}))
+   "Chilled water setpoint enthalpy";
   Modelica.Blocks.Interfaces.RealOutput P( final unit="W")
    "Chiller pump power"
     annotation (Placement(transformation(extent={{100,-22},{120,-2}}),
@@ -122,6 +124,7 @@ protected
         extent={{10,-10},{-10,10}},
         rotation=0,
         origin={-56,-70})));
+
 equation
   connect(preHeaFloCon.port, conVol.heatPort)
     annotation (Line(points={{-15,70},{-10,70}}, color={191,0,0}));
@@ -168,8 +171,8 @@ equation
   connect(perMod.P, P)
     annotation (Line(points={{-45,-17},{86,-17},{86,-12},{110,-12}},
                  color={0,0,127}));
-  annotation (Icon(coordinateSystem(extent={{-120,-100},{100,100}}),
-                   graphics={
+annotation (Icon(coordinateSystem(extent={{-120,-100},{100,100}}),
+     graphics={
         Line(points={{-40,76}}, color={238,46,47}),
         Rectangle(
           extent={{-72,90},{70,-90}},
@@ -251,14 +254,14 @@ equation
         Line(
           points={{-120,-40},{-80,-40},{-80,-80}},
           color={0,0,127},
-          thickness=0.5),        Text(
+          thickness=0.5),
+        Text(
           extent={{-161,137},{139,97}},
           lineColor={0,0,255},
           fillPattern=FillPattern.HorizontalCylinder,
           fillColor={0,127,255},
           textString="%name")}),
-                           Diagram(coordinateSystem(extent={{-100,
-            -100},{100,100}})),
+        Diagram(coordinateSystem(extent={{-100,-100},{100,100}})),
             defaultComponentName="chi",
 Documentation(info="<html>
 <p>

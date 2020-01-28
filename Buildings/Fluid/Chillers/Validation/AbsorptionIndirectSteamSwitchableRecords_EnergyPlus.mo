@@ -128,8 +128,8 @@ equation
   Documentation(info="<html>
 <p>
 This model validates
-<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteam\">
-Buildings.Fluid.Chillers.AbsorptionIndirectSteam</a>.
+<a href=\"Buildings.Fluid.Chillers.AbsorptionIndirectSteamSwitchableRecords\">
+Buildings.Fluid.Chillers.AbsorptionIndirectSteamSwitchableRecords</a>.
 <p>
 The EnergyPlus results were generated using the example file <code>IndirectAbsorptionChiller.idf</code>
 from EnergyPlus 9.2, with a nominal cooling capacity of <i>10000</i> Watts.
@@ -137,7 +137,7 @@ from EnergyPlus 9.2, with a nominal cooling capacity of <i>10000</i> Watts.
 </html>", revisions="<html>
 <ul>
 <li>
-July 4, 2019, by Hagar Elarga:<br/>
+January 4, 2020, by Hagar Elarga:<br/>
 First implementation.
 </li>
 </ul>

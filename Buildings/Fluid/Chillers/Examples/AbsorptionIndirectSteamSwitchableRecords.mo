@@ -26,7 +26,7 @@ model AbsorptionIndirectSteamSwitchableRecords
     show_T=true,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
   "Absorption chiller"
-    annotation (Placement(transformation(extent={{-10,0},{10,20}})));
+    annotation (Placement(transformation(extent={{0,0},{20,20}})));
   Buildings.Fluid.Sources.MassFlowSource_T conPum(
     redeclare package Medium = Medium,
     use_m_flow_in=false,
@@ -66,7 +66,7 @@ model AbsorptionIndirectSteamSwitchableRecords
     redeclare package Medium = Medium,
     nPorts=1)
    "Volume for heating load"
-     annotation (Placement(transformation(extent={{60,6},{40,26}})));
+     annotation (Placement(transformation(extent={{60,0},{40,20}})));
   Buildings.Fluid.Sources.Boundary_pT cooVol(
     redeclare package Medium = Medium,
     nPorts=1)
@@ -88,20 +88,21 @@ equation
     annotation (Line(points={{70,-34},{62,-34}},
                                 color={0,0,127}));
   connect(absIndSte.port_a2, evaPum.ports[1])
-    annotation (Line(points={{10,4},{20,4},{20,-30},{40,-30}},
+    annotation (Line(points={{20,4},{20,-30},{40,-30}},
                                  color={0,127,255}));
-  connect(absIndSte.TSet, TEvaSet.y) annotation (Line(points={{-11,8},{-30,8},{
+  connect(absIndSte.TSet, TEvaSet.y) annotation (Line(points={{-1,8},{-30,8},{
           -30,-30},{-38,-30}},
                            color={0,0,127}));
   connect(conPum.ports[1], absIndSte.port_a1)
-    annotation (Line(points={{-40,70},{-20,70},{-20,16},{-10,16}},
+    annotation (Line(points={{-40,70},{-20,70},{-20,16},{0,16}},
                                      color={0,127,255}));
   connect(absIndSte.port_b1, heaVol.ports[1])
-    annotation (Line(points={{10,16},{40,16}}, color={0,127,255}));
+    annotation (Line(points={{20,16},{26,16},{26,10},{40,10}},
+                                               color={0,127,255}));
   connect(cooVol.ports[1], absIndSte.port_b2) annotation (Line(points={{-40,-70},
-          {-20,-70},{-20,4},{-10,4}}, color={0,127,255}));
+          {-20,-70},{-20,4},{0,4}},   color={0,127,255}));
   connect(onOff.y, absIndSte.on)
-    annotation (Line(points={{-39,12},{-11,12}}, color={255,0,255}));
+    annotation (Line(points={{-39,12},{-1,12}},  color={255,0,255}));
   annotation (
 experiment(Tolerance=1e-6, StopTime=14400),
 __Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/Fluid/Chillers/Examples/AbsorptionIndirectSteamSwitchableRecords.mos"
