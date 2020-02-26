@@ -1,6 +1,6 @@
 within Buildings.Fluid.HeatPumps;
 model EquationFitReversible
-  "Model for a reversable heat pump based on the equation fit method"
+"Model for a reversable heat pump based on the equation fit method"
   extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
           show_T=true,
           final m1_flow_nominal=per.hea.mLoa_flow*scaling_factor,
