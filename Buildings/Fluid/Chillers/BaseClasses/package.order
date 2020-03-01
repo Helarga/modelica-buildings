@@ -1,6 +1,8 @@
+AbsorptionIndirectRemovableRecords
 AbsorptionIndirectSteam
 Carnot
 PartialCarnot_T
 PartialCarnot_y
 PartialElectric
+SixPortHeatMassExchanger
 warnIfPerformanceOutOfBounds

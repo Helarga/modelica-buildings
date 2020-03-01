@@ -1,5 +1,5 @@
 within Buildings.Fluid.Chillers;
-model AbsorptionIndirectSteam
+model AbsorptionIndirectSteamSwitchableRecords
   "Indirect steam heated absorption chiller based on performance curves"
     extends Buildings.Fluid.Interfaces.FourPortHeatMassExchanger(
      T1_start = 273.15+25,
@@ -16,17 +16,13 @@ model AbsorptionIndirectSteam
            nPorts=2,
            final prescribedHeatFlowRate=true));
 
-  parameter Buildings.Fluid.Chillers.Data.AbsorptionIndirect.Generic per
-   "Performance data"
-    annotation (choicesAllMatching= true,
-       Placement(transformation(extent={{60,72},{80,92}})));
   parameter Modelica.SIunits.HeatFlowRate Q_flow_small = -per.QEva_flow_nominal*1E-6
    "Small value for heat flow rate or power, used to avoid division by zero"
    annotation(Dialog(tab="Advanced"));
 
   Modelica.Blocks.Interfaces.BooleanInput on
     "Set to true to enable the absorption chiller"
-     annotation (Placement(transformation(extent={{-128,2},{-100,30}}),
+     annotation (Placement(transformation(extent={{-128,10},{-100,38}}),
                                     iconTransformation(extent={{-120,10},{-100,
             30}})));
   Modelica.Blocks.Interfaces.RealInput TSet(final unit="K", displayUnit="degC")
@@ -38,35 +34,39 @@ model AbsorptionIndirectSteam
      annotation (Placement(transformation(extent={{100,10},{120,30}}),
                             iconTransformation(extent={{100,-30},{120,-10}})));
   Modelica.Blocks.Interfaces.RealOutput QGen_flow(final unit="W")
-  "Required generator heat flow rate in the form of steam"
+    "Required generator heat flow rate in the form of steam"
      annotation (Placement(transformation(extent={{100,-30},{120,-10}}),
         iconTransformation(extent={{100,10},{120,30}})));
   Modelica.Blocks.Interfaces.RealOutput QEva_flow(final unit="W")
-  "Evaporator heat flow rate"
+    "Evaporator heat flow rate"
      annotation (Placement(transformation(extent={{100,-50},{120,-30}}),
         iconTransformation(extent={{100,-96},{120,-76}})));
   Modelica.Blocks.Interfaces.RealOutput QCon_flow(final unit="W")
-  "Condenser heat flow rate"
+    "Condenser heat flow rate"
      annotation (Placement(transformation(extent={{100,30},{120,50}}),
         iconTransformation(extent={{100,74},{120,94}})));
-
   Real PLR(min=0, final unit="1") = perMod.PLR
    "Part load ratio";
   Real CR(min=0, final unit="1") = perMod.CR
    "Cycling ratio";
 
+  BaseClasses.AbsorptionIndirectRemovableRecords perMod(
+      final  per= per,
+      final  hotWater=false,
+      final  Q_flow_small=Q_flow_small)
+    "Block that computes the performance"
+     annotation (Placement(transformation(extent={{-52,0},{-32,20}})));
+  replaceable Data.AbsorptionIndirect.AbsorptionIndirectSteam per
+    constrainedby Data.AbsorptionIndirect.AbsorptionIndirectSteam
+    "Performance data for indirect steam absorption chiller"
+    annotation (Placement(transformation(extent={{40,72},{60,92}})));
 protected
-  BaseClasses.AbsorptionIndirectSteam perMod(
-    final per=per,
-    final Q_flow_small=Q_flow_small) "Block that computes the performance"
-    annotation (Placement(transformation(extent={{-52,0},{-32,20}})));
-
   Modelica.Blocks.Sources.RealExpression QEva_flow_set(
     final y=Buildings.Utilities.Math.Functions.smoothMin(
-        x1=m2_flow*(hEvaSet - inStream(port_a2.h_outflow)),
-        x2=-Q_flow_small,
-        deltaX=Q_flow_small/10)) "Setpoint heat flow rate of the evaporator"
-    annotation (Placement(transformation(extent={{-92,-28},{-72,-8}})));
+           x1=m2_flow*(hEvaSet - inStream(port_a2.h_outflow)),
+           x2=-Q_flow_small,
+           deltaX=Q_flow_small/10)) "Setpoint heat flow rate of the evaporator"
+     annotation (Placement(transformation(extent={{-92,-28},{-72,-8}})));
 
   Modelica.SIunits.SpecificEnthalpy hEvaSet=Medium2.specificEnthalpy_pTX(
       p=port_b2.p,
@@ -74,14 +74,15 @@ protected
       X=cat(
         1,
         port_b2.Xi_outflow,
-        {1 - sum(port_b2.Xi_outflow)})) "Chilled water setpoint enthalpy";
+        {1 - sum(port_b2.Xi_outflow)}))
+    "Chilled water setpoint enthalpy";
 
   Modelica.Blocks.Sources.RealExpression TConEnt(
         y=Medium1.temperature(
         Medium1.setState_phX(
           p = port_a1.p,
           h = inStream(port_a1.h_outflow))))
-   "Condenser entering water temperature"
+    "Condenser entering water temperature"
      annotation (Placement(transformation(extent={{-92,-8},{-72,10}})));
 
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor TEvaLvg
@@ -100,22 +101,20 @@ protected
      annotation (Placement(transformation(extent={{-1,-40},{19,-20}})));
 
 equation
-  connect(on, perMod.on) annotation (Line(points={{-114,16},{-94,16},{-94,17},{
-          -53,17}},
-                color={255,0,255}));
+  connect(on, perMod.on) annotation (Line(points={{-114,24},{-60,24},{-60,17},{-53,
+          17}}, color={255,0,255}));
   connect(perMod.QCon_flow, preHeaFloCon.Q_flow) annotation (Line(points={{-31,18},
           {-20,18},{-20,28},{-52,28},{-52,40},{-47,40}}, color={0,0,127}));
   connect(perMod.QEva_flow, preHeaFloEva.Q_flow) annotation (Line(points={{-31,8},
           {-20,8},{-20,-30},{-1,-30}},   color={0,0,127}));
-  connect(preHeaFloEva.port, vol2.heatPort)
-    annotation (Line(points={{19,-30},{28,-30},{28,-60},{12,-60}},
+  connect(preHeaFloEva.port, vol2.heatPort) annotation (Line(points={{19,-30},{28,-30},{28,-60},{12,-60}},
                                   color={191,0,0}));
   connect(perMod.QEva_flow, QEva_flow) annotation (Line(points={{-31,8},{88,8},
           {88,-40},{110,-40}},                    color={0,0,127}));
-  connect(TConEnt.y, perMod.TConEnt) annotation (Line(points={{-71,1},{-66,1},{
-          -66,13},{-53,13}},      color={0,0,127}));
+  connect(TConEnt.y, perMod.TConEnt) annotation (Line(points={{-71,1},{-66,1},{-66,
+          10},{-53,10}},          color={0,0,127}));
   connect(QEva_flow_set.y, perMod.QEva_flow_set) annotation (Line(points={{-71,-18},
-          {-64,-18},{-64,7},{-53,7}},    color={0,0,127}));
+          {-64,-18},{-64,6},{-53,6}},    color={0,0,127}));
   connect(preHeaFloCon.port, vol1.heatPort) annotation (Line(points={{-27,40},{-20,
           40},{-20,60},{-10,60}},                                     color={
           191,0,0}));
@@ -128,8 +127,8 @@ equation
                               color={191,0,0}));
   connect(TEvaLvg.T, perMod.TEvaLvg) annotation (Line(points={{-52,-40},{-60,
           -40},{-60,3},{-53,3}},     color={0,0,127}));
-  connect(perMod.P, P) annotation (Line(points={{-31,15},{94,15},{94,20},{110,
-          20}}, color={0,0,127}));
+  connect(perMod.P, P) annotation (Line(points={{-31,15},{92,15},{92,20},{110,20}},
+                color={0,0,127}));
   annotation (Icon(graphics={
         Line(points={{-40,76}}, color={238,46,47}),
         Line(
@@ -211,7 +210,7 @@ defaultComponentName="chi",
 Documentation(info="<html>
 <p>
 Model for an indirect steam heated absorption chiller based on performance curves.
-The model uses performance curves similar to the EnergyPlus model <code>Chiller:Absorption:Indirect</code>.
+The model uses performance curves similar to the EnergyPlus model <code>Chiller:Absorption:Indirect</code>, steam only.
 </p>
 <p>
 The model uses six functions to predict the chiller cooling capacity, power consumption for
@@ -310,10 +309,16 @@ The heat balance of the chiller is
 </p>
 <h4>Performance data</h4>
 <p>
-The equipment performance data is obtained from the record <code>per</code>,
-which is an instance of
-<a href=\"Buildings.Fluid.Chillers.Data.AbsorptionIndirectSteam\">
-Buildings.Fluid.Chillers.Data.AbsorptionIndirectSteam</a>.
+The equipment performance data is obtained from the replaceable record for the steam
+as a heat source <code>per</code>,
+<a href=\"Buildings.Fluid.Chillers.Data.AbsorptionIndirectSteam.AbsorptionIndirectHotWater\">
+ Buildings.Fluid.Chillers.Data.AbsorptionIndirectSteam.AbsorptionIndirectHotWater</a>
+
+which extends from 
+<a href=\"Buildings.Fluid.Chillers.Data.AbsorptionIndirectSteam.Generic\">
+Buildings.Fluid.Chillers.Data.AbsorptionIndirectSteam.Generic</a>
+
+
 Additional performance curves can be developed using
 two available techniques (Hydeman and Gillespie, 2002). The first technique is called the
 Least-squares Linear Regression method and is used when sufficient performance data exist
@@ -342,4 +347,4 @@ First implementation.
 </li>
 </ul>
 </html>"));
-end AbsorptionIndirectSteam;
+end AbsorptionIndirectSteamSwitchableRecords;
