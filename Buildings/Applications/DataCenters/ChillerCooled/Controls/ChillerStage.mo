@@ -86,10 +86,7 @@ model ChillerStage "Chiller staging control logic"
   inner Modelica.StateGraph.StateGraphRoot stateGraphRoot
     annotation (Placement(transformation(extent={{40,60},{60,80}})));
 
-  Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(
-    table=[0,0,0;
-           1,1,0;
-           2,1,1])
+  Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(table=[0,0,0; 1,1,0; 2,1,1])
     annotation (Placement(transformation(extent={{70,-10},{90,10}})));
 
   Buildings.Controls.OBC.CDL.Conversions.BooleanToInteger booToInt(
@@ -151,14 +148,16 @@ equation
   connect(oneOn.active, booToInt.u) annotation (Line(points={{-39,10},{10,10},{
           10,-40},{18,-40}},
                           color={255,0,255}));
-  connect(booToInt.y, addInt.u1) annotation (Line(points={{41,-40},{50,-40},{50,
+  connect(booToInt.y, addInt.u1) annotation (Line(points={{42,-40},{50,-40},{50,
           -54},{58,-54}}, color={255,127,0}));
-  connect(booToInt1.y, addInt.u2) annotation (Line(points={{41,-80},{50,-80},{50,
-          -66},{58,-66}}, color={255,127,0}));
-  connect(addInt.y, intToRea.u) annotation (Line(points={{81,-60},{88,-60},{88,-20},
-          {30,-20},{30,0},{38,0}}, color={255,127,0}));
+  connect(booToInt1.y, addInt.u2) annotation (Line(points={{42,-80},{50,-80},{
+          50,-66},{58,-66}},
+                          color={255,127,0}));
+  connect(addInt.y, intToRea.u) annotation (Line(points={{82,-60},{88,-60},{88,
+          -20},{30,-20},{30,0},{38,0}},
+                                   color={255,127,0}));
   connect(intToRea.y, combiTable1Ds.u)
-    annotation (Line(points={{61,0},{68,0},{68,0}}, color={0,0,127}));
+    annotation (Line(points={{62,0},{68,0},{68,0}}, color={0,0,127}));
   annotation (Documentation(info="<html>
 <p>
 This is a chiller staging control that works as follows:

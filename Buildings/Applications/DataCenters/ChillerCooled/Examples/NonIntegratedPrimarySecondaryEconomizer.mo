@@ -187,7 +187,7 @@ equation
       color={255,127,0}));
   connect(chiStaCon.cooMod, cooModCon.y)
     annotation (Line(
-      points={{-172,146},{-184,146},{-184,110},{-191,110}},
+      points={{-172,146},{-186,146},{-186,110},{-191,110}},
       color={255,127,0}));
   connect(cooModCon.y, intToBoo.u)
     annotation (Line(
@@ -198,7 +198,7 @@ equation
       points={{-191,110},{-186,110},{-186,202},{164,202},{164,160},{178,160}},
       color={255,127,0}));
   connect(chiNumOn.y, priPumCon.numOnChi) annotation (Line(points={{-236.9,65},
-          {-188,65},{-188,25},{-174,25}}, color={255,127,0}));
+          {-186,65},{-186,25},{-174,25}}, color={255,127,0}));
   connect(cooModCon.y, cooTowSpeCon.cooMod) annotation (Line(points={{-191,110},
           {-186,110},{-186,182.444},{-172,182.444}}, color={255,127,0}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false,

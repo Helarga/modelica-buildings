@@ -60,23 +60,24 @@ protected
 equation
   connect(cooMod, freCoo.u1) annotation (Line(points={{-120,-70},{-92,-70},{-92,
           -50},{-42,-50}}, color={255,127,0}));
-  connect(conInt.y, freCoo.u2) annotation (Line(points={{-59,-70},{-52,-70},{-52,
-          -58},{-42,-58}}, color={255,127,0}));
-  connect(freCoo.y, switch1.u2) annotation (Line(points={{-19,-50},{40,-50},{40,
+  connect(conInt.y, freCoo.u2) annotation (Line(points={{-58,-70},{-52,-70},{
+          -52,-58},{-42,-58}},
+                           color={255,127,0}));
+  connect(freCoo.y, switch1.u2) annotation (Line(points={{-18,-50},{40,-50},{40,
           0},{58,0}}, color={255,0,255}));
   connect(const.y, switch1.u1)
-    annotation (Line(points={{41,40},{48,40},{48,8},{58,8}}, color={0,0,127}));
+    annotation (Line(points={{42,40},{48,40},{48,8},{58,8}}, color={0,0,127}));
   connect(dxSpe.y, switch1.u3) annotation (Line(points={{-19,60},{10,60},{10,-8},
           {58,-8}},color={0,0,127}));
   connect(switch1.y, y)
-    annotation (Line(points={{81,0},{110,0}}, color={0,0,127}));
+    annotation (Line(points={{82,0},{110,0}}, color={0,0,127}));
   connect(TMixAirSet, dxSpe.u_s)
     annotation (Line(points={{-120,60},{-42,60}}, color={0,0,127}));
   connect(TMixAirMea, dxSpe.u_m)
     annotation (Line(points={{-120,0},{-30,0},{-30,48}},color={0,0,127}));
   connect(not1.y, dxSpe.trigger)
-    annotation (Line(points={{-47,30},{-38,30},{-38,48}}, color={255,0,255}));
-  connect(freCoo.y, not1.u) annotation (Line(points={{-19,-50},{0,-50},{0,-20},
+    annotation (Line(points={{-46,30},{-38,30},{-38,48}}, color={255,0,255}));
+  connect(freCoo.y, not1.u) annotation (Line(points={{-18,-50},{0,-50},{0,-20},
           {-80,-20},{-80,30},{-70,30}},color={255,0,255}));
   annotation (
     Icon(coordinateSystem(preserveAspectRatio=false), graphics={Rectangle(

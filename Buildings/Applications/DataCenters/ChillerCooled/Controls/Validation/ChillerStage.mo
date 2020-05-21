@@ -10,8 +10,7 @@ model ChillerStage
     "Staging controller for chillers"
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   Modelica.Blocks.Sources.Constant QTot(
-    k=0.55*chiStaCon.QEva_nominal)
-    "Total cooling load in chillers"
+    k=0.55*chiStaCon.QEva_nominal) "Total cooling load in chillers"
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}})));
   Modelica.Blocks.Sources.IntegerTable cooMod(
     table=[0,0;

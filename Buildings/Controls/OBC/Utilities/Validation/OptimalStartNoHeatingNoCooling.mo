@@ -33,6 +33,8 @@ model OptimalStartNoHeatingNoCooling
   Buildings.Controls.OBC.CDL.Continuous.LimPID conPID1(
     controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
     Ti=3,
+    yMax=1,
+    yMin=0,
     reverseAction=true) "PI control for space cooling"
     annotation (Placement(transformation(extent={{180,0},{200,20}})));
   Buildings.Controls.SetPoints.OccupancySchedule occSch(occupancy=3600*{7,19},period=24*3600)
@@ -48,7 +50,9 @@ model OptimalStartNoHeatingNoCooling
     annotation (Placement(transformation(extent={{140,40},{160,60}})));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conPID(
     controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
-    Ti=3) "PI control for space heating"
+    Ti=3,
+    yMax=1,
+    yMin=0) "PI control for space heating"
     annotation (Placement(transformation(extent={{180,40},{200,60}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain QHea(k=2000)
     "Heat injection in the zone"

@@ -40,10 +40,10 @@ model EquationFitReversible_CoolingClosedLoop
    "Volume for source side"
    annotation (Placement(transformation(extent={{-70,-60},{-50,-40}})));
   Controls.OBC.CDL.Continuous.Sources.Pulse uMod(
-    amplitude=1,
-    width=0.5,
+    amplitude=-1,
+    width=0.7,
     period=200,
-    offset=-1,
+    offset=0,
     startTime=0)
    "heat pump operational mode input signal"
    annotation (Placement(transformation(extent={{-90,-30},{-70,-10}})));
@@ -51,7 +51,8 @@ model EquationFitReversible_CoolingClosedLoop
     amplitude=1,
     width=0.7,
     period(displayUnit="s") = 200,
-    offset=0)
+    offset=0,
+    startTime=0)
     annotation (Placement(transformation(extent={{-90,70},{-70,90}})));
   Modelica.Blocks.Math.Gain Q_flow(k=4200)
     "Heat input to volume"
@@ -72,10 +73,10 @@ model EquationFitReversible_CoolingClosedLoop
     annotation (Placement(transformation(extent={{20,40},{0,60}})));
   MixingVolumes.MixingVolume vol(
     redeclare package Medium = Medium,
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     massDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_start=285.15,
     m_flow_nominal=mLoa_flow_nominal,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     V=0.1*3600*mLoa_flow_nominal/1000,
     nPorts=2)
     "Mixing volume mimics a room to be cooled"
@@ -127,12 +128,6 @@ equation
    annotation (Line(points={{-19,80},{18,80}},color={0,0,127}));
   connect(heaFlo.port, vol.heatPort)
    annotation (Line(points={{70,80},{80,80},{80,-2}},color={191,0,0}));
-  connect(pum.port_a, vol.ports[1])
-   annotation (Line(points={{20,50},{58,50},{58,-10},{70,-10}},
-                                                             color={0,127,255}));
-  connect(vol.ports[2], heaPum.port_b1)
-   annotation (Line(points={{70,-14},{20,-14}},
-                                            color={0,127,255}));
   connect(pum.port_b, heaPum.port_a1)
    annotation (Line(points={{0,50},{-20,50},{-20,-14},{0,-14}},
                                                             color={0,127,255}));
@@ -148,7 +143,11 @@ equation
   connect(heaPum.port_a1, pre.ports[1])
    annotation (Line(points={{0,-14},{-32,-14},{-32,10},{-50,10}},
                                                        color={0,127,255}));
-     annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+  connect(pum.port_a, vol.ports[1]) annotation (Line(points={{20,50},{60,50},{60,
+          -10},{70,-10}}, color={0,127,255}));
+  connect(heaPum.port_b1, vol.ports[2])
+    annotation (Line(points={{20,-14},{70,-14}}, color={0,127,255}));
+annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{120,100}}), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},

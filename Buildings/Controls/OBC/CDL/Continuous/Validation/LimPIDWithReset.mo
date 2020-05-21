@@ -15,6 +15,7 @@ model LimPIDWithReset
     k=1,
     Ti=1,
     Td=1,
+    yMax=1,
     yMin=-1,
     reset=Buildings.Controls.OBC.CDL.Types.Reset.Parameter,
     y_reset=0.5) "Controller, reset to parameter value"
@@ -28,6 +29,7 @@ model LimPIDWithReset
     k=1,
     Ti=1,
     Td=1,
+    yMax=1,
     yMin=-1,
     reset=Buildings.Controls.OBC.CDL.Types.Reset.Input,
     y_reset=0.5) "Controller, reset to input value"
@@ -44,6 +46,7 @@ model LimPIDWithReset
     k=1,
     Ti=1,
     Td=1,
+    yMax=1,
     yMin=-1,
     reset=Buildings.Controls.OBC.CDL.Types.Reset.Parameter,
     y_reset=0.5) "Controller, reset to parameter value"
@@ -57,6 +60,7 @@ model LimPIDWithReset
     k=1,
     Ti=1,
     Td=1,
+    yMax=1,
     yMin=-1,
     reset=Buildings.Controls.OBC.CDL.Types.Reset.Input,
     y_reset=0.5) "Controller, reset to input value"

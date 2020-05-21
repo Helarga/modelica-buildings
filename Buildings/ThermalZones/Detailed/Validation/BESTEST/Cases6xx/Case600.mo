@@ -7,17 +7,21 @@ model Case600 "Case 600FF, but with dual-setpoint for heating and cooling"
     peakHea(Min=3.437*1000, Max=4.354*1000, Mean=4.000*1000),
     peakCoo(Min=-5.965*1000, Max=-6.827*1000, Mean=-6.461*1000)));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conHea(
-    k=0.1,
+    Td=60,
+    yMax=1,
+    yMin=0,
     Ti=300,
-    controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI)
-    "Controller for heating"
+    controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
+    k=0.1) "Controller for heating"
     annotation (Placement(transformation(extent={{-72,30},{-64,38}})));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conCoo(
-    k=0.1,
-    Ti=300,
+    Td=60,
+    yMax=1,
+    yMin=0,
     reverseAction=true,
-    controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI)
-    "Controller for cooling"
+    Ti=300,
+    controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
+    k=0.1) "Controller for cooling"
     annotation (Placement(transformation(extent={{-72,8},{-64,16}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gaiHea(k=1E6) "Gain for heating"
     annotation (Placement(transformation(extent={{-58,30},{-50,38}})));
@@ -127,7 +131,7 @@ equation
 <li>
 April 8, 2020, by Michael Wetter:<br/>
 Removed <code>initType</code> in PID controller.
-</li>
+</li>   
 <li>
 January 21, 2020, by Michael Wetter:<br/>
 Changed calculation of time averaged values to use

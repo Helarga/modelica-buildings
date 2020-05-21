@@ -1,7 +1,8 @@
 within Buildings.ThermalZones.ReducedOrder.RC;
 model TwoElements
   "Thermal Zone with two elements for exterior and interior walls"
-  extends OneElement(AArray={ATotExt,ATotWin,AInt});
+  extends OneElement(AArray={ATotExt,ATotWin,AInt},
+                     use_moisture_balance= true);
 
   parameter Modelica.SIunits.Area AInt "Area of interior walls"
     annotation(Dialog(group="Interior walls"));
