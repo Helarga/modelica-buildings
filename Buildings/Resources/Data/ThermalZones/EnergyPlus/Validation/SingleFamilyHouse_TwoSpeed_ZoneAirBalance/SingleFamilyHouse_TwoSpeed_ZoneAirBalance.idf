@@ -111,7 +111,7 @@
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
 
-  Timestep,6;
+  Timestep,1;
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -1197,7 +1197,7 @@
     LIVING ZONE,             !- Zone or ZoneList Name
     INTERMITTENT,            !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
-    500,                     !- Design Level {W}
+    50,                     !- Design Level {W}
     ,                        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent
