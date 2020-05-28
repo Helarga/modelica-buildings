@@ -1,0 +1,13 @@
+simulateModel("NRELNewModels.RTUCompressorStageValidation",tolerance=1e-6, stopTime=1000, method="Cvode", resultFile="RTUCompressorStage");
+
+createPlot(id=1,
+ position={510, 13, 592, 427},
+ y={"comStaCon.comSpe"},
+ grid=true,
+ colors={{28,108,200}});
+createPlot(id=5,
+ y={"comStaCon.TAct","comStaCon.TSet"},
+ grid=true,
+ subPlot=2,
+ colors={{28,108,200}});
+
