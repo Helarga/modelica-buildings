@@ -78,7 +78,7 @@
 ! Zonal Equipment:                Living Zone - Direct Air
 ! Central Air Handling Equipment: Yes
 ! System Equipment Autosize:      No
-! Purchased fCooling:              No
+! Purchased Cooling:              No
 ! Purchased Heating:              No
 ! Purchased Chilled Water:        No
 ! Purchased Hot Water:            No
@@ -356,38 +356,27 @@
     SpectralAverage,         !- Optical Data Type
     ,                        !- Window Glass Spectral Data Set Name
     0.003,                   !- Thickness {m}
-    0.01,                     !- Solar Transmittance at Normal Incidence
-    0.75,                    !- Front Side Solar Reflectance at Normal Incidence
-    0.75,                    !- Back Side Solar Reflectance at Normal Incidence
-    0.1,                     !- Visible Transmittance at Normal Incidence
+    0.837,                   !- Solar Transmittance at Normal Incidence
+    0.075,                   !- Front Side Solar Reflectance at Normal Incidence
+    0.075,                   !- Back Side Solar Reflectance at Normal Incidence
+    0.898,                   !- Visible Transmittance at Normal Incidence
     0.081,                   !- Front Side Visible Reflectance at Normal Incidence
     0.081,                   !- Back Side Visible Reflectance at Normal Incidence
     0.0,                     !- Infrared Transmittance at Normal Incidence
     0.84,                    !- Front Side Infrared Hemispherical Emissivity
     0.84,                    !- Back Side Infrared Hemispherical Emissivity
-    0.9;                       !- Conductivity {W/m-K}
+    0.9;                     !- Conductivity {W/m-K}
 
   WindowMaterial:Gas,
     AIR 6MM,                 !- Name
     AIR,                     !- Gas Type
-    0.1;                   !- Thickness {m}
+    0.006;                   !- Thickness {m}
 
-  !Construction,
-  !  EXTWALL:LIVING,          !- Name
-  !  A1 - 1 IN STUCCO,        !- Outside Layer
-  !  CB11,                    !- Layer 2
-  !  GP01;                    !- Layer 3
-
-  ! Hagar look here
-  ! EXTWALL:LIVING with extra insulation
   Construction,
     EXTWALL:LIVING,          !- Name
     A1 - 1 IN STUCCO,        !- Outside Layer
     CB11,                    !- Layer 2
-    IN05,                    !- Layer 3 <-- Extra layer of R30
-    IN05,                    !-  <-- Extra layer of R30  
     GP01;                    !- Layer 3
-
 
   Construction,
     INTERIORWall,            !- Name
@@ -454,28 +443,6 @@
     1,                       !- Multiplier
     autocalculate,           !- Ceiling Height {m}
     autocalculate;           !- Volume {m3}
-
-  ! Hagar look here
-  #Material,
-  #  Std Wood 6inch,          !- Name
-  #  MediumSmooth,            !- Roughness
-  #  0.15,                    !- Thickness {m}
-  #  0.12,                    !- Conductivity {W/m-K}
-  #  540.0000,                !- Density {kg/m3}
-  #  1210,                    !- Specific Heat {J/kg-K}
-  #  0.9000000,               !- Thermal Absorptance
-  #  0.7000000,               !- Solar Absorptance
-  #  0.7000000;               !- Visible Absorptance
-
-  #Construction,
-  #  InteriorFurnishings,     !- Name
-  #  Std Wood 6inch;          !- Outside Layer
-
-  #InternalMass,
-  #  LivingZoneMass,                !- Surface Name
-  #  InteriorFurnishings,                     !- Construction Name
-  #  LIVING ZONE,  !- Zone or ZoneList Name
-  #  408.7734;                     !- Total area exposed to Zone {m2}
 
   Zone,
     GARAGE ZONE,             !- Name
@@ -1123,7 +1090,7 @@
     LIVING ZONE,             !- Zone or ZoneList Name
     HOUSE OCCUPANCY,         !- Number of People Schedule Name
     people,                  !- Number of People Calculation Method
-    0.000000,                !- Number of People
+    3.000000,                !- Number of People
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3000000,               !- Fraction Radiant
@@ -1145,7 +1112,7 @@
     LIVING ZONE,             !- Zone or ZoneList Name
     HOUSE LIGHTING,          !- Schedule Name
     LightingLevel,           !- Design Level Calculation Method
-    0.1,                       !- Lighting Level {W}
+    1000,                    !- Lighting Level {W}
     ,                        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Return Air Fraction
@@ -1159,7 +1126,7 @@
     LIVING ZONE,             !- Zone or ZoneList Name
     INF-SCHED,               !- Schedule Name
     flow/zone,               !- Design Flow Rate Calculation Method
-    0.131944,                !- Design Flow Rate {m3/s}
+    6.131944,                !- Design Flow Rate {m3/s}
     ,                        !- Flow Rate per Zone Floor Area {m3/s-m2}
     ,                        !- Flow Rate per Person {m3/s-person}
     ,                        !- Air Changes per Hour {1/hr}
@@ -1181,7 +1148,7 @@
     LIVING ZONE,             !- Zone or ZoneList Name
     INF-SCHED,               !- Schedule Name
     flow/zone,               !- Design Flow Rate Calculation Method
-    0.001,                    !- Design Flow Rate {m3/s}
+    0.01,                    !- Design Flow Rate {m3/s}
     ,                        !- Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Flow per Exterior Surface Area {m3/s-m2}
     ,                        !- Air Changes per Hour {1/hr}
@@ -1230,7 +1197,7 @@
     LIVING ZONE,             !- Zone or ZoneList Name
     INTERMITTENT,            !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
-    .1,                     !- Design Level {W}
+    50,                     !- Design Level {W}
     ,                        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent

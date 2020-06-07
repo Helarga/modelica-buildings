@@ -1,0 +1,805 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Model diagnosis</title>
+
+</head>
+<body>
+<h2>Connection sets: Buildings.Applications.DHC.EnergyTransferStations.CouplingETS_TimeSeriesBuilding</h2>
+<pre>
+Connection sets: 791 sets
+Connection set (potential): {TChiWatSet.y (i), coo.TSet (i)}
+Connection set (potential): {THeaWatSup.y (i), supHeaWat.T_in (i)}
+Connection set (potential): {pumBui.m_flow_in (i), secMasFloRat.y (i)}
+Connection set (stream): {coo.port_a1.C_outflow[1:0] (i), supChiWat.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {coo.port_a1.Xi_outflow[1:0] (i), supChiWat.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.port_a1.h_outflow (i), supChiWat.ports[1].h_outflow (i)}
+Connection set (flow): {coo.port_a1.m_flow (i), supChiWat.ports[1].m_flow (i)}
+Connection set (potential): {coo.port_a1.p (i), supChiWat.ports[1].p (i)}
+Connection set (stream): {coo.port_b2.C_outflow[1:0] (i), pre.ports[1].C_outflow[1:0] (i), pumBui.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.port_b2.Xi_outflow[1:0] (i), pre.ports[1].Xi_outflow[1:0] (i), pumBui.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.port_b2.h_outflow (i), pre.ports[1].h_outflow (i), pumBui.port_a.h_outflow (i)}
+Connection set (flow): {coo.port_b2.m_flow (i), pre.ports[1].m_flow (i), pumBui.port_a.m_flow (i)}
+Connection set (potential): {coo.port_b2.p (i), pre.ports[1].p (i), pumBui.port_a.p (i)}
+Connection set (potential): {priMasFloRat.y (i), supChiWat.m_flow_in (i)}
+Connection set (stream): {coo.port_b1.C_outflow[1:0] (i), sinChiWat.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {coo.port_b1.Xi_outflow[1:0] (i), sinChiWat.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.port_b1.h_outflow (i), sinChiWat.ports[1].h_outflow (i)}
+Connection set (flow): {coo.port_b1.m_flow (i), sinChiWat.ports[1].m_flow (i)}
+Connection set (potential): {coo.port_b1.p (i), sinChiWat.ports[1].p (i)}
+Connection set (stream): {bui.secHeaSup[1].C_outflow[1:0] (i), supHeaWat.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.secHeaSup[1].Xi_outflow[1:0] (i), supHeaWat.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.secHeaSup[1].h_outflow (i), supHeaWat.ports[1].h_outflow (i)}
+Connection set (flow): {bui.secHeaSup[1].m_flow (i), supHeaWat.ports[1].m_flow (i)}
+Connection set (potential): {bui.secHeaSup[1].p (i), supHeaWat.ports[1].p (i)}
+Connection set (stream): {bui.secHeaRet[1].C_outflow[1:0] (i), sinHeaWat.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.secHeaRet[1].Xi_outflow[1:0] (i), sinHeaWat.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.secHeaRet[1].h_outflow (i), sinHeaWat.ports[1].h_outflow (i)}
+Connection set (flow): {bui.secHeaRet[1].m_flow (i), sinHeaWat.ports[1].m_flow (i)}
+Connection set (potential): {bui.secHeaRet[1].p (i), sinHeaWat.ports[1].p (i)}
+Connection set (stream): {bui.secCooSup[1].C_outflow[1:0] (i), pumBui.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.secCooSup[1].Xi_outflow[1:0] (i), pumBui.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.secCooSup[1].h_outflow (i), pumBui.port_b.h_outflow (i)}
+Connection set (flow): {bui.secCooSup[1].m_flow (i), pumBui.port_b.m_flow (i)}
+Connection set (potential): {bui.secCooSup[1].p (i), pumBui.port_b.p (i)}
+Connection set (stream): {bui.secCooRet[1].C_outflow[1:0] (i), coo.port_a2.C_outflow[1:0] (i)}
+Connection set (stream): {bui.secCooRet[1].Xi_outflow[1:0] (i), coo.port_a2.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.secCooRet[1].h_outflow (i), coo.port_a2.h_outflow (i)}
+Connection set (flow): {bui.secCooRet[1].m_flow (i), coo.port_a2.m_flow (i)}
+Connection set (potential): {bui.secCooRet[1].p (i), coo.port_a2.p (i)}
+Connection set (stream): {coo.hex.port_b1.C_outflow[1:0] (i), coo.senTDisRet.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.port_b1.Xi_outflow[1:0] (i), coo.senTDisRet.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.port_b1.h_outflow (i), coo.senTDisRet.port_a.h_outflow (i)}
+Connection set (flow): {coo.hex.port_b1.m_flow (i), coo.senTDisRet.port_a.m_flow (i)}
+Connection set (potential): {coo.hex.port_b1.p (i), coo.senTDisRet.port_a.p (i)}
+Connection set (stream): {coo.hex.port_a1.C_outflow[1:0] (i), coo.val.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.port_a1.Xi_outflow[1:0] (i), coo.val.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.port_a1.h_outflow (i), coo.val.port_b.h_outflow (i)}
+Connection set (flow): {coo.hex.port_a1.m_flow (i), coo.val.port_b.m_flow (i)}
+Connection set (potential): {coo.hex.port_a1.p (i), coo.val.port_b.p (i)}
+Connection set (stream): {coo.senMasFlo.port_b.C_outflow[1:0] (i), coo.val.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.senMasFlo.port_b.Xi_outflow[1:0] (i), coo.val.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.senMasFlo.port_b.h_outflow (i), coo.val.port_a.h_outflow (i)}
+Connection set (flow): {coo.senMasFlo.port_b.m_flow (i), coo.val.port_a.m_flow (i)}
+Connection set (potential): {coo.senMasFlo.port_b.p (i), coo.val.port_a.p (i)}
+Connection set (stream): {coo.port_a1.C_outflow[1:0] (o), coo.senTDisSup.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.port_a1.Xi_outflow[1:0] (o), coo.senTDisSup.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.port_a1.h_outflow (o), coo.senTDisSup.port_a.h_outflow (i)}
+Connection set (flow): {coo.port_a1.m_flow (o), coo.senTDisSup.port_a.m_flow (i)}
+Connection set (potential): {coo.port_a1.p (o), coo.senTDisSup.port_a.p (i)}
+Connection set (stream): {coo.senMasFlo.port_a.C_outflow[1:0] (i), coo.senTDisSup.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {coo.senMasFlo.port_a.Xi_outflow[1:0] (i), coo.senTDisSup.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.senMasFlo.port_a.h_outflow (i), coo.senTDisSup.port_b.h_outflow (i)}
+Connection set (flow): {coo.senMasFlo.port_a.m_flow (i), coo.senTDisSup.port_b.m_flow (i)}
+Connection set (potential): {coo.senMasFlo.port_a.p (i), coo.senTDisSup.port_b.p (i)}
+Connection set (stream): {coo.TBuiSup.port_b.C_outflow[1:0] (i), coo.port_b2.C_outflow[1:0] (o)}
+Connection set (stream): {coo.TBuiSup.port_b.Xi_outflow[1:0] (i), coo.port_b2.Xi_outflow[1:0] (o)}
+Connection set (stream): {coo.TBuiSup.port_b.h_outflow (i), coo.port_b2.h_outflow (o)}
+Connection set (flow): {coo.TBuiSup.port_b.m_flow (i), coo.port_b2.m_flow (o)}
+Connection set (potential): {coo.TBuiSup.port_b.p (i), coo.port_b2.p (o)}
+Connection set (stream): {coo.port_b1.C_outflow[1:0] (o), coo.senTDisRet.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {coo.port_b1.Xi_outflow[1:0] (o), coo.senTDisRet.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.port_b1.h_outflow (o), coo.senTDisRet.port_b.h_outflow (i)}
+Connection set (flow): {coo.port_b1.m_flow (o), coo.senTDisRet.port_b.m_flow (i)}
+Connection set (potential): {coo.port_b1.p (o), coo.senTDisRet.port_b.p (i)}
+Connection set (potential): {coo.TSet (o), coo.con.u_s (i)}
+Connection set (potential): {coo.TBuiSup.T (i), coo.con.u_m (i)}
+Connection set (potential): {coo.con.y (i), coo.val.y (i)}
+Connection set (stream): {coo.TBuiSup.port_a.C_outflow[1:0] (i), coo.hex.port_b2.C_outflow[1:0] (i)}
+Connection set (stream): {coo.TBuiSup.port_a.Xi_outflow[1:0] (i), coo.hex.port_b2.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.TBuiSup.port_a.h_outflow (i), coo.hex.port_b2.h_outflow (i)}
+Connection set (flow): {coo.TBuiSup.port_a.m_flow (i), coo.hex.port_b2.m_flow (i)}
+Connection set (potential): {coo.TBuiSup.port_a.p (i), coo.hex.port_b2.p (i)}
+Connection set (potential): {coo.cp.u (i), coo.pro.y (i)}
+Connection set (potential): {coo.pro.u2 (i), coo.senMasFlo.m_flow (i)}
+Connection set (potential): {coo.dTDis.u1 (i), coo.senTDisSup.T (i)}
+Connection set (potential): {coo.dTDis.u2 (i), coo.senTDisRet.T (i)}
+Connection set (potential): {coo.dTDis.y (i), coo.pro.u1 (i)}
+Connection set (potential): {coo.Q_flow (o), coo.cp.y (i), coo.int.u (i)}
+Connection set (potential): {coo.Q (o), coo.int.y (i)}
+Connection set (stream): {coo.TBuiRet.port_b.C_outflow[1:0] (i), coo.hex.port_a2.C_outflow[1:0] (i)}
+Connection set (stream): {coo.TBuiRet.port_b.Xi_outflow[1:0] (i), coo.hex.port_a2.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.TBuiRet.port_b.h_outflow (i), coo.hex.port_a2.h_outflow (i)}
+Connection set (flow): {coo.TBuiRet.port_b.m_flow (i), coo.hex.port_a2.m_flow (i)}
+Connection set (potential): {coo.TBuiRet.port_b.p (i), coo.hex.port_a2.p (i)}
+Connection set (stream): {coo.TBuiRet.port_a.C_outflow[1:0] (i), coo.port_a2.C_outflow[1:0] (o)}
+Connection set (stream): {coo.TBuiRet.port_a.Xi_outflow[1:0] (i), coo.port_a2.Xi_outflow[1:0] (o)}
+Connection set (stream): {coo.TBuiRet.port_a.h_outflow (i), coo.port_a2.h_outflow (o)}
+Connection set (flow): {coo.TBuiRet.port_a.m_flow (i), coo.port_a2.m_flow (o)}
+Connection set (potential): {coo.TBuiRet.port_a.p (i), coo.port_a2.p (o)}
+Connection set (stream): {coo.hex.bal1.port_a.C_outflow[1:0] (i), coo.hex.port_a1.C_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal1.port_a.Xi_outflow[1:0] (i), coo.hex.port_a1.Xi_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal1.port_a.h_outflow (i), coo.hex.port_a1.h_outflow (o)}
+Connection set (flow): {coo.hex.bal1.port_a.m_flow (i), coo.hex.port_a1.m_flow (o)}
+Connection set (potential): {coo.hex.bal1.port_a.p (i), coo.hex.port_a1.p (o)}
+Connection set (stream): {coo.hex.bal1.port_b.C_outflow[1:0] (i), coo.hex.port_b1.C_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal1.port_b.Xi_outflow[1:0] (i), coo.hex.port_b1.Xi_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal1.port_b.h_outflow (i), coo.hex.port_b1.h_outflow (o)}
+Connection set (flow): {coo.hex.bal1.port_b.m_flow (i), coo.hex.port_b1.m_flow (o)}
+Connection set (potential): {coo.hex.bal1.port_b.p (i), coo.hex.port_b1.p (o)}
+Connection set (stream): {coo.hex.bal2.port_a.C_outflow[1:0] (i), coo.hex.port_a2.C_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal2.port_a.Xi_outflow[1:0] (i), coo.hex.port_a2.Xi_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal2.port_a.h_outflow (i), coo.hex.port_a2.h_outflow (o)}
+Connection set (flow): {coo.hex.bal2.port_a.m_flow (i), coo.hex.port_a2.m_flow (o)}
+Connection set (potential): {coo.hex.bal2.port_a.p (i), coo.hex.port_a2.p (o)}
+Connection set (stream): {coo.hex.bal2.port_b.C_outflow[1:0] (i), coo.hex.port_b2.C_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal2.port_b.Xi_outflow[1:0] (i), coo.hex.port_b2.Xi_outflow[1:0] (o)}
+Connection set (stream): {coo.hex.bal2.port_b.h_outflow (i), coo.hex.port_b2.h_outflow (o)}
+Connection set (flow): {coo.hex.bal2.port_b.m_flow (i), coo.hex.port_b2.m_flow (o)}
+Connection set (potential): {coo.hex.bal2.port_b.p (i), coo.hex.port_b2.p (o)}
+Connection set (potential): {coo.hex.bal1.hOut (o), coo.hex.bal1.vol.hOut (i)}
+Connection set (stream): {coo.hex.bal1.port_a.C_outflow[1:0] (o), coo.hex.bal1.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal1.port_a.Xi_outflow[1:0] (o), coo.hex.bal1.preDro.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal1.port_a.h_outflow (o), coo.hex.bal1.preDro.port_a.h_outflow (i)}
+Connection set (flow): {coo.hex.bal1.port_a.m_flow (o), coo.hex.bal1.preDro.port_a.m_flow (i)}
+Connection set (potential): {coo.hex.bal1.port_a.p (o), coo.hex.bal1.preDro.port_a.p (i)}
+Connection set (stream): {coo.hex.bal1.preDro.port_b.C_outflow[1:0] (i), coo.hex.bal1.vol.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal1.preDro.port_b.Xi_outflow[1:0] (i), coo.hex.bal1.vol.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal1.preDro.port_b.h_outflow (i), coo.hex.bal1.vol.port_a.h_outflow (i)}
+Connection set (flow): {coo.hex.bal1.preDro.port_b.m_flow (i), coo.hex.bal1.vol.port_a.m_flow (i)}
+Connection set (potential): {coo.hex.bal1.preDro.port_b.p (i), coo.hex.bal1.vol.port_a.p (i)}
+Connection set (stream): {coo.hex.bal1.port_b.C_outflow[1:0] (o), coo.hex.bal1.vol.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal1.port_b.Xi_outflow[1:0] (o), coo.hex.bal1.vol.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal1.port_b.h_outflow (o), coo.hex.bal1.vol.port_b.h_outflow (i)}
+Connection set (flow): {coo.hex.bal1.port_b.m_flow (o), coo.hex.bal1.vol.port_b.m_flow (i)}
+Connection set (potential): {coo.hex.bal1.port_b.p (o), coo.hex.bal1.vol.port_b.p (i)}
+Connection set (potential): {coo.hex.bal1.heaInp.y (i), coo.hex.bal1.vol.Q_flow (i)}
+Connection set (potential): {coo.hex.bal2.hOut (o), coo.hex.bal2.vol.hOut (i)}
+Connection set (stream): {coo.hex.bal2.port_a.C_outflow[1:0] (o), coo.hex.bal2.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal2.port_a.Xi_outflow[1:0] (o), coo.hex.bal2.preDro.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal2.port_a.h_outflow (o), coo.hex.bal2.preDro.port_a.h_outflow (i)}
+Connection set (flow): {coo.hex.bal2.port_a.m_flow (o), coo.hex.bal2.preDro.port_a.m_flow (i)}
+Connection set (potential): {coo.hex.bal2.port_a.p (o), coo.hex.bal2.preDro.port_a.p (i)}
+Connection set (stream): {coo.hex.bal2.preDro.port_b.C_outflow[1:0] (i), coo.hex.bal2.vol.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal2.preDro.port_b.Xi_outflow[1:0] (i), coo.hex.bal2.vol.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal2.preDro.port_b.h_outflow (i), coo.hex.bal2.vol.port_a.h_outflow (i)}
+Connection set (flow): {coo.hex.bal2.preDro.port_b.m_flow (i), coo.hex.bal2.vol.port_a.m_flow (i)}
+Connection set (potential): {coo.hex.bal2.preDro.port_b.p (i), coo.hex.bal2.vol.port_a.p (i)}
+Connection set (stream): {coo.hex.bal2.port_b.C_outflow[1:0] (o), coo.hex.bal2.vol.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal2.port_b.Xi_outflow[1:0] (o), coo.hex.bal2.vol.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {coo.hex.bal2.port_b.h_outflow (o), coo.hex.bal2.vol.port_b.h_outflow (i)}
+Connection set (flow): {coo.hex.bal2.port_b.m_flow (o), coo.hex.bal2.vol.port_b.m_flow (i)}
+Connection set (potential): {coo.hex.bal2.port_b.p (o), coo.hex.bal2.vol.port_b.p (i)}
+Connection set (potential): {coo.hex.bal2.heaInp.y (i), coo.hex.bal2.vol.Q_flow (i)}
+Connection set (potential): {coo.con.addD.u1 (i), coo.con.addI.u1 (i), coo.con.addP.u1 (i), coo.con.u_s (o)}
+Connection set (potential): {coo.con.P.u (i), coo.con.addP.y (i)}
+Connection set (potential): {coo.con.D.u (i), coo.con.addD.y (i)}
+Connection set (potential): {coo.con.I.u (i), coo.con.addI.y (i)}
+Connection set (potential): {coo.con.P.y (i), coo.con.addPID.u1 (i)}
+Connection set (potential): {coo.con.D.y (i), coo.con.addPID.u2 (i)}
+Connection set (potential): {coo.con.I.y (i), coo.con.addPID.u3 (i)}
+Connection set (potential): {coo.con.addPID.y (i), coo.con.gainPID.u (i)}
+Connection set (potential): {coo.con.addSat.u2 (i), coo.con.gainPID.y (i), coo.con.limiter.u (i)}
+Connection set (potential): {coo.con.addSat.u1 (i), coo.con.limiter.y (i), coo.con.y (o)}
+Connection set (potential): {coo.con.addSat.y (i), coo.con.gainTrack.u (i)}
+Connection set (potential): {coo.con.addI.u3 (i), coo.con.gainTrack.y (i)}
+Connection set (potential): {coo.con.addD.u2 (i), coo.con.addI.u2 (i), coo.con.addP.u2 (i), coo.con.u_m (o)}
+Connection set (potential): {coo.val.y (o), coo.val.y_actual (o)}
+Connection set (stream): {bui.disFloHea.ports_a1[1].C_outflow[1:0] (i), bui.terUniHea.port_bHeaWat.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_a1[1].Xi_outflow[1:0] (i), bui.terUniHea.port_bHeaWat.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_a1[1].h_outflow (i), bui.terUniHea.port_bHeaWat.h_outflow (i)}
+Connection set (flow): {bui.disFloHea.ports_a1[1].m_flow (i), bui.terUniHea.port_bHeaWat.m_flow (i)}
+Connection set (potential): {bui.disFloHea.ports_a1[1].p (i), bui.terUniHea.port_bHeaWat.p (i)}
+Connection set (stream): {bui.disFloHea.ports_b1[1].C_outflow[1:0] (i), bui.terUniHea.port_aHeaWat.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_b1[1].Xi_outflow[1:0] (i), bui.terUniHea.port_aHeaWat.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_b1[1].h_outflow (i), bui.terUniHea.port_aHeaWat.h_outflow (i)}
+Connection set (flow): {bui.disFloHea.ports_b1[1].m_flow (i), bui.terUniHea.port_aHeaWat.m_flow (i)}
+Connection set (potential): {bui.disFloHea.ports_b1[1].p (i), bui.terUniHea.port_aHeaWat.p (i)}
+Connection set (potential): {bui.disFloHea.mReq_flow[1] (i), bui.terUniHea.mReqHeaWat_flow (i)}
+Connection set (potential): {bui.disFloCoo.mReq_flow[1] (i), bui.terUniCoo.mReqChiWat_flow (i)}
+Connection set (potential): {bui.QHea_flow (o), bui.disFloHea.QActTot_flow (i)}
+Connection set (potential): {bui.QCoo_flow (o), bui.disFloCoo.QActTot_flow (i)}
+Connection set (potential): {bui.loa.y[1] (i), bui.terUniCoo.QReqCoo_flow (i)}
+Connection set (potential): {bui.loa.y[2] (i), bui.terUniHea.QReqHea_flow (i)}
+Connection set (potential): {bui.maxTSet.y (i), bui.terUniCoo.TSetCoo (i)}
+Connection set (potential): {bui.minTSet.y (i), bui.terUniHea.TSetHea (i)}
+Connection set (stream): {bui.disFloCoo.ports_a1[1].C_outflow[1:0] (i), bui.terUniCoo.port_bChiWat.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_a1[1].Xi_outflow[1:0] (i), bui.terUniCoo.port_bChiWat.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_a1[1].h_outflow (i), bui.terUniCoo.port_bChiWat.h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.ports_a1[1].m_flow (i), bui.terUniCoo.port_bChiWat.m_flow (i)}
+Connection set (potential): {bui.disFloCoo.ports_a1[1].p (i), bui.terUniCoo.port_bChiWat.p (i)}
+Connection set (stream): {bui.disFloCoo.ports_b1[1].C_outflow[1:0] (i), bui.terUniCoo.port_aChiWat.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_b1[1].Xi_outflow[1:0] (i), bui.terUniCoo.port_aChiWat.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_b1[1].h_outflow (i), bui.terUniCoo.port_aChiWat.h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.ports_b1[1].m_flow (i), bui.terUniCoo.port_aChiWat.m_flow (i)}
+Connection set (potential): {bui.disFloCoo.ports_b1[1].p (i), bui.terUniCoo.port_aChiWat.p (i)}
+Connection set (stream): {bui.disFloHea.port_a.C_outflow[1:0] (i), bui.secHeaSup[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.port_a.Xi_outflow[1:0] (i), bui.secHeaSup[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.port_a.h_outflow (i), bui.secHeaSup[1].h_outflow (o)}
+Connection set (flow): {bui.disFloHea.port_a.m_flow (i), bui.secHeaSup[1].m_flow (o)}
+Connection set (potential): {bui.disFloHea.port_a.p (i), bui.secHeaSup[1].p (o)}
+Connection set (stream): {bui.disFloHea.port_b.C_outflow[1:0] (i), bui.secHeaRet[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.port_b.Xi_outflow[1:0] (i), bui.secHeaRet[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.port_b.h_outflow (i), bui.secHeaRet[1].h_outflow (o)}
+Connection set (flow): {bui.disFloHea.port_b.m_flow (i), bui.secHeaRet[1].m_flow (o)}
+Connection set (potential): {bui.disFloHea.port_b.p (i), bui.secHeaRet[1].p (o)}
+Connection set (stream): {bui.disFloCoo.port_b.C_outflow[1:0] (i), bui.secCooRet[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.port_b.Xi_outflow[1:0] (i), bui.secCooRet[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.port_b.h_outflow (i), bui.secCooRet[1].h_outflow (o)}
+Connection set (flow): {bui.disFloCoo.port_b.m_flow (i), bui.secCooRet[1].m_flow (o)}
+Connection set (potential): {bui.disFloCoo.port_b.p (i), bui.secCooRet[1].p (o)}
+Connection set (stream): {bui.disFloCoo.port_a.C_outflow[1:0] (i), bui.secCooSup[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.port_a.Xi_outflow[1:0] (i), bui.secCooSup[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.port_a.h_outflow (i), bui.secCooSup[1].h_outflow (o)}
+Connection set (flow): {bui.disFloCoo.port_a.m_flow (i), bui.secCooSup[1].m_flow (o)}
+Connection set (potential): {bui.disFloCoo.port_a.p (i), bui.secCooSup[1].p (o)}
+Connection set (potential): {bui.terUniHea.fan.m_flow_in (i), bui.terUniHea.gaiFloNom2.y (i)}
+Connection set (potential): {bui.terUniHea.con.y (i), bui.terUniHea.gaiMasFlo.u (i), bui.terUniHea.swi.u1 (i)}
+Connection set (potential): {bui.terUniHea.gaiMasFlo.y (i), bui.terUniHea.scaMasFloReqHeaWat.u (i)}
+Connection set (potential): {bui.terUniHea.fan.P (i), bui.terUniHea.scaPFan.u (i)}
+Connection set (potential): {bui.terUniHea.Q_flowHea.y (i), bui.terUniHea.TLoaODE.QAct_flow (i), bui.terUniHea.gaiHeaFlo1.u (i), bui.terUniHea.scaQActHea_flow.u (i)}
+Connection set (stream): {bui.terUniHea.fan.port_b.C_outflow[1:0] (i), bui.terUniHea.hex.port_a2.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_b.Xi_outflow[1:1] (i), bui.terUniHea.hex.port_a2.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_b.h_outflow (i), bui.terUniHea.hex.port_a2.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.fan.port_b.m_flow (i), bui.terUniHea.hex.port_a2.m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.port_b.p (i), bui.terUniHea.hex.port_a2.p (i)}
+Connection set (stream): {bui.terUniHea.hex.port_b2.C_outflow[1:0] (i), bui.terUniHea.sinAir.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.port_b2.Xi_outflow[1:1] (i), bui.terUniHea.sinAir.ports[1].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.hex.port_b2.h_outflow (i), bui.terUniHea.sinAir.ports[1].h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.port_b2.m_flow (i), bui.terUniHea.sinAir.ports[1].m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.port_b2.p (i), bui.terUniHea.sinAir.ports[1].p (i)}
+Connection set (potential): {bui.terUniHea.TLoaODE.TSet (i), bui.terUniHea.TSetHea (o)}
+Connection set (potential): {bui.terUniHea.TLoaODE.TAir (i), bui.terUniHea.retAir.T_in (i)}
+Connection set (potential): {bui.terUniHea.con.u_s (i), bui.terUniHea.gaiHeaFlo.y (i)}
+Connection set (potential): {bui.terUniHea.con.u_m (i), bui.terUniHea.gaiHeaFlo1.y (i)}
+Connection set (stream): {bui.terUniHea.fan.port_a.C_outflow[1:0] (i), bui.terUniHea.retAir.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_a.Xi_outflow[1:1] (i), bui.terUniHea.retAir.ports[1].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_a.h_outflow (i), bui.terUniHea.retAir.ports[1].h_outflow (i)}
+Connection set (flow): {bui.terUniHea.fan.port_a.m_flow (i), bui.terUniHea.retAir.ports[1].m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.port_a.p (i), bui.terUniHea.retAir.ports[1].p (i)}
+Connection set (potential): {bui.terUniHea.gaiFloNom2.u (i), bui.terUniHea.swi.y (i)}
+Connection set (potential): {bui.terUniHea.one.y (i), bui.terUniHea.swi.u3 (i)}
+Connection set (potential): {bui.terUniHea.con1.y (i), bui.terUniHea.swi.u2 (i)}
+Connection set (potential): {bui.terUniHea.TLoaODE.QReq_flow (i), bui.terUniHea.gaiHeaFlo.u (i), bui.terUniHea.scaQReqHea_flow.y (i)}
+Connection set (stream): {bui.terUniHea.hex.port_a1.C_outflow[1:0] (i), bui.terUniHea.scaHeaWatFloInl.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.port_a1.Xi_outflow[1:0] (i), bui.terUniHea.scaHeaWatFloInl.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.port_a1.h_outflow (i), bui.terUniHea.scaHeaWatFloInl.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.port_a1.m_flow (i), bui.terUniHea.scaHeaWatFloInl.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.port_a1.p (i), bui.terUniHea.scaHeaWatFloInl.port_b.p (i)}
+Connection set (stream): {bui.terUniHea.hex.port_b1.C_outflow[1:0] (i), bui.terUniHea.scaHeaWatFloOut.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.port_b1.Xi_outflow[1:0] (i), bui.terUniHea.scaHeaWatFloOut.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.port_b1.h_outflow (i), bui.terUniHea.scaHeaWatFloOut.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.port_b1.m_flow (i), bui.terUniHea.scaHeaWatFloOut.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.port_b1.p (i), bui.terUniHea.scaHeaWatFloOut.port_a.p (i)}
+Connection set (potential): {bui.terUniHea.fan.filter.y (i), bui.terUniHea.fan.m_flow_actual (o), bui.terUniHea.fan.preSou.m_flow_in (i)}
+Connection set (potential): {bui.terUniHea.fan.inputSwitch.u (i), bui.terUniHea.fan.m_flow_in (o)}
+Connection set (flow): {bui.terUniHea.fan.heatPort.Q_flow (o), bui.terUniHea.fan.prePow.port.Q_flow (i), bui.terUniHea.fan.vol.heatPort.Q_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.heatPort.T (o), bui.terUniHea.fan.prePow.port.T (i), bui.terUniHea.fan.vol.heatPort.T (i)}
+Connection set (stream): {bui.terUniHea.fan.port_b.C_outflow[1:0] (o), bui.terUniHea.fan.preSou.port_b.C_outflow[1:0] (i), bui.terUniHea.fan.senRelPre.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_b.Xi_outflow[1:1] (o), bui.terUniHea.fan.preSou.port_b.Xi_outflow[1:1] (i), bui.terUniHea.fan.senRelPre.port_a.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_b.h_outflow (o), bui.terUniHea.fan.preSou.port_b.h_outflow (i), bui.terUniHea.fan.senRelPre.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.fan.port_b.m_flow (o), bui.terUniHea.fan.preSou.port_b.m_flow (i), bui.terUniHea.fan.senRelPre.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.port_b.p (o), bui.terUniHea.fan.preSou.port_b.p (i), bui.terUniHea.fan.senRelPre.port_a.p (i)}
+Connection set (potential): {bui.terUniHea.fan.PToMed.y (i), bui.terUniHea.fan.prePow.Q_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.PToMed.u1 (i), bui.terUniHea.fan.heaDis.Q_flow (i)}
+Connection set (stream): {bui.terUniHea.fan.preSou.port_a.C_outflow[1:0] (i), bui.terUniHea.fan.senMasFlo.port_b.C_outflow[1:0] (i), bui.terUniHea.fan.senRelPre.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.fan.preSou.port_a.Xi_outflow[1:1] (i), bui.terUniHea.fan.senMasFlo.port_b.Xi_outflow[1:1] (i), bui.terUniHea.fan.senRelPre.port_b.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.fan.preSou.port_a.h_outflow (i), bui.terUniHea.fan.senMasFlo.port_b.h_outflow (i), bui.terUniHea.fan.senRelPre.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.fan.preSou.port_a.m_flow (i), bui.terUniHea.fan.senMasFlo.port_b.m_flow (i), bui.terUniHea.fan.senRelPre.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.preSou.port_a.p (i), bui.terUniHea.fan.senMasFlo.port_b.p (i), bui.terUniHea.fan.senRelPre.port_b.p (i)}
+Connection set (potential): {bui.terUniHea.fan.eff.etaHyd (i), bui.terUniHea.fan.heaDis.etaHyd (i)}
+Connection set (potential): {bui.terUniHea.fan.eff.V_flow (i), bui.terUniHea.fan.heaDis.V_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.P (o), bui.terUniHea.fan.eff.PEle (i), bui.terUniHea.fan.heaDis.PEle (i)}
+Connection set (potential): {bui.terUniHea.fan.PToMed.u2 (i), bui.terUniHea.fan.eff.WFlo (i), bui.terUniHea.fan.heaDis.WFlo (i)}
+Connection set (potential): {bui.terUniHea.fan.eff.rho (i), bui.terUniHea.fan.rho_inlet.y (i)}
+Connection set (potential): {bui.terUniHea.fan.eff.m_flow (i), bui.terUniHea.fan.senMasFlo.m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.filter.u (i), bui.terUniHea.fan.inputSwitch.y (i)}
+Connection set (potential): {bui.terUniHea.fan.eff.dp_in (i), bui.terUniHea.fan.senRelPre.p_rel (i)}
+Connection set (potential): {bui.terUniHea.fan.eff.y_out (i), bui.terUniHea.fan.y_actual (o)}
+Connection set (stream): {bui.terUniHea.fan.port_a.C_outflow[1:0] (o), bui.terUniHea.fan.vol.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_a.Xi_outflow[1:1] (o), bui.terUniHea.fan.vol.ports[1].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.fan.port_a.h_outflow (o), bui.terUniHea.fan.vol.ports[1].h_outflow (i)}
+Connection set (flow): {bui.terUniHea.fan.port_a.m_flow (o), bui.terUniHea.fan.vol.ports[1].m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.port_a.p (o), bui.terUniHea.fan.vol.ports[1].p (i)}
+Connection set (stream): {bui.terUniHea.fan.senMasFlo.port_a.C_outflow[1:0] (i), bui.terUniHea.fan.vol.ports[2].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.fan.senMasFlo.port_a.Xi_outflow[1:1] (i), bui.terUniHea.fan.vol.ports[2].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.fan.senMasFlo.port_a.h_outflow (i), bui.terUniHea.fan.vol.ports[2].h_outflow (i)}
+Connection set (flow): {bui.terUniHea.fan.senMasFlo.port_a.m_flow (i), bui.terUniHea.fan.vol.ports[2].m_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.senMasFlo.port_a.p (i), bui.terUniHea.fan.vol.ports[2].p (i)}
+Connection set (flow): {bui.terUniHea.fan.heatPort.Q_flow (i)}
+Connection set (flow): {bui.terUniHea.fan.vol.heaFloSen.port_a.Q_flow (i), bui.terUniHea.fan.vol.heatPort.Q_flow (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.heaFloSen.port_a.T (i), bui.terUniHea.fan.vol.heatPort.T (o)}
+Connection set (stream): {bui.terUniHea.fan.vol.dynBal.ports[1].C_outflow[1:0] (i), bui.terUniHea.fan.vol.ports[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.fan.vol.dynBal.ports[1].Xi_outflow[1:1] (i), bui.terUniHea.fan.vol.ports[1].Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniHea.fan.vol.dynBal.ports[1].h_outflow (i), bui.terUniHea.fan.vol.ports[1].h_outflow (o)}
+Connection set (flow): {bui.terUniHea.fan.vol.dynBal.ports[1].m_flow (i), bui.terUniHea.fan.vol.ports[1].m_flow (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.dynBal.ports[1].p (i), bui.terUniHea.fan.vol.ports[1].p (o)}
+Connection set (stream): {bui.terUniHea.fan.vol.dynBal.ports[2].C_outflow[1:0] (i), bui.terUniHea.fan.vol.ports[2].C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.fan.vol.dynBal.ports[2].Xi_outflow[1:1] (i), bui.terUniHea.fan.vol.ports[2].Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniHea.fan.vol.dynBal.ports[2].h_outflow (i), bui.terUniHea.fan.vol.ports[2].h_outflow (o)}
+Connection set (flow): {bui.terUniHea.fan.vol.dynBal.ports[2].m_flow (i), bui.terUniHea.fan.vol.ports[2].m_flow (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.dynBal.ports[2].p (i), bui.terUniHea.fan.vol.ports[2].p (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.U (o), bui.terUniHea.fan.vol.dynBal.UOut (i)}
+Connection set (potential): {bui.terUniHea.fan.vol.dynBal.mXiOut[1] (i), bui.terUniHea.fan.vol.mXi[1] (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.dynBal.mOut (i), bui.terUniHea.fan.vol.m (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.dynBal.hOut (i), bui.terUniHea.fan.vol.hOut_internal (o)}
+Connection set (potential): {bui.terUniHea.fan.vol.XiOut_internal[1] (o), bui.terUniHea.fan.vol.dynBal.XiOut[1] (i)}
+Connection set (potential): {bui.terUniHea.fan.vol.portT.y (i), bui.terUniHea.fan.vol.preTem.T (i)}
+Connection set (flow): {bui.terUniHea.fan.vol.heaFloSen.port_b.Q_flow (i), bui.terUniHea.fan.vol.preTem.port.Q_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.vol.heaFloSen.port_b.T (i), bui.terUniHea.fan.vol.preTem.port.T (i)}
+Connection set (potential): {bui.terUniHea.fan.vol.dynBal.Q_flow (i), bui.terUniHea.fan.vol.heaFloSen.Q_flow (i)}
+Connection set (potential): {bui.terUniHea.fan.preSou.m_flow_in (o), bui.terUniHea.fan.preSou.m_flow_internal (o)}
+Connection set (potential): {bui.terUniHea.fan.eff.dp_in (o), bui.terUniHea.fan.eff.dp_internal (o)}
+Connection set (potential): {bui.terUniHea.con.controlError.u1 (i), bui.terUniHea.con.uS_revAct.u (i), bui.terUniHea.con.u_s (o)}
+Connection set (potential): {bui.terUniHea.con.errI1.u1 (i), bui.terUniHea.con.uS_revAct.y (i), bui.terUniHea.con.uSetWp.u (i)}
+Connection set (potential): {bui.terUniHea.con.controlError.u2 (i), bui.terUniHea.con.uMea_revAct.u (i), bui.terUniHea.con.u_m (o)}
+Connection set (potential): {bui.terUniHea.con.errP.u1 (i), bui.terUniHea.con.uSetWp.y (i)}
+Connection set (potential): {bui.terUniHea.con.errI1.u2 (i), bui.terUniHea.con.errP.u2 (i), bui.terUniHea.con.uMea_revAct.y (i)}
+Connection set (potential): {bui.terUniHea.con.addPD.u1 (i), bui.terUniHea.con.errP.y (i)}
+Connection set (potential): {bui.terUniHea.con.addPD.y (i), bui.terUniHea.con.addPID.u1 (i)}
+Connection set (potential): {bui.terUniHea.con.addPID.y (i), bui.terUniHea.con.gainPID.u (i)}
+Connection set (potential): {bui.terUniHea.con.antWinErr.u1 (i), bui.terUniHea.con.gainPID.y (i), bui.terUniHea.con.lim.u (i)}
+Connection set (potential): {bui.terUniHea.con.antWinErr.u2 (i), bui.terUniHea.con.lim.y (i), bui.terUniHea.con.y (o)}
+Connection set (potential): {bui.terUniHea.con.antWinErr.y (i), bui.terUniHea.con.antWinGai.u (i)}
+Connection set (potential): {bui.terUniHea.con.Dzero.y (i), bui.terUniHea.con.addPD.u2 (i)}
+Connection set (potential): {bui.terUniHea.con.I.y (i), bui.terUniHea.con.addPID.u2 (i)}
+Connection set (potential): {bui.terUniHea.con.I.u (i), bui.terUniHea.con.errI2.y (i)}
+Connection set (potential): {bui.terUniHea.con.errI1.y (i), bui.terUniHea.con.errI2.u1 (i)}
+Connection set (potential): {bui.terUniHea.con.antWinGai.y (i), bui.terUniHea.con.errI2.u2 (i)}
+Connection set (potential): {bui.terUniHea.con.assMesYMinMax.u (i), bui.terUniHea.con.cheYMinMax.y (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_a.C_outflow[1:0] (i), bui.terUniHea.hex.port_a1.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_a.Xi_outflow[1:0] (i), bui.terUniHea.hex.port_a1.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_a.h_outflow (i), bui.terUniHea.hex.port_a1.h_outflow (o)}
+Connection set (flow): {bui.terUniHea.hex.bal1.port_a.m_flow (i), bui.terUniHea.hex.port_a1.m_flow (o)}
+Connection set (potential): {bui.terUniHea.hex.bal1.port_a.p (i), bui.terUniHea.hex.port_a1.p (o)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_b.C_outflow[1:0] (i), bui.terUniHea.hex.port_b1.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_b.Xi_outflow[1:0] (i), bui.terUniHea.hex.port_b1.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_b.h_outflow (i), bui.terUniHea.hex.port_b1.h_outflow (o)}
+Connection set (flow): {bui.terUniHea.hex.bal1.port_b.m_flow (i), bui.terUniHea.hex.port_b1.m_flow (o)}
+Connection set (potential): {bui.terUniHea.hex.bal1.port_b.p (i), bui.terUniHea.hex.port_b1.p (o)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_a.C_outflow[1:0] (i), bui.terUniHea.hex.port_a2.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_a.Xi_outflow[1:1] (i), bui.terUniHea.hex.port_a2.Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_a.h_outflow (i), bui.terUniHea.hex.port_a2.h_outflow (o)}
+Connection set (flow): {bui.terUniHea.hex.bal2.port_a.m_flow (i), bui.terUniHea.hex.port_a2.m_flow (o)}
+Connection set (potential): {bui.terUniHea.hex.bal2.port_a.p (i), bui.terUniHea.hex.port_a2.p (o)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_b.C_outflow[1:0] (i), bui.terUniHea.hex.port_b2.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_b.Xi_outflow[1:1] (i), bui.terUniHea.hex.port_b2.Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_b.h_outflow (i), bui.terUniHea.hex.port_b2.h_outflow (o)}
+Connection set (flow): {bui.terUniHea.hex.bal2.port_b.m_flow (i), bui.terUniHea.hex.port_b2.m_flow (o)}
+Connection set (potential): {bui.terUniHea.hex.bal2.port_b.p (i), bui.terUniHea.hex.port_b2.p (o)}
+Connection set (potential): {bui.terUniHea.hex.bal1.hOut (o), bui.terUniHea.hex.bal1.vol.hOut (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_a.C_outflow[1:0] (o), bui.terUniHea.hex.bal1.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_a.Xi_outflow[1:0] (o), bui.terUniHea.hex.bal1.preDro.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_a.h_outflow (o), bui.terUniHea.hex.bal1.preDro.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.bal1.port_a.m_flow (o), bui.terUniHea.hex.bal1.preDro.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal1.port_a.p (o), bui.terUniHea.hex.bal1.preDro.port_a.p (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.preDro.port_b.C_outflow[1:0] (i), bui.terUniHea.hex.bal1.vol.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.preDro.port_b.Xi_outflow[1:0] (i), bui.terUniHea.hex.bal1.vol.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.preDro.port_b.h_outflow (i), bui.terUniHea.hex.bal1.vol.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.bal1.preDro.port_b.m_flow (i), bui.terUniHea.hex.bal1.vol.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal1.preDro.port_b.p (i), bui.terUniHea.hex.bal1.vol.port_a.p (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_b.C_outflow[1:0] (o), bui.terUniHea.hex.bal1.vol.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_b.Xi_outflow[1:0] (o), bui.terUniHea.hex.bal1.vol.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal1.port_b.h_outflow (o), bui.terUniHea.hex.bal1.vol.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.bal1.port_b.m_flow (o), bui.terUniHea.hex.bal1.vol.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal1.port_b.p (o), bui.terUniHea.hex.bal1.vol.port_b.p (i)}
+Connection set (potential): {bui.terUniHea.hex.bal1.heaInp.y (i), bui.terUniHea.hex.bal1.vol.Q_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal2.hOut (o), bui.terUniHea.hex.bal2.vol.hOut (i)}
+Connection set (potential): {bui.terUniHea.hex.bal2.XiOut[1] (o), bui.terUniHea.hex.bal2.vol.XiOut[1] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_a.C_outflow[1:0] (o), bui.terUniHea.hex.bal2.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_a.Xi_outflow[1:1] (o), bui.terUniHea.hex.bal2.preDro.port_a.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_a.h_outflow (o), bui.terUniHea.hex.bal2.preDro.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.bal2.port_a.m_flow (o), bui.terUniHea.hex.bal2.preDro.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal2.port_a.p (o), bui.terUniHea.hex.bal2.preDro.port_a.p (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.preDro.port_b.C_outflow[1:0] (i), bui.terUniHea.hex.bal2.vol.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.preDro.port_b.Xi_outflow[1:1] (i), bui.terUniHea.hex.bal2.vol.port_a.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.preDro.port_b.h_outflow (i), bui.terUniHea.hex.bal2.vol.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.bal2.preDro.port_b.m_flow (i), bui.terUniHea.hex.bal2.vol.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal2.preDro.port_b.p (i), bui.terUniHea.hex.bal2.vol.port_a.p (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_b.C_outflow[1:0] (o), bui.terUniHea.hex.bal2.vol.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_b.Xi_outflow[1:1] (o), bui.terUniHea.hex.bal2.vol.port_b.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniHea.hex.bal2.port_b.h_outflow (o), bui.terUniHea.hex.bal2.vol.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.hex.bal2.port_b.m_flow (o), bui.terUniHea.hex.bal2.vol.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniHea.hex.bal2.port_b.p (o), bui.terUniHea.hex.bal2.vol.port_b.p (i)}
+Connection set (potential): {bui.terUniHea.hex.bal2.heaInp.y (i), bui.terUniHea.hex.bal2.vol.Q_flow (i)}
+Connection set (potential): {bui.terUniHea.retAir.T_in (o), bui.terUniHea.retAir.T_in_internal (o)}
+Connection set (potential): {bui.terUniHea.QReqHea_flow (o), bui.terUniHea.scaQReqHea_flow.u (i)}
+Connection set (potential): {bui.terUniHea.QActHea_flow (o), bui.terUniHea.scaQActHea_flow.y (i)}
+Connection set (potential): {bui.terUniHea.PFan (o), bui.terUniHea.scaPFan.y (i)}
+Connection set (potential): {bui.terUniHea.mReqHeaWat_flow (o), bui.terUniHea.scaMasFloReqHeaWat.y (i)}
+Connection set (stream): {bui.terUniHea.port_aHeaWat.C_outflow[1:0] (o), bui.terUniHea.scaHeaWatFloInl.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.port_aHeaWat.Xi_outflow[1:0] (o), bui.terUniHea.scaHeaWatFloInl.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.port_aHeaWat.h_outflow (o), bui.terUniHea.scaHeaWatFloInl.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.port_aHeaWat.m_flow (o), bui.terUniHea.scaHeaWatFloInl.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniHea.port_aHeaWat.p (o), bui.terUniHea.scaHeaWatFloInl.port_a.p (i)}
+Connection set (stream): {bui.terUniHea.port_bHeaWat.C_outflow[1:0] (o), bui.terUniHea.scaHeaWatFloOut.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.port_bHeaWat.Xi_outflow[1:0] (o), bui.terUniHea.scaHeaWatFloOut.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniHea.port_bHeaWat.h_outflow (o), bui.terUniHea.scaHeaWatFloOut.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniHea.port_bHeaWat.m_flow (o), bui.terUniHea.scaHeaWatFloOut.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniHea.port_bHeaWat.p (o), bui.terUniHea.scaHeaWatFloOut.port_b.p (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_b.C_outflow[1:0] (i), bui.disFloHea.port_b.C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_b.Xi_outflow[1:0] (i), bui.disFloHea.port_b.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_b.h_outflow (i), bui.disFloHea.port_b.h_outflow (o)}
+Connection set (flow): {bui.disFloHea.heaCoo.port_b.m_flow (i), bui.disFloHea.port_b.m_flow (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.port_b.p (i), bui.disFloHea.port_b.p (o)}
+Connection set (stream): {bui.disFloHea.pipPre.port_a.C_outflow[1:0] (i), bui.disFloHea.port_a.C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.pipPre.port_a.Xi_outflow[1:0] (i), bui.disFloHea.port_a.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.pipPre.port_a.h_outflow (i), bui.disFloHea.port_a.h_outflow (o)}
+Connection set (flow): {bui.disFloHea.pipPre.port_a.m_flow (i), bui.disFloHea.port_a.m_flow (o)}
+Connection set (potential): {bui.disFloHea.pipPre.port_a.p (i), bui.disFloHea.port_a.p (o)}
+Connection set (potential): {bui.disFloHea.mReqTot_flow (o), bui.disFloHea.sumMasFloReq.y (i)}
+Connection set (potential): {bui.disFloHea.mReq_flow[1] (o), bui.disFloHea.sumMasFloReq.u[1] (i)}
+Connection set (potential): {bui.disFloHea.mAct_flow[1].y (i), bui.disFloHea.sou_m_flow[1].m_flow_in (i)}
+Connection set (stream): {bui.disFloHea.ports_a1[1].C_outflow[1:0] (o), bui.disFloHea.sin.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_a1[1].Xi_outflow[1:0] (o), bui.disFloHea.sin.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_a1[1].h_outflow (o), bui.disFloHea.sin.ports[1].h_outflow (i)}
+Connection set (flow): {bui.disFloHea.ports_a1[1].m_flow (o), bui.disFloHea.sin.ports[1].m_flow (i)}
+Connection set (potential): {bui.disFloHea.ports_a1[1].p (o), bui.disFloHea.sin.ports[1].p (i)}
+Connection set (stream): {bui.disFloHea.ports_b1[1].C_outflow[1:0] (o), bui.disFloHea.sou_m_flow[1].ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_b1[1].Xi_outflow[1:0] (o), bui.disFloHea.sou_m_flow[1].ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.ports_b1[1].h_outflow (o), bui.disFloHea.sou_m_flow[1].ports[1].h_outflow (i)}
+Connection set (flow): {bui.disFloHea.ports_b1[1].m_flow (o), bui.disFloHea.sou_m_flow[1].ports[1].m_flow (i)}
+Connection set (potential): {bui.disFloHea.ports_b1[1].p (o), bui.disFloHea.sou_m_flow[1].ports[1].p (i)}
+Connection set (stream): {bui.disFloHea.pipPre.port_b.C_outflow[1:0] (i), bui.disFloHea.senMasFlo.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.pipPre.port_b.Xi_outflow[1:0] (i), bui.disFloHea.senMasFlo.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.pipPre.port_b.h_outflow (i), bui.disFloHea.senMasFlo.port_a.h_outflow (i)}
+Connection set (flow): {bui.disFloHea.pipPre.port_b.m_flow (i), bui.disFloHea.senMasFlo.port_a.m_flow (i)}
+Connection set (potential): {bui.disFloHea.pipPre.port_b.p (i), bui.disFloHea.senMasFlo.port_a.p (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_a.C_outflow[1:0] (i), bui.disFloHea.senMasFlo.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_a.Xi_outflow[1:0] (i), bui.disFloHea.senMasFlo.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_a.h_outflow (i), bui.disFloHea.senMasFlo.port_b.h_outflow (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.port_a.m_flow (i), bui.disFloHea.senMasFlo.port_b.m_flow (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.port_a.p (i), bui.disFloHea.senMasFlo.port_b.p (i)}
+Connection set (potential): {bui.disFloHea.QActTot_flow (o), bui.disFloHea.Q_flowSum.y (i), bui.disFloHea.heaCoo.u (i)}
+Connection set (potential): {bui.disFloHea.QAct_flow[1].y (i), bui.disFloHea.Q_flowSum.u[1] (i)}
+Connection set (potential): {bui.disFloHea.TSupVal.y (i), bui.disFloHea.reaRep.u (i)}
+Connection set (potential): {bui.disFloHea.reaRep.y[1] (i), bui.disFloHea.sou_m_flow[1].T_in (i)}
+Connection set (potential): {bui.disFloHea.dpNetVal.y (i), bui.disFloHea.pipPre.dp_in (i)}
+Connection set (potential): {bui.disFloHea.sou_m_flow[1].m_flow_in (o), bui.disFloHea.sou_m_flow[1].m_flow_in_internal (o)}
+Connection set (potential): {bui.disFloHea.sou_m_flow[1].T_in (o), bui.disFloHea.sou_m_flow[1].T_in_internal (o)}
+Connection set (potential): {bui.disFloHea.pipPre.dp_in (o), bui.disFloHea.pipPre.dp_internal (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.gai.u (i), bui.disFloHea.heaCoo.u (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.Q_flow (o), bui.disFloHea.heaCoo.gai.y (i), bui.disFloHea.heaCoo.preHea.Q_flow (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.preHea.port.Q_flow (i), bui.disFloHea.heaCoo.vol.heatPort.Q_flow (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.preHea.port.T (i), bui.disFloHea.heaCoo.vol.heatPort.T (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_b.C_outflow[1:0] (o), bui.disFloHea.heaCoo.vol.ports[2].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_b.Xi_outflow[1:0] (o), bui.disFloHea.heaCoo.vol.ports[2].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_b.h_outflow (o), bui.disFloHea.heaCoo.vol.ports[2].h_outflow (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.port_b.m_flow (o), bui.disFloHea.heaCoo.vol.ports[2].m_flow (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.port_b.p (o), bui.disFloHea.heaCoo.vol.ports[2].p (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_a.C_outflow[1:0] (o), bui.disFloHea.heaCoo.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_a.Xi_outflow[1:0] (o), bui.disFloHea.heaCoo.preDro.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.port_a.h_outflow (o), bui.disFloHea.heaCoo.preDro.port_a.h_outflow (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.port_a.m_flow (o), bui.disFloHea.heaCoo.preDro.port_a.m_flow (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.port_a.p (o), bui.disFloHea.heaCoo.preDro.port_a.p (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.preDro.port_b.C_outflow[1:0] (i), bui.disFloHea.heaCoo.vol.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.preDro.port_b.Xi_outflow[1:0] (i), bui.disFloHea.heaCoo.vol.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloHea.heaCoo.preDro.port_b.h_outflow (i), bui.disFloHea.heaCoo.vol.ports[1].h_outflow (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.preDro.port_b.m_flow (i), bui.disFloHea.heaCoo.vol.ports[1].m_flow (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.preDro.port_b.p (i), bui.disFloHea.heaCoo.vol.ports[1].p (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.vol.heaFloSen.port_a.Q_flow (i), bui.disFloHea.heaCoo.vol.heatPort.Q_flow (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.heaFloSen.port_a.T (i), bui.disFloHea.heaCoo.vol.heatPort.T (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.vol.dynBal.ports[1].C_outflow[1:0] (i), bui.disFloHea.heaCoo.vol.ports[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.vol.dynBal.ports[1].Xi_outflow[1:0] (i), bui.disFloHea.heaCoo.vol.ports[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.vol.dynBal.ports[1].h_outflow (i), bui.disFloHea.heaCoo.vol.ports[1].h_outflow (o)}
+Connection set (flow): {bui.disFloHea.heaCoo.vol.dynBal.ports[1].m_flow (i), bui.disFloHea.heaCoo.vol.ports[1].m_flow (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.dynBal.ports[1].p (i), bui.disFloHea.heaCoo.vol.ports[1].p (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.vol.dynBal.ports[2].C_outflow[1:0] (i), bui.disFloHea.heaCoo.vol.ports[2].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.vol.dynBal.ports[2].Xi_outflow[1:0] (i), bui.disFloHea.heaCoo.vol.ports[2].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloHea.heaCoo.vol.dynBal.ports[2].h_outflow (i), bui.disFloHea.heaCoo.vol.ports[2].h_outflow (o)}
+Connection set (flow): {bui.disFloHea.heaCoo.vol.dynBal.ports[2].m_flow (i), bui.disFloHea.heaCoo.vol.ports[2].m_flow (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.dynBal.ports[2].p (i), bui.disFloHea.heaCoo.vol.ports[2].p (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.U (o), bui.disFloHea.heaCoo.vol.dynBal.UOut (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.dynBal.mOut (i), bui.disFloHea.heaCoo.vol.m (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.dynBal.hOut (i), bui.disFloHea.heaCoo.vol.hOut_internal (o)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.portT.y (i), bui.disFloHea.heaCoo.vol.preTem.T (i)}
+Connection set (flow): {bui.disFloHea.heaCoo.vol.heaFloSen.port_b.Q_flow (i), bui.disFloHea.heaCoo.vol.preTem.port.Q_flow (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.heaFloSen.port_b.T (i), bui.disFloHea.heaCoo.vol.preTem.port.T (i)}
+Connection set (potential): {bui.disFloHea.heaCoo.vol.dynBal.Q_flow (i), bui.disFloHea.heaCoo.vol.heaFloSen.Q_flow (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_b.C_outflow[1:0] (i), bui.disFloCoo.port_b.C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_b.Xi_outflow[1:0] (i), bui.disFloCoo.port_b.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_b.h_outflow (i), bui.disFloCoo.port_b.h_outflow (o)}
+Connection set (flow): {bui.disFloCoo.heaCoo.port_b.m_flow (i), bui.disFloCoo.port_b.m_flow (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.port_b.p (i), bui.disFloCoo.port_b.p (o)}
+Connection set (stream): {bui.disFloCoo.pipPre.port_a.C_outflow[1:0] (i), bui.disFloCoo.port_a.C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.pipPre.port_a.Xi_outflow[1:0] (i), bui.disFloCoo.port_a.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.pipPre.port_a.h_outflow (i), bui.disFloCoo.port_a.h_outflow (o)}
+Connection set (flow): {bui.disFloCoo.pipPre.port_a.m_flow (i), bui.disFloCoo.port_a.m_flow (o)}
+Connection set (potential): {bui.disFloCoo.pipPre.port_a.p (i), bui.disFloCoo.port_a.p (o)}
+Connection set (potential): {bui.disFloCoo.mReqTot_flow (o), bui.disFloCoo.sumMasFloReq.y (i)}
+Connection set (potential): {bui.disFloCoo.mReq_flow[1] (o), bui.disFloCoo.sumMasFloReq.u[1] (i)}
+Connection set (potential): {bui.disFloCoo.mAct_flow[1].y (i), bui.disFloCoo.sou_m_flow[1].m_flow_in (i)}
+Connection set (stream): {bui.disFloCoo.ports_a1[1].C_outflow[1:0] (o), bui.disFloCoo.sin.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_a1[1].Xi_outflow[1:0] (o), bui.disFloCoo.sin.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_a1[1].h_outflow (o), bui.disFloCoo.sin.ports[1].h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.ports_a1[1].m_flow (o), bui.disFloCoo.sin.ports[1].m_flow (i)}
+Connection set (potential): {bui.disFloCoo.ports_a1[1].p (o), bui.disFloCoo.sin.ports[1].p (i)}
+Connection set (stream): {bui.disFloCoo.ports_b1[1].C_outflow[1:0] (o), bui.disFloCoo.sou_m_flow[1].ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_b1[1].Xi_outflow[1:0] (o), bui.disFloCoo.sou_m_flow[1].ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.ports_b1[1].h_outflow (o), bui.disFloCoo.sou_m_flow[1].ports[1].h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.ports_b1[1].m_flow (o), bui.disFloCoo.sou_m_flow[1].ports[1].m_flow (i)}
+Connection set (potential): {bui.disFloCoo.ports_b1[1].p (o), bui.disFloCoo.sou_m_flow[1].ports[1].p (i)}
+Connection set (stream): {bui.disFloCoo.pipPre.port_b.C_outflow[1:0] (i), bui.disFloCoo.senMasFlo.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.pipPre.port_b.Xi_outflow[1:0] (i), bui.disFloCoo.senMasFlo.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.pipPre.port_b.h_outflow (i), bui.disFloCoo.senMasFlo.port_a.h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.pipPre.port_b.m_flow (i), bui.disFloCoo.senMasFlo.port_a.m_flow (i)}
+Connection set (potential): {bui.disFloCoo.pipPre.port_b.p (i), bui.disFloCoo.senMasFlo.port_a.p (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_a.C_outflow[1:0] (i), bui.disFloCoo.senMasFlo.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_a.Xi_outflow[1:0] (i), bui.disFloCoo.senMasFlo.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_a.h_outflow (i), bui.disFloCoo.senMasFlo.port_b.h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.port_a.m_flow (i), bui.disFloCoo.senMasFlo.port_b.m_flow (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.port_a.p (i), bui.disFloCoo.senMasFlo.port_b.p (i)}
+Connection set (potential): {bui.disFloCoo.QActTot_flow (o), bui.disFloCoo.Q_flowSum.y (i), bui.disFloCoo.heaCoo.u (i)}
+Connection set (potential): {bui.disFloCoo.QAct_flow[1].y (i), bui.disFloCoo.Q_flowSum.u[1] (i)}
+Connection set (potential): {bui.disFloCoo.TSupVal.y (i), bui.disFloCoo.reaRep.u (i)}
+Connection set (potential): {bui.disFloCoo.reaRep.y[1] (i), bui.disFloCoo.sou_m_flow[1].T_in (i)}
+Connection set (potential): {bui.disFloCoo.dpNetVal.y (i), bui.disFloCoo.pipPre.dp_in (i)}
+Connection set (potential): {bui.disFloCoo.sou_m_flow[1].m_flow_in (o), bui.disFloCoo.sou_m_flow[1].m_flow_in_internal (o)}
+Connection set (potential): {bui.disFloCoo.sou_m_flow[1].T_in (o), bui.disFloCoo.sou_m_flow[1].T_in_internal (o)}
+Connection set (potential): {bui.disFloCoo.pipPre.dp_in (o), bui.disFloCoo.pipPre.dp_internal (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.gai.u (i), bui.disFloCoo.heaCoo.u (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.Q_flow (o), bui.disFloCoo.heaCoo.gai.y (i), bui.disFloCoo.heaCoo.preHea.Q_flow (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.preHea.port.Q_flow (i), bui.disFloCoo.heaCoo.vol.heatPort.Q_flow (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.preHea.port.T (i), bui.disFloCoo.heaCoo.vol.heatPort.T (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_b.C_outflow[1:0] (o), bui.disFloCoo.heaCoo.vol.ports[2].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_b.Xi_outflow[1:0] (o), bui.disFloCoo.heaCoo.vol.ports[2].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_b.h_outflow (o), bui.disFloCoo.heaCoo.vol.ports[2].h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.port_b.m_flow (o), bui.disFloCoo.heaCoo.vol.ports[2].m_flow (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.port_b.p (o), bui.disFloCoo.heaCoo.vol.ports[2].p (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_a.C_outflow[1:0] (o), bui.disFloCoo.heaCoo.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_a.Xi_outflow[1:0] (o), bui.disFloCoo.heaCoo.preDro.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.port_a.h_outflow (o), bui.disFloCoo.heaCoo.preDro.port_a.h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.port_a.m_flow (o), bui.disFloCoo.heaCoo.preDro.port_a.m_flow (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.port_a.p (o), bui.disFloCoo.heaCoo.preDro.port_a.p (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.preDro.port_b.C_outflow[1:0] (i), bui.disFloCoo.heaCoo.vol.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.preDro.port_b.Xi_outflow[1:0] (i), bui.disFloCoo.heaCoo.vol.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.disFloCoo.heaCoo.preDro.port_b.h_outflow (i), bui.disFloCoo.heaCoo.vol.ports[1].h_outflow (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.preDro.port_b.m_flow (i), bui.disFloCoo.heaCoo.vol.ports[1].m_flow (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.preDro.port_b.p (i), bui.disFloCoo.heaCoo.vol.ports[1].p (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.vol.heaFloSen.port_a.Q_flow (i), bui.disFloCoo.heaCoo.vol.heatPort.Q_flow (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.heaFloSen.port_a.T (i), bui.disFloCoo.heaCoo.vol.heatPort.T (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.vol.dynBal.ports[1].C_outflow[1:0] (i), bui.disFloCoo.heaCoo.vol.ports[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.vol.dynBal.ports[1].Xi_outflow[1:0] (i), bui.disFloCoo.heaCoo.vol.ports[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.vol.dynBal.ports[1].h_outflow (i), bui.disFloCoo.heaCoo.vol.ports[1].h_outflow (o)}
+Connection set (flow): {bui.disFloCoo.heaCoo.vol.dynBal.ports[1].m_flow (i), bui.disFloCoo.heaCoo.vol.ports[1].m_flow (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.dynBal.ports[1].p (i), bui.disFloCoo.heaCoo.vol.ports[1].p (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.vol.dynBal.ports[2].C_outflow[1:0] (i), bui.disFloCoo.heaCoo.vol.ports[2].C_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.vol.dynBal.ports[2].Xi_outflow[1:0] (i), bui.disFloCoo.heaCoo.vol.ports[2].Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.disFloCoo.heaCoo.vol.dynBal.ports[2].h_outflow (i), bui.disFloCoo.heaCoo.vol.ports[2].h_outflow (o)}
+Connection set (flow): {bui.disFloCoo.heaCoo.vol.dynBal.ports[2].m_flow (i), bui.disFloCoo.heaCoo.vol.ports[2].m_flow (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.dynBal.ports[2].p (i), bui.disFloCoo.heaCoo.vol.ports[2].p (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.U (o), bui.disFloCoo.heaCoo.vol.dynBal.UOut (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.dynBal.mOut (i), bui.disFloCoo.heaCoo.vol.m (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.dynBal.hOut (i), bui.disFloCoo.heaCoo.vol.hOut_internal (o)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.portT.y (i), bui.disFloCoo.heaCoo.vol.preTem.T (i)}
+Connection set (flow): {bui.disFloCoo.heaCoo.vol.heaFloSen.port_b.Q_flow (i), bui.disFloCoo.heaCoo.vol.preTem.port.Q_flow (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.heaFloSen.port_b.T (i), bui.disFloCoo.heaCoo.vol.preTem.port.T (i)}
+Connection set (potential): {bui.disFloCoo.heaCoo.vol.dynBal.Q_flow (i), bui.disFloCoo.heaCoo.vol.heaFloSen.Q_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.m_flow_in (i), bui.terUniCoo.gaiFloNom2.y (i)}
+Connection set (potential): {bui.terUniCoo.con.y (i), bui.terUniCoo.gaiFloNom2.u (i), bui.terUniCoo.gaiMasFlo.u (i)}
+Connection set (potential): {bui.terUniCoo.fan.P (i), bui.terUniCoo.scaPFan.u (i)}
+Connection set (potential): {bui.terUniCoo.Q_flowCoo.y (i), bui.terUniCoo.TLoaODE.QAct_flow (i), bui.terUniCoo.gaiHeaFlo1.u (i), bui.terUniCoo.scaQActCoo_flow.u (i)}
+Connection set (potential): {bui.terUniCoo.TLoaODE.TAir (i), bui.terUniCoo.retAir.T_in (i)}
+Connection set (potential): {bui.terUniCoo.gaiMasFlo.y (i), bui.terUniCoo.scaMasFloReqChiWat.u (i)}
+Connection set (potential): {bui.terUniCoo.TLoaODE.QReq_flow (i), bui.terUniCoo.gaiHeaFlo.u (i), bui.terUniCoo.scaQReqCoo_flow.y (i)}
+Connection set (potential): {bui.terUniCoo.TLoaODE.TSet (i), bui.terUniCoo.TSetCoo (o)}
+Connection set (potential): {bui.terUniCoo.con.u_s (i), bui.terUniCoo.gaiHeaFlo.y (i)}
+Connection set (potential): {bui.terUniCoo.con.u_m (i), bui.terUniCoo.gaiHeaFlo1.y (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_b1.C_outflow[1:0] (i), bui.terUniCoo.scaChiWatFloOut.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_b1.Xi_outflow[1:0] (i), bui.terUniCoo.scaChiWatFloOut.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_b1.h_outflow (i), bui.terUniCoo.scaChiWatFloOut.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.port_b1.m_flow (i), bui.terUniCoo.scaChiWatFloOut.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.port_b1.p (i), bui.terUniCoo.scaChiWatFloOut.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_a1.C_outflow[1:0] (i), bui.terUniCoo.scaChiWatFloInl.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_a1.Xi_outflow[1:0] (i), bui.terUniCoo.scaChiWatFloInl.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_a1.h_outflow (i), bui.terUniCoo.scaChiWatFloInl.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.port_a1.m_flow (i), bui.terUniCoo.scaChiWatFloInl.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.port_a1.p (i), bui.terUniCoo.scaChiWatFloInl.port_b.p (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_b.C_outflow[1:0] (i), bui.terUniCoo.hex.port_a2.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_b.Xi_outflow[1:1] (i), bui.terUniCoo.hex.port_a2.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_b.h_outflow (i), bui.terUniCoo.hex.port_a2.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.fan.port_b.m_flow (i), bui.terUniCoo.hex.port_a2.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.port_b.p (i), bui.terUniCoo.hex.port_a2.p (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_b2.C_outflow[1:0] (i), bui.terUniCoo.sinAir.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_b2.Xi_outflow[1:1] (i), bui.terUniCoo.sinAir.ports[1].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.hex.port_b2.h_outflow (i), bui.terUniCoo.sinAir.ports[1].h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.port_b2.m_flow (i), bui.terUniCoo.sinAir.ports[1].m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.port_b2.p (i), bui.terUniCoo.sinAir.ports[1].p (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_a.C_outflow[1:0] (i), bui.terUniCoo.retAir.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_a.Xi_outflow[1:1] (i), bui.terUniCoo.retAir.ports[1].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_a.h_outflow (i), bui.terUniCoo.retAir.ports[1].h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.fan.port_a.m_flow (i), bui.terUniCoo.retAir.ports[1].m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.port_a.p (i), bui.terUniCoo.retAir.ports[1].p (i)}
+Connection set (potential): {bui.terUniCoo.con.controlError.u1 (i), bui.terUniCoo.con.uS_revAct.u (i), bui.terUniCoo.con.u_s (o)}
+Connection set (potential): {bui.terUniCoo.con.errI1.u1 (i), bui.terUniCoo.con.uS_revAct.y (i), bui.terUniCoo.con.uSetWp.u (i)}
+Connection set (potential): {bui.terUniCoo.con.controlError.u2 (i), bui.terUniCoo.con.uMea_revAct.u (i), bui.terUniCoo.con.u_m (o)}
+Connection set (potential): {bui.terUniCoo.con.errP.u1 (i), bui.terUniCoo.con.uSetWp.y (i)}
+Connection set (potential): {bui.terUniCoo.con.errI1.u2 (i), bui.terUniCoo.con.errP.u2 (i), bui.terUniCoo.con.uMea_revAct.y (i)}
+Connection set (potential): {bui.terUniCoo.con.addPD.u1 (i), bui.terUniCoo.con.errP.y (i)}
+Connection set (potential): {bui.terUniCoo.con.addPD.y (i), bui.terUniCoo.con.addPID.u1 (i)}
+Connection set (potential): {bui.terUniCoo.con.addPID.y (i), bui.terUniCoo.con.gainPID.u (i)}
+Connection set (potential): {bui.terUniCoo.con.antWinErr.u1 (i), bui.terUniCoo.con.gainPID.y (i), bui.terUniCoo.con.lim.u (i)}
+Connection set (potential): {bui.terUniCoo.con.antWinErr.u2 (i), bui.terUniCoo.con.lim.y (i), bui.terUniCoo.con.y (o)}
+Connection set (potential): {bui.terUniCoo.con.antWinErr.y (i), bui.terUniCoo.con.antWinGai.u (i)}
+Connection set (potential): {bui.terUniCoo.con.Dzero.y (i), bui.terUniCoo.con.addPD.u2 (i)}
+Connection set (potential): {bui.terUniCoo.con.I.y (i), bui.terUniCoo.con.addPID.u2 (i)}
+Connection set (potential): {bui.terUniCoo.con.I.u (i), bui.terUniCoo.con.errI2.y (i)}
+Connection set (potential): {bui.terUniCoo.con.errI1.y (i), bui.terUniCoo.con.errI2.u1 (i)}
+Connection set (potential): {bui.terUniCoo.con.antWinGai.y (i), bui.terUniCoo.con.errI2.u2 (i)}
+Connection set (potential): {bui.terUniCoo.con.assMesYMinMax.u (i), bui.terUniCoo.con.cheYMinMax.y (i)}
+Connection set (potential): {bui.terUniCoo.fan.filter.y (i), bui.terUniCoo.fan.m_flow_actual (o), bui.terUniCoo.fan.preSou.m_flow_in (i)}
+Connection set (potential): {bui.terUniCoo.fan.inputSwitch.u (i), bui.terUniCoo.fan.m_flow_in (o)}
+Connection set (flow): {bui.terUniCoo.fan.heatPort.Q_flow (o), bui.terUniCoo.fan.vol.heatPort.Q_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.heatPort.T (o), bui.terUniCoo.fan.vol.heatPort.T (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_b.C_outflow[1:0] (o), bui.terUniCoo.fan.preSou.port_b.C_outflow[1:0] (i), bui.terUniCoo.fan.senRelPre.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_b.Xi_outflow[1:1] (o), bui.terUniCoo.fan.preSou.port_b.Xi_outflow[1:1] (i), bui.terUniCoo.fan.senRelPre.port_a.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_b.h_outflow (o), bui.terUniCoo.fan.preSou.port_b.h_outflow (i), bui.terUniCoo.fan.senRelPre.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.fan.port_b.m_flow (o), bui.terUniCoo.fan.preSou.port_b.m_flow (i), bui.terUniCoo.fan.senRelPre.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.port_b.p (o), bui.terUniCoo.fan.preSou.port_b.p (i), bui.terUniCoo.fan.senRelPre.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.fan.preSou.port_a.C_outflow[1:0] (i), bui.terUniCoo.fan.senMasFlo.port_b.C_outflow[1:0] (i), bui.terUniCoo.fan.senRelPre.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.fan.preSou.port_a.Xi_outflow[1:1] (i), bui.terUniCoo.fan.senMasFlo.port_b.Xi_outflow[1:1] (i), bui.terUniCoo.fan.senRelPre.port_b.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.fan.preSou.port_a.h_outflow (i), bui.terUniCoo.fan.senMasFlo.port_b.h_outflow (i), bui.terUniCoo.fan.senRelPre.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.fan.preSou.port_a.m_flow (i), bui.terUniCoo.fan.senMasFlo.port_b.m_flow (i), bui.terUniCoo.fan.senRelPre.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.preSou.port_a.p (i), bui.terUniCoo.fan.senMasFlo.port_b.p (i), bui.terUniCoo.fan.senRelPre.port_b.p (i)}
+Connection set (potential): {bui.terUniCoo.fan.eff.rho (i), bui.terUniCoo.fan.rho_inlet.y (i)}
+Connection set (potential): {bui.terUniCoo.fan.eff.m_flow (i), bui.terUniCoo.fan.senMasFlo.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.P (o), bui.terUniCoo.fan.eff.PEle (i)}
+Connection set (potential): {bui.terUniCoo.fan.filter.u (i), bui.terUniCoo.fan.inputSwitch.y (i)}
+Connection set (potential): {bui.terUniCoo.fan.eff.dp_in (i), bui.terUniCoo.fan.senRelPre.p_rel (i)}
+Connection set (potential): {bui.terUniCoo.fan.eff.y_out (i), bui.terUniCoo.fan.y_actual (o)}
+Connection set (stream): {bui.terUniCoo.fan.port_a.C_outflow[1:0] (o), bui.terUniCoo.fan.vol.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_a.Xi_outflow[1:1] (o), bui.terUniCoo.fan.vol.ports[1].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.fan.port_a.h_outflow (o), bui.terUniCoo.fan.vol.ports[1].h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.fan.port_a.m_flow (o), bui.terUniCoo.fan.vol.ports[1].m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.port_a.p (o), bui.terUniCoo.fan.vol.ports[1].p (i)}
+Connection set (stream): {bui.terUniCoo.fan.senMasFlo.port_a.C_outflow[1:0] (i), bui.terUniCoo.fan.vol.ports[2].C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.fan.senMasFlo.port_a.Xi_outflow[1:1] (i), bui.terUniCoo.fan.vol.ports[2].Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.fan.senMasFlo.port_a.h_outflow (i), bui.terUniCoo.fan.vol.ports[2].h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.fan.senMasFlo.port_a.m_flow (i), bui.terUniCoo.fan.vol.ports[2].m_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.senMasFlo.port_a.p (i), bui.terUniCoo.fan.vol.ports[2].p (i)}
+Connection set (flow): {bui.terUniCoo.fan.heatPort.Q_flow (i)}
+Connection set (flow): {bui.terUniCoo.fan.vol.heaFloSen.port_a.Q_flow (i), bui.terUniCoo.fan.vol.heatPort.Q_flow (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.heaFloSen.port_a.T (i), bui.terUniCoo.fan.vol.heatPort.T (o)}
+Connection set (stream): {bui.terUniCoo.fan.vol.dynBal.ports[1].C_outflow[1:0] (i), bui.terUniCoo.fan.vol.ports[1].C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.fan.vol.dynBal.ports[1].Xi_outflow[1:1] (i), bui.terUniCoo.fan.vol.ports[1].Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniCoo.fan.vol.dynBal.ports[1].h_outflow (i), bui.terUniCoo.fan.vol.ports[1].h_outflow (o)}
+Connection set (flow): {bui.terUniCoo.fan.vol.dynBal.ports[1].m_flow (i), bui.terUniCoo.fan.vol.ports[1].m_flow (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.dynBal.ports[1].p (i), bui.terUniCoo.fan.vol.ports[1].p (o)}
+Connection set (stream): {bui.terUniCoo.fan.vol.dynBal.ports[2].C_outflow[1:0] (i), bui.terUniCoo.fan.vol.ports[2].C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.fan.vol.dynBal.ports[2].Xi_outflow[1:1] (i), bui.terUniCoo.fan.vol.ports[2].Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniCoo.fan.vol.dynBal.ports[2].h_outflow (i), bui.terUniCoo.fan.vol.ports[2].h_outflow (o)}
+Connection set (flow): {bui.terUniCoo.fan.vol.dynBal.ports[2].m_flow (i), bui.terUniCoo.fan.vol.ports[2].m_flow (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.dynBal.ports[2].p (i), bui.terUniCoo.fan.vol.ports[2].p (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.U (o), bui.terUniCoo.fan.vol.dynBal.UOut (i)}
+Connection set (potential): {bui.terUniCoo.fan.vol.dynBal.mXiOut[1] (i), bui.terUniCoo.fan.vol.mXi[1] (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.dynBal.mOut (i), bui.terUniCoo.fan.vol.m (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.dynBal.hOut (i), bui.terUniCoo.fan.vol.hOut_internal (o)}
+Connection set (potential): {bui.terUniCoo.fan.vol.XiOut_internal[1] (o), bui.terUniCoo.fan.vol.dynBal.XiOut[1] (i)}
+Connection set (potential): {bui.terUniCoo.fan.vol.portT.y (i), bui.terUniCoo.fan.vol.preTem.T (i)}
+Connection set (flow): {bui.terUniCoo.fan.vol.heaFloSen.port_b.Q_flow (i), bui.terUniCoo.fan.vol.preTem.port.Q_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.vol.heaFloSen.port_b.T (i), bui.terUniCoo.fan.vol.preTem.port.T (i)}
+Connection set (potential): {bui.terUniCoo.fan.vol.dynBal.Q_flow (i), bui.terUniCoo.fan.vol.heaFloSen.Q_flow (i)}
+Connection set (potential): {bui.terUniCoo.fan.preSou.m_flow_in (o), bui.terUniCoo.fan.preSou.m_flow_internal (o)}
+Connection set (potential): {bui.terUniCoo.fan.eff.dp_in (o), bui.terUniCoo.fan.eff.dp_internal (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_a.C_outflow[1:0] (i), bui.terUniCoo.hex.port_a1.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_a.Xi_outflow[1:0] (i), bui.terUniCoo.hex.port_a1.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_a.h_outflow (i), bui.terUniCoo.hex.port_a1.h_outflow (o)}
+Connection set (flow): {bui.terUniCoo.hex.bal1.port_a.m_flow (i), bui.terUniCoo.hex.port_a1.m_flow (o)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.port_a.p (i), bui.terUniCoo.hex.port_a1.p (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_b.C_outflow[1:0] (i), bui.terUniCoo.hex.port_b1.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_b.Xi_outflow[1:0] (i), bui.terUniCoo.hex.port_b1.Xi_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_b.h_outflow (i), bui.terUniCoo.hex.port_b1.h_outflow (o)}
+Connection set (flow): {bui.terUniCoo.hex.bal1.port_b.m_flow (i), bui.terUniCoo.hex.port_b1.m_flow (o)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.port_b.p (i), bui.terUniCoo.hex.port_b1.p (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_a.C_outflow[1:0] (i), bui.terUniCoo.hex.port_a2.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_a.Xi_outflow[1:1] (i), bui.terUniCoo.hex.port_a2.Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_a.h_outflow (i), bui.terUniCoo.hex.port_a2.h_outflow (o)}
+Connection set (flow): {bui.terUniCoo.hex.bal2.port_a.m_flow (i), bui.terUniCoo.hex.port_a2.m_flow (o)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.port_a.p (i), bui.terUniCoo.hex.port_a2.p (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_b.C_outflow[1:0] (i), bui.terUniCoo.hex.port_b2.C_outflow[1:0] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_b.Xi_outflow[1:1] (i), bui.terUniCoo.hex.port_b2.Xi_outflow[1:1] (o)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_b.h_outflow (i), bui.terUniCoo.hex.port_b2.h_outflow (o)}
+Connection set (flow): {bui.terUniCoo.hex.bal2.port_b.m_flow (i), bui.terUniCoo.hex.port_b2.m_flow (o)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.port_b.p (i), bui.terUniCoo.hex.port_b2.p (o)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.hOut (o), bui.terUniCoo.hex.bal1.vol.hOut (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_a.C_outflow[1:0] (o), bui.terUniCoo.hex.bal1.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_a.Xi_outflow[1:0] (o), bui.terUniCoo.hex.bal1.preDro.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_a.h_outflow (o), bui.terUniCoo.hex.bal1.preDro.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.bal1.port_a.m_flow (o), bui.terUniCoo.hex.bal1.preDro.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.port_a.p (o), bui.terUniCoo.hex.bal1.preDro.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.preDro.port_b.C_outflow[1:0] (i), bui.terUniCoo.hex.bal1.vol.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.preDro.port_b.Xi_outflow[1:0] (i), bui.terUniCoo.hex.bal1.vol.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.preDro.port_b.h_outflow (i), bui.terUniCoo.hex.bal1.vol.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.bal1.preDro.port_b.m_flow (i), bui.terUniCoo.hex.bal1.vol.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.preDro.port_b.p (i), bui.terUniCoo.hex.bal1.vol.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_b.C_outflow[1:0] (o), bui.terUniCoo.hex.bal1.vol.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_b.Xi_outflow[1:0] (o), bui.terUniCoo.hex.bal1.vol.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal1.port_b.h_outflow (o), bui.terUniCoo.hex.bal1.vol.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.bal1.port_b.m_flow (o), bui.terUniCoo.hex.bal1.vol.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.port_b.p (o), bui.terUniCoo.hex.bal1.vol.port_b.p (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal1.heaInp.y (i), bui.terUniCoo.hex.bal1.vol.Q_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.hOut (o), bui.terUniCoo.hex.bal2.vol.hOut (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.XiOut[1] (o), bui.terUniCoo.hex.bal2.vol.XiOut[1] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_a.C_outflow[1:0] (o), bui.terUniCoo.hex.bal2.preDro.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_a.Xi_outflow[1:1] (o), bui.terUniCoo.hex.bal2.preDro.port_a.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_a.h_outflow (o), bui.terUniCoo.hex.bal2.preDro.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.bal2.port_a.m_flow (o), bui.terUniCoo.hex.bal2.preDro.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.port_a.p (o), bui.terUniCoo.hex.bal2.preDro.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.preDro.port_b.C_outflow[1:0] (i), bui.terUniCoo.hex.bal2.vol.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.preDro.port_b.Xi_outflow[1:1] (i), bui.terUniCoo.hex.bal2.vol.port_a.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.preDro.port_b.h_outflow (i), bui.terUniCoo.hex.bal2.vol.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.bal2.preDro.port_b.m_flow (i), bui.terUniCoo.hex.bal2.vol.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.preDro.port_b.p (i), bui.terUniCoo.hex.bal2.vol.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_b.C_outflow[1:0] (o), bui.terUniCoo.hex.bal2.vol.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_b.Xi_outflow[1:1] (o), bui.terUniCoo.hex.bal2.vol.port_b.Xi_outflow[1:1] (i)}
+Connection set (stream): {bui.terUniCoo.hex.bal2.port_b.h_outflow (o), bui.terUniCoo.hex.bal2.vol.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.hex.bal2.port_b.m_flow (o), bui.terUniCoo.hex.bal2.vol.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.port_b.p (o), bui.terUniCoo.hex.bal2.vol.port_b.p (i)}
+Connection set (potential): {bui.terUniCoo.hex.bal2.heaInp.y (i), bui.terUniCoo.hex.bal2.vol.Q_flow (i)}
+Connection set (potential): {bui.terUniCoo.retAir.T_in (o), bui.terUniCoo.retAir.T_in_internal (o)}
+Connection set (potential): {bui.terUniCoo.QReqCoo_flow (o), bui.terUniCoo.scaQReqCoo_flow.u (i)}
+Connection set (potential): {bui.terUniCoo.QActCoo_flow (o), bui.terUniCoo.scaQActCoo_flow.y (i)}
+Connection set (potential): {bui.terUniCoo.PFan (o), bui.terUniCoo.scaPFan.y (i)}
+Connection set (potential): {bui.terUniCoo.mReqChiWat_flow (o), bui.terUniCoo.scaMasFloReqChiWat.y (i)}
+Connection set (stream): {bui.terUniCoo.port_aChiWat.C_outflow[1:0] (o), bui.terUniCoo.scaChiWatFloInl.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.port_aChiWat.Xi_outflow[1:0] (o), bui.terUniCoo.scaChiWatFloInl.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.port_aChiWat.h_outflow (o), bui.terUniCoo.scaChiWatFloInl.port_a.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.port_aChiWat.m_flow (o), bui.terUniCoo.scaChiWatFloInl.port_a.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.port_aChiWat.p (o), bui.terUniCoo.scaChiWatFloInl.port_a.p (i)}
+Connection set (stream): {bui.terUniCoo.port_bChiWat.C_outflow[1:0] (o), bui.terUniCoo.scaChiWatFloOut.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.port_bChiWat.Xi_outflow[1:0] (o), bui.terUniCoo.scaChiWatFloOut.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {bui.terUniCoo.port_bChiWat.h_outflow (o), bui.terUniCoo.scaChiWatFloOut.port_b.h_outflow (i)}
+Connection set (flow): {bui.terUniCoo.port_bChiWat.m_flow (o), bui.terUniCoo.scaChiWatFloOut.port_b.m_flow (i)}
+Connection set (potential): {bui.terUniCoo.port_bChiWat.p (o), bui.terUniCoo.scaChiWatFloOut.port_b.p (i)}
+Connection set (potential): {supChiWat.m_flow_in (o), supChiWat.m_flow_in_internal (o)}
+Connection set (potential): {supHeaWat.T_in (o), supHeaWat.T_in_internal (o)}
+Connection set (potential): {pumBui.inputSwitch.y (i), pumBui.m_flow_actual (o), pumBui.preSou.m_flow_in (i)}
+Connection set (potential): {pumBui.inputSwitch.u (i), pumBui.m_flow_in (o)}
+Connection set (flow): {pumBui.heatPort.Q_flow (o), pumBui.prePow.port.Q_flow (i), pumBui.vol.heatPort.Q_flow (i)}
+Connection set (potential): {pumBui.heatPort.T (o), pumBui.prePow.port.T (i), pumBui.vol.heatPort.T (i)}
+Connection set (stream): {pumBui.port_b.C_outflow[1:0] (o), pumBui.preSou.port_b.C_outflow[1:0] (i), pumBui.senRelPre.port_a.C_outflow[1:0] (i)}
+Connection set (stream): {pumBui.port_b.Xi_outflow[1:0] (o), pumBui.preSou.port_b.Xi_outflow[1:0] (i), pumBui.senRelPre.port_a.Xi_outflow[1:0] (i)}
+Connection set (stream): {pumBui.port_b.h_outflow (o), pumBui.preSou.port_b.h_outflow (i), pumBui.senRelPre.port_a.h_outflow (i)}
+Connection set (flow): {pumBui.port_b.m_flow (o), pumBui.preSou.port_b.m_flow (i), pumBui.senRelPre.port_a.m_flow (i)}
+Connection set (potential): {pumBui.port_b.p (o), pumBui.preSou.port_b.p (i), pumBui.senRelPre.port_a.p (i)}
+Connection set (potential): {pumBui.PToMed.y (i), pumBui.prePow.Q_flow (i)}
+Connection set (potential): {pumBui.PToMed.u1 (i), pumBui.heaDis.Q_flow (i)}
+Connection set (stream): {pumBui.preSou.port_a.C_outflow[1:0] (i), pumBui.senMasFlo.port_b.C_outflow[1:0] (i), pumBui.senRelPre.port_b.C_outflow[1:0] (i)}
+Connection set (stream): {pumBui.preSou.port_a.Xi_outflow[1:0] (i), pumBui.senMasFlo.port_b.Xi_outflow[1:0] (i), pumBui.senRelPre.port_b.Xi_outflow[1:0] (i)}
+Connection set (stream): {pumBui.preSou.port_a.h_outflow (i), pumBui.senMasFlo.port_b.h_outflow (i), pumBui.senRelPre.port_b.h_outflow (i)}
+Connection set (flow): {pumBui.preSou.port_a.m_flow (i), pumBui.senMasFlo.port_b.m_flow (i), pumBui.senRelPre.port_b.m_flow (i)}
+Connection set (potential): {pumBui.preSou.port_a.p (i), pumBui.senMasFlo.port_b.p (i), pumBui.senRelPre.port_b.p (i)}
+Connection set (potential): {pumBui.eff.etaHyd (i), pumBui.heaDis.etaHyd (i)}
+Connection set (potential): {pumBui.eff.V_flow (i), pumBui.heaDis.V_flow (i)}
+Connection set (potential): {pumBui.P (o), pumBui.eff.PEle (i), pumBui.heaDis.PEle (i)}
+Connection set (potential): {pumBui.PToMed.u2 (i), pumBui.eff.WFlo (i), pumBui.heaDis.WFlo (i)}
+Connection set (potential): {pumBui.eff.rho (i), pumBui.rho_inlet.y (i)}
+Connection set (potential): {pumBui.eff.m_flow (i), pumBui.senMasFlo.m_flow (i)}
+Connection set (potential): {pumBui.eff.dp_in (i), pumBui.senRelPre.p_rel (i)}
+Connection set (potential): {pumBui.eff.y_out (i), pumBui.y_actual (o)}
+Connection set (stream): {pumBui.port_a.C_outflow[1:0] (o), pumBui.vol.ports[1].C_outflow[1:0] (i)}
+Connection set (stream): {pumBui.port_a.Xi_outflow[1:0] (o), pumBui.vol.ports[1].Xi_outflow[1:0] (i)}
+Connection set (stream): {pumBui.port_a.h_outflow (o), pumBui.vol.ports[1].h_outflow (i)}
+Connection set (flow): {pumBui.port_a.m_flow (o), pumBui.vol.ports[1].m_flow (i)}
+Connection set (potential): {pumBui.port_a.p (o), pumBui.vol.ports[1].p (i)}
+Connection set (stream): {pumBui.senMasFlo.port_a.C_outflow[1:0] (i), pumBui.vol.ports[2].C_outflow[1:0] (i)}
+Connection set (stream): {pumBui.senMasFlo.port_a.Xi_outflow[1:0] (i), pumBui.vol.ports[2].Xi_outflow[1:0] (i)}
+Connection set (stream): {pumBui.senMasFlo.port_a.h_outflow (i), pumBui.vol.ports[2].h_outflow (i)}
+Connection set (flow): {pumBui.senMasFlo.port_a.m_flow (i), pumBui.vol.ports[2].m_flow (i)}
+Connection set (potential): {pumBui.senMasFlo.port_a.p (i), pumBui.vol.ports[2].p (i)}
+Connection set (flow): {pumBui.heatPort.Q_flow (i)}
+Connection set (flow): {pumBui.vol.heaFloSen.port_a.Q_flow (i), pumBui.vol.heatPort.Q_flow (o)}
+Connection set (potential): {pumBui.vol.heaFloSen.port_a.T (i), pumBui.vol.heatPort.T (o)}
+Connection set (stream): {pumBui.vol.dynBal.ports[1].C_outflow[1:0] (i), pumBui.vol.ports[1].C_outflow[1:0] (o)}
+Connection set (stream): {pumBui.vol.dynBal.ports[1].Xi_outflow[1:0] (i), pumBui.vol.ports[1].Xi_outflow[1:0] (o)}
+Connection set (stream): {pumBui.vol.dynBal.ports[1].h_outflow (i), pumBui.vol.ports[1].h_outflow (o)}
+Connection set (flow): {pumBui.vol.dynBal.ports[1].m_flow (i), pumBui.vol.ports[1].m_flow (o)}
+Connection set (potential): {pumBui.vol.dynBal.ports[1].p (i), pumBui.vol.ports[1].p (o)}
+Connection set (stream): {pumBui.vol.dynBal.ports[2].C_outflow[1:0] (i), pumBui.vol.ports[2].C_outflow[1:0] (o)}
+Connection set (stream): {pumBui.vol.dynBal.ports[2].Xi_outflow[1:0] (i), pumBui.vol.ports[2].Xi_outflow[1:0] (o)}
+Connection set (stream): {pumBui.vol.dynBal.ports[2].h_outflow (i), pumBui.vol.ports[2].h_outflow (o)}
+Connection set (flow): {pumBui.vol.dynBal.ports[2].m_flow (i), pumBui.vol.ports[2].m_flow (o)}
+Connection set (potential): {pumBui.vol.dynBal.ports[2].p (i), pumBui.vol.ports[2].p (o)}
+Connection set (potential): {pumBui.vol.U (o), pumBui.vol.dynBal.UOut (i)}
+Connection set (potential): {pumBui.vol.dynBal.mOut (i), pumBui.vol.m (o)}
+Connection set (potential): {pumBui.vol.dynBal.hOut (i), pumBui.vol.hOut_internal (o)}
+Connection set (potential): {pumBui.vol.portT.y (i), pumBui.vol.preTem.T (i)}
+Connection set (flow): {pumBui.vol.heaFloSen.port_b.Q_flow (i), pumBui.vol.preTem.port.Q_flow (i)}
+Connection set (potential): {pumBui.vol.heaFloSen.port_b.T (i), pumBui.vol.preTem.port.T (i)}
+Connection set (potential): {pumBui.vol.dynBal.Q_flow (i), pumBui.vol.heaFloSen.Q_flow (i)}
+Connection set (potential): {pumBui.preSou.m_flow_in (o), pumBui.preSou.m_flow_internal (o)}
+Connection set (potential): {pumBui.eff.dp_in (o), pumBui.eff.dp_internal (o)}
+</pre>
+</body>
+</html>
