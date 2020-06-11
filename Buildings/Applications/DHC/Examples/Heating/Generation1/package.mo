@@ -45,7 +45,7 @@ package Generation1 "First generation district heating plant model"
     // Nominal loads
     parameter Modelica.SIunits.Power QBld_flow_nominal= 19347.2793
       "Nominal heat flow rate, Project 1 WP3 DESTEST";
-  /*    
+  /*
   parameter Modelica.SIunits.Power QBld1_flow_nominal= 200E3
     "Nominal heat flow rate, building 1";
   parameter Modelica.SIunits.Power QBld2_flow_nominal= 150E3
