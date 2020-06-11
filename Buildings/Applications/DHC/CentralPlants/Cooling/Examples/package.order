@@ -1,9 +1,3 @@
 CoolingPlantOpenLoop
 CoolingPlantClosedLoop
-ChilledWaterLoop
-ChilledWaterLoopBypass
-ChilledWaterLoopBypassCT
-ChilledWaterLoopBypassCTPumpControl
-ChilledWaterLoopBypassCTPumpControlClosed
-ChilledWaterLoopBypassCTPumpControlClosedDynamic
-CoolingPlantOpenLoop2
+DistrictCoolingSystem
