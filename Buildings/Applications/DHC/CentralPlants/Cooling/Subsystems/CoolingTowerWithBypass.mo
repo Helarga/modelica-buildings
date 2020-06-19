@@ -78,11 +78,11 @@ model CoolingTowerWithBypass "Cooling tower system with bypass valve"
                           noEvent(actualStream(port_a.Xi_outflow))) if
          show_T "Medium properties in port_a";
 
-  Medium.ThermodynamicState sta_b=
-      Medium.setState_phX(port_b.p,
-                          noEvent(actualStream(port_b.h_outflow)),
-                          noEvent(actualStream(port_b.Xi_outflow))) if
-          show_T "Medium properties in port_b";
+   Medium.ThermodynamicState sta_b=
+       Medium.setState_phX(port_b.p,
+                           noEvent(actualStream(port_b.h_outflow)),
+                           noEvent(actualStream(port_b.Xi_outflow))) if
+           show_T "Medium properties in port_b";
 
   Modelica.Fluid.Interfaces.FluidPort_a port_a(redeclare package Medium=Medium)
     "Fluid connector a (positive design flow direction is from port_a to port_b)"
@@ -147,7 +147,7 @@ model CoolingTowerWithBypass "Cooling tower system with bypass valve"
 
   Modelica.Blocks.Sources.RealExpression TSetCWSup(y=max(TWetBul + dTApp, TMin))
     "Condenser water supply temperature setpoint"
-    annotation (Placement(transformation(extent={{-60,50},{-40,70}})));
+    annotation (Placement(transformation(extent={{-58,50},{-38,70}})));
 
   Modelica.Blocks.Sources.Constant TSetByPas(k=TMin)
     "Bypass loop temperature setpoint"
@@ -173,7 +173,7 @@ model CoolingTowerWithBypass "Cooling tower system with bypass valve"
     Ti=Ti) "Cooling tower fan speed controller"
     annotation (Placement(transformation(extent={{-12,50},{8,70}})));
 
-  Modelica.Blocks.Sources.RealExpression TLvgCooTow(y=cooTowSys.sta_b.T)
+  Modelica.Blocks.Sources.RealExpression TLvgCooTow(y=senTCWSup.T)
     "Condenser water temperature leaving the towers"
     annotation (Placement(transformation(extent={{-30,30},{-10,50}})));
 
@@ -194,7 +194,7 @@ equation
   connect(valByp.port_a, cooTowSys.port_a) annotation (Line(points={{-10,-40},{-30,
           -40},{-30,0},{-10,0}}, color={0,127,255}));
   connect(valByp.port_b, senTCWSup.port_a) annotation (Line(points={{10,-40},{30,-40},{30,0},{60,0}}, color={0,127,255}));
-  connect(TSetCWSup.y, cooTowSpeCon.u_s) annotation (Line(points={{-39,60},{-14,
+  connect(TSetCWSup.y, cooTowSpeCon.u_s) annotation (Line(points={{-37,60},{-14,
           60}},                                                                       color={0,0,127}));
   connect(cooTowSpeCon.y, cooTowSys.speFan) annotation (Line(points={{9,60},{20,
           60},{20,20},{-20,20},{-20,2},{-12,2}}, color={0,0,127}));

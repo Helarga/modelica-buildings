@@ -130,6 +130,7 @@ model Plant "District cooling plant model"
         iconTransformation(extent={{-140,-50},{-100,-10}})));
 
   Buildings.Applications.DataCenters.ChillerCooled.Equipment.ElectricChillerParallel mulChiSys(
+    show_T=true,
     per=fill(perChi, numChi),
     m1_flow_nominal=mCHW_flow_nominal,
     m2_flow_nominal=mCW_flow_nominal,
@@ -143,6 +144,7 @@ model Plant "District cooling plant model"
   Buildings.Applications.DHC.CentralPlants.Cooling.Subsystems.CoolingTowerWithBypass
     cooTowWitByp(
     redeclare package Medium = Medium,
+    show_T=true,
     num=numChi,
     m_flow_nominal=mCW_flow_nominal,
     dp_nominal=dpCW_nominal,
@@ -153,7 +155,7 @@ model Plant "District cooling plant model"
     TMin=TMin) "Cooling towers with bypass valve"
     annotation (Placement(transformation(extent={{-60,-60},{-40,-40}})));
 
-  Buildings.Applications.DataCenters.ChillerCooled.Equipment.FlowMachine_y pumCHW(
+  DataCenters.ChillerCooled.Equipment.FlowMachine_y pumCHW(
     redeclare package Medium = Medium,
     per=fill(perCHWPum, numChi),
     energyDynamics=energyDynamics,
@@ -175,7 +177,8 @@ model Plant "District cooling plant model"
     redeclare package Medium = Medium,
     allowFlowReversal=false,
     m_flow_nominal=mCHW_flow_nominal*0.05,
-    dpValve_nominal=dpCHW_nominal) "Chilled water bypass valve"
+    dpValve_nominal=dpCHW_nominal,
+    l=0.001)                       "Chilled water bypass valve"
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=90,
@@ -297,8 +300,6 @@ equation
   connect(CHWPumCon.dpMea, dpMea) annotation (Line(points={{-122,-20},{-160,-20}}, color={0,0,127}));
   connect(mPum_flow.y, CHWPumCon.masFloPum) annotation (Line(points={{-121,8},
           {-132,8},{-132,-12},{-122,-12}}, color={0,0,127}));
-  connect(CHWPumCon.y, pumCHW.u) annotation (Line(points={{-99,-16},{-80,-16},{-80,
-          8},{-40,8},{-40,60},{20,60},{20,54},{12,54}},      color={0,0,127}));
   connect(bypValCon.y, valByp.y) annotation (Line(points={{119,0},{92,0}},color={0,0,127}));
   connect(mValByp_flow.y, bypValCon.u_m) annotation (Line(points={{139,-30},{
           130,-30},{130,-12}},                                                                    color={0,0,127}));
@@ -340,6 +341,8 @@ equation
           60},{-48,32},{40,32},{40,-16},{138,-16},{138,-12}}, color={255,0,255}));
   connect(mSetSca_flow.y, bypValCon.u_s) annotation (Line(points={{111,20},{150,
           20},{150,0},{142,0}}, color={0,0,127}));
+  connect(CHWPumCon.y, pumCHW.u) annotation (Line(points={{-99,-16},{-56,-16},{-56,
+          64},{22,64},{22,54},{12,54}}, color={0,0,127}));
   annotation (__Dymola_Commands,
   Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-80},{160,100}})),
     experiment(

@@ -167,7 +167,7 @@ model CoolingIndirect
     annotation (Placement(transformation(extent={{20,-10},{40,10}})));
 
   Buildings.Controls.Continuous.LimPID con(
-    final controllerType=Modelica.Blocks.Types.SimpleController.PID,
+    final controllerType=Modelica.Blocks.Types.SimpleController.PI,
     final k=k,
     final Td=Td,
     final yMax=yMax,
@@ -213,7 +213,9 @@ model CoolingIndirect
     final m_flow_nominal=mDis_flow_nominal,
     final dpValve_nominal=dpValve_nominal,
     riseTime(displayUnit="s") = 60,
-    y_start=0) "District-side (primary) control valve"
+    order=2,
+    y_start=0,
+    l=0.001)   "District-side (primary) control valve"
     annotation (Placement(transformation(extent={{-30,70},{-10,50}})));
 
   Modelica.Blocks.Math.Gain cp(final k=cp_default)
