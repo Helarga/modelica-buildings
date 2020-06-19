@@ -54,9 +54,8 @@ model FanCoil2PipeHeating
     final k=k,
     final Ti=Ti,
     controllerType=Buildings.Controls.OBC.CDL.Types.SimpleController.PI,
-    final reverseAction=false,
-    reset=Buildings.Controls.OBC.CDL.Types.Reset.Parameter)
-    "PI controller"
+    reverseActing=true,
+    yMin=0) "PI controller"
     annotation (Placement(transformation(extent={{-10,210},{10,230}})));
   Buildings.Fluid.HeatExchangers.DryCoilEffectivenessNTU hex(
     redeclare final package Medium1 = Medium1,
