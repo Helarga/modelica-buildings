@@ -12,7 +12,7 @@ model ChilledWaterPumpSpeed
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal
     "Nominal mass flow rate of single chilled water pump";
 
-  parameter Real minSpe(unit="1",min=0,max=1) = 0.05
+  parameter Real minSpe=0.05
     "Minimum speed ratio required by chilled water pumps";
 
   parameter Modelica.Blocks.Types.SimpleController controllerType=Modelica.Blocks.Types.SimpleController.PI
@@ -61,8 +61,8 @@ model ChilledWaterPumpSpeed
     Td=60,
     yMax=1,
     yMin=0,
-    reverseAction=false)
-           "PID controller of pump speed"
+    reverseActing=true)
+     "PID controller of pump speed"
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}})));
   Modelica.Blocks.Math.Gain gai(k=1/dpSetPoi)
     "Multiplier gain for normalizing dp input"

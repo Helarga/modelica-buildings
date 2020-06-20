@@ -114,7 +114,7 @@ model CoolingTowerWithBypass "Cooling tower system with bypass valve"
     "Leaving water temperature"
     annotation (Placement(transformation(extent={{100,20},{120,40}})));
 
-  Buildings.Applications.DHC.CentralPlants.Cooling.Subsystems.CoolingTowerParellel
+  Buildings.Applications.DHC.CentralPlants.Cooling.Subsystems.CoolingTowerParallel
     cooTowSys(
     use_inputFilter=true,
     redeclare package Medium = Medium,
@@ -159,6 +159,7 @@ model CoolingTowerWithBypass "Cooling tower system with bypass valve"
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     k=1,
     Ti=60,
+    reverseActing=true,
     reset=Buildings.Types.Reset.Parameter,
     y_reset=0)
            "Bypass valve controller"
@@ -167,7 +168,7 @@ model CoolingTowerWithBypass "Cooling tower system with bypass valve"
   Buildings.Controls.Continuous.LimPID cooTowSpeCon(
     u_s(unit="K", displayUnit="degC"),
     u_m(unit="K", displayUnit="degC"),
-    final reverseAction=true,
+    final reverseActing=false,
     controllerType=controllerType,
     k=k,
     Ti=Ti) "Cooling tower fan speed controller"

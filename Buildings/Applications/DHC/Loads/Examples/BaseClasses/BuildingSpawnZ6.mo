@@ -12,15 +12,16 @@ model BuildingSpawnZ6
     "Number of conditioned thermal zones";
   parameter Integer facSca[nZon]=fill(5, nZon)
     "Scaling factor to be applied to on each extensive quantity";
-  parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal[nZon]={-1*QCoo_flow_nominal[i]/(1005*10) for i in 1:nZon}
+  parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal[nZon]= fill(0.113,nZon)
     "Load side mass flow rate at nominal conditions"
-    annotation(Dialog(group="Nominal condition"));   //fill(0.2, nZon)
+    annotation(Dialog(group="Nominal condition"));                      // {-1*QCoo_flow_nominal[i]/(1005*10) for i in 1:nZon}
+                                                     //fill(0.2, nZon)
   parameter Modelica.SIunits.HeatFlowRate QHea_flow_nominal[nZon]=
     fill(3000, nZon) ./ facSca
     "Design heating heat flow rate (>=0)"
     annotation (Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.HeatFlowRate QCoo_flow_nominal[nZon]=
-    fill(-9000, nZon) ./ facSca
+    fill(-8750, nZon) ./ facSca
     "Design cooling heat flow rate (<=0)"
     annotation (Dialog(group="Nominal condition"));
   parameter String idfName=

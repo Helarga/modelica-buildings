@@ -9,7 +9,7 @@ model CoolingTowerParallel
     "Design water flow rate"
     annotation (Dialog(group="Nominal condition"));
 
-  Buildings.Applications.DHC.CentralPlants.Cooling.Subsystems.CoolingTowerParellel
+  Buildings.Applications.DHC.CentralPlants.Cooling.Subsystems.CoolingTowerParallel
     cooTowPar(
     use_inputFilter=true,
     riseTimeValve=30,

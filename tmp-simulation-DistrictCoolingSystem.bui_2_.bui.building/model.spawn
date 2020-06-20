@@ -1,0 +1,34 @@
+{
+    "EnergyPlus": {
+        "idf": "resources/RefBldgSmallOfficeNew2004_Chicago.idf",
+        "weather": "resources/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+    },
+    "fmu": {
+        "kind": "ME",
+        "name": "/mnt/shared/modelica-buildings/tmp-simulation-DistrictCoolingSystem.bui_1_.bui.building/DistrictCoolingSystem.bui_1_.bui.building.fmu",
+        "version": "2.0"
+    },
+    "model": {
+        "zones": [
+            {
+                "name": "Attic"
+            },
+            {
+                "name": "Core_ZN"
+            },
+            {
+                "name": "Perimeter_ZN_1"
+            },
+            {
+                "name": "Perimeter_ZN_2"
+            },
+            {
+                "name": "Perimeter_ZN_3"
+            },
+            {
+                "name": "Perimeter_ZN_4"
+            }
+        ]
+    },
+    "version": "0.1"
+}

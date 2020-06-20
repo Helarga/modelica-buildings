@@ -3,10 +3,10 @@ model PipeConnection "Building service connection pipe"
   extends Buildings.Fluid.FixedResistances.HydraulicDiameter(
     dp(nominal=1E5),
     dh=0,
-    final fac=1.1,
     final ReC=6000,
     final linearized=false,
     final v_nominal=m_flow_nominal * 4 / (rho_default * dh^2 * Modelica.Constants.pi));
+   // final fac=1.1,
     // Steel straight pipe
     annotation (
     DefaultComponentName="pipCon",

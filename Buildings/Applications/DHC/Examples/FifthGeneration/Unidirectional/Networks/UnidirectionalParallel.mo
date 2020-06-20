@@ -5,7 +5,7 @@ model UnidirectionalParallel
     redeclare BaseClasses.ConnectionParallel con[nCon](
       final lDis=lDis, final lCon=lCon, final dhDis=dhDis, final dhCon=dhCon, final fac=fac),
     redeclare model Model_pipDis = BaseClasses.PipeDistribution (
-      final dh=dhEnd, final length=2*lEnd));
+      final dh=dhEnd, final length=2*lEnd, final fac=facEnd));
   parameter Modelica.SIunits.Length lDis[nCon]
     "Length of the distribution pipe before each connection (supply only, not counting return line)";
   parameter Modelica.SIunits.Length lCon[nCon]
@@ -18,6 +18,8 @@ model UnidirectionalParallel
     "Hydraulic diameter of each connection pipe";
   parameter Modelica.SIunits.Length dhEnd = dhDis[nCon]
     "Hydraulic diameter of the end of the distribution line";
+  parameter Real facEnd
+    "Factor to take into account resistance of bends etc., fac=dp_nominal/dpStraightPipe_nominal";
   parameter Real fac[nCon]
     "Factor to take into account resistance of bends etc., fac=dp_nominal/dpStraightPipe_nominal";
 end UnidirectionalParallel;

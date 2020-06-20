@@ -27,7 +27,7 @@ model BuildingSpawnZ6WithCoolingIndirectETS
     "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"
     "Name of the weather file"
     annotation(Dialog(group="Building model parameters"));
-  parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal=(bui.disFloCoo.m_flow_nominal.*(bui.delTBuiCoo/bui.delTDisCoo))
+  parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal=bui.disFloCoo.m_flow_nominal*(bui.delTBuiCoo/bui.delTDisCoo)
    "Nominal mass flow rate of primary (district) district cooling side";
   //bui.disFloCoo.m_flow_nominal
 
@@ -49,7 +49,7 @@ model BuildingSpawnZ6WithCoolingIndirectETS
     //redeclare final package Medium =Medium,
     //mDis_flow_nominal=mDis_flow_nominal,
     //mBui_flow_nominal=mBui_flow_nominal,
-
+    //mDis_flow_nominal=mDis_flow_nominal,
    // redeclare final package Medium = Medium,
   Modelica.Blocks.Sources.RealExpression fixme(y=bui.disFloCoo.mReqTot_flow/sum(
         bui.terUni.mChiWat_flow_nominal .* bui.terUni.facSca))

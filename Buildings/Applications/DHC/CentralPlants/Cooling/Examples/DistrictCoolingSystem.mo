@@ -7,23 +7,18 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     nBui=nBui,
     mDis_flow_nominal=sum({bui[i].ets.mDis_flow_nominal for i in 1:nBui})*1.01,
     mCon_flow_nominal={bui[i].ets.mDis_flow_nominal for i in 1:nBui},
-    lDis={10,10,1},
-    lCon={10,10,1},
-    lEnd=2,
-    dhDis={0.30,0.25,0.20},
-    dhCon={0.20,0.20,0.20})
+    lDis={15,15,15},
+    lCon={20,20,20},
+    dhDis={0.08,0.05,0.05},
+    dhCon={0.05,0.05,0.05})
     "Design data"
     annotation (Placement(transformation(extent={{80,40},{100,60}})));
-  // chiller and cooling tower
-//   redeclare parameter Buildings.Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_York_YT_1055kW_5_96COP_Vanes
-//     perChi;
   parameter Integer nBui=3
   "number of coonected buildings";
-  parameter Modelica.SIunits.MassFlowRate mCHW_flow_nominal=6
+  parameter Modelica.SIunits.MassFlowRate mCHW_flow_nominal=cooPla.perChi.mEva_flow_nominal
     "Nominal chilled water mass flow rate";
-  //-1*(sum(bui.bui.terUni.QCoo_flow_nominal))/(4200*7)
-  parameter Modelica.SIunits.MassFlowRate mCW_flow_nominal=15
-    "Nominal condenser water mass flow rate";
+  parameter Modelica.SIunits.MassFlowRate mCW_flow_nominal=30
+    "Nominal condenser water mass flow rate";                                             //cooPla.mulChiSys.per[1].mEva_flow_nominal//40
   parameter Modelica.SIunits.PressureDifference dpCHW_nominal=44.8*1000
     "Nominal chilled water side pressure";
   parameter Modelica.SIunits.PressureDifference dpCW_nominal=46.2*1000
@@ -34,9 +29,9 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     "Minimum mass flow rate of single chiller";
   parameter Boolean allowFlowReversal = false;
   // control settings
-  parameter Modelica.SIunits.Pressure dpSetPoi=8000
+  parameter Modelica.SIunits.Pressure dpSetPoi=80000
     "Differential pressure setpoint";
-  parameter Modelica.SIunits.Pressure pumDP=dpCHW_nominal+dpSetPoi+8000;
+  parameter Modelica.SIunits.Pressure pumDP=dpCHW_nominal+dpSetPoi+80000;
   parameter Modelica.SIunits.Temperature TCHWSet=273.15 + 5
     "Chilled water temperature setpoint";
   parameter Modelica.SIunits.Time tWai=30 "Waiting time";
@@ -46,11 +41,6 @@ model DistrictCoolingSystem "Example to test the district cooling system."
       V_flow={0,mCHW_flow_nominal}/1000,
       dp={pumDP,0}))
     "Performance data for chilled water pumps";
-
-  //  dp=(dpCHW_nominal+dpSetPoi+8000)*{1.5,1.3,1.0,0.6}))
-    //  V_flow=mCHW_flow_nominal/1000*{0.2,0.6,1.0,1.2},
-     // dp=(dpCHW_nominal+dpSetPoi+7000+500)*{1.5,1.3,1.0,0.6}))
-  //    dp=(dpCHW_nominal+dpSetPoi+18000+30000)*{1.5,1.3,1.0,0.6}))
   parameter Buildings.Fluid.Movers.Data.Generic perCWPum(
     pressure=Buildings.Fluid.Movers.BaseClasses.Characteristics.flowParameters(
       V_flow=mCW_flow_nominal/1000*{0.2,0.6,1.0,1.2},
@@ -60,22 +50,14 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     "Nominal pressure drop of chilled water pumps";
   parameter Modelica.SIunits.Pressure dpCWPum_nominal=6000
     "Nominal pressure drop of chilled water pumps";
-//   parameter Modelica.SIunits.PressureDifference dpDis_nominal[nBui](
-//     each min=0, each displayUnit="Pa")=
-//     2 .* cat(1, {dp_nominal*0.2}, fill(dp_nominal*0.8 / (nBui-1), nBui-1));
-  parameter Modelica.SIunits.PressureDifference dp_nominal=60000
+  parameter Modelica.SIunits.PressureDifference dp_nominal=50000
     "Nominal pressure drop in the distribution line";
-  // building
-//   parameter Modelica.SIunits.Power Q_flow_nominal=-50E3
-//     "Nominal heat flow rate, negative";
-
 
   BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
    final computeWetBulbTemperature=true,
    filNam= Modelica.Utilities.Files.loadResource(
           "modelica://Buildings/Resources/weatherdata/USA_CA_San.Francisco.Intl.AP.724940_TMY3.mos"))
     annotation (Placement(transformation(extent={{-100,-84},{-80,-64}})));
-
   BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
     annotation (Placement(transformation(extent={{-114,-54},{-94,-34}}),
         iconTransformation(extent={{-114,-54},{-94,-34}})));
@@ -134,7 +116,8 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     final dhCon=datDes.dhCon,
     final dhEnd=datDes.dhEnd,
     final allowFlowReversal=allowFlowReversal,
-    fac={2,2,2})                               "Distribution network."
+    facEnd=1.1,
+    fac={1.1,1.1,1.1})                         "Distribution network."
     annotation (Placement(transformation(extent={{16,20},{44,32}})));
   Modelica.Blocks.Sources.RealExpression fixme1_sumQAct(y=sum({bui[i].bui.disFloCoo.QActTot_flow
         for i in 1:nBui}))
@@ -148,6 +131,11 @@ model DistrictCoolingSystem "Example to test the district cooling system."
   Modelica.Blocks.Sources.RealExpression TSetChiWatSup[nBui](y=bui.TChiWatSup_nominal)
     "Chilled water supply temperature set point."
     annotation (Placement(transformation(extent={{-60,40},{-40,60}})));
+  Modelica.Blocks.Continuous.FirstOrder firstOrder(
+    T=600,
+    initType=Modelica.Blocks.Types.Init.InitialOutput,
+    y_start=80000)
+    annotation (Placement(transformation(extent={{40,-60},{20,-80}})));
 equation
   connect(weaDat.weaBus, weaBus) annotation (Line(
       points={{-80,-74},{-60,-74},{-60,-44},{-104,-44}},
@@ -162,11 +150,9 @@ equation
   connect(disNet.port_bDisRet, cooPla.port_a) annotation (Line(points={{16,22.4},
           {0,22.4},{0,-31},{-14,-31}}, color={0,127,255}));
   connect(cooPla.port_b, disNet.port_aDisSup) annotation (Line(points={{-14,-41},
-          {-4,-41},{-4,26},{16,26}}, color={0,127,255}));
+          {4,-41},{4,26},{16,26}},   color={0,127,255}));
   connect(disNet.port_bDisSup, disNet.port_aDisRet) annotation (Line(points={{44,
           26},{52,26},{52,22.4},{44,22.4}}, color={0,127,255}));
-  connect(disNet.dp, cooPla.dpMea) annotation (Line(points={{44.7,27.8},{80,27.8},
-          {80,-84},{-46,-84},{-46,-39},{-36,-39}}, color={0,0,127}));
   connect(TchiWatSet.y, cooPla.TCHWSupSet) annotation (Line(points={{-59,-30},{-46,
           -30},{-46,-33},{-36,-33}}, color={0,0,127}));
   for i in 1:nBui loop
@@ -183,12 +169,15 @@ equation
   end for;
   connect(TSetChiWatSup.y, bui.TSetChiWat) annotation (Line(points={{-39,50},{0,
           50},{0,73},{19,73}}, color={0,0,127}));
-
+  connect(disNet.dp, firstOrder.u) annotation (Line(points={{44.7,27.8},{82,
+          27.8},{82,-70},{42,-70}}, color={0,0,127}));
+  connect(firstOrder.y, cooPla.dpMea) annotation (Line(points={{19,-70},{-52,
+          -70},{-52,-39},{-36,-39}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
       StartTime=13392000,
-      StopTime=13564800,
+      StopTime= 13910400,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"));
 end DistrictCoolingSystem;

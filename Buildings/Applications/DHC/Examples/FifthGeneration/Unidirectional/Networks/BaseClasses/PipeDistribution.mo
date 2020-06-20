@@ -1,7 +1,7 @@
 within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Networks.BaseClasses;
 model PipeDistribution "DHC distribution pipe"
   extends Buildings.Fluid.FixedResistances.HydraulicDiameter(
-    dp(nominal=2E5),
+    dp(nominal=1E5),
     dh=0,
     final ReC=6000,
     final roughness=7E-6,

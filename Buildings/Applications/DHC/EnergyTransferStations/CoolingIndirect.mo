@@ -129,7 +129,7 @@ model CoolingIndirect
     "Initial value of output from the controller"
     annotation(Dialog(group="Initialization", tab="Controller",
                       enable=initType == Modelica.Blocks.Types.InitPID.InitialOutput));
-  parameter Boolean reverseAction = true
+  parameter Boolean reverseActing = false
     "Set to true for throttling the water flow rate through a cooling coil controller"
     annotation(Dialog(tab="Controller"));
 
@@ -181,7 +181,7 @@ model CoolingIndirect
     final xi_start=xi_start,
     final xd_start=xd_start,
     final y_start=yCon_start,
-    final reverseAction=reverseAction) "Controller"
+    final reverseActing=reverseActing) "Controller"
     annotation (Placement(transformation(extent={{-90,-10},{-70,10}})));
 
   Buildings.Fluid.Sensors.TemperatureTwoPort senTDisSup(
