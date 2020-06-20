@@ -9,7 +9,7 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     mCon_flow_nominal={bui[i].ets.mDis_flow_nominal for i in 1:nBui},
     lDis={15,15,15},
     lCon={20,20,20},
-    dhDis={0.08,0.05,0.05},
+    dhDis={0.08,0.075,0.05},
     dhCon={0.05,0.05,0.05})
     "Design data"
     annotation (Placement(transformation(extent={{80,40},{100,60}})));
@@ -169,10 +169,10 @@ equation
   end for;
   connect(TSetChiWatSup.y, bui.TSetChiWat) annotation (Line(points={{-39,50},{0,
           50},{0,73},{19,73}}, color={0,0,127}));
-  connect(disNet.dp, firstOrder.u) annotation (Line(points={{44.7,27.8},{82,
-          27.8},{82,-70},{42,-70}}, color={0,0,127}));
-  connect(firstOrder.y, cooPla.dpMea) annotation (Line(points={{19,-70},{-52,
-          -70},{-52,-39},{-36,-39}}, color={0,0,127}));
+  connect(disNet.dp, firstOrder.u) annotation (Line(points={{44.7,27.8},{82,27.8},
+          {82,-70},{42,-70}}, color={0,0,127}));
+  connect(firstOrder.y, cooPla.dpMea) annotation (Line(points={{19,-70},{-52,-70},
+          {-52,-39},{-36,-39}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
