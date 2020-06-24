@@ -2,20 +2,22 @@ within Buildings.Applications.DHC.Loads.Examples.BaseClasses;
 model BuildingSpawnZ6
   "Six-zone EnergyPlus building model based on URBANopt GeoJSON export, with distribution pumps"
   extends Buildings.Applications.DHC.Loads.BaseClasses.PartialBuilding(
-    redeclare package Medium = Buildings.Media.Water,
+    redeclare package Medium = MediumW,
     final have_eleHea=false,
     final have_eleCoo=false,
     final have_pum=true,
     final have_weaBus=false);
-  package Medium2 = Buildings.Media.Air "Medium model";
+
+  package MediumA = Buildings.Media.Air   " Air Medium";
+  package MediumW = Buildings.Media.Water " Water Medium ";
+
   parameter Integer nZon = 5
     "Number of conditioned thermal zones";
   parameter Integer facSca[nZon]=fill(5, nZon)
     "Scaling factor to be applied to on each extensive quantity";
-  parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal[nZon]= fill(0.113,nZon)
+  parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] * 0.22)/(3500) for i in 1:nZon}
     "Load side mass flow rate at nominal conditions"
-    annotation(Dialog(group="Nominal condition"));                      // {-1*QCoo_flow_nominal[i]/(1005*10) for i in 1:nZon}
-                                                     //fill(0.2, nZon)
+    annotation(Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.HeatFlowRate QHea_flow_nominal[nZon]=
     fill(3000, nZon) ./ facSca
     "Design heating heat flow rate (>=0)"
@@ -34,8 +36,10 @@ model BuildingSpawnZ6
     "Nominal building supply and return water temperature difference";
   parameter Modelica.SIunits.TemperatureDifference delTDisCoo=9
     "Nominal district supply and return water temperature difference";
-  parameter Modelica.SIunits.Temperature T_aChiWat_nominal;
-  parameter Modelica.SIunits.Temperature T_bChiWat_nominal;
+  parameter Modelica.SIunits.Temperature T_aChiWat_nominal(displayUnit="degC")
+    "Supply chilled water nominal temperature";
+  parameter Modelica.SIunits.Temperature T_bChiWat_nominal(displayUnit="degC")
+    "Return chilled water nominal temperature";
 
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant minTSet[nZon](
     k=fill(293.15, nZon),
@@ -56,31 +60,31 @@ model BuildingSpawnZ6
   Modelica.Blocks.Sources.Constant qLatGai_flow(k=0) "Latent heat gain"
     annotation (Placement(transformation(extent={{-60,90},{-40,110}})));
   Buildings.ThermalZones.EnergyPlus.ThermalZone znAttic(
-    redeclare package Medium = Medium2,
+    redeclare package Medium = MediumA,
     zoneName="Attic") "Thermal zone"
     annotation (Placement(transformation(extent={{24,84},{64,124}})));
   Buildings.ThermalZones.EnergyPlus.ThermalZone znCore_ZN(
-    redeclare package Medium = Medium2,
+    redeclare package Medium = MediumA,
     zoneName="Core_ZN",
     nPorts=2) "Thermal zone"
     annotation (Placement(transformation(extent={{24,42},{64,82}})));
   Buildings.ThermalZones.EnergyPlus.ThermalZone znPerimeter_ZN_1(
-    redeclare package Medium = Medium2,
+    redeclare package Medium = MediumA,
     zoneName="Perimeter_ZN_1",
     nPorts=2) "Thermal zone"
     annotation (Placement(transformation(extent={{24,0},{64,40}})));
   Buildings.ThermalZones.EnergyPlus.ThermalZone znPerimeter_ZN_2(
-    redeclare package Medium = Medium2,
+    redeclare package Medium = MediumA,
     zoneName="Perimeter_ZN_2",
     nPorts=2) "Thermal zone"
     annotation (Placement(transformation(extent={{24,-40},{64,0}})));
   Buildings.ThermalZones.EnergyPlus.ThermalZone znPerimeter_ZN_3(
-    redeclare package Medium = Medium2,
+    redeclare package Medium = MediumA,
     zoneName="Perimeter_ZN_3",
     nPorts=2) "Thermal zone"
     annotation (Placement(transformation(extent={{24,-80},{64,-40}})));
   Buildings.ThermalZones.EnergyPlus.ThermalZone znPerimeter_ZN_4(
-    redeclare package Medium = Medium2,
+    redeclare package Medium = MediumA,
     zoneName="Perimeter_ZN_4",
     nPorts=2) "Thermal zone"
     annotation (Placement(transformation(extent={{24,-120},{64,-80}})));
@@ -94,14 +98,14 @@ model BuildingSpawnZ6
   Buildings.Controls.OBC.CDL.Continuous.MultiSum mulSum3(nin=2)
     annotation (Placement(transformation(extent={{260,70},{280,90}})));
   BaseClasses.FanCoil4Pipe terUni[nZon](
-    T_aChiWat_nominal=T_aChiWat_nominal,
-    T_bChiWat_nominal=T_bChiWat_nominal,
-    redeclare each final package Medium1 = Medium,
-    redeclare each final package Medium2 = Medium2,
+    redeclare each final package Medium1 = MediumW,
+    redeclare each final package Medium2 = MediumA,
     fan(show_T=true),
     final facSca=facSca,
     final QHea_flow_nominal=QHea_flow_nominal,
     final QCoo_flow_nominal=QCoo_flow_nominal,
+    each T_aChiWat_nominal=T_aChiWat_nominal,
+    each T_bChiWat_nominal=T_bChiWat_nominal,
     each T_aLoaHea_nominal=293.15,
     each T_aLoaCoo_nominal=297.15,
     each T_bHeaWat_nominal=308.15,
@@ -110,8 +114,9 @@ model BuildingSpawnZ6
     final mLoaCoo_flow_nominal=mLoa_flow_nominal)
     "Terminal unit"
     annotation (Placement(transformation(extent={{-140,-2},{-116,22}})));
+
   Buildings.Applications.DHC.Loads.FlowDistribution disFloHea(
-    redeclare package Medium = Medium,
+    redeclare package Medium = MediumW,
     m_flow_nominal=sum(terUni.mHeaWat_flow_nominal .* terUni.facSca),
     have_pum=true,
     dp_nominal=100000,
@@ -120,7 +125,7 @@ model BuildingSpawnZ6
     "Heating water distribution system"
     annotation (Placement(transformation(extent={{-236,-188},{-216,-168}})));
   Buildings.Applications.DHC.Loads.FlowDistribution disFloCoo(
-    redeclare package Medium = Medium,
+    redeclare package Medium = MediumW,
     m_flow_nominal=sum(terUni.mChiWat_flow_nominal .* terUni.facSca),
     typDis=Buildings.Applications.DHC.Loads.Types.DistributionType.ChilledWater,
     have_pum=true,
@@ -139,7 +144,8 @@ equation
       color={0,0,127},
       smooth=Smooth.None));
   connect(multiplex3_1.u3[1],qLatGai_flow.y)  annotation (Line(points={{-22,133},{-26,133},{-26,100},{-39,100}}, color={0,0,127}));
-  connect(multiplex3_1.y,znAttic.qGai_flow)  annotation (Line(points={{1,140},{20,140},{20,114},{22,114}}, color={0,0,127}));
+  connect(multiplex3_1.y,znAttic.qGai_flow)  annotation (Line(points={{1,140},{
+          20,140},{20,114},{22,114}},                                                                      color={0,0,127}));
   connect(multiplex3_1.y,znCore_ZN.qGai_flow)  annotation (Line(points={{1,140},{20,140},{20,72},{22,72}}, color={0,0,127}));
   connect(multiplex3_1.y,znPerimeter_ZN_1.qGai_flow)  annotation (Line(points={{1,140},{20,140},{20,30},{22,30}}, color={0,0,127}));
   connect(multiplex3_1.y,znPerimeter_ZN_2.qGai_flow)  annotation (Line(points={{1,140},{20,140},{20,-10},{22,-10}}, color={0,0,127}));

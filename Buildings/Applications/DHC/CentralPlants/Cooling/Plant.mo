@@ -158,6 +158,7 @@ model Plant "District cooling plant model"
   DataCenters.ChillerCooled.Equipment.FlowMachine_y pumCHW(
     redeclare package Medium = Medium,
     per=fill(perCHWPum, numChi),
+    riseTimePump=100,
     energyDynamics=energyDynamics,
     m_flow_nominal=mCHW_flow_nominal,
     dpValve_nominal=dpCHWPum_nominal,

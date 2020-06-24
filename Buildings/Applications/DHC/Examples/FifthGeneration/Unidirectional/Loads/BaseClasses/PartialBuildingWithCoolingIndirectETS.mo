@@ -15,14 +15,6 @@ partial model PartialBuildingWithCoolingIndirectETS
   parameter Boolean allowFlowReversalDis = false
     "Set to true to allow flow reversal on the district side"
     annotation(Dialog(tab="Assumptions"), Evaluate=true);
-
-//   final parameter Integer nBuiSup = 2
-//     "Number of building services supply lines"
-//     annotation(Dialog(group="ETS model parameters"), Evaluate=true);
-//   final parameter Integer nDisSup = 2
-//     "Number of district water supply lines"
-//     annotation(Dialog(group="ETS model parameters"), Evaluate=true);
-
   parameter Modelica.SIunits.TemperatureDifference dT_nominal=5
     "Water temperature drop/increase accross load and source-side HX (always positive)"
     annotation(Dialog(group="ETS model parameters"));
@@ -58,7 +50,6 @@ partial model PartialBuildingWithCoolingIndirectETS
     final allowFlowReversal=allowFlowReversalBui)
     "Building model "
     annotation (Placement(transformation(extent={{-30,8},{30,68}})));
-
     annotation(Dialog(group="ETS model parameters"),
     DefaultComponentName="bui",
     Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},

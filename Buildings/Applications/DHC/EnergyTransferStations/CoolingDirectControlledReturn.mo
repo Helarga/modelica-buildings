@@ -128,7 +128,7 @@ model CoolingDirectControlledReturn
       tab="Controller",
       enable=initType == Modelica.Blocks.Types.InitPID.InitialOutput));
 
-  parameter Boolean reverseAction = true
+  parameter Boolean reverseActing = true
     "Set to true for throttling the water flow rate through a cooling 
       coil controller"
     annotation(Dialog(tab="Controller"));
@@ -252,7 +252,7 @@ model CoolingDirectControlledReturn
     final wd=wd,
     final Ni=Ni,
     final Nd=Nd,
-    final reverseAction=reverseAction,
+    final reverseActing=reverseActing,
     final initType=initType,
     final xi_start=xi_start,
     final xd_start=xd_start,
