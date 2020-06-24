@@ -3,7 +3,7 @@ model BuildingSpawnZ6WithCoolingIndirectETS
   "Model of a building (Spawn 6 zones) with an energy transfer station"
   package MediumW = Buildings.Media.Water;
   extends BaseClasses.PartialBuildingWithCoolingIndirectETS(
-      m1_flow_nominal=mBui_flow_nominal,
+      m1_flow_nominal=mBuiHea_flow_nominal,
       m2_flow_nominal=mDis_flow_nominal,
       redeclare package Medium1 =MediumW,
       redeclare package Medium2 =MediumW,
@@ -29,6 +29,8 @@ model BuildingSpawnZ6WithCoolingIndirectETS
   parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal=bui.disFloCoo.m_flow_nominal*(bui.delTBuiCoo/bui.delTDisCoo)
    "Nominal mass flow rate of primary (district) district cooling side";
   //bui.disFloCoo.m_flow_nominal
+  parameter Modelica.SIunits.MassFlowRate mBuiHea_flow_nominal= bui.disFloHea.m_flow_nominal
+    "Nominal mass flow rate of secondary (building) district cooling side";
 
   parameter Modelica.SIunits.MassFlowRate mBui_flow_nominal= bui.disFloCoo.m_flow_nominal
     "Nominal mass flow rate of secondary (building) district cooling side";

@@ -66,7 +66,7 @@ model DistrictCoolingSystem "Example to test the district cooling system."
 
   Plant cooPla(
     redeclare
-      Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_Trane_CGWD_207kW_3_99COP_None
+      Buildings.Fluid.Chillers.Data.ElectricEIR.ElectricEIRChiller_Trane_CGWD_207kW_3_99COP_None
       perChi,
     perCHWPum=perCHWPum,
     perCWPum=perCWPum,

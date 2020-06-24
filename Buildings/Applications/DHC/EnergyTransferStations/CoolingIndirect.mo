@@ -239,7 +239,6 @@ protected
     "Specific heat capacity of the fluid";
 
 equation
-
   connect(hex.port_a2, port_a2) annotation (Line(points={{40,-6},{60,-6},{60,-60},
           {100,-60}}, color={0,127,255}));
   connect(hex.port_b1, senTDisRet.port_a) annotation (Line(points={{40,6},{60,6},
