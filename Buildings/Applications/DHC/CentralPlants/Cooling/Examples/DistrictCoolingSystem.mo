@@ -89,7 +89,8 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     "District cooling plant."
     annotation (Placement(transformation(extent={{-34,-46},{-14,-26}})));
 
-  Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads.BuildingSpawnZ6WithCoolingIndirectETS bui_ETS[nBui]
+  Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads.BuildingSpawnZ6WithCoolingIndirectETS bui_ETS[nBui](
+      TChiWatSup_nominal=280.15)
     annotation (Placement(transformation(extent={{20,60},{40,80}})));
     //dp_nominal=100000)
   Buildings.Fluid.Sources.Boundary_pT heaSou(
