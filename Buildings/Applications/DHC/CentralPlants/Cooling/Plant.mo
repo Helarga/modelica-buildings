@@ -203,7 +203,7 @@ model Plant "District cooling plant model"
 
   Buildings.Applications.DHC.CentralPlants.Cooling.Controls.ChilledWaterPumpSpeed
     CHWPumCon(
-    tWai=tWai,
+    tWai=0,
     m_flow_nominal=mCHW_flow_nominal,
     dpSetPoi=dpSetPoi,
     controllerType=Modelica.Blocks.Types.SimpleController.PI) "Chilled water pump controller"

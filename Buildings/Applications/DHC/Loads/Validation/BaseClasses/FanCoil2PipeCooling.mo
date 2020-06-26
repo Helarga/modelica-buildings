@@ -23,7 +23,7 @@ model FanCoil2PipeCooling
       T_aChiWat_nominal - T_bChiWat_nominal)));
   import hexConfiguration = Buildings.Fluid.Types.HeatExchangerConfiguration;
   parameter Real k(min=0) = 1 "Gain of controller";
-  parameter Modelica.SIunits.Time Ti(min=Modelica.Constants.small) = 10
+  parameter Modelica.SIunits.Time Ti=10
     "Time constant of integrator block";
   parameter Boolean use_inputFilter=true
     "= true, if fan speed is filtered with a 2nd order CriticalDamping filter"
@@ -95,7 +95,7 @@ model FanCoil2PipeCooling
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=0,
-        origin={150,0})));
+        origin={120,0})));
   Buildings.Applications.DHC.Loads.SimpleRoomODE TLoaODE(
     TOutHea_nominal=273.15 - 5,
     TIndHea_nominal=T_aLoaHea_nominal,
@@ -124,8 +124,8 @@ equation
     annotation (Line(points={{-80,0},{-100,0}}, color={0,127,255}));
   connect(Q_flowCoo.y, TLoaODE.QAct_flow) annotation (Line(points={{141,200},{
           150,200},{150,160},{-20,160},{-20,32},{-12,32}},      color={0,0,127}));
-  connect(TLoaODE.TAir, retAir.T_in) annotation (Line(points={{12,40},{140,40},
-          {140,4},{124,4}},color={0,0,127}));
+  connect(TLoaODE.TAir, retAir.T_in) annotation (Line(points={{12,40},{142,40},
+          {142,4},{132,4}},color={0,0,127}));
   connect(gaiMasFlo.y, scaMasFloReqChiWat.u) annotation (Line(points={{62,220},
           {100,220},{100,80},{158,80}},color={0,0,127}));
   connect(scaQReqCoo_flow.y, TLoaODE.QReq_flow) annotation (Line(points={{-158,60},
@@ -146,7 +146,7 @@ equation
   connect(con.y, gaiFloNom2.u) annotation (Line(points={{12,220},{20,220},{20,180},
           {38,180}},      color={0,0,127}));
   connect(retAir.ports[1], fan.port_a)
-    annotation (Line(points={{102,0},{90,0}}, color={0,127,255}));
+    annotation (Line(points={{110,0},{90,0}}, color={0,127,255}));
   connect(greThr.y, con.trigger)
     annotation (Line(points={{-28,200},{-6,200},{-6,208}}, color={255,0,255}));
   connect(gaiHeaFlo.y, greThr.u) annotation (Line(points={{-66,220},{-60,220},{

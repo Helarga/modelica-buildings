@@ -141,13 +141,13 @@ equation
     annotation (Line(points={{-220,220},{-120,220},{-120,48},{-12,48}},
       color={0,0,127}));
   connect(TLoaODE.TAir, retAir.T_in) annotation (Line(points={{12,40},{140,40},
-          {140,4},{124,4}},color={0,0,127}));
+          {140,4},{162,4}},color={0,0,127}));
   connect(gaiHeaFlo.y, con.u_s)
     annotation (Line(points={{-66,220},{-12,220}}, color={0,0,127}));
   connect(con.u_m, gaiHeaFlo1.y) annotation (Line(points={{0,208},{0,207},{
           8.88178e-16,207},{8.88178e-16,202}}, color={0,0,127}));
   connect(retAir.ports[1], fan.port_a)
-    annotation (Line(points={{102,0},{90,0}}, color={0,127,255}));
+    annotation (Line(points={{140,0},{90,0}}, color={0,127,255}));
   connect(swi.y, gaiFloNom2.u)
     annotation (Line(points={{52,180},{54,180}}, color={0,0,127}));
   connect(con.y, swi.u1) annotation (Line(points={{12,220},{24,220},{24,188},{28,
