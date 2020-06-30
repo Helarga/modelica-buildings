@@ -15,8 +15,8 @@ model BuildingSpawnZ6WithCoolingIndirectETS
       T_bChiWat_nominal=285.15,
       nPorts_aHeaWat=1,
       nPorts_bHeaWat=1,
-      nPorts_bChiWat=1,
-      nPorts_aChiWat=1));
+      nPorts_aChiWat=1,
+      nPorts_bChiWat=1));
 
   parameter String idfName=
     "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/RefBldgSmallOffice/RefBldgSmallOfficeNew2004_Chicago.idf"
@@ -48,26 +48,32 @@ model BuildingSpawnZ6WithCoolingIndirectETS
     "Energy transfer station model"
     annotation (Placement(transformation(extent={{-28,-88},{32,-28}})));
 
-  Modelica.Blocks.Sources.RealExpression fixme(y=bui.disFloCoo.mReqTot_flow/sum(
-        bui.terUni.mChiWat_flow_nominal .* bui.terUni.facSca))
-    annotation (Placement(transformation(extent={{-78,72},{-58,92}})));
   Modelica.Fluid.Sources.FixedBoundary preSou(redeclare package Medium = MediumW,
       nPorts=1)
-    annotation (Placement(transformation(extent={{-80,-120},{-60,-100}})));
-  Fluid.Sensors.TemperatureTwoPort TBuiRet(redeclare final package Medium =
-        MediumW, final m_flow_nominal=mBui_flow_nominal)
-    "District-side (primary) supply temperature sensor" annotation (Placement(
-        transformation(
-        extent={{10,-10},{-10,10}},
-        rotation=0,
-        origin={58,-76})));
-  Fluid.Sensors.TemperatureTwoPort TBuiSup(redeclare final package Medium =
-        MediumW, final m_flow_nominal=mBui_flow_nominal)
-    "District-side (primary) supply temperature sensor" annotation (Placement(
-        transformation(
-        extent={{10,-10},{-10,10}},
-        rotation=0,
-        origin={-52,-76})));
+    annotation (Placement(transformation(extent={{-98,-86},{-78,-66}})));
+  Buildings.Fluid.Actuators.Valves.TwoWayLinear val(
+    redeclare final package Medium = MediumW,
+    final dpValve_nominal=7000,
+    final use_inputFilter=false,
+    final m_flow_nominal=mDis_flow_nominal,
+    final linearized=false)
+    "Mixing valve"
+    annotation (Placement(transformation(extent={{10,10},{-10,-10}}, origin={50,-96})));
+  Buildings.Controls.Continuous.LimPID con(
+    final controllerType=Modelica.Blocks.Types.SimpleController.PI,
+    final k=1,
+    final yMax=1,
+    final yMin=0.1,
+    final Ti=300,
+    final initType=Modelica.Blocks.Types.InitPID.InitialOutput,
+    final y_start=1,
+    final reverseActing=true)
+    "Controller"
+    annotation (Placement(transformation(extent={{-12,-124},{8,-104}})));
+  Modelica.Blocks.Sources.RealExpression mDis_flowSet(y=0.6)
+    annotation (Placement(transformation(extent={{-44,-124},{-24,-104}})));
+  Modelica.Blocks.Sources.RealExpression mDis_mea(y=port_a2.m_flow)
+    annotation (Placement(transformation(extent={{-44,-144},{-24,-124}})));
 equation
   connect(port_a1, bui.ports_aHeaWat[1]) annotation (Line(points={{-100,60},{-80,
           60},{-80,32},{-30,32}}, color={0,127,255}));
@@ -75,19 +81,22 @@ equation
           {80,60},{100,60}}, color={0,127,255}));
   connect(TSetChiWat,ets. TSetBuiSup) annotation (Line(points={{-120,20},{-88,20},
           {-88,-58},{-34,-58}}, color={0,0,127}));
-  connect(ets.port_b1, port_b2) annotation (Line(points={{32,-40},{60,-40},{60,
-          0},{-60,0},{-60,-60},{-100,-60}},
-                                         color={0,127,255}));
-  connect(preSou.ports[1],ets. port_b2) annotation (Line(points={{-60,-110},{
-          -28,-110},{-28,-76}}, color={0,127,255}));
-  connect(port_a2,ets. port_a1) annotation (Line(points={{100,-60},{48,-60},{48,
-          -8},{-46,-8},{-46,-40},{-28,-40}}, color={0,127,255}));
-  connect(ets.port_a2, TBuiRet.port_b) annotation (Line(points={{32,-76},{48,-76}}, color={0,127,255}));
-  connect(TBuiRet.port_a, bui.ports_bChiWat[1]) annotation (Line(points={{68,-76},
-          {78,-76},{78,20},{30,20}}, color={0,127,255}));
-  connect(ets.port_b2, TBuiSup.port_a)  annotation (Line(points={{-28,-76},{-42,-76}}, color={0,127,255}));
-  connect(TBuiSup.port_b, bui.ports_aChiWat[1]) annotation (Line(points={{-62,-76},
-          {-72,-76},{-72,20},{-30,20}}, color={0,127,255}));
+  connect(preSou.ports[1],ets. port_b2) annotation (Line(points={{-78,-76},{-28,
+          -76}},                color={0,127,255}));
+  connect(ets.port_b2, bui.ports_aChiWat[1]) annotation (Line(points={{-28,-76},
+          {-70,-76},{-70,20},{-30,20}}, color={0,127,255}));
+  connect(ets.port_a2, bui.ports_bChiWat[1]) annotation (Line(points={{32,-76},{
+          74,-76},{74,20},{30,20}}, color={0,127,255}));
+  connect(con.y, val.y) annotation (Line(points={{9,-114},{50,-114},{50,-108}},  color={0,0,127}));
+  connect(con.u_s, mDis_flowSet.y) annotation (Line(points={{-14,-114},{-23,-114}}, color={0,0,127}));
+  connect(val.port_b, ets.port_a1) annotation (Line(points={{40,-96},{-50,-96},
+          {-50,-40},{-28,-40}}, color={0,127,255}));
+  connect(mDis_mea.y, con.u_m) annotation (Line(points={{-23,-134},{-2,-134},{
+          -2,-126}}, color={0,0,127}));
+  connect(ets.port_b1, port_b2) annotation (Line(points={{32,-40},{52,-40},{52,0},
+          {-60,0},{-60,-60},{-100,-60}}, color={0,127,255}));
+  connect(port_a2, val.port_a) annotation (Line(points={{100,-60},{80,-60},{80,-96},
+          {60,-96}}, color={0,127,255}));
   annotation (Icon(graphics={
           Bitmap(extent={{-72,-62},{62,74}},
           fileName="modelica://Buildings/Resources/Images/ThermalZones/EnergyPlus/EnergyPlusLogo.png")}),

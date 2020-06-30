@@ -7,14 +7,15 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     Buildings.Applications.DHC.Examples.Combined.Generation5.Unidirectional.Data.DesignDataParallel4GDC
     datDes(
     nBui=nBui,
-    mDis_flow_nominal=sum({bui_ETS[i].ets.mDis_flow_nominal for i in 1:nBui})*1.01,
+    mDis_flow_nominal=sum({bui_ETS[i].ets.mDis_flow_nominal for i in 1:nBui})*
+        1.01,
     mCon_flow_nominal={bui_ETS[i].ets.mDis_flow_nominal for i in 1:nBui},
     lDis=fill(15, nBui),
     lCon=fill(20, nBui),
-    dhDis={0.08,0.075,0.05},
-    dhCon={0.05,0.05,0.05}) "Design data"
+    dhDis={0.125,0.125,0.1,0.085,0.08,0.075,0.06,0.05},
+    dhCon=fill(0.05, nBui)) "Design data"
     annotation (Placement(transformation(extent={{80,40},{100,60}})));
-  parameter Integer nBui=3
+  parameter Integer nBui=8
   "number of coonected buildings";
   parameter Modelica.SIunits.MassFlowRate mCHW_flow_nominal=cooPla.numChi*(cooPla.perChi.mEva_flow_nominal)
     "Nominal chilled water mass flow rate";
@@ -115,19 +116,19 @@ model DistrictCoolingSystem "Example to test the district cooling system."
     final dhEnd=datDes.dhEnd,
     final allowFlowReversal=allowFlowReversal,
     facEnd=1.1,
-    fac={1.1,1.1,1.1})                         "Distribution network."
+    fac=fill(1.1, nBui))                       "Distribution network."
     annotation (Placement(transformation(extent={{16,20},{44,32}})));
   Modelica.Blocks.Sources.RealExpression TchiWatSet(y=TCHWSet)
     "Chilled water supply temperature setpoint."
     annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
   Modelica.Blocks.Sources.RealExpression TSetChiWatSup[nBui](y=bui_ETS.bui.T_aChiWat_nominal)
     "Chilled water supply temperature set point."
-    annotation (Placement(transformation(extent={{-60,40},{-40,60}})));
+    annotation (Placement(transformation(extent={{-80,40},{-60,60}})));
   Modelica.Blocks.Continuous.FirstOrder firOrdDel(
-    T=600,
+    T=60,
     initType=Modelica.Blocks.Types.Init.InitialOutput,
-    y_start=80000) "First order delay"
-    annotation (Placement(transformation(extent={{60,-60},{40,-80}})));
+    y_start=70000) "Delay to mimic ETS signal delay."
+    annotation (Placement(transformation(extent={{32,-46},{52,-26}})));
 equation
   connect(weaDat.weaBus, weaBus) annotation (Line(
       points={{-80,-74},{-60,-74},{-60,-44},{-104,-44}},
@@ -142,7 +143,7 @@ equation
   connect(disNet.port_bDisRet, cooPla.port_a) annotation (Line(points={{16,22.4},
           {0,22.4},{0,-31},{-14,-31}}, color={0,127,255}));
   connect(cooPla.port_b, disNet.port_aDisSup) annotation (Line(points={{-14,-41},
-          {4,-41},{4,26},{16,26}},   color={0,127,255}));
+          {-4,-41},{-4,26},{16,26}}, color={0,127,255}));
   connect(disNet.port_bDisSup, disNet.port_aDisRet) annotation (Line(points={{44,
           26},{52,26},{52,22.4},{44,22.4}}, color={0,127,255}));
   connect(TchiWatSet.y, cooPla.TCHWSupSet) annotation (Line(points={{-59,-30},{-46,
@@ -157,17 +158,17 @@ equation
     connect(disNet.ports_aCon[i], bui_ETS[i].port_b2) annotation (Line(points={{
             38.4,32},{38.4,40},{8,40},{8,64},{20,64}}, color={0,127,255}));
   end for;
-  connect(TSetChiWatSup.y, bui_ETS.TSetChiWat) annotation (Line(points={{-39,50},
+  connect(TSetChiWatSup.y, bui_ETS.TSetChiWat) annotation (Line(points={{-59,50},
           {0,50},{0,73},{19,73}}, color={0,0,127}));
-  connect(disNet.dp, firOrdDel.u) annotation (Line(points={{44.7,27.8},{82,27.8},
-          {82,-70},{62,-70}}, color={0,0,127}));
-  connect(firOrdDel.y, cooPla.dpMea) annotation (Line(points={{39,-70},{-52,-70},
-          {-52,-39},{-36,-39}}, color={0,0,127}));
+  connect(disNet.dp, firOrdDel.u) annotation (Line(points={{44.7,27.8},{62,27.8},
+          {62,-6},{18,-6},{18,-36},{30,-36}}, color={0,0,127}));
+  connect(firOrdDel.y, cooPla.dpMea) annotation (Line(points={{53,-36},{68,-36},
+          {68,-68},{-50,-68},{-50,-39},{-36,-39}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
-      StartTime=13392000,
-      StopTime= 13910400,
+      StartTime=15724800,
+      StopTime=15897600,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"));
 end DistrictCoolingSystem;

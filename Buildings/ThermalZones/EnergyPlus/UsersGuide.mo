@@ -114,5 +114,14 @@ May 22, 2019, by Michael Wetter:<br/>
 Created User's guide.
 </li>
 </ul>
-</html>"));
+</html>"),
+    experiment(StopTime=1, __Dymola_Algorithm="Dassl"),
+    __Dymola_experimentFlags(
+      Advanced(
+        EvaluateAlsoTop=false,
+        GenerateVariableDependencies=true,
+        OutputModelicaCode=false),
+      Evaluate=true,
+      OutputCPUtime=true,
+      OutputFlatModelica=false));
 end UsersGuide;
