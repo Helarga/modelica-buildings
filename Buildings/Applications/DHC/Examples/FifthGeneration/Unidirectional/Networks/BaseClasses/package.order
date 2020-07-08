@@ -4,3 +4,5 @@ Junction
 PipeConnection
 PipeDistribution
 Pump_m_flow
+PipeConnection2
+ConnectionParallel2

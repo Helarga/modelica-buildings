@@ -1,0 +1,27 @@
+within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Networks.BaseClasses;
+model ConnectionParallel2
+  "Model for connecting an agent to the DHC system"
+  extends Applications.DHC.Networks.BaseClasses.PartialConnection2Pipe(
+    redeclare model Model_pipDis = PipeDistribution (
+      dp_nominal=dpDis_nominal),
+    redeclare model Model_pipCon = PipeConnection2 (
+      dp_nominal=dpCon_nominal));
+    /*(
+       // final dh=dhDis, final length=lDis, final fac= fac),
+      final fac= fac,
+      final length=2*lCon,
+      final dh=dhCon));
+  parameter Real fac
+    "Factor to take into account resistance of bends etc., fac=dp_nominal/dpStraightPipe_nominal";
+  parameter Modelica.SIunits.Length lDis
+    "Length of the distribution pipe before the connection";
+  parameter Modelica.SIunits.Length lCon
+    "Length of the connection pipe (supply only, not counting return line)";
+  parameter Modelica.SIunits.Length dhDis
+    "Hydraulic diameter of the distribution pipe";
+  parameter Modelica.SIunits.Length dhCon
+  "Hydraulic diameter of the connection pipe";*/
+  parameter Modelica.SIunits.Pressure dpCon_nominal;
+  parameter Modelica.SIunits.Pressure dpDis_nominal;
+
+end ConnectionParallel2;

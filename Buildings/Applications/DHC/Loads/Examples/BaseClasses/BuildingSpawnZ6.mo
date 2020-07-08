@@ -23,7 +23,7 @@ model BuildingSpawnZ6
     "Design heating heat flow rate (>=0)"
     annotation (Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.HeatFlowRate QCoo_flow_nominal[nZon]=
-    fill(-8750, nZon) ./ facSca
+    fill(-10500, nZon) ./ facSca
     "Design cooling heat flow rate (<=0)"
     annotation (Dialog(group="Nominal condition"));
   parameter String idfName=
