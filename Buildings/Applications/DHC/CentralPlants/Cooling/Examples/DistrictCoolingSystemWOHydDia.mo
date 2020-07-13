@@ -110,8 +110,8 @@ model DistrictCoolingSystemWOHydDia
     final mDis_flow_nominal=datDes.mDis_flow_nominal,
     final mCon_flow_nominal=datDes.mCon_flow_nominal,
     final allowFlowReversal=allowFlowReversal,
-    dpCon_nominal(displayUnit="Pa") = {1300,200,400},
-    dpDis_nominal(displayUnit="Pa") = {1300,200,400},
+    dpCon_nominal(displayUnit="Pa") = {40000,400,400},
+    dpDis_nominal(displayUnit="Pa") = {40000,400,400},
     dpEnd_nominal(displayUnit="Pa") = 400)
     annotation (Placement(transformation(extent={{16,20},{44,32}})));
   //  fac=fill(1.1, nBui))                       "Distribution network."
