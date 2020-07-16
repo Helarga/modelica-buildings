@@ -123,11 +123,10 @@ model Plant "District cooling plant model"
     annotation (Placement(transformation(extent={{-180,-80},{-140,-40}}),
         iconTransformation(extent={{-140,-100},{-100,-60}})));
 
-  Modelica.Blocks.Interfaces.RealInput dpMea(
-    final unit="Pa")
-    "Measured pressure difference"
-    annotation (Placement(transformation(extent={{-180,-40},{-140,0}}),
-        iconTransformation(extent={{-140,-50},{-100,-10}})));
+  Modelica.Blocks.Interfaces.RealInput dpMea(final unit="Pa")
+    "Measured pressure difference" annotation (Placement(transformation(extent=
+            {{-180,-40},{-140,0}}), iconTransformation(extent={{-140,-50},{-100,
+            -10}})));
 
   Buildings.Applications.DataCenters.ChillerCooled.Equipment.ElectricChillerParallel mulChiSys(
     show_T=true,
@@ -155,7 +154,7 @@ model Plant "District cooling plant model"
     TMin=TMin) "Cooling towers with bypass valve"
     annotation (Placement(transformation(extent={{-60,-60},{-40,-40}})));
 
-  DataCenters.ChillerCooled.Equipment.FlowMachine_y pumCHW(
+  Buildings.Applications.DataCenters.ChillerCooled.Equipment.FlowMachine_y pumCHW(
     redeclare package Medium = Medium,
     per=fill(perCHWPum, numChi),
     riseTimePump=100,
@@ -206,7 +205,8 @@ model Plant "District cooling plant model"
     tWai=0,
     m_flow_nominal=mCHW_flow_nominal,
     dpSetPoi=dpSetPoi,
-    controllerType=Modelica.Blocks.Types.SimpleController.PI) "Chilled water pump controller"
+    controllerType=Modelica.Blocks.Types.SimpleController.PI)
+    "Chilled water pump controller"
     annotation (Placement(transformation(extent={{-120,-26},{-100,-6}})));
 
   Buildings.Applications.DHC.CentralPlants.Cooling.Controls.ChillerStage chiStaCon(
@@ -257,11 +257,11 @@ model Plant "District cooling plant model"
 
   Buildings.Fluid.Sources.Boundary_pT expTanCHW(redeclare package Medium = Medium,
       nPorts=1) "Chilled water expansion tank"
-    annotation (Placement(transformation(extent={{50,20},{70,40}})));
+    annotation (Placement(transformation(extent={{50,8},{70,28}})));
 
   Buildings.Fluid.Sensors.MassFlowRate senMasFlo(redeclare package Medium = Medium)
     "Chilled water return mass flow"
-    annotation (Placement(transformation(extent={{50,40},{30,60}})));
+    annotation (Placement(transformation(extent={{72,40},{52,60}})));
 
   Modelica.Blocks.Sources.Constant mSetSca_flow(k=1)
     "Scaled bypass valve mass flow setpoint"
@@ -298,7 +298,6 @@ equation
                                      color={0,0,127}));
   connect(chiStaCon.y, chiOn.u) annotation (Line(points={{-99,56},{-90,56},{-90,60},{-82,60}},
                                                  color={0,0,127}));
-  connect(CHWPumCon.dpMea, dpMea) annotation (Line(points={{-122,-20},{-160,-20}}, color={0,0,127}));
   connect(mPum_flow.y, CHWPumCon.masFloPum) annotation (Line(points={{-121,8},
           {-132,8},{-132,-12},{-122,-12}}, color={0,0,127}));
   connect(bypValCon.y, valByp.y) annotation (Line(points={{119,0},{92,0}},color={0,0,127}));
@@ -314,8 +313,6 @@ equation
   connect(cp.u, pro.y) annotation (Line(points={{2,80},{19,80}}, color={0,0,127}));
   connect(cp.y, chiStaCon.QLoa) annotation (Line(points={{-21,80},{-130,80},{-130,
           52},{-122,52}}, color={0,0,127}));
-  connect(pumCHW.port_b, mulChiSys.port_a2) annotation (Line(points={{-10,50},{-20,
-          50},{-20,16},{-10,16}}, color={0,127,255}));
   connect(mulChiSys.port_b2, senTCHWSup.port_a) annotation (Line(points={{10,16},
           {32,16},{32,-50},{120,-50}}, color={0,127,255}));
   connect(pumCW.port_b, mulChiSys.port_a1) annotation (Line(points={{10,-50},{20,
@@ -327,23 +324,28 @@ equation
   connect(expTanCW.ports[1], pumCW.port_a) annotation (Line(points={{-30,-20},{-26,
           -20},{-26,-50},{-10,-50}}, color={0,127,255}));
   connect(senTCHWRet.port_b, senMasFlo.port_a)
-    annotation (Line(points={{120,50},{50,50}}, color={0,127,255}));
-  connect(pumCHW.port_a, senMasFlo.port_b)
-    annotation (Line(points={{10,50},{30,50}}, color={0,127,255}));
-  connect(senMasFlo.m_flow, pro.u2) annotation (Line(points={{40,61},{40,66},{54,
-          66},{54,74},{42,74}}, color={0,0,127}));
-  connect(expTanCHW.ports[1], senMasFlo.port_a) annotation (Line(points={{70,30},
-          {80,30},{80,50},{50,50}}, color={0,127,255}));
+    annotation (Line(points={{120,50},{72,50}}, color={0,127,255}));
+  connect(senMasFlo.m_flow, pro.u2) annotation (Line(points={{62,61},{62,66},{
+          54,66},{54,74},{42,74}},
+                                color={0,0,127}));
+  connect(expTanCHW.ports[1], senMasFlo.port_a) annotation (Line(points={{70,18},
+          {80,18},{80,50},{72,50}}, color={0,127,255}));
   connect(valByp.port_b, senMasFlo.port_a)
-    annotation (Line(points={{80,10},{80,50},{50,50}}, color={0,127,255}));
+    annotation (Line(points={{80,10},{80,50},{72,50}}, color={0,127,255}));
   connect(mulChiSys.TSet, TCHWSupSet) annotation (Line(points={{12,10},{20,10},
           {20,20},{-160,20}},color={0,0,127}));
   connect(chiOn[1].y, bypValCon.trigger) annotation (Line(points={{-59,60},{-48,
           60},{-48,32},{40,32},{40,-16},{138,-16},{138,-12}}, color={255,0,255}));
   connect(mSetSca_flow.y, bypValCon.u_s) annotation (Line(points={{111,20},{150,
           20},{150,0},{142,0}}, color={0,0,127}));
-  connect(CHWPumCon.y, pumCHW.u) annotation (Line(points={{-99,-16},{-56,-16},{-56,
-          64},{22,64},{22,54},{12,54}}, color={0,0,127}));
+  connect(dpMea, CHWPumCon.dpMea)
+    annotation (Line(points={{-160,-20},{-122,-20}}, color={0,0,127}));
+  connect(CHWPumCon.y, pumCHW.u) annotation (Line(points={{-99,-16},{-78,-16},{
+          -78,48},{-28,48},{-28,60},{26,60},{26,54},{12,54}}, color={0,0,127}));
+  connect(senMasFlo.port_b, pumCHW.port_a)
+    annotation (Line(points={{52,50},{10,50}}, color={0,127,255}));
+  connect(pumCHW.port_b, mulChiSys.port_a2) annotation (Line(points={{-10,50},{
+          -22,50},{-22,16},{-10,16}}, color={0,127,255}));
   annotation (__Dymola_Commands,
   Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-80},{160,100}})),
     experiment(

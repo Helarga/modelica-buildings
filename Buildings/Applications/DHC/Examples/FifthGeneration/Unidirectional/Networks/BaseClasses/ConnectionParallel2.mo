@@ -2,10 +2,9 @@ within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Networ
 model ConnectionParallel2
   "Model for connecting an agent to the DHC system"
   extends Applications.DHC.Networks.BaseClasses.PartialConnection2Pipe(
-    redeclare model Model_pipDis = PipeDistribution (
-      dp_nominal=dpDis_nominal),
-    redeclare model Model_pipCon = PipeConnection2 (
-      dp_nominal=dpCon_nominal));
+      redeclare model Model_pipDis = PipeDistribution2 (dp_nominal=
+            dpDis_nominal), redeclare model Model_pipCon = PipeConnection2 (
+          dp_nominal=dpCon_nominal));
     /*(
        // final dh=dhDis, final length=lDis, final fac= fac),
       final fac= fac,

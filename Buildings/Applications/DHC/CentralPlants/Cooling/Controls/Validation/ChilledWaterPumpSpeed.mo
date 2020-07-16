@@ -2,7 +2,7 @@ within Buildings.Applications.DHC.CentralPlants.Cooling.Controls.Validation;
 model ChilledWaterPumpSpeed
   "Example to test the chilled water pump speed controller"
   extends Modelica.Icons.Example;
-  Buildings.Applications.DHC.CentralPlants.Cooling.Controls.ChilledWaterPumpSpeed
+  Buildings.Applications.DHC.CentralPlants.Cooling.Controls.ChilledWaterPumpSpeed3
     chiWatPumSpe(
     dpSetPoi=68900,
     tWai=30,

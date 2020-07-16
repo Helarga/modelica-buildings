@@ -82,13 +82,14 @@ partial model PartialPumpParallel "Partial model for pump parallel"
     annotation(Dialog(tab="Flow resistance"));
   parameter Real threshold(min = 0.01) = 0.05
     "Hysteresis threshold";
-  Modelica.Blocks.Interfaces.RealInput u[num](
-    each final unit="1",
-    each max=1,
-    each min=0)
+  Modelica.Blocks.Interfaces.RealInput u[num]
     "Continuous input signal for the flow machine"
     annotation (Placement(transformation(extent={{-140,20},{-100,60}}),
       iconTransformation(extent={{-140,20},{-100,60}})));
+   /*(
+    each final unit="1",
+    each max=1,
+    each min=0)*/
   Modelica.Blocks.Interfaces.RealOutput P[num](
     each final quantity="Power",
     each final unit="W")
@@ -157,21 +158,21 @@ initial equation
     level = AssertionLevel.warning);
 
 equation
-  connect(pum.port_b, val.port_a)
-    annotation (Line(points={{10,0},{25,0},{40,0}}, color={0,127,255}));
-  for i in 1:num loop
+ for i in 1:num loop
   connect(val[i].port_b, port_b)
     annotation (Line(points={{60,0},{80,0},{100,0}}, color={0,127,255}));
+  connect(pum[i].port_b, val[i].port_a)
+    annotation (Line(points={{10,0},{40,0}}, color={0,127,255}));
   connect(port_a, pum[i].port_a)
     annotation (Line(points={{-100,0},{-56,0},{-10,0}}, color={0,127,255}));
-  end for;
+ end for;
   connect(pum.P, P)
     annotation (Line(points={{11,9},{20,9},{20,40},{110,40}},
       color={0,0,127}));
   connect(booToRea.y, val.y)
-    annotation (Line(points={{41,60},{50,60},{50,12}}, color={0,0,127}));
+    annotation (Line(points={{42,60},{50,60},{50,12}}, color={0,0,127}));
   connect(hys.y, booToRea.u)
-    annotation (Line(points={{1,60},{18,60}}, color={255,0,255}));
+    annotation (Line(points={{2,60},{18,60}}, color={255,0,255}));
   connect(hys.u, u) annotation (Line(points={{-22,60},{-62,60},{-62,40},{-120,40}},
         color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={

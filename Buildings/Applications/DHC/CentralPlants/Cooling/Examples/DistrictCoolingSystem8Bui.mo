@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.CentralPlants.Cooling.Examples;
-model DistrictCoolingSystem "Example to test the district cooling system."
+model DistrictCoolingSystem8Bui "Example to test the district cooling system."
   extends Modelica.Icons.Example;
 
   package MediumW = Buildings.Media.Water "Medium model for water";
@@ -105,7 +105,7 @@ model DistrictCoolingSystem "Example to test the district cooling system."
   Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Networks.UnidirectionalParallel disNet(
     redeclare final package Medium = MediumW,
     final nCon=nBui,
-    iConDpSen=nBui,
+    iConDpSen=0,
     final mDis_flow_nominal=datDes.mDis_flow_nominal,
     final mCon_flow_nominal=datDes.mCon_flow_nominal,
     final lDis=datDes.lDis,
@@ -171,4 +171,4 @@ equation
       StopTime=15897600,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"));
-end DistrictCoolingSystem;
+end DistrictCoolingSystem8Bui;

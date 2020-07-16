@@ -1,5 +1,6 @@
 within Buildings.Applications.DHC.CentralPlants.Cooling.Controls;
-model ChilledWaterPumpSpeed "Controller for variable speed chilled water pumps"
+model ChilledWaterPumpSpeed3
+  "Controller for variable speed chilled water pumps"
 
   parameter Integer numPum(min=1, max=2)=2 "Number of chilled water pumps, maximum is 2";
 
@@ -66,9 +67,6 @@ model ChilledWaterPumpSpeed "Controller for variable speed chilled water pumps"
   Modelica.Blocks.Sources.Constant dpSetSca(k=dpSetPoi)
     "Scaled differential pressure setpoint"
     annotation (Placement(transformation(extent={{-100,-10},{-80,10}})));
-  Modelica.Blocks.Math.Gain gai(k=1/dpSetPoi)
-    "Multiplier gain for normalizing dp input"
-    annotation (Placement(transformation(extent={{-80,-50},{-60,-30}})));
 equation
   connect(pumStaCon.masFloPum, masFloPum) annotation (Line(points={{-12,8},{-20,
           8},{-20,40},{-120,40}}, color={0,0,127}));
@@ -78,15 +76,13 @@ equation
   connect(dpSetSca.y, conPID.u_s)
     annotation (Line(points={{-79,0},{-62,0}}, color={0,0,127}));
   connect(pumStaCon.y, pumSpe.u1)
-    annotation (Line(points={{11,0},{22,0},{22,6},{38,6}}, color={0,0,127}));
-  connect(conPID.y, pumSpe[1].u2) annotation (Line(points={{-39,0},{-20,0},{-20,
-          -32},{22,-32},{22,-6},{38,-6}}, color={0,0,127}));
-  connect(conPID.y, pumSpe[2].u2) annotation (Line(points={{-39,0},{-20,0},{-20,
-          -32},{22,-32},{22,-6},{38,-6}}, color={0,0,127}));
-  connect(dpMea, gai.u)
-    annotation (Line(points={{-120,-40},{-82,-40}}, color={0,0,127}));
-  connect(conPID.u_m, gai.y)
-    annotation (Line(points={{-50,-12},{-50,-40},{-59,-40}}, color={0,0,127}));
+    annotation (Line(points={{11,0},{20,0},{20,6},{38,6}}, color={0,0,127}));
+  connect(dpMea, pumSpe[1].u2) annotation (Line(points={{-120,-40},{20,-40},{20,
+          -6},{38,-6}}, color={0,0,127}));
+  connect(dpMea, conPID.u_m) annotation (Line(points={{-120,-40},{-50,-40},{-50,
+          -12}}, color={0,0,127}));
+  connect(dpMea, pumSpe[2].u2) annotation (Line(points={{-120,-40},{20,-40},{20,
+          -6},{38,-6}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
           Rectangle(
           extent={{-100,100},{100,-100}},
@@ -98,4 +94,4 @@ equation
         textString="%name",
         lineColor={0,0,255})}),             Diagram(coordinateSystem(
           preserveAspectRatio=false)));
-end ChilledWaterPumpSpeed;
+end ChilledWaterPumpSpeed3;

@@ -2,10 +2,9 @@ within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Networ
 model UnidirectionalParallel2
   "Hydraulic network for unidirectional parallel DHC system"
   extends Applications.DHC.Networks.BaseClasses.PartialDistribution2Pipe(
-    redeclare BaseClasses.ConnectionParallel2 con[nCon](
-        dpCon_nominal=dpCon_nominal,
-        dpDis_nominal=dpDis_nominal),
-    redeclare model Model_pipDis = BaseClasses.PipeDistribution(dp_nominal=dpEnd_nominal));
+      redeclare BaseClasses.ConnectionParallel2 con[nCon](dpCon_nominal=
+          dpCon_nominal, dpDis_nominal=dpDis_nominal), redeclare model
+      Model_pipDis = BaseClasses.PipeDistribution2 (dp_nominal=dpEnd_nominal));
 
   /* (
       final dh=dhEnd, final length=2*lEnd, final fac=facEnd))*/

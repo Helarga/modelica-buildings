@@ -195,7 +195,6 @@ model FlowDistributionPumpControl
     m_flow_nominal=m_flow_nominal,
     have_pum=true,
     typCtr=Buildings.Applications.DHC.Loads.Types.PumpControlType.ConstantSpeed,
-
     dp_nominal=dp_nominal,
     dpDis_nominal=dpDis_nominal,
     dpMin=dpSet,
@@ -203,9 +202,10 @@ model FlowDistributionPumpControl
     nPorts_a1=5,
     nPorts_b1=5) "Distribution system with pump controlled at constant speed"
     annotation (Placement(transformation(extent={{-10,70},{10,90}})));
+
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant THeaWatSup(k=
         T_aHeaWat_nominal) "Heating water supply temperature"
-    annotation (Placement(transformation(extent={{-180,-10},{-160,10}})));
+    annotation (Placement(transformation(extent={{-180,-58},{-160,-38}})));
   Fluid.Sources.Boundary_pT supHeaWat(
     redeclare package Medium = Medium1,
     use_T_in=true,
@@ -290,14 +290,16 @@ equation
          {0,0,127}));
   connect(disCstSpe.mReqTot_flow, pipPre.m_flow_in) annotation (Line(points={{
           11,76},{40,76},{40,200},{-4,200},{-4,188}}, color={0,0,127}));
-  connect(THeaWatSup.y, supHeaWat1.T_in) annotation (Line(points={{-158,0},{
-          -152,0},{-152,4},{-142,4}}, color={0,0,127}));
+  connect(THeaWatSup.y, supHeaWat1.T_in) annotation (Line(points={{-158,-48},{
+          -152,-48},{-152,4},{-142,4}},
+                                      color={0,0,127}));
   connect(dis.port_bDisRet, supHeaWat.ports[1]) annotation (Line(points={{40,
           -176},{20,-176},{20,-200},{-120,-200},{-120,-178}}, color={0,127,255}));
   connect(supHeaWat.ports[2], vol.ports[2]) annotation (Line(points={{-120,-182},
           {-120,-174},{-80,-174},{-80,-160},{-47,-160}}, color={0,127,255}));
-  connect(THeaWatSup.y, supHeaWat.T_in) annotation (Line(points={{-158,0},{-152,
-          0},{-152,-176},{-142,-176}}, color={0,0,127}));
+  connect(THeaWatSup.y, supHeaWat.T_in) annotation (Line(points={{-158,-48},{
+          -152,-48},{-152,-176},{-142,-176}},
+                                       color={0,0,127}));
   connect(minTSet.y, reaRep.u)
     annotation (Line(points={{-158,70},{-130,70}}, color={0,0,127}));
   connect(dis.dp, pumCstDp.dpMea) annotation (Line(points={{81,-167},{120,-167},

@@ -173,6 +173,10 @@ model BuildingTimeSeriesCooling
     "Multiplier for calculating heat gain of the volume"
     annotation (Placement(transformation(extent={{-70,20},{-50,40}})));
 
+  Fluid.Sources.Boundary_pT           expTanCHW(redeclare package Medium =
+        Medium, nPorts=1)
+                "Chilled water expansion tank"
+    annotation (Placement(transformation(extent={{-22,-74},{-2,-54}})));
 protected
   parameter Modelica.SIunits.SpecificHeatCapacity cp=
    Medium.specificHeatCapacityCp(
@@ -212,6 +216,8 @@ equation
   connect(QCoo.y[1], heaGai.u) annotation (Line(points={{-79,30},{-72,30}}, color={0,0,127}));
   connect(QCoo.y[1], m_flow.u) annotation (Line(points={{-79,30},{-76,30},{-76,-10},
           {-72,-10}}, color={0,0,127}));
+  connect(ets.port_b1, expTanCHW.ports[1])
+    annotation (Line(points={{30,-36},{30,-64},{-2,-64}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Polygon(
           points={{20,-70},{60,-85},{20,-100},{20,-70}},

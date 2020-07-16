@@ -26,17 +26,17 @@ model BuildingSpawnZ6WithCoolingIndirectETS
     "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"
     "Name of the weather file"
     annotation(Dialog(group="Building model parameters"));
-  parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal=5
+  parameter Modelica.SIunits.MassFlowRate mDis_flow_nominal= bui.disFloCoo.m_flow_nominal*(bui.delTBuiCoo/bui.delTDisCoo)
    "Nominal mass flow rate of primary (district) district cooling side";
-                                                             //bui.disFloCoo.m_flow_nominal*(bui.delTBuiCoo/bui.delTDisCoo)
+
   //bui.disFloCoo.m_flow_nominal
   parameter Modelica.SIunits.MassFlowRate mBuiHea_flow_nominal= bui.disFloHea.m_flow_nominal
     "Nominal mass flow rate of secondary (building) district cooling side";
 
 
-  parameter Modelica.SIunits.MassFlowRate mBui_flow_nominal= 5
+  parameter Modelica.SIunits.MassFlowRate mBui_flow_nominal= bui.disFloCoo.m_flow_nominal
     "Nominal mass flow rate of secondary (building) district cooling side";
-                                                              //bui.disFloCoo.m_flow_nominal
+
 
   Buildings.Applications.DHC.EnergyTransferStations.CoolingIndirect ets(
     redeclare package Medium =MediumW,
@@ -46,7 +46,7 @@ model BuildingSpawnZ6WithCoolingIndirectETS
     dp2_nominal=500,
     use_Q_flow_nominal=true,
     Q_flow_nominal=-1*(sum(bui.terUni.QCoo_flow_nominal)),
-    T_a1_nominal=273.15 + 5,
+    T_a1_nominal=273.15 + 7,
     T_a2_nominal=273.15 + 12)
     "Energy transfer station model"
     annotation (Placement(transformation(extent={{-28,-88},{32,-28}})));

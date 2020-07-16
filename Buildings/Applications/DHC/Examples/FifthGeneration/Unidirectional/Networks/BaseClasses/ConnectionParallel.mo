@@ -1,12 +1,13 @@
 within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Networks.BaseClasses;
 model ConnectionParallel "Model for connecting an agent to the DHC system"
   extends Applications.DHC.Networks.BaseClasses.PartialConnection2Pipe(
-    redeclare model Model_pipDis = PipeDistribution (
-      final dh=dhDis, final length=lDis, final fac= fac),
-    redeclare model Model_pipCon = PipeConnection (
-      final fac= fac,
-      final length=2*lCon,
-      final dh=dhCon));
+      redeclare model Model_pipDis = PipeDistribution (
+        final dh=dhDis,
+        final length=lDis,
+        final fac=fac), redeclare model Model_pipCon = PipeConnection (
+        final fac=fac,
+        final length=2*lCon,
+        final dh=dhCon));
 
   parameter Real fac
     "Factor to take into account resistance of bends etc., fac=dp_nominal/dpStraightPipe_nominal";
