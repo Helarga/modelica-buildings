@@ -40,6 +40,12 @@ model OneZone "Validation model for one zone"
     annotation (Placement(transformation(extent={{-40,-50},{-20,-30}})));
   Modelica.Blocks.Sources.Constant qIntGai[3](each k=0) "Internal heat gains"
     annotation (Placement(transformation(extent={{-40,0},{-20,20}})));
+  Buildings.ThermalZones.EnergyPlus.OutputVariable ligPow(
+    name="Lights Electric Power",
+    key="LIVING ZONE Lights",
+    y(final unit="W"))
+    "Block that reads output from EnergyPlus"
+    annotation (Placement(transformation(extent={{2,44},{22,64}})));
 equation
   connect(freshAir.ports[1], duc.port_b)
     annotation (Line(points={{-20,-40},{-10,-40}}, color={0,127,255}));
