@@ -2,3 +2,9 @@ Controls
 Subsystems
 Examples
 Validation
+HeatingCentralPlant
+PlantHeating
+BoilerParallel
+PartialPlantParallelInterface
+PartialPlantParallel
+ValvesParameters
