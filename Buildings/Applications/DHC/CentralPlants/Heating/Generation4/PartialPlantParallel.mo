@@ -4,12 +4,9 @@ partial model PartialPlantParallel
   extends
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.PartialPlantParallelInterface;
   extends
-    Buildings.Applications.DHC.CentralPlants.Heating.Generation4.ValvesParameters(
-    final numVal = 1,
-    final m_flow_nominal = {m1_flow_nominal},
-    rhoStd = {Medium1.density_pTX(101325, 273.15+4, Medium1.X_default),
-            Medium2.density_pTX(101325, 273.15+4, Medium2.X_default)},
-    final deltaM=deltaM);
+    Buildings.Applications.DHC.CentralPlants.Heating.Generation4.ValveParameter(
+    rhoStd = Medium.density_pTX(101325, 273.15+50, Medium.X_default));
+
   extends
     Buildings.Applications.DataCenters.ChillerCooled.Equipment.BaseClasses.SignalFilter(
     final numFil=num);
@@ -18,18 +15,17 @@ partial model PartialPlantParallel
     annotation(HideResult=true);
 
   // Isolation valve parameters
-  parameter Real l( min=1e-10, max=1) = {0.0001}
+  parameter Real l( min=1e-10, max=1) = 0.0001
     "Valve leakage, l=Kv(y=0)/Kv(y=1)"
     annotation(Dialog(group="Two-way valve"));
-  parameter Real kFixed(unit="", min=0)=
-    {m1_flow_nominal} ./ sqrt({dp1_nominal})
+  parameter Real kFixed(unit="", min=0)= m_flow_nominal ./ sqrt( dp_nominal)
     "Flow coefficient of fixed resistance that may be in series with valve 1, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)."
    annotation(Dialog(group="Two-way valve"));
 
-  Buildings.Fluid.Actuators.Valves.TwoWayLinear val1[num](
-    each final allowFlowReversal=allowFlowReversal1,
-    each final m_flow_nominal=m1_flow_nominal,
-    each dpFixed_nominal=dp1_nominal,
+  Buildings.Fluid.Actuators.Valves.TwoWayLinear val[num](
+    each final allowFlowReversal=allowFlowReversal,
+    each final m_flow_nominal=m_flow_nominal,
+    each dpFixed_nominal=dp_nominal,
     each final show_T=show_T,
     each final homotopyInitialization=homotopyInitialization,
     each final use_inputFilter=false,
@@ -37,15 +33,13 @@ partial model PartialPlantParallel
     each final init=initValve,
     final y_start=yValve_start,
     each final deltaM=deltaM,
-    each final l=l[1],
-    each final kFixed=kFixed[1],
-    each final dpValve_nominal=dpValve_nominal[1],
+    each final l=l,
+    each final kFixed=kFixed,
+    each final dpValve_nominal=dpValve_nominal,
     each final CvData=Buildings.Fluid.Types.CvTypes.OpPoint,
-    each final from_dp=from_dp1,
-    each final linearized=linearizeFlowResistance1,
-    each final rhoStd=rhoStd[1])
-    "Isolation valves on medium 1 side for on/off use"
-    annotation (
+    each final from_dp=from_dp,
+    each final linearized=linearizeFlowResistance,
+    each final rhoStd=rhoStd) "Isolation valves for on/off use" annotation (
       Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
@@ -71,7 +65,7 @@ equation
   connect(on, booToRea.u)
     annotation (Line(points={{-120,54},{-81.2,54},{-81.2,54}},
       color={255,0,255}));
-  connect(y_actual, val1.y)
+  connect(y_actual, val.y)
     annotation (Line(points={{-20,74},{46,74},{46,12}}, color={0,0,127}));
   annotation (    Documentation(info="<html>
 <p>

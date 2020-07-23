@@ -3,7 +3,8 @@ partial model PartialPlantParallelInterface
   "Partial model that implements the interface for parallel plants"
   extends Buildings.Fluid.Interfaces.PartialTwoPortInterface;
   extends Buildings.Fluid.Interfaces.TwoPortFlowResistanceParameters(
-     final computeFlowResistance=true);
+            final computeFlowResistance=true,
+            deltaM= deltaM);
 
   parameter Integer num(min=1)=2 "Number of equipment";
 
