@@ -64,7 +64,7 @@ void* InputVariableAllocate(
   const char* unit,
   int usePrecompiledFMU,
   const char* fmuName,
-  const char* buildingsLibraryRoot,
+  const char* spawnExe,
   const int verbosity){
   /* Note: The idfName is needed to unpack the fmu so that the valueReference can be obtained */
   unsigned int i;
@@ -196,7 +196,7 @@ void* InputVariableAllocate(
       weaName,
       usePrecompiledFMU,
       fmuName,
-      buildingsLibraryRoot);
+      spawnExe);
     comVar->ptrBui = getBuildingsFMU(i);
     AddInputVariableToBuilding(comVar);
 

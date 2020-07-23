@@ -60,7 +60,7 @@ void* OutputVariableAllocate(
   const char* componentKey,
   int usePrecompiledFMU,
   const char* fmuName,
-  const char* buildingsLibraryRoot,
+  const char* spawnExe,
   const int verbosity,
   int printUnit){
   /* Note: The idfName is needed to unpack the fmu so that the valueReference can be obtained */
@@ -183,7 +183,7 @@ void* OutputVariableAllocate(
       weaName,
       usePrecompiledFMU,
       fmuName,
-      buildingsLibraryRoot);
+      spawnExe);
     comVar->ptrBui = getBuildingsFMU(i);
     AddOutputVariableToBuilding(comVar);
 

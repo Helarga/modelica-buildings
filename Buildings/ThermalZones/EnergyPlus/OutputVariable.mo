@@ -34,7 +34,7 @@ protected
       componentKey=key,
       usePrecompiledFMU=usePrecompiledFMU,
       fmuName=fmuName,
-      buildingsLibraryRoot=Buildings.ThermalZones.EnergyPlus.BaseClasses.buildingsLibraryRoot,
+      spawnExe=spawnExe,
       verbosity=verbosity,
       printUnit=printUnit) "Class to communicate with EnergyPlus";
 

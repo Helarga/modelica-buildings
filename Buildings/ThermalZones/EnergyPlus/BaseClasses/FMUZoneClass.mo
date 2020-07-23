@@ -17,12 +17,13 @@ class FMUZoneClass "Class used to couple the FMU to interact with a thermal zone
     input Boolean usePrecompiledFMU "Set to true to use precompiled FMU with name specified by input fmuName";
     input String fmuName
       "Specify if a pre-compiled FMU should be used instead of EnergyPlus (mainly for development)";
-    input String buildingsLibraryRoot "Root directory of the Buildings library (used to find the spawn executable)";
+    input String spawnExe; //=Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn");
+   // input String buildingsLibraryRoot "Root directory of the Buildings library (used to find the spawn executable)";
     input Buildings.ThermalZones.EnergyPlus.Types.Verbosity verbosity "Verbosity of EnergyPlus output";
 
     // The idea is to use loadResource so that the modelica compiler will include these binaries in the generated FMU
-    final spawnExe=Modelica.Utilities.Files.loadResource("modelica://path/to/spawn.exe"),
-    final spawnLib=Modelica.Utilities.Files.loadResource("modelica://path/to/epfmi.so"),
+
+    constant String epfmi=Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/lib/epfmi.so");
 
     output FMUZoneClass adapter;
 
@@ -34,12 +35,13 @@ class FMUZoneClass "Class used to couple the FMU to interact with a thermal zone
       zoneName,
       usePrecompiledFMU,
       fmuName,
-      spawnExe, // <<< Need to adjust the ZoneAllocate C function to use this path
+      spawnExe,
       verbosity)
         annotation (
           IncludeDirectory="modelica://Buildings/Resources/C-Sources/EnergyPlus",
           Include="#include \"ZoneAllocate.c\"",
           Library={"fmilib_shared", "dl"});
+           // <<< Need to adjust the ZoneAllocate C function to use this path
           // dl provides dlsym to load EnergyPlus dll, which is needed by OpenModelica compiler
 
     annotation (Documentation(info="<html>

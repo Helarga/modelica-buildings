@@ -26,7 +26,7 @@ size_t AllocateBuildingDataStructure(
   const char* weaName,
   int usePrecompiledFMU,
   const char* fmuName,
-  const char* buildingsLibraryRoot){
+  const char* spawnExe){
 
   const size_t nFMU = getBuildings_nFMU();
   if (FMU_EP_VERBOSITY >= MEDIUM)
@@ -60,9 +60,9 @@ size_t AllocateBuildingDataStructure(
   mallocString((strlen(modelicaNameBuilding)+1), "Not enough memory in EnergyPlusFMU.c. to allocate modelicaNameBuilding.", &(Buildings_FMUS[nFMU]->modelicaNameBuilding));
   strcpy(Buildings_FMUS[nFMU]->modelicaNameBuilding, modelicaNameBuilding);
 
-  /* Assign the Buildings library root */
+  /* Assign the Buildings library root 
   mallocString((strlen(buildingsLibraryRoot)+1), "Not enough memory in EnergyPlusFMU.c. to allocate buildingsLibraryRoot.", &(Buildings_FMUS[nFMU]->buildingsLibraryRoot));
-  strcpy(Buildings_FMUS[nFMU]->buildingsLibraryRoot, buildingsLibraryRoot);
+  strcpy(Buildings_FMUS[nFMU]->buildingsLibraryRoot, buildingsLibraryRoot);*/
 
   /* Assign the idfName name */
   if (usePrecompiledFMU){
