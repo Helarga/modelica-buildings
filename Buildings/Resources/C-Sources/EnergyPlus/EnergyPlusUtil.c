@@ -22,63 +22,22 @@
 #include <dlfcn.h>
 #endif
 
-void writeFormatLog(unsigned int level, const char *fmt, ...) {
-  /*const char* prefix = "\033[1;33m*** Log\033[0m: ";*/
-  const char* prefix = "*** Log: ";
+void writeFormatLog(const char *fmt, ...) {
   va_list args;
 
-  if (level <= FMU_EP_VERBOSITY){
-    fprintf(stdout, "%s", prefix);
-    va_start(args, fmt);
-    vprintf(fmt, args);
-    va_end(args);
-    fprintf(stdout, "%s", "\n");
-    fflush(stdout);
-    ModelicaFormatMessage(fmt, args);
-  }
+  freopen("output.txt", "a+", stdout);
+
+  va_start(args, fmt);
+  vprintf(fmt, args);
+  va_end(args);
+  printf("%s", "\n");
+  fflush(stdout);
+  freopen("/dev/tty", "w", stdout); /*for gcc, ubuntu*/
 }
 
-void writeLog(unsigned int level, const char* msg)
+void writeLog(const char* msg)
 {
-    if (level <= FMU_EP_VERBOSITY){
-      const char* prefix = "*** Log: ";
-      char* m;
-      mallocString((strlen(msg)+strlen(prefix)+1), "Failed to allocate string array in writeLog.", &m);
-      strcpy(m, prefix);
-      strcat(m, msg);
-      fprintf(stdout, "%s\n", m);
-      fflush(stdout);
-      ModelicaFormatMessage("%s", m);
-    }
-}
-
-void logStringArray(unsigned int level,
-                    const char* msg,
-                    const char** array,
-                    size_t n){
-  int i;
-  if (level <= FMU_EP_VERBOSITY){
-    writeLog(level, msg);
-    for(i = 0; i < n; i++)
-      writeLog(level, array[i]);
-    writeLog(level, "End of array.");
-  }
-}
-
-void logValueReferenceArray(unsigned int level,
-                            const char* msg,
-                            const fmi2ValueReference* array,
-                            size_t n){
-  int i;
-  if (level <= FMU_EP_VERBOSITY){
-    char res[100];
-    writeLog(level, msg);
-    for(i = 0; i < n; i++){
-      sprintf(res, "%d", array[i]);
-      writeLog(level, res);
-    }
-    writeLog(level, "End of array.");
-  }
+  writeFormatLog("%s\n", msg);
 }
 
 
