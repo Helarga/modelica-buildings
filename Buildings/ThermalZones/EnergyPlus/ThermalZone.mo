@@ -83,7 +83,6 @@ model ThermalZone "Model to connect to an EnergyPlus thermal zone"
             220,110}})));
 
   Buildings.ThermalZones.EnergyPlus.BaseClasses.FMUZoneAdapter fmuZon(
-    final buildingsLibraryRoot=Buildings.ThermalZones.EnergyPlus.BaseClasses.buildingsLibraryRoot,
     final modelicaNameBuilding=modelicaNameBuilding,
     final modelicaNameThermalZone=modelicaNameThermalZone,
     final idfName=idfName,
