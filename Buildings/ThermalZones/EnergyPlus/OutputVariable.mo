@@ -29,8 +29,8 @@ protected
       modelicaNameBuilding=modelicaNameBuilding,
       modelicaNameOutputVariable=modelicaNameOutputVariable,
       idfName=idfName,
-      weaName=epWeaName,
-      componentName=name,
+      weaName=weaName,
+      name=name,
       componentKey=key,
       usePrecompiledFMU=usePrecompiledFMU,
       fmuName=fmuName,
@@ -86,9 +86,8 @@ equation
 Block that retrieves an output variable from EnergyPlus.
 </p>
 <p>
-This model instantiates an FMU with the name <code>idfName</code> and
-reads at every EnergyPlus zone time step the output variable specified
-by the parameters <code>componentKey</code> and <code>componentName</code>.
+This model reads at every EnergyPlus zone time step the output variable specified
+by the parameters <code>componentKey</code> and <code>variableName</code>.
 These parameters are the values for the EnergyPlus variable key and name,
 which can be found in the EnergyPlus result dictionary file (<code>.rdd</code> file)
 or the EnergyPlus meter dictionary file (<code>.mdd</code> file).

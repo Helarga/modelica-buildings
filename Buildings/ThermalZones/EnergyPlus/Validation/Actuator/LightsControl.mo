@@ -5,7 +5,7 @@ model LightsControl "Validation model for one actuator that controls the lights"
 
   Buildings.ThermalZones.EnergyPlus.Actuator actLig(
     unit=Buildings.ThermalZones.EnergyPlus.Types.Units.Power,
-    componentName="LIVING ZONE Lights",
+    variableName="LIVING ZONE Lights",
     componentType="Lights",
     controlType="Electric Power Level") "Actuator for lights"
     annotation (Placement(transformation(extent={{100,100},{120,120}})));
@@ -90,8 +90,7 @@ equation
         "Simulate and plot"),
   experiment(
       StopTime=172800,
-      Tolerance=1e-06,
-      __Dymola_Algorithm="Cvode"),
+      Tolerance=1e-06),
     Documentation(info="<html>
 <p>
 Validation case for a building that uses an EMS actuator to assign the lighting power in EnergyPlus.

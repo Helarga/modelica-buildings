@@ -38,7 +38,7 @@ model ShadeControl
     annotation (Placement(transformation(extent={{0,40},{40,80}})));
   Buildings.ThermalZones.EnergyPlus.Actuator actSha(
     unit=Buildings.ThermalZones.EnergyPlus.Types.Units.Normalized,
-    componentName="Zn001:Wall001:Win001",
+    variableName="Zn001:Wall001:Win001",
     componentType="Window Shading Control",
     controlType="Control Status") "Actuator for window shade"
     annotation (Placement(transformation(extent={{170,-100},{190,-80}})));
@@ -220,8 +220,7 @@ equation
   experiment(
       StartTime=8640000,
       StopTime=8899200,
-      Tolerance=1e-06,
-      __Dymola_Algorithm="Cvode"),
+      Tolerance=1e-06),
     Diagram(coordinateSystem(extent={{-200,-160},{200,120}})),
     Icon(coordinateSystem(extent={{-100,-100},{100,100}})),
     Documentation(info="<html>

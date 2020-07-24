@@ -134,8 +134,7 @@ void buildJSONModelStructureForEnergyPlus(
         saveAppend(buffer, "    \"emsActuators\": [\n", size);
       }
       openJSONModelBracket(buffer, size);
-      buildJSONKeyValue(buffer, 4, "name", inpVars[i]->name, true, size);
-      buildJSONKeyValue(buffer, 4, "variableName", inpVars[i]->componentName, true, size);
+      buildJSONKeyValue(buffer, 4, "variableName", inpVars[i]->name, true, size);
       buildJSONKeyValue(buffer, 4, "componentType", inpVars[i]->componentType, true, size);
       buildJSONKeyValue(buffer, 4, "controlType", inpVars[i]->controlType, true, size);
       buildJSONKeyValue(buffer, 4, "unit", inpVars[i]->unit, true, size);
@@ -363,8 +362,8 @@ void generateFMU(
     createFlag = " --create "; /* Flag for command */
     len = strlen(spawnExe) + strlen(cmd) + strlen(optionFlags)
       + strlen(outputFlag) + strlen("\"") + strlen(FMUPath) + strlen("\"")
-      + strlen(createFlag) + strlen("\"") + strlen(modelicaBuildingsJsonFile) + strlen("\"");
-      + strlen("\0");
+      + strlen(createFlag) + strlen("\"") + strlen(modelicaBuildingsJsonFile) + strlen("\"")
+      + 1;
 
     mallocString(len, "Failed to allocate memory in generateFMU().", &fulCmd);
     memset(fulCmd, '\0', len);
@@ -485,10 +484,12 @@ void importEnergyPlusFMU(FMUBuilding* bui){
   /* Set callback functions */
   callbacks = jm_get_default_callbacks();
 
+  if (FMU_EP_VERBOSITY >= MEDIUM)
+    ModelicaFormatMessage("Calling fmi_import_allocate_context(callbacks = %p)", callbacks);
   bui->context = fmi_import_allocate_context(callbacks);
 
   if (FMU_EP_VERBOSITY >= MEDIUM)
-    ModelicaFormatMessage("Getting fmi version.");
+    ModelicaFormatMessage("Getting fmi version, bui->context = %p, FMUPath = %s, tmpPath = %s.", bui->context, FMUPath, tmpPath);
   version = fmi_import_get_fmi_version(bui->context, FMUPath, tmpPath);
 
   if (version != fmi_version_2_0_enu){
