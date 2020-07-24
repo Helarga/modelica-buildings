@@ -2,6 +2,9 @@ within Buildings.ThermalZones.EnergyPlus;
 model Schedule "Block to write to an EnergyPlus schedule"
   extends Buildings.ThermalZones.EnergyPlus.BaseClasses.PartialEnergyPlusObject;
 
+  constant String spawnExe= Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn")
+    "Root directory of the Buildings library (used to find the spawn executable"
+    annotation(HideResult=true);
   parameter String name
     "Name of schedule";
 
@@ -34,7 +37,7 @@ protected
       unit=Buildings.ThermalZones.EnergyPlus.BaseClasses.getUnitAsString(unit),
       usePrecompiledFMU=usePrecompiledFMU,
       fmuName=fmuName,
-      buildingsLibraryRoot=Buildings.ThermalZones.EnergyPlus.BaseClasses.buildingsLibraryRoot,
+      spawnExe=spawnExe,
       verbosity=verbosity)
    "Class to communicate with EnergyPlus";
 

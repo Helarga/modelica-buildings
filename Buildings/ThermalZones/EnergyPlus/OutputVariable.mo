@@ -3,6 +3,9 @@ model OutputVariable
   "Block to read an EnergyPlus output variable for use in Modelica"
   extends Buildings.ThermalZones.EnergyPlus.BaseClasses.PartialEnergyPlusObject;
 
+  constant String spawnExe= Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn")
+    "Root directory of the Buildings library (used to find the spawn executable"
+    annotation(HideResult=true);
   parameter String name
     "EnergyPlus name of the output variable as in the EnergyPlus .rdd or .mdd file";
   parameter String key
