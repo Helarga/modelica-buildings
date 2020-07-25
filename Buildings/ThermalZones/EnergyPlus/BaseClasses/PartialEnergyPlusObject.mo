@@ -12,6 +12,11 @@ protected
   constant String modelicaNameOutputVariable = getInstanceName()
     "Name of this instance"
     annotation(HideResult=true);
+  constant String spawnExe= Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn")
+    "Path to the spawn executable"
+    annotation(HideResult=true);
+  constant String epfmi=Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/lib/epfmi.so")
+    " The path to the energy plus shared library";
 
   final parameter String idfName=building.idfName "Name of the IDF file that contains this zone";
   final parameter String weaName=building.weaName "Name of the EnergyPlus weather file (but with mos extension)";

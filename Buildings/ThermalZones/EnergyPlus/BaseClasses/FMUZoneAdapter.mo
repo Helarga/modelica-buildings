@@ -3,7 +3,7 @@ block FMUZoneAdapter "Block that interacts with this EnergyPlus zone"
   extends Modelica.Blocks.Icons.Block;
 
   constant String spawnExe= Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn")
-    "Root directory of the Buildings library (used to find the spawn executable"
+     "The path of the spawn executable"
     annotation(HideResult=true);
   constant String modelicaNameBuilding
     "Name of the building to which this thermal zone belongs to"
@@ -173,7 +173,7 @@ equation
     counter = pre(counter) + 1;
   end when;
   QCon_flow = QConLast_flow + (T-TRooLast) * dQCon_flow;
-  annotation (
+   annotation(HideResult=true,
   defaultComponentName="fmuZon",
   Icon(graphics={Bitmap(extent={{-92,-82},{82,92}}, fileName=
             "modelica://Buildings/Resources/Images/Fluid/FMI/FMI_icon.png")}),

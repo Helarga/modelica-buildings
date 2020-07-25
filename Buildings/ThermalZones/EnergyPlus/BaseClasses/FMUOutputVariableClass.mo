@@ -18,11 +18,10 @@ class FMUOutputVariableClass
     input String componentKey "EnergyPlus key of the output variable";
     input Boolean usePrecompiledFMU "Set to true to use precompiled FMU with name specified by input fmuName";
     input String fmuName
-      "Specify if a pre-compiled FMU should be used instead of EnergyPlus (mainly for development)";
-    input String spawnExe; //=Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn");
+                        "Specify if a pre-compiled FMU should be used instead of EnergyPlus (mainly for development)";
+    input String spawnExe "Path of the spawn executable";
     input Buildings.ThermalZones.EnergyPlus.Types.Verbosity verbosity "Verbosity of EnergyPlus output";
     input Boolean printUnit "Set to true to print unit of OutputVariable objects to log file";
-    constant String epfmi=Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/lib/epfmi.so");
 
     output FMUOutputVariableClass adapter;
     external "C" adapter = OutputVariableAllocate(
