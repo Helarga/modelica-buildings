@@ -5,6 +5,7 @@ partial model PartialPlantParallel
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.PartialPlantParallelInterface;
   extends
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.ValveParameter(
+    final deltaM= 0.1,
     rhoStd = Medium.density_pTX(101325, 273.15+50, Medium.X_default));
 
   extends
@@ -25,6 +26,7 @@ partial model PartialPlantParallel
   Buildings.Fluid.Actuators.Valves.TwoWayLinear val[num](
     each final allowFlowReversal=allowFlowReversal,
     each final m_flow_nominal=m_flow_nominal,
+    each final deltaM=deltaM,
     each dpFixed_nominal=dp_nominal,
     each final show_T=show_T,
     each final homotopyInitialization=homotopyInitialization,
@@ -32,7 +34,6 @@ partial model PartialPlantParallel
     each final riseTime=riseTimeValve,
     each final init=initValve,
     final y_start=yValve_start,
-    each final deltaM=deltaM,
     each final l=l,
     each final kFixed=kFixed,
     each final dpValve_nominal=dpValve_nominal,
@@ -44,6 +45,8 @@ partial model PartialPlantParallel
         extent={{-10,-10},{10,10}},
         rotation=0,
         origin={46,0})));
+
+
 
 initial equation
   assert(homotopyInitialization, "In " + getInstanceName() +

@@ -44,6 +44,10 @@ model CoolingPlantOpenLoop
   parameter Modelica.SIunits.Pressure dpCWPum_nominal=6000
     "Nominal pressure drop of chilled water pumps";
 
+  constant String spawnExe= Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/bin/spawn-linux64/bin/spawn");
+  constant String zeft = Modelica.Utilities.Files.loadResource("Buildings/Resources/Library/linux64/libepfmi-9.0.1");
+
+
   Buildings.Applications.DHC.CentralPlants.Cooling.Plant pla(
     perChi=perChi,
     perCHWPum=perCHWPum,

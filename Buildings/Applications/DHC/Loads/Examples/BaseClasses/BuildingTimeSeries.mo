@@ -39,7 +39,7 @@ model BuildingTimeSeries
     annotation(Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.Temperature T_aLoaCoo_nominal(
     min=273.15, displayUnit="degC") = 273.15 + 24
-    "Load side inlet temperature at nominal conditions in cooling mode"
+    "Load side inlet temperture at nominal conditions in cooling mode"
     annotation(Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal=1
     "Load side mass flow rate at nominal conditions in heating mode"

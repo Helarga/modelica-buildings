@@ -18,7 +18,7 @@ record TwoPortFlowResistanceParameters
     "= true, use linear relation between m_flow and dp for any flow rate"
     annotation(Dialog(enable = computeFlowResistance,
                tab="Flow resistance"));
-  parameter Real deltaM = 0.1
+  parameter Real deltaM=0.1
     "Fraction of nominal flow rate where flow transitions to laminar"
     annotation(Dialog(enable = computeFlowResistance, tab="Flow resistance"));
 
