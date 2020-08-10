@@ -1,6 +1,5 @@
 within Buildings.Applications.DHC.CentralPlants.Heating.Generation4;
-partial model ValveParameter
-  "Model with parameters for on-off valve."
+partial model ValveParameters "Model with parameters for on-off valve."
 
   parameter Buildings.Fluid.Types.CvTypes CvData=Buildings.Fluid.Types.CvTypes.OpPoint
    "Selection of flow coefficient"
@@ -89,4 +88,4 @@ First implementation.
 </li>
 </ul>
 </html>"));
-end ValveParameter;
+end ValveParameters;

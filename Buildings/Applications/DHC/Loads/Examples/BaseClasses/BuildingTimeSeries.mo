@@ -96,7 +96,7 @@ model BuildingTimeSeries
     y(each unit="W"),
     offset={0,0,0},
     columns={2,3,4},
-    smoothness=Modelica.Blocks.Types.Smoothness.LinearSegments)
+    smoothness=Modelica.Blocks.Types.Smoothness.MonotoneContinuousDerivative1)
     "Reader for thermal loads (y[1] is cooling load, y[2] is heating load)"
     annotation (Placement(transformation(extent={{0,-10},{20,10}})));
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant minTSet(k=293.15,

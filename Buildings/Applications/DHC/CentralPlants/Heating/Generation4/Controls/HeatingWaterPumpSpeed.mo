@@ -1,5 +1,5 @@
-within Buildings.Applications.DHC.CentralPlants.Cooling.Controls;
-model ChilledWaterPumpSpeed "Controller for variable speed chilled water pumps"
+within Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Controls;
+model HeatingWaterPumpSpeed "Controller for variable speed heating water pumps"
 
   parameter Integer numPum(min=1, max=2)=2 "Number of chilled water pumps, maximum is 2";
 
@@ -32,7 +32,7 @@ model ChilledWaterPumpSpeed "Controller for variable speed chilled water pumps"
   Modelica.Blocks.Interfaces.RealInput masFloPum(
     final unit="kg/s")
     "Total mass flowrate of chilled water pumps"
-    annotation (Placement(transformation(extent={{-140,20},{-100,60}})));
+    annotation (Placement(transformation(extent={{-140,46},{-100,86}})));
 
   Modelica.Blocks.Interfaces.RealInput dpMea(
     final unit="Pa")
@@ -60,7 +60,8 @@ model ChilledWaterPumpSpeed "Controller for variable speed chilled water pumps"
     Td=60,
     yMax=1,
     yMin=0,
-    reverseActing=true) "PID controller of pump speed"
+    reverseActing=false)
+     "PID controller of pump speed"
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}})));
   Modelica.Blocks.Sources.Constant dpSetSca(k=dpSetPoi)
     "Scaled differential pressure setpoint"
@@ -68,9 +69,17 @@ model ChilledWaterPumpSpeed "Controller for variable speed chilled water pumps"
   Modelica.Blocks.Math.Gain gai(k=1/dpSetPoi)
     "Multiplier gain for normalizing dp input"
     annotation (Placement(transformation(extent={{-80,-50},{-60,-30}})));
+  Modelica.Blocks.Sources.RealExpression setMas(y=if masFloPum <=
+        m_flow_nominal then m_flow_nominal else numPum*m_flow_nominal)
+    "SetPoint of the heating water mass flow rate."
+    annotation (Placement(transformation(extent={{0,30},{20,50}})));
+  Modelica.Blocks.Interfaces.RealOutput PLR "PLR of the boiler"
+    annotation (Placement(transformation(extent={{100,50},{120,70}})));
+  Modelica.Blocks.Math.Division ratMas
+    annotation (Placement(transformation(extent={{34,50},{54,70}})));
 equation
-  connect(pumStaCon.masFloPum, masFloPum) annotation (Line(points={{-12,8},{-20,
-          8},{-20,40},{-120,40}}, color={0,0,127}));
+  connect(pumStaCon.masFloPum, masFloPum) annotation (Line(points={{-12,8},{-22,
+          8},{-22,66},{-120,66}}, color={0,0,127}));
   connect(conPID.y, pumStaCon.speSig) annotation (Line(points={{-39,0},{-20,0},{
           -20,4},{-12,4}}, color={0,0,127}));
   connect(pumSpe.y, y) annotation (Line(points={{61,0},{110,0}}, color={0,0,127}));
@@ -86,6 +95,14 @@ equation
     annotation (Line(points={{-120,-40},{-82,-40}}, color={0,0,127}));
   connect(conPID.u_m, gai.y)
     annotation (Line(points={{-50,-12},{-50,-40},{-59,-40}}, color={0,0,127}));
+  connect(ratMas.u2, setMas.y) annotation (Line(points={{32,54},{26,54},{26,40},
+          {21,40}}, color={0,0,127}));
+  connect(masFloPum, ratMas.u1)
+    annotation (Line(points={{-120,66},{32,66}}, color={0,0,127}));
+  connect(ratMas.y, PLR)
+    annotation (Line(points={{55,60},{110,60}}, color={0,0,127}));
+  connect(PLR, PLR)
+    annotation (Line(points={{110,60},{110,60}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
           Rectangle(
           extent={{-100,100},{100,-100}},
@@ -97,4 +114,4 @@ equation
         textString="%name",
         lineColor={0,0,255})}),             Diagram(coordinateSystem(
           preserveAspectRatio=false)));
-end ChilledWaterPumpSpeed;
+end HeatingWaterPumpSpeed;

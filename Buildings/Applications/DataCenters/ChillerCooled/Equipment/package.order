@@ -3,6 +3,7 @@ ElectricChillerParallel
 ElectricHeater
 FlowMachine_m
 FlowMachine_y
+FlowMachine_dp
 HeatExchanger_TSet
 IntegratedPrimaryLoadSide
 IntegratedPrimaryPlantSide

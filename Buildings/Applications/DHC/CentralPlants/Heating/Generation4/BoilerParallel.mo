@@ -2,37 +2,42 @@ within Buildings.Applications.DHC.CentralPlants.Heating.Generation4;
 model BoilerParallel "Multiple identical boiler"
   extends
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.PartialPlantParallel(
-      val(dpFixed_nominal=7000));
-  parameter Modelica.SIunits.MassFlowRate mBoi_flow_nominal;
+        redeclare Buildings.Fluid.Boilers.BoilerPolynomial boi[num](
+            each energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+            each Q_flow_nominal= Q_flow_nominal,
+            each m_flow_nominal=m_flow_nominal,
+            each dp_nominal=dp_nominal,
+            each effCur=Buildings.Fluid.Types.EfficiencyCurves.Constant,
+            each a={0.9},
+            each fue=Fluid.Data.Fuels.NaturalGasHigherHeatingValue()));
+           // each a={0.9},
+
+  parameter Modelica.SIunits.MassFlowRate m_flow_nominal;
+  parameter Modelica.SIunits.PressureDifference dp_nominal;
   parameter Modelica.SIunits.HeatFlowRate Q_flow_nominal;
-  parameter Modelica.SIunits.PressureDifference dp_nominalBoi;
 
-
-  replaceable Buildings.Fluid.Boilers.BoilerPolynomial boi[num](
-    m_flow_nominal=mBoi_flow_nominal,
-    dp_nominal=dp_nominalBoi,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    Q_flow_nominal=Q_flow_nominal,
-    fue=Buildings.Fluid.Data.Fuels.HeatingOilLowerHeatingValue())
-    "Hot water boiler"
-    annotation (Placement(transformation(extent={{-12,-10},{8,10}})));
-  Modelica.Blocks.Interfaces.RealInput PLR[num] "Part load ratio signal."
-    annotation (Placement(transformation(extent={{-142,0},{-102,40}}),
-        iconTransformation(extent={{-142,0},{-102,40}})));
-
-
-
-
-
+  Modelica.Blocks.Interfaces.RealInput PLR[num]
+   "Part load ratio signal."
+    annotation (Placement(transformation(extent={{-120,30},{-100,50}}),
+        iconTransformation(extent={{-120,30},{-100,50}})));
+  Modelica.Blocks.Interfaces.RealOutput TBoiLvg[num]
+   "Boiler leaving water temperature."
+    annotation (Placement(transformation(
+          extent={{100,30},{120,50}}), iconTransformation(extent={{100,30},{120,
+            50}})));
 equation
-  connect(boi.port_b, val.port_a)
-    annotation (Line(points={{8,0},{36,0}}, color={0,127,255}));
+  connect(boi.port_b, val.port_a)  annotation (Line(points={{0,0},{36,0}}, color={0,127,255}));
   for i in 1:num loop
     connect(val[i].port_b, port_b) annotation (Line(points={{56,0},{100,0}}, color={0,127,255}));
-    connect(port_a, boi[i].port_a) annotation (Line(points={{-100,0},{-12,0}}, color={0,127,255}));
+    connect(port_a, boi[i].port_a) annotation (Line(points={{-100,0},{-20,0}}, color={0,127,255}));
   end for;
-  connect(PLR, boi.y) annotation (Line(points={{-122,20},{-86,20},{-86,8},{-14,8}},
-        color={0,0,127}));
+  connect(PLR, filter.u) annotation (Line(points={{-110,40},{-80,40},{-80,84},{
+          -55.2,84}},
+                color={0,0,127}));
+  connect(PLR, boi.y) annotation (Line(points={{-110,40},{-80,40},{-80,8},{-22,8}},
+               color={0,0,127}));
+  connect(boi.T, TBoiLvg) annotation (Line(points={{1,8},{20,8},{20,40},{110,40}},
+                color={0,0,127}));
   annotation (    Documentation(info="<html>
 <p>
 This model implements a chiller parallel with <code>num</code> identical chillers. For the chiller model please see
@@ -49,5 +54,14 @@ June 30, 2017, by Yangyang Fu:<br/>
 First implementation.
 </li>
 </ul>
-</html>"));
+</html>"), Icon(graphics={
+        Line(
+          points={{-92,0},{0,0}},
+          color={28,108,200},
+          thickness=1),
+        Line(
+          points={{0,0},{92,0}},
+          color={238,46,47},
+          thickness=1),
+        Rectangle(extent={{-54,54},{54,-54}}, lineColor={102,44,145})}));
 end BoilerParallel;

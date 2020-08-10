@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.Loads.Examples;
-model OpenStudioLoadProfile
+model OpenStudioLoadProfileSimHeaCoo
   "Example illustrating the coupling of a building model to heating water and chilled water loops"
   extends Modelica.Icons.Example;
   package Medium1 = Buildings.Media.Water
@@ -10,9 +10,9 @@ model OpenStudioLoadProfile
     bui(
     have_pum=true,
     filNam=
-        "modelica://Buildings/Applications/DHC/Loads/Examples/Resources/primaryschool-3C-2013.mos",
-    facScaHea=20,
-    facScaCoo=50,
+        "modelica://Buildings/Applications/DHC/Loads/Examples/Resources/MediumOffice-90.1-2010-5A.mos",
+    facScaHea=30,
+    facScaCoo=60,
     k=1,
     Ti=10,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -167,4 +167,4 @@ First implementation.
   coordinateSystem(preserveAspectRatio=false, extent={{-160,-140},{160,140}})),
   __Dymola_Commands(file="Resources/Scripts/Dymola/Applications/DHC/Loads/Examples/CouplingTimeSeries.mos"
         "Simulate and plot"));
-end OpenStudioLoadProfile;
+end OpenStudioLoadProfileSimHeaCoo;

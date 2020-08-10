@@ -7,19 +7,6 @@ partial model PartialPlantParallelInterface
 
   parameter Integer num(min=1)=2 "Number of equipment";
 
-  Modelica.Blocks.Math.BooleanToReal booToRea[num](
-    each final realTrue=1,
-    each final realFalse=0)
-    "Boolean to real (if true then 1 else 0)"
-    annotation (Placement(transformation(extent={{-80,48},{-68,60}})));
-  Modelica.Blocks.Interfaces.BooleanInput on[num]
-    "Set to true to enable equipment, or false to disable equipment"
-    annotation (Placement(transformation(extent={{-140,34},{-100,74}}),
-        iconTransformation(extent={{-140,34},{-100,74}})));
-equation
-  connect(on, booToRea.u)
-    annotation (Line(points={{-120,54},{-81.2,54}},
-      color={255,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
           extent={{-80,80},{80,-80}},

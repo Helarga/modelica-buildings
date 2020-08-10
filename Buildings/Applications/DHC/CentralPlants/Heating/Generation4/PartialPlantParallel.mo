@@ -4,7 +4,7 @@ partial model PartialPlantParallel
   extends
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.PartialPlantParallelInterface;
   extends
-    Buildings.Applications.DHC.CentralPlants.Heating.Generation4.ValveParameter(
+    Buildings.Applications.DHC.CentralPlants.Heating.Generation4.ValveParameters(
     final deltaM= 0.1,
     rhoStd = Medium.density_pTX(101325, 273.15+50, Medium.X_default));
 
@@ -24,6 +24,7 @@ partial model PartialPlantParallel
    annotation(Dialog(group="Two-way valve"));
 
   Buildings.Fluid.Actuators.Valves.TwoWayLinear val[num](
+    redeclare each package Medium = Medium,
     each final allowFlowReversal=allowFlowReversal,
     each final m_flow_nominal=m_flow_nominal,
     each final deltaM=deltaM,
@@ -46,7 +47,15 @@ partial model PartialPlantParallel
         rotation=0,
         origin={46,0})));
 
-
+  replaceable Buildings.Fluid.Boilers.BoilerPolynomial boi[num](
+    redeclare each final package Medium = Medium,
+    each effCur=Buildings.Fluid.Types.EfficiencyCurves.Constant,
+    each from_dp=true,
+    each T_start=293.15,
+    each a={0.9},
+    each fue=Fluid.Data.Fuels.NaturalGasHigherHeatingValue())
+    "Hot water boiler"
+    annotation (Placement(transformation(extent={{-20,-10},{0,10}})));
 
 initial equation
   assert(homotopyInitialization, "In " + getInstanceName() +
@@ -54,20 +63,10 @@ initial equation
     level = AssertionLevel.warning);
 
 equation
-  for i in 1:num loop
-  end for;
+
   if use_inputFilter then
-    connect(booToRea.y, filter.u)
-      annotation (Line(points={{-67.4,54},{-60,54},{-60,84},{-55.2,84}},
-        color={0,0,127}));
   else
-    connect(booToRea.y, y_actual)
-      annotation (Line(points={{-67.4,54},{-60,54},{-60,74},{-20,74}},
-        color={0,0,127}));
   end if;
-  connect(on, booToRea.u)
-    annotation (Line(points={{-120,54},{-81.2,54},{-81.2,54}},
-      color={255,0,255}));
   connect(y_actual, val.y)
     annotation (Line(points={{-20,74},{46,74},{46,12}}, color={0,0,127}));
   annotation (    Documentation(info="<html>

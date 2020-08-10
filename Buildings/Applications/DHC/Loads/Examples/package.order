@@ -6,3 +6,4 @@ CouplingTimeSeries
 BaseClasses
 CouplingTimeSeriesWithExtPump
 OpenStudioLoadProfile
+OpenStudioLoadProfileSimHeaCoo
