@@ -296,12 +296,12 @@ model ETSSimplified
   Buildings.Controls.OBC.CDL.Continuous.MultiSum PPumHea(nin=2)
     "Total power drawn by pumps motors for space heating (ETS included, building excluded)"
     annotation (Placement(transformation(extent={{190,410},{210,430}})));
-  Buildings.Fluid.Sources.Boundary_pT bouHeaWat(redeclare final package Medium
-      = MediumBui, nPorts=1)
+  Buildings.Fluid.Sources.Boundary_pT bouHeaWat(redeclare final package Medium =
+        MediumBui, nPorts=1)
     "Pressure boundary condition representing the expansion vessel"
     annotation (Placement(transformation(extent={{170,130},{150,150}})));
-  Buildings.Fluid.Sources.Boundary_pT bouChiWat(redeclare final package Medium
-      = MediumBui, nPorts=1)
+  Buildings.Fluid.Sources.Boundary_pT bouChiWat(redeclare final package Medium =
+        MediumBui, nPorts=1)
     "Pressure boundary condition representing the expansion vessel"
     annotation (Placement(transformation(extent={{-162,-210},{-142,-190}})));
   Buildings.Controls.OBC.CDL.Continuous.MultiSum PPumCoo(nin=3)

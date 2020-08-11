@@ -70,7 +70,7 @@ model HeatingWaterPumpSpeed "Controller for variable speed heating water pumps"
     "Multiplier gain for normalizing dp input"
     annotation (Placement(transformation(extent={{-80,-50},{-60,-30}})));
   Modelica.Blocks.Sources.RealExpression setMas(y=if masFloPum <=
-        m_flow_nominal then m_flow_nominal else numPum*m_flow_nominal)
+        m_flow_nominal*1.001 then m_flow_nominal else numPum*m_flow_nominal)
     "SetPoint of the heating water mass flow rate."
     annotation (Placement(transformation(extent={{0,30},{20,50}})));
   Modelica.Blocks.Interfaces.RealOutput PLR "PLR of the boiler"

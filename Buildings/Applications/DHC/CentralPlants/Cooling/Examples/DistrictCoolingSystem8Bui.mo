@@ -158,8 +158,8 @@ equation
     connect(disNet.ports_aCon[i], bui_ETS[i].port_b2) annotation (Line(points={{
             38.4,32},{38.4,40},{8,40},{8,64},{20,64}}, color={0,127,255}));
   end for;
-  connect(TSetChiWatSup.y, bui_ETS.TSetChiWat) annotation (Line(points={{-59,50},
-          {0,50},{0,73},{19,73}}, color={0,0,127}));
+  connect(TSetChiWatSup.y, bui_ETS.TSetWat) annotation (Line(points={{-59,50},{
+          0,50},{0,73},{19,73}}, color={0,0,127}));
   connect(disNet.dp, firOrdDel.u) annotation (Line(points={{44.7,27.8},{62,27.8},
           {62,-6},{18,-6},{18,-36},{30,-36}}, color={0,0,127}));
   connect(firOrdDel.y, cooPla.dpMea) annotation (Line(points={{53,-36},{68,-36},

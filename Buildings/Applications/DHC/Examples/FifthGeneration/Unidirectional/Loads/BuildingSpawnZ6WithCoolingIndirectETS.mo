@@ -59,7 +59,7 @@ equation
           60},{-80,32},{-30,32}}, color={0,127,255}));
   connect(bui.ports_bHeaWat[1], port_b1) annotation (Line(points={{30,32},{80,32},
           {80,60},{100,60}}, color={0,127,255}));
-  connect(TSetChiWat,ets. TSetBuiSup) annotation (Line(points={{-120,20},{-88,20},
+  connect(TSetWat, ets.TSetBuiSup) annotation (Line(points={{-120,20},{-88,20},
           {-88,-58},{-34,-58}}, color={0,0,127}));
   connect(preSou.ports[1],ets. port_b2) annotation (Line(points={{-78,-76},{-28,
           -76}},                color={0,127,255}));

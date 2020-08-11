@@ -129,12 +129,11 @@ model CoolingIndirect
     "Initial value of output from the controller"
     annotation(Dialog(group="Initialization", tab="Controller",
                       enable=initType == Modelica.Blocks.Types.InitPID.InitialOutput));
-  parameter Boolean reverseActing = false
+  parameter Boolean reverseActing=true
     "Set to true for throttling the water flow rate through a cooling coil controller"
     annotation(Dialog(tab="Controller"));
 
-  Modelica.Blocks.Interfaces.RealInput TSetBuiSup(final quantity=
-        "ThermodynamicTemperature", final unit="K")
+  Modelica.Blocks.Interfaces.RealInput TSetBuiSup
     "Setpoint temperature for building supply"
     annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
 

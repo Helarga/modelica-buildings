@@ -1,4 +1,4 @@
-within Buildings.Applications.DHC.EnergyTransferStations;
+within Buildings.Applications.DHC.EnergyTransferStations.Heating;
 model HeatingIndirect
   "Indirect heating energy transfer station for district energy systems"
   extends Buildings.Fluid.Interfaces.PartialFourPortInterface(
@@ -129,12 +129,11 @@ model HeatingIndirect
     "Initial value of output from the controller"
     annotation(Dialog(group="Initialization", tab="Controller",
                       enable=initType == Modelica.Blocks.Types.InitPID.InitialOutput));
-  parameter Boolean reverseActing=true
+  parameter Boolean reverseActing=false
     "Set to false for throttling the water flow rate through a heating coil controller"
     annotation(Dialog(tab="Controller"));
 
-  Modelica.Blocks.Interfaces.RealInput TSetBuiSup(final quantity=
-        "ThermodynamicTemperature", final unit="K")
+  Modelica.Blocks.Interfaces.RealInput TSetBuiSup
     "Setpoint temperature for building supply"
     annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
 
@@ -322,17 +321,33 @@ annotation (defaultComponentName="coo",
           fillColor={0,0,0},
           fillPattern=FillPattern.Solid),
         Rectangle(
-          extent={{-80,65},{80,54}},
+          extent={{-80,65},{-4,56}},
+          lineColor={0,0,255},
+          pattern=LinePattern.None,
+          fillColor={255,0,0},
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{-4,66},{80,56}},
           lineColor={0,0,255},
           pattern=LinePattern.None,
           fillColor={0,0,255},
           fillPattern=FillPattern.Solid),
         Rectangle(
-          extent={{-80,-55},{80,-66}},
+          extent={{-80,-55},{-4,-64}},
+          lineColor={0,0,255},
+          pattern=LinePattern.None,
+          fillColor={255,0,0},
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{-4,-54},{80,-64}},
           lineColor={0,0,255},
           pattern=LinePattern.None,
           fillColor={0,0,255},
-          fillPattern=FillPattern.Solid)}),                      Diagram(
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{-80,-56},{-4,-64}},
+          lineColor={0,0,255},
+          pattern=LinePattern.None)}),                           Diagram(
         coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,160}})),
     Documentation(info="<html>
 <p>

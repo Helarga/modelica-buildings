@@ -161,11 +161,11 @@ model PlantHeating "Central heating plant."
     annotation (Placement(transformation(
         extent={{-10,10},{10,-10}},
         rotation=90,
-        origin={56,0})));
+        origin={50,0})));
 
   Modelica.Blocks.Math.Add dT(final k1=-1, final k2=+1)
     "Temperature difference"
-    annotation (Placement(transformation(extent={{100,70},{80,90}})));
+    annotation (Placement(transformation(extent={{102,76},{82,96}})));
   Modelica.Blocks.Math.Product pro "Product"
     annotation (Placement(transformation(extent={{54,74},{34,94}})));
   Modelica.Blocks.Math.Gain cp(final k=4200)
@@ -174,14 +174,14 @@ model PlantHeating "Central heating plant."
   Fluid.Sensors.MassFlowRate senMasFlo(
     redeclare package Medium =Medium)
     "Chilled water return mass flow"
-    annotation (Placement(transformation(extent={{88,40},{68,60}})));
+    annotation (Placement(transformation(extent={{84,40},{64,60}})));
   Fluid.Sensors.MassFlowRate senMasFloByp(
     redeclare package Medium = Medium)
     "Chilled water bypass valve mass flow meter"
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=-90,
-        origin={56,-34})));
+        origin={50,-30})));
   Modelica.Blocks.Math.Product pro1[numBoi] "Product" annotation (Placement(
         transformation(
         extent={{-10,10},{10,-10}},
@@ -224,21 +224,21 @@ equation
     annotation (Line(points={{-10,50},{-48,
           50},{-48,-20},{-14,-20}}, color={0,127,255}));
   connect(valByp.port_b, pumHW.port_a)
-    annotation (Line(points={{56,10},{56,50},{10,50}}, color={0,127,255}));
+    annotation (Line(points={{50,10},{50,50},{10,50}}, color={0,127,255}));
   connect(senTHWRet.port_b, senMasFlo.port_a)
-    annotation (Line(points={{120,50},{88,50}}, color={0,127,255}));
+    annotation (Line(points={{120,50},{84,50}}, color={0,127,255}));
   connect(senMasFlo.port_b, pumHW.port_a)
-    annotation (Line(points={{68,50},{10,50}}, color={0,127,255}));
+    annotation (Line(points={{64,50},{10,50}}, color={0,127,255}));
   connect(senTHWSup.T, dT.u2)
-    annotation (Line(points={{106,-39},{106,74},{102,74}},
+    annotation (Line(points={{106,-39},{106,80},{104,80}},
                          color={0,0,127}));
   connect(senTHWRet.T, dT.u1)
-    annotation (Line(points={{130,61},{130,86},{102,86}}, color={0,0,127}));
+    annotation (Line(points={{130,61},{130,92},{104,92}}, color={0,0,127}));
   connect(dT.y, pro.u1)
-    annotation (Line(points={{79,80},{74,80},{74,90},{56,90}},
+    annotation (Line(points={{81,86},{74,86},{74,90},{56,90}},
         color={0,0,127}));
   connect(pro.u2, senMasFlo.m_flow)
-    annotation (Line(points={{56,78},{78,78},{78,61}}, color={0,0,127}));
+    annotation (Line(points={{56,78},{74,78},{74,61}}, color={0,0,127}));
   connect(pro.y, cp.u)
     annotation (Line(points={{33,84},{12,84}},
         color={0,0,127}));
@@ -246,15 +246,15 @@ equation
     annotation (Line(points={{-11,84},{-132,84},{-132,56},{-122,56}},
                                color={0,0,127}));
   connect(valByp.port_a, senMasFloByp.port_b)
-    annotation (Line(points={{56,-10},{56,-24}}, color={0,127,255}));
+    annotation (Line(points={{50,-10},{50,-20}}, color={0,127,255}));
   connect(boiHotWat.port_b, senTHWSup.port_a)
     annotation (Line(points={{6,-20},{
           20,-20},{20,-50},{96,-50}},  color={0,127,255}));
   connect(senMasFloByp.port_a, senTHWSup.port_a)
-    annotation (Line(points={{56,-44},{56,-50},{96,-50}}, color={0,127,255}));
+    annotation (Line(points={{50,-40},{50,-50},{96,-50}}, color={0,127,255}));
   connect(valByp.y, bypValCon.y)
-    annotation (Line(points={{68,-6.66134e-16},{94,
-          -6.66134e-16},{94,0},{111,0}}, color={0,0,127}));
+    annotation (Line(points={{62,-6.66134e-16},{94,-6.66134e-16},{94,0},{111,0}},
+                                         color={0,0,127}));
   connect(pumHW.port_a, expTanCW.ports[1])
     annotation (Line(points={{10,50},{18,
           50},{18,22},{20,22}}, color={0,127,255}));

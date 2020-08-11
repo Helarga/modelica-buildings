@@ -38,8 +38,8 @@ model MultipleSpawnETSmodel
     redeclare package Medium = MediumW, nPorts=3)
     annotation (Placement(transformation(extent={{60,30},{40,50}})));
 equation
-  connect(TSetChiWatSup.y, bui.TSetChiWat) annotation (Line(points={{-38,0},{-28,
-          0},{-28,4},{-11,4}},    color={0,0,127}));
+  connect(TSetChiWatSup.y, bui.TSetWat) annotation (Line(points={{-38,0},{-28,0},
+          {-28,3},{-11,3}}, color={0,0,127}));
   connect(bui.port_a1, boundary1.ports[1:3]) annotation (Line(points={{-10,6},{
           -20,6},{-20,37.3333},{-40,37.3333}},  color={0,127,255}));
   connect(bui.port_b1, boundary2.ports[1:3]) annotation (Line(points={{10,6},{

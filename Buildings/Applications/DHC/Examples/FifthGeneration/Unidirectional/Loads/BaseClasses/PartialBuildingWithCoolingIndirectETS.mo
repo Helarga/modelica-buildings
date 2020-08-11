@@ -35,13 +35,11 @@ partial model PartialBuildingWithCoolingIndirectETS
     annotation(Dialog(group="ETS model parameters"));
 
   // IO CONNECTORS
-  Modelica.Blocks.Interfaces.RealInput TSetChiWat
-    "Chilled water set point"
-    annotation (Placement(transformation(
+  Modelica.Blocks.Interfaces.RealInput TSetWat
+    "Chilled/Heating water set point." annotation (Placement(transformation(
         extent={{-20,-20},{20,20}},
         rotation=0,
-        origin={-120,20}),
-        iconTransformation(
+        origin={-120,20}), iconTransformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
         origin={-110,30})));
