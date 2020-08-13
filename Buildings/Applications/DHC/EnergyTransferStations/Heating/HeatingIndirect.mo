@@ -180,7 +180,9 @@ model HeatingIndirect
     final xi_start=xi_start,
     final xd_start=xd_start,
     final y_start=yCon_start,
-    final reverseActing=reverseActing) "Controller"
+    final reverseActing=reverseActing,
+    reset=Buildings.Types.Reset.Parameter)
+                                       "Controller"
     annotation (Placement(transformation(extent={{-90,-10},{-70,10}})));
 
   Buildings.Fluid.Sensors.TemperatureTwoPort senTDisSup(

@@ -150,7 +150,7 @@ model PlantHeating "Central heating plant."
      redeclare package Medium = Medium,
      m_flow_nominal=mBoi_flow_nominal,
      dpValve_nominal=7000)
-    annotation (Placement(transformation(extent={{10,60},{-10,40}})));
+    annotation (Placement(transformation(extent={{0,60},{-20,40}})));
   Buildings.Fluid.Actuators.Valves.TwoWayEqualPercentage valByp(
     redeclare package Medium = Medium,
     allowFlowReversal=false,
@@ -173,11 +173,11 @@ model PlantHeating "Central heating plant."
     annotation (Placement(transformation(extent={{10,74},{-10,94}})));
   Fluid.Sensors.MassFlowRate senMasFlo(
     redeclare package Medium =Medium)
-    "Chilled water return mass flow"
+    "Heating water return mass flow"
     annotation (Placement(transformation(extent={{84,40},{64,60}})));
   Fluid.Sensors.MassFlowRate senMasFloByp(
     redeclare package Medium = Medium)
-    "Chilled water bypass valve mass flow meter"
+    "Heating water bypass valve mass flow meter"
     annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=-90,
@@ -221,14 +221,14 @@ equation
   connect(dpMea, heaWatPumCon.dpMea)
     annotation (Line(points={{-150,-34},{-122,-34}}, color={0,0,127}));
   connect(pumHW.port_b, boiHotWat.port_a)
-    annotation (Line(points={{-10,50},{-48,
-          50},{-48,-20},{-14,-20}}, color={0,127,255}));
+    annotation (Line(points={{-20,50},{-48,50},{-48,-20},{-14,-20}},
+                                    color={0,127,255}));
   connect(valByp.port_b, pumHW.port_a)
-    annotation (Line(points={{50,10},{50,50},{10,50}}, color={0,127,255}));
+    annotation (Line(points={{50,10},{50,50},{0,50}},  color={0,127,255}));
   connect(senTHWRet.port_b, senMasFlo.port_a)
     annotation (Line(points={{120,50},{84,50}}, color={0,127,255}));
   connect(senMasFlo.port_b, pumHW.port_a)
-    annotation (Line(points={{64,50},{10,50}}, color={0,127,255}));
+    annotation (Line(points={{64,50},{0,50}},  color={0,127,255}));
   connect(senTHWSup.T, dT.u2)
     annotation (Line(points={{106,-39},{106,80},{104,80}},
                          color={0,0,127}));
@@ -256,10 +256,10 @@ equation
     annotation (Line(points={{62,-6.66134e-16},{94,-6.66134e-16},{94,0},{111,0}},
                                          color={0,0,127}));
   connect(pumHW.port_a, expTanCW.ports[1])
-    annotation (Line(points={{10,50},{18,
-          50},{18,22},{20,22}}, color={0,127,255}));
+    annotation (Line(points={{0,50},{18,50},{18,22},{20,22}},
+                                color={0,127,255}));
   connect(heaWatPumCon.y, pumHW.u) annotation (Line(points={{-99,-30},{-52,-30},
-          {-52,62},{28,62},{28,54},{12.2,54}}, color={0,0,127}));
+          {-52,62},{28,62},{28,54},{2.2,54}},  color={0,0,127}));
   connect(bypValCon.u_s, norDecMasFlo.y)
     annotation (Line(points={{134,0},{139,0}}, color={0,0,127}));
   connect(on, bypValCon.trigger)

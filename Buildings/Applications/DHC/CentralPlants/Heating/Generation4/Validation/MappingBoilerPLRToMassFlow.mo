@@ -58,8 +58,7 @@ model MappingBoilerPLRToMassFlow
   Modelica.Blocks.Sources.Pulse mHea(amplitude=0.5*Q_flow_nominal/(4200*5),
     width=50,
     period=300,
-    offset=Q_flow_nominal/(4200*5))
-    "Heating water mass flow rate."
+    offset=Q_flow_nominal/(4200*5)) "Heating water mass flow rate."
     annotation (Placement(transformation(extent={{-98,14},{-78,34}})));
 equation
 
