@@ -52,14 +52,14 @@ model HeatingIndirect
     min=0+273,
     max=100+273.15,
     start=5+273.15,
-    final displayUnit="K")
+    displayUnit="K")
     "Nominal temperature at port a1"
     annotation(Dialog(group="Heat exchanger"));
   parameter Modelica.SIunits.Temperature T_a2_nominal(
     min=0+273,
     max=100+273.15,
     start=7+273.15,
-    final displayUnit="K")
+    displayUnit="K")
     "Nominal temperature at port a2"
     annotation(Dialog(group="Heat exchanger"));
   parameter Modelica.SIunits.Efficiency eta(
@@ -181,7 +181,7 @@ model HeatingIndirect
     final xd_start=xd_start,
     final y_start=yCon_start,
     final reverseActing=reverseActing,
-    reset=Buildings.Types.Reset.Parameter)
+    reset=Buildings.Types.Reset.Disabled)
                                        "Controller"
     annotation (Placement(transformation(extent={{-90,-10},{-70,10}})));
 

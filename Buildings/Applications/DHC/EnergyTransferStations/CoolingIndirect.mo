@@ -52,14 +52,14 @@ model CoolingIndirect
     min=0+273,
     max=100+273.15,
     start=5+273.15,
-    final displayUnit="K")
+    displayUnit="K")
     "Nominal temperature at port a1"
     annotation(Dialog(group="Heat exchanger"));
   parameter Modelica.SIunits.Temperature T_a2_nominal(
     min=0+273,
     max=100+273.15,
     start=7+273.15,
-    final displayUnit="K")
+    displayUnit="K")
     "Nominal temperature at port a2"
     annotation(Dialog(group="Heat exchanger"));
   parameter Modelica.SIunits.Efficiency eta(
