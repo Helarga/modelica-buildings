@@ -8,16 +8,6 @@ model OneZone "Validation model for one zone"
   Modelica.Blocks.Sources.Constant qRadGai_flow(k=0) "Radiative heat gain"
     annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
 
-  inner Buildings.ThermalZones.EnergyPlus.Building building(
-    idfName = Modelica.Utilities.Files.loadResource(
-      "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/SingleFamilyHouse_TwoSpeed_ZoneAirBalance/SingleFamilyHouse_TwoSpeed_ZoneAirBalance.idf"),
-    weaName = Modelica.Utilities.Files.loadResource(
-      "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"),
-    fmuName = Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/src/ThermalZones/EnergyPlus/FMUs/Zones1.fmu"),
-    showWeatherData=false)
-    "Building model"
-    annotation (Placement(transformation(extent={{20,60},{40,80}})));
-
   Modelica.Blocks.Routing.Multiplex3 multiplex3_1
     "Multiplex to combine signals into a vector"
     annotation (Placement(transformation(extent={{-40,0},{-20,20}})));
@@ -48,6 +38,17 @@ model OneZone "Validation model for one zone"
     annotation (Placement(transformation(extent={{-40,-50},{-20,-30}})));
   Modelica.Blocks.Sources.Constant qLatGai_flow(k=0) "Latent heat gain"
     annotation (Placement(transformation(extent={{-80,-30},{-60,-10}})));
+  inner Building                                   building(
+    idfName=Modelica.Utilities.Files.loadResource(
+        "modelica://RTU/NRELNewModels/Resources/RefSmallOfficeChicago.idf"),
+    weaName=Modelica.Utilities.Files.loadResource(
+        "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"),
+    fmuName=Modelica.Utilities.Files.loadResource(
+        "modelica://Buildings/Resources/src/ThermalZones/EnergyPlus/FMUs/Zones1.fmu"),
+    showWeatherData=false)
+    "Building model"
+    annotation (Placement(transformation(extent={{20,60},{40,80}})));
+
 equation
   connect(qRadGai_flow.y,multiplex3_1. u1[1])  annotation (Line(
       points={{-59,40},{-52,40},{-52,17},{-42,17}},
