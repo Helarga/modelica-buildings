@@ -42,20 +42,20 @@ model MappingBoilerPLRToMassFlow
     annotation (Placement(transformation(extent={{-34,-10},{-14,10}})));
 
   Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(table=[0,0,0; 1,1,0; 2,1,1])
-    "Determine which pump should be on - rotation control is not considered here"
-    annotation (Placement(transformation(extent={{38,58},{58,78}})));
+    annotation (Placement(transformation(extent={{38,70},{58,90}})));
   Modelica.Blocks.Math.Product pro1[numBoi] "Product" annotation (Placement(
         transformation(
         extent={{-10,10},{10,-10}},
         rotation=-90,
         origin={38,30})));
   Modelica.Blocks.Sources.Pulse          OnOff_y(
-    amplitude=1,
+    amplitude=0,
     width=50,
     period=300,
     offset=1) "On off signal for parallel boilers."
     annotation (Placement(transformation(extent={{-18,70},{2,90}})));
-  Modelica.Blocks.Sources.Pulse mHea(amplitude=0.5*Q_flow_nominal/(4200*5),
+  Modelica.Blocks.Sources.Pulse mHea(
+    amplitude=-0.5*Q_flow_nominal/(4200*5),
     width=50,
     period=300,
     offset=Q_flow_nominal/(4200*5)) "Heating water mass flow rate."
@@ -76,9 +76,9 @@ equation
  end for;
 
   connect(combiTable1Ds.u, OnOff_y.y)
-    annotation (Line(points={{36,68},{28,68},{28,80},{3,80}},color={0,0,127}));
-  connect(combiTable1Ds.y, pro1.u2) annotation (Line(points={{59,68},{64,68},{64,
-          52},{44,52},{44,42}},    color={0,0,127}));
+    annotation (Line(points={{36,80},{3,80}},                color={0,0,127}));
+  connect(combiTable1Ds.y, pro1.u2) annotation (Line(points={{59,80},{64,80},{
+          64,52},{44,52},{44,42}}, color={0,0,127}));
   connect(pro1.y, boi.PLR) annotation (Line(points={{38,19},{38,16},{2,16},{2,4},
           {13,4}},         color={0,0,127}));
   connect(heaWatPumCon.PLR, pro1[1].u1)
