@@ -1,2 +1,9 @@
 MappingBoilerPLRToMassFlow
 CentralPlantHeating4G
+hwPumps
+CentralPlantHeating4GSec
+IndirectHeatingEts
+IndirectCoolingEts
+SpawnETSHeating
+SpawnETSHeatingInfiniteSource
+CentralPlantHeating4GWOdisNet

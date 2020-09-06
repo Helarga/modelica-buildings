@@ -150,14 +150,14 @@ equation
           {10,10},{-39,10}}, color={255,0,255}));
   connect(twoOn.active, booToInt1.u)
     annotation (Line(points={{-39,-70},{18,-70}},          color={255,0,255}));
-  connect(booToInt.y, addInt.u1) annotation (Line(points={{41,-40},{58,-40}},
+  connect(booToInt.y, addInt.u1) annotation (Line(points={{42,-40},{58,-40}},
                           color={255,127,0}));
-  connect(booToInt1.y, addInt.u2) annotation (Line(points={{41,-70},{48,-70},{
+  connect(booToInt1.y, addInt.u2) annotation (Line(points={{42,-70},{48,-70},{
           48,-52},{58,-52}}, color={255,127,0}));
-  connect(addInt.y, intToRea.u) annotation (Line(points={{81,-46},{90,-46},{90,
+  connect(addInt.y, intToRea.u) annotation (Line(points={{82,-46},{90,-46},{90,
           -20},{30,-20},{30,0},{38,0}}, color={255,127,0}));
   connect(intToRea.y, combiTable1Ds.u)
-    annotation (Line(points={{61,0},{68,0},{68,0}}, color={0,0,127}));
+    annotation (Line(points={{62,0},{68,0},{68,0}}, color={0,0,127}));
   annotation (                   Documentation(info="<html>
 <p>This model implements a simple staging control logic for variable speed pumps.
 </p>

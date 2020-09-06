@@ -28,8 +28,7 @@ model Heater_T "Heater with prescribed outlet temperature"
 
   Modelica.Blocks.Interfaces.RealInput TSet(
     unit="K",
-    displayUnit="degC")
-    "Set point temperature of the fluid that leaves port_b"
+    displayUnit="degC") "Set point temperature of the fluid that leaves port_b"
     annotation (Placement(transformation(origin={-120,80},
               extent={{20,-20},{-20,20}},rotation=180)));
 
@@ -37,12 +36,19 @@ model Heater_T "Heater with prescribed outlet temperature"
     "Heat flow rate added to the fluid (if flow is from port_a to port_b)"
     annotation (Placement(transformation(extent={{100,70},{120,90}})));
 
+  Modelica.Blocks.Interfaces.BooleanInput on "Control On off signal"
+    annotation (Placement(transformation(
+        origin={-120,-40},
+        extent={{20,-20},{-20,20}},
+        rotation=180)));
+
 equation
   connect(TSet, outCon.TSet) annotation (Line(points={{-120,80},{-96,80},{10,80},
           {10,8},{19,8}}, color={0,0,127}));
   connect(outCon.Q_flow, Q_flow) annotation (Line(points={{41,8},{80,8},{80,80},
           {110,80}}, color={0,0,127}));
-
+  connect(on, outCon.on) annotation (Line(points={{-120,-40},{10,-40},{10,-4},{18,
+          -4}}, color={255,0,255}));
     annotation (
     defaultComponentName="hea",
 Documentation(info="<html>

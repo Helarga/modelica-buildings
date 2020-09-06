@@ -5,8 +5,7 @@ partial model PartialPlantParallelInterface
   extends Buildings.Fluid.Interfaces.TwoPortFlowResistanceParameters(
            final computeFlowResistance=true);
 
-  parameter Integer num(min=1)=2 "Number of equipment";
-
+//parameter Integer num "Number of equipment";
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
           extent={{-80,80},{80,-80}},

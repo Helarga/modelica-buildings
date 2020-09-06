@@ -63,7 +63,12 @@ model PrescribedOutlet
         extent={{10,-10},{-10,10}},
         rotation=180,
         origin={-110,40})));
-
+  Modelica.Blocks.Interfaces.BooleanInput on
+    "Boiler on/off signal."
+    annotation (Placement(transformation(
+        origin={-120,-40},
+        extent={{20,-20},{-20,20}},
+        rotation=180)));
   Modelica.Blocks.Interfaces.RealOutput Q_flow(unit="W")
     "Heat flow rate added to the fluid (if flow is from port_a to port_b)"
     annotation (Placement(transformation(extent={{100,70},{120,90}})));
@@ -279,7 +284,7 @@ equation
   end if;
 
   // Compute enthalpy leaving the component.
-  if use_TSet then
+  if use_TSet and on then
     if not restrictHeat and not restrictCool then
       // No capacity limit
       dhAct = 0;

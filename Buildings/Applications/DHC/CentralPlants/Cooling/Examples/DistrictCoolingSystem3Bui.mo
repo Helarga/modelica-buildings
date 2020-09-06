@@ -98,7 +98,7 @@ model DistrictCoolingSystem3Bui
     annotation (Placement(transformation(extent={{-34,-46},{-14,-26}})));
 
   Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads.BuildingSpawnZ6WithCoolingIndirectETS bui_ETS[nBui](
-      TChiWatSup_nominal=280.15)
+      dT_nominal=5, TChiWatSup_nominal=280.15)
     annotation (Placement(transformation(extent={{20,60},{40,80}})));
     //dp_nominal=100000)
   Buildings.Fluid.Sources.Boundary_pT heaSou(
@@ -162,11 +162,13 @@ equation
           {62,-6},{18,-6},{18,-36},{30,-36}}, color={0,0,127}));
   connect(firOrdDel.y, cooPla.dpMea) annotation (Line(points={{53,-36},{68,-36},
           {68,-68},{-50,-68},{-50,-39},{-36,-39}}, color={0,0,127}));
+  connect(disNet.port_bDisSup, disNet.port_aDisRet) annotation (Line(points={{
+          44,26},{52,26},{52,22.4},{44,22.4}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
       StartTime=15724800,
-      StopTime=15897600,
+      StopTime=15728400,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"));
 end DistrictCoolingSystem3Bui;

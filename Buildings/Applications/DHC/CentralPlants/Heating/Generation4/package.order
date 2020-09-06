@@ -9,3 +9,6 @@ PartialPlantParallelInterface
 PartialPlantParallel
 ValvesParameters
 ValveParameters
+PlantHeatingtrY
+PlantHeatingNewBoiler
+Boiler_TParallel

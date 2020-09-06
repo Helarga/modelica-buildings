@@ -48,23 +48,15 @@ model CoolingIndirect
     start=10000)
     "Nominal heat transfer"
     annotation(Dialog(group="Heat exchanger"));
-  parameter Modelica.SIunits.Temperature T_a1_nominal(
-    min=0+273,
-    max=100+273.15,
-    start=5+273.15,
-    displayUnit="K")
+  parameter Modelica.SIunits.Temperature T_a1_nominal
     "Nominal temperature at port a1"
     annotation(Dialog(group="Heat exchanger"));
-  parameter Modelica.SIunits.Temperature T_a2_nominal(
-    min=0+273,
-    max=100+273.15,
-    start=7+273.15,
-    displayUnit="K")
+  parameter Modelica.SIunits.Temperature T_a2_nominal
     "Nominal temperature at port a2"
     annotation(Dialog(group="Heat exchanger"));
   parameter Modelica.SIunits.Efficiency eta(
     final min=0,
-    final max=1)=0.8
+    final max=1)
     "Constant effectiveness"
     annotation(Dialog(group="Heat exchanger"));
 
@@ -76,8 +68,7 @@ model CoolingIndirect
   parameter Real k(final min=0, final unit="1") = 1
     "Gain of controller"
     annotation(Dialog(tab="Controller"));
-  parameter Modelica.SIunits.Time Ti(
-    min=Modelica.Constants.small)=120
+  parameter Modelica.SIunits.Time Ti=40
     "Time constant of integrator block"
      annotation (Dialog(tab="Controller", enable=
           controllerType == Modelica.Blocks.Types.SimpleController.PI or
@@ -93,7 +84,7 @@ model CoolingIndirect
   parameter Real yMin=0
    "Lower limit of output"
     annotation(Dialog(tab="Controller"));
-  parameter Real wp(final min=0) = 1
+  parameter Real wp(final min=0)=1
    "Set-point weight for Proportional block (0..1)"
     annotation(Dialog(tab="Controller"));
   parameter Real wd(final min=0) = 0
@@ -101,7 +92,7 @@ model CoolingIndirect
     annotation(Dialog(tab="Controller", enable=
           controllerType==Modelica.Blocks.Types.SimpleController.PD or
           controllerType==Modelica.Blocks.Types.SimpleController.PID));
-  parameter Real Ni(min=100*Modelica.Constants.eps) = 0.9
+  parameter Real Ni(min=100*Modelica.Constants.eps)=0.9
     "Ni*Ti is time constant of anti-windup compensation"
     annotation(Dialog(tab="Controller", enable=
           controllerType==Modelica.Blocks.Types.SimpleController.PI or
@@ -111,8 +102,7 @@ model CoolingIndirect
     annotation(Dialog(tab="Controller", enable=
           controllerType==Modelica.Blocks.Types.SimpleController.PD or
           controllerType==Modelica.Blocks.Types.SimpleController.PID));
-  parameter Modelica.Blocks.Types.InitPID initType=
-    Modelica.Blocks.Types.InitPID.DoNotUse_InitialIntegratorState
+  parameter Modelica.Blocks.Types.InitPID initType=Modelica.Blocks.Types.InitPID.InitialOutput
     "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
     annotation(Evaluate=true, Dialog(group="Initialization", tab="Controller"));
   parameter Real xi_start=0
@@ -129,7 +119,7 @@ model CoolingIndirect
     "Initial value of output from the controller"
     annotation(Dialog(group="Initialization", tab="Controller",
                       enable=initType == Modelica.Blocks.Types.InitPID.InitialOutput));
-  parameter Boolean reverseActing=true
+  parameter Boolean reverseActing=false
     "Set to true for throttling the water flow rate through a cooling coil controller"
     annotation(Dialog(tab="Controller"));
 

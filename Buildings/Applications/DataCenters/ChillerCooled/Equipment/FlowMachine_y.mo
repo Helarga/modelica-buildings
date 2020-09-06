@@ -1,6 +1,7 @@
 within Buildings.Applications.DataCenters.ChillerCooled.Equipment;
 model FlowMachine_y "Identical speed controlled flow machines"
   extends Buildings.Applications.DataCenters.ChillerCooled.Equipment.BaseClasses.PartialPumpParallel(
+    l=0.001,
     redeclare final Buildings.Fluid.Movers.SpeedControlled_y pum,
     rhoStd=Medium.density_pTX(101325, 273.15+4, Medium.X_default));
 

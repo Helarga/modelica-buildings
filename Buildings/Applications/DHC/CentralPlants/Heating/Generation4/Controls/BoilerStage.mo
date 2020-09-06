@@ -11,6 +11,8 @@ model BoilerStage "Stage controller for boilers"
 
   parameter Modelica.SIunits.Power  dQ = 0.25*QBoi_nominal
     "Deadband for critical point of heating load";
+  parameter Integer numBoi
+    "Number of boilers";
 
   Modelica.Blocks.Interfaces.RealInput QLoa(unit="W") "Total heating loads"
     annotation (Placement(transformation(extent={{-140,-60},{-100,-20}})));
@@ -77,18 +79,24 @@ model BoilerStage "Stage controller for boilers"
         origin={-10,40})));
   inner Modelica.StateGraph.StateGraphRoot stateGraphRoot
     annotation (Placement(transformation(extent={{-100,58},{-80,78}})));
-  Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(table=[0,0,0; 1,1,0; 2,1,1])
+  Modelica.Blocks.Tables.CombiTable1Ds comTab(table=[0,0,0; 1,1,0; 2,1,1])
     annotation (Placement(transformation(extent={{70,-10},{90,10}})));
   Buildings.Controls.OBC.CDL.Conversions.BooleanToInteger booToInt(
     final integerTrue=1, final integerFalse=0)
-    annotation (Placement(transformation(extent={{30,-40},{50,-20}})));
+    annotation (Placement(transformation(extent={{20,-40},{40,-20}})));
   Buildings.Controls.OBC.CDL.Conversions.BooleanToInteger booToInt1(
     final integerFalse=0, final integerTrue=2)
-    annotation (Placement(transformation(extent={{30,-80},{50,-60}})));
+    annotation (Placement(transformation(extent={{20,-80},{40,-60}})));
   Buildings.Controls.OBC.CDL.Integers.Add addInt
-    annotation (Placement(transformation(extent={{70,-60},{90,-40}})));
+    annotation (Placement(transformation(extent={{60,-60},{80,-40}})));
   Buildings.Controls.OBC.CDL.Conversions.IntegerToReal intToRea
-    annotation (Placement(transformation(extent={{40,-10},{60,10}})));
+    annotation (Placement(transformation(extent={{38,-10},{58,10}})));
+  Modelica.Blocks.Math.RealToBoolean boiOn[numBoi]
+    "Real value to boolean value"
+    annotation (Placement(transformation(extent={{68,30},{88,50}})));
+  Modelica.Blocks.Interfaces.BooleanOutput y_On[numBoi]
+    "On signal of the boilers" annotation (Placement(transformation(extent={{100,
+            30},{120,50}}), iconTransformation(extent={{100,30},{120,50}})));
 equation
   connect(off.outPort[1], offToOne.inPort) annotation (Line(points={{-50,59.5},{
           -50,44}},               color={0,0,0}));
@@ -102,22 +110,28 @@ equation
           {0,20},{-49.5,20},{-49.5,11}},   color={0,0,0}));
   connect(offToOne.outPort, oneOn.inPort[1]) annotation (Line(points={{-50,38.5},
           {-50,24},{-50,11},{-50.5,11}}, color={0,0,0}));
-  connect(oneOn.outPort[2], oneToOff.inPort) annotation (Line(points={{-49.75,-10.5},
-          {-49.75,-18},{-10,-18},{-10,36}}, color={0,0,0}));
+  connect(oneOn.outPort[2], oneToOff.inPort) annotation (Line(points={{-49.75,
+          -10.5},{-49.75,-20},{-10,-20},{-10,36}},
+                                            color={0,0,0}));
   connect(oneOn.outPort[1], oneToTwo.inPort) annotation (Line(points={{-50.25,-10.5},
           {-50.25,-18},{-50,-18},{-50,-36}}, color={0,0,0}));
-  connect(combiTable1Ds.y, y) annotation (Line(points={{91,0},{110,0}}, color={0,0,127}));
-  connect(combiTable1Ds.u, intToRea.y) annotation (Line(points={{68,0},{62,0}}, color={0,0,127}));
-  connect(addInt.u2, booToInt1.y) annotation (Line(points={{68,-56},{60,-56},{
-          60,-70},{52,-70}},
-                          color={255,127,0}));
-  connect(oneOn.active, booToInt.u) annotation (Line(points={{-39,0},{20,0},{20,
-          -30},{28,-30}}, color={255,0,255}));
-  connect(twoOn.active, booToInt1.u) annotation (Line(points={{-39,-70},{28,-70}}, color={255,0,255}));
-  connect(booToInt.y, addInt.u1) annotation (Line(points={{52,-30},{60,-30},{60,
-          -44},{68,-44}}, color={255,127,0}));
-  connect(addInt.y, intToRea.u) annotation (Line(points={{92,-50},{94,-50},{94,-14},
-          {34,-14},{34,0},{38,0}}, color={255,127,0}));
+  connect(comTab.y, y)
+    annotation (Line(points={{91,0},{110,0}}, color={0,0,127}));
+  connect(comTab.u, intToRea.y)
+    annotation (Line(points={{68,0},{60,0}}, color={0,0,127}));
+  connect(addInt.u2, booToInt1.y) annotation (Line(points={{58,-56},{48,-56},{48,
+          -70},{42,-70}}, color={255,127,0}));
+  connect(oneOn.active, booToInt.u) annotation (Line(points={{-39,0},{4,0},{4,-30},
+          {18,-30}},      color={255,0,255}));
+  connect(twoOn.active, booToInt1.u) annotation (Line(points={{-39,-70},{18,-70}}, color={255,0,255}));
+  connect(booToInt.y, addInt.u1) annotation (Line(points={{42,-30},{46,-30},{46,
+          -44},{58,-44}}, color={255,127,0}));
+  connect(addInt.y, intToRea.u) annotation (Line(points={{82,-50},{94,-50},{94,-14},
+          {34,-14},{34,0},{36,0}}, color={255,127,0}));
+  connect(comTab.y, boiOn.u) annotation (Line(points={{91,0},{92,0},{92,20},{60,
+          20},{60,40},{66,40}}, color={0,0,127}));
+  connect(boiOn.y, y_On)
+    annotation (Line(points={{89,40},{110,40}}, color={255,0,255}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}})),           Icon(coordinateSystem(
           preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={

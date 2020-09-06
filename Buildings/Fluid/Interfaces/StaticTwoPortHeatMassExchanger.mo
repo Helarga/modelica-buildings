@@ -43,7 +43,7 @@ model StaticTwoPortHeatMassExchanger
 
   // Outputs that are needed in models that extend this model
   Modelica.Blocks.Interfaces.RealOutput hOut(unit="J/kg")
-    "Leaving temperature of the component";
+    "Leaving enthalpy of the component";
 
   Modelica.Blocks.Interfaces.RealOutput XiOut[Medium.nXi](each unit="1",
                                                           each min=0,

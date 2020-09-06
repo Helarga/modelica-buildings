@@ -16,12 +16,15 @@ partial model PartialPlantParallel
     annotation(HideResult=true);
 
   // Isolation valve parameters
+
   parameter Real l( min=1e-10, max=1) = 0.0001
     "Valve leakage, l=Kv(y=0)/Kv(y=1)"
     annotation(Dialog(group="Two-way valve"));
   parameter Real kFixed(unit="", min=0)= m_flow_nominal ./ sqrt( dp_nominal)
     "Flow coefficient of fixed resistance that may be in series with valve 1, k=m_flow/sqrt(dp), with unit=(kg.m)^(1/2)."
    annotation(Dialog(group="Two-way valve"));
+   parameter Integer num=2
+    "Number of equipment";
 
   Buildings.Fluid.Actuators.Valves.TwoWayLinear val[num](
     redeclare each package Medium = Medium,
@@ -47,13 +50,10 @@ partial model PartialPlantParallel
         rotation=0,
         origin={46,0})));
 
-  replaceable Buildings.Fluid.Boilers.BoilerPolynomial boi[num](
+  replaceable Buildings.Fluid.HeatExchangers.Heater_T boi[num](
     redeclare each final package Medium = Medium,
-    each effCur=Buildings.Fluid.Types.EfficiencyCurves.Constant,
     each from_dp=true,
-    each T_start=293.15,
-    each a={0.9},
-    each fue=Fluid.Data.Fuels.NaturalGasHigherHeatingValue())
+    each T_start=293.15)
     "Hot water boiler"
     annotation (Placement(transformation(extent={{-20,-10},{0,10}})));
 
@@ -64,12 +64,10 @@ initial equation
 
 equation
 
-  if use_inputFilter then
-  else
-  end if;
+
   connect(y_actual, val.y)
     annotation (Line(points={{-20,74},{46,74},{46,12}}, color={0,0,127}));
-  annotation (    Documentation(info="<html>
+annotation (    Documentation(info="<html>
 <p>
 Partial model that can be extended to construct parallel chillers such as
 <a href=\"modelica://Buildings.Applications.DataCenters.ChillerCooled.Equipment.ElectricChillerParallel\">

@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.CentralPlants.Heating.Generation4;
-model PlantHeating "Central heating plant."
+model PlantHeatingNewBoiler "Central heating plant."
 
   package Medium =  Buildings.Media.Water "MediumW model";
 
@@ -77,28 +77,22 @@ model PlantHeating "Central heating plant."
         iconTransformation(extent={{90,-60},{110,-40}})));
 
   Modelica.Blocks.Interfaces.BooleanInput on "On signal of the plant"
-    annotation (Placement(transformation(extent={{-160,30},{-140,50}}),
+    annotation (Placement(transformation(extent={{-160,62},{-140,82}}),
         iconTransformation(extent={{-140,60},{-100,100}})));
 
   Modelica.Blocks.Interfaces.RealInput dpMea(final unit="Pa")
     "Measured pressure difference" annotation (Placement(transformation(extent={{-160,
-            -30},{-140,-10}}),      iconTransformation(extent={{-140,-50},{-100,
+            -40},{-140,-20}}),      iconTransformation(extent={{-140,-50},{-100,
             -10}})));
 
-  BoilerParallel boiHotWat(
+  Boiler_TParallel boiHotWat(
     redeclare package Medium = Medium,
     m_flow_nominal=mBoi_flow_nominal,
     show_T=true,
-    rhoStd=Medium.density_pTX(
-        Medium.p_default,
-        Medium.T_default,
-        Medium.X_default),
-    delT_nominal=delT_nominal,
-    Q_flow_nominal=QBoi_flow_nominal,
     dp_nominal=dpBoi_nominal,
-    numBoi=2)
-    "Parallel boilers "
-    annotation (Placement(transformation(extent={{0,-60},{20,-40}})));
+    QMax_flow=QBoi_flow_nominal)
+                     "Parallel boilers "
+    annotation (Placement(transformation(extent={{10,-60},{30,-40}})));
 
   Buildings.Fluid.Sensors.TemperatureTwoPort THWSup(redeclare package Medium =
         Medium, m_flow_nominal=mHW_flow_nominal)
@@ -121,8 +115,9 @@ model PlantHeating "Central heating plant."
     tWai=tWai,
     QBoi_nominal=QBoi_flow_nominal,
     criPoiLoa=0.7*QBoi_flow_nominal,
-    dQ=0.25*QBoi_flow_nominal)      "Boiler staging controller"
-    annotation (Placement(transformation(extent={{-120,54},{-100,74}})));
+    dQ=0.25*QBoi_flow_nominal,
+    numBoi=numBoi)                  "Boiler staging controller"
+    annotation (Placement(transformation(extent={{-120,58},{-100,78}})));
 
   Modelica.Blocks.Sources.RealExpression mPum_flow(y=pumHW.port_a.m_flow)
     "Total heating water pump mass flow rate"
@@ -172,7 +167,7 @@ model PlantHeating "Central heating plant."
     annotation (Placement(transformation(extent={{54,74},{34,94}})));
   Modelica.Blocks.Math.Gain cp(final k=4200)
     "Specific heat multiplier to calculate heat flow rate"
-    annotation (Placement(transformation(extent={{10,74},{-10,94}})));
+    annotation (Placement(transformation(extent={{0,76},{-20,96}})));
   Fluid.Sensors.MassFlowRate senMasFlo(
     redeclare package Medium =Medium)
     "Heating water return mass flow"
@@ -184,11 +179,6 @@ model PlantHeating "Central heating plant."
         extent={{10,10},{-10,-10}},
         rotation=-90,
         origin={54,-30})));
-  Modelica.Blocks.Math.Product pro1[numBoi] "Product" annotation (Placement(
-        transformation(
-        extent={{-10,10},{10,-10}},
-        rotation=-90,
-        origin={-70,-10})));
   final parameter Medium.ThermodynamicState sta_default=
     Medium.setState_pTX(
       T=Medium.T_default,
@@ -199,47 +189,44 @@ model PlantHeating "Central heating plant."
     Medium.specificHeatCapacityCp(sta_default)
     "Specific heat capacity of the fluid";
 
-  Fluid.Sources.Boundary_pT           expTanCW(redeclare package Medium =
+  Buildings.Fluid.Sources.Boundary_pT expTanCW(redeclare package Medium =
         Medium, nPorts=1)
      "Heating water expansion tank"
     annotation (Placement(transformation(extent={{-8,6},{12,26}})));
-  Modelica.Blocks.Math.RealToBoolean boiOn[numBoi]
-    "Real value to boolean value"
-    annotation (Placement(transformation(extent={{-30,-20},{-10,0}})));
+  Modelica.Blocks.Interfaces.RealInput THeaSet(final unit="K", displayUnit="degC")
+    "Heating water setpoint." annotation (Placement(transformation(extent={{-160,
+            -60},{-140,-40}}), iconTransformation(extent={{-140,-104},{-100,-64}})));
+
 equation
  for i in 1:numBoi loop
-    connect(heaWatPumCon.PLR, pro1[i].u1) annotation (Line(points={{-99,-24},{
-            -94,-24},{-94,12},{-76,12},{-76,2}},
-                                            color={0,0,127}));
+  connect(THeaSet, boiHotWat.TSet[i]) annotation (Line(points={{-150,-50},{-60,
+            -50},{-60,-54},{9,-54}},
+                              color={0,0,127}));
  end for;
-
-  connect(on,boiStaCon.on)  annotation (Line(points={{-150,40},{-136,40},{-136,68},{-122,68}},
+  connect(on,boiStaCon.on)  annotation (Line(points={{-150,72},{-122,72}},
                       color={255,0,255}));
   connect(mPum_flow.y, heaWatPumCon.masFloPum) annotation (Line(points={{-121,40},
           {-132,40},{-132,-23.4},{-121,-23.4}},
                                            color={0,0,127}));
-  connect(dpMea, heaWatPumCon.dpMea)  annotation (Line(points={{-150,-20},{-138,-20},{-138,-35},{-121,-35}},
-                                                     color={0,0,127}));
+  connect(dpMea, heaWatPumCon.dpMea)  annotation (Line(points={{-150,-30},{-138,
+          -30},{-138,-35},{-121,-35}},               color={0,0,127}));
   connect(dT.y, pro.u1)  annotation (Line(points={{77,84},{74,84},{74,90},{56,90}},
         color={0,0,127}));
-  connect(pro.y, cp.u)  annotation (Line(points={{33,84},{12,84}},
+  connect(pro.y, cp.u)  annotation (Line(points={{33,84},{22,84},{22,86},{2,86}},
         color={0,0,127}));
-  connect(cp.y, boiStaCon.QLoa)  annotation (Line(points={{-11,84},{-132,84},{-132,60},{-122,60}},
-                               color={0,0,127}));
+  connect(cp.y, boiStaCon.QLoa)  annotation (Line(points={{-21,86},{-134,86},{-134,
+          64},{-122,64}},      color={0,0,127}));
   connect(valByp.port_a, senMasFloByp.port_b)   annotation (Line(points={{54,-10},{54,-20}}, color={0,127,255}));
-  connect(heaWatPumCon.y, pumHW.u) annotation (Line(points={{-99,-30},{-48,-30},
-          {-48,68},{20,68},{20,54},{2,54}},    color={0,0,127}));
-  connect(on, heaWatPumCon.resPI) annotation (Line(points={{-150,40},{-136,40},{
-          -136,-37},{-121,-37}}, color={255,0,255}));
+  connect(heaWatPumCon.y, pumHW.u) annotation (Line(points={{-99,-30},{-60,-30},
+          {-60,68},{8,68},{8,54},{2,54}},      color={0,0,127}));
   connect(senMasFloByp.m_flow, heaWatPumCon.meaFloByPas) annotation (Line(
         points={{43,-30},{40,-30},{40,-74},{-130,-74},{-130,-38.8},{-121,-38.8}},
         color={0,0,127}));
   connect(port_a, THWRet.port_a)   annotation (Line(points={{160,50},{114,50}}, color={0,127,255}));
   connect(pumHW.port_b, boiHotWat.port_a) annotation (Line(points={{-20,50},{
-          -36,50},{-36,-50},{0,-50}},
+          -36,50},{-36,-50},{10,-50}},
                                     color={0,127,255}));
-  connect(boiHotWat.port_b, THWSup.port_a)  annotation (Line(points={{20,-50},{
-          122,-50}},                                                                      color={0,127,255}));
+  connect(boiHotWat.port_b, THWSup.port_a)  annotation (Line(points={{30,-50},{122,-50}}, color={0,127,255}));
   connect(THWSup.port_b, port_b)   annotation (Line(points={{142,-50},{160,-50}}, color={0,127,255}));
   connect(pumHW.port_a, senMasFlo.port_b)   annotation (Line(points={{0,50},{24,50}}, color={0,127,255}));
   connect(senMasFlo.port_a, THWRet.port_b)   annotation (Line(points={{44,50},{94,50}}, color={0,127,255}));
@@ -249,21 +236,15 @@ equation
   connect(senMasFlo.m_flow, pro.u2) annotation (Line(points={{34,61},{72,61},{72,
           78},{56,78}}, color={0,0,127}));
   connect(valByp.port_b, senMasFlo.port_a)   annotation (Line(points={{54,10},{54,50},{44,50}}, color={0,127,255}));
-  connect(boiHotWat.port_b, senMasFloByp.port_a)   annotation (Line(points={{20,-50},
-          {54,-50},{54,-40}},                                                                            color={0,127,255}));
+  connect(boiHotWat.port_b, senMasFloByp.port_a)   annotation (Line(points={{30,-50},{54,-50},{54,-40}}, color={0,127,255}));
   connect(expTanCW.ports[1], senMasFlo.port_a)   annotation (Line(points={{12,16},{44,16},{44,50}}, color={0,127,255}));
-  connect(boiStaCon.y, boiOn.u) annotation (Line(points={{-99,64},{-52,64},{-52,
-          -10},{-32,-10}}, color={0,0,127}));
-  connect(boiOn.y, boiHotWat.on) annotation (Line(points={{-9,-10},{-6,-10},{-6,
-          -42},{-2,-42}},color={255,0,255}));
   connect(dT.u2, THWRet.T)  annotation (Line(points={{100,78},{104,78},{104,61}}, color={0,0,127}));
   connect(dT.u1, THWSup.T)  annotation (Line(points={{100,90},{132,90},{132,-39}}, color={0,0,127}));
-  connect(pro1.y, boiHotWat.PLR) annotation (Line(points={{-70,-21},{-70,-54.4},
-          {-1,-54.4}},color={0,0,127}));
-  connect(boiStaCon.y, pro1.u2)
-    annotation (Line(points={{-99,64},{-64,64},{-64,2}},  color={0,0,127}));
-  connect(THWSup.T, boiHotWat.THWSup) annotation (Line(points={{132,-39},{108,
-          -39},{108,-78},{-8,-78},{-8,-58},{-1,-58}},color={0,0,127}));
+  connect(boiStaCon.y_On, boiHotWat.on) annotation (Line(points={{-99,72},{-72,72},
+          {-72,-45},{9,-45}}, color={255,0,255}));
+  connect(boiStaCon.y_On, heaWatPumCon.resPI) annotation (Line(points={{-99,72},
+          {-90,72},{-90,-6},{-128,-6},{-128,-21.2},{-121,-21.2}}, color={255,0,
+          255}));
   annotation (__Dymola_Commands,
   Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-80},{160,100}})),
     experiment(
@@ -366,4 +347,4 @@ equation
           extent={{-149,-114},{151,-154}},
           lineColor={0,0,255},
           textString="%name")}));
-end PlantHeating;
+end PlantHeatingNewBoiler;

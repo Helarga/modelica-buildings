@@ -79,7 +79,7 @@ partial model PartialFanCoil4Pipe
   Modelica.Blocks.Sources.RealExpression Q_flowCoo(y=hexCoo.Q2_flow)
     annotation (Placement(transformation(extent={{-80,30},{-60,50}})));
   Buildings.Controls.OBC.CDL.Continuous.Gain gaiFloNom2(k=max({
-    mLoaHea_flow_nominal,mLoaCoo_flow_nominal}))
+        mLoaHea_flow_nominal,mLoaCoo_flow_nominal}))
     annotation (Placement(transformation(extent={{40,130},{60,150}})));
   Buildings.Controls.OBC.CDL.Continuous.LimPID conCoo(
     Ti=10,

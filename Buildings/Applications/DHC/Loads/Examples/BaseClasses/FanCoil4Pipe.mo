@@ -6,8 +6,10 @@ model FanCoil4Pipe
     final have_fluPor=true,
     final have_heaPor=false,
     final have_scaLoa=true,
-    fan(show_T=true),
-    hexCoo(show_T=true));
+    fan(energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+        show_T=true),
+    hexCoo(show_T=true),
+    hexHea(show_T=true));
 equation
   connect(TSen, conCoo.u_m) annotation (Line(points={{-220,140},{-40,140},{-40,
           160},{0,160},{0,168}}, color={0,0,127}));

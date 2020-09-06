@@ -15,7 +15,9 @@ model MappingBoilerPLRToMassFlow
     dp_nominal(displayUnit="Pa") = 500,
     num=numBoi,
     l=0.001,
-    Q_flow_nominal=Q_flow_nominal)
+    delT_nominal(displayUnit="degC") = 5,
+    Q_flow_nominal=Q_flow_nominal,
+    numBoi=2)
     annotation (Placement(transformation(extent={{14,-10},{34,10}})));
   Controls.HeatingWaterPumpSpeed heaWatPumCon(
     numPum=numBoi,
@@ -36,7 +38,7 @@ model MappingBoilerPLRToMassFlow
     nPorts=1)
     annotation (Placement(transformation(extent={{98,-10},{78,10}})));
   Modelica.Blocks.Sources.RealExpression realExpression(y=7000)
-    annotation (Placement(transformation(extent={{-60,32},{-40,52}})));
+    annotation (Placement(transformation(extent={{-60,52},{-40,72}})));
   Fluid.Sensors.MassFlowRate senMasFlo(redeclare package Medium = Medium)
     "Chilled water return mass flow"
     annotation (Placement(transformation(extent={{-34,-10},{-14,10}})));
@@ -60,18 +62,24 @@ model MappingBoilerPLRToMassFlow
     period=300,
     offset=Q_flow_nominal/(4200*5)) "Heating water mass flow rate."
     annotation (Placement(transformation(extent={{-98,14},{-78,34}})));
+  Modelica.Blocks.Sources.BooleanExpression
+                                         booleanExpression(y=true)
+    annotation (Placement(transformation(extent={{-64,36},{-44,56}})));
+  Modelica.Blocks.Sources.RealExpression realExpression1(y=0.01)
+    annotation (Placement(transformation(extent={{-64,20},{-44,40}})));
 equation
 
   connect(boi.port_b, boundary1.ports[1])
     annotation (Line(points={{34,0},{78,0}}, color={0,127,255}));
   connect(heaWatPumCon.dpMea, realExpression.y)
-    annotation (Line(points={{-14,42},{-39,42}}, color={0,0,127}));
+    annotation (Line(points={{-13,41},{-28,41},{-28,62},{-39,62}},
+                                                 color={0,0,127}));
   connect(boundary.ports[1], senMasFlo.port_a)
     annotation (Line(points={{-44,0},{-34,0}}, color={0,127,255}));
   connect(boi.port_a, senMasFlo.port_b)
     annotation (Line(points={{14,0},{-14,0}},  color={0,127,255}));
-  connect(senMasFlo.m_flow, heaWatPumCon.masFloPum) annotation (Line(points={{-24,
-          11},{-24,52.6},{-14,52.6}}, color={0,0,127}));
+  connect(senMasFlo.m_flow, heaWatPumCon.masFloPum) annotation (Line(points={{-24,11},
+          {-24,52.6},{-13,52.6}},     color={0,0,127}));
  for i in 1: numBoi loop
  end for;
 
@@ -87,6 +95,10 @@ equation
     annotation (Line(points={{9,52},{32,52},{32,42}}, color={0,0,127}));
   connect(mHea.y, boundary.m_flow_in) annotation (Line(points={{-77,24},{-72,24},
           {-72,8},{-66,8}}, color={0,0,127}));
+  connect(booleanExpression.y, heaWatPumCon.resPI) annotation (Line(points={{
+          -43,46},{-36,46},{-36,39},{-13,39}}, color={255,0,255}));
+  connect(realExpression1.y, heaWatPumCon.meaFloByPas) annotation (Line(points=
+          {{-43,30},{-28,30},{-28,37.2},{-13,37.2}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false,grid={4,4})),
        Diagram(coordinateSystem(preserveAspectRatio=false, grid={4,4})),
      experiment(

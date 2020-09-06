@@ -112,7 +112,7 @@ partial model PartialParallelElectricEIR
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
 
 equation
-  for i in 1:num loop
+ for i in 1:num loop
   connect(TSet, chi[i].TSet)
     annotation (Line(points={{-120,0},{-90,0},{-90,-3},{-12,-3}},
       color={0,0,127}));
@@ -122,7 +122,7 @@ equation
   connect(chi[i].port_a2, port_a2)
     annotation (Line(points={{10,-6},{40,-6},{40,-60},{100,-60}},
       color={0,127,255}));
-  end for;
+ end for;
   connect(chi.port_b2, val2.port_a)
     annotation (Line(points={{-10,-6},{-40,-6},{-40,-22}},
       color={0,127,255}));

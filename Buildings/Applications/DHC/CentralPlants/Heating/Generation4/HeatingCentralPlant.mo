@@ -425,7 +425,7 @@ equation
     annotation (Line(points={{-198.5,-150},{-184,-150},{-184,-170},{-168.28,
           -170}},                                           color={0,0,0}));
   connect(T3.outPort, alternative.join[2])
-    annotation (Line(points={{-184.5,-190},{-176,-190},{-176,-170},{-168.28,
+    annotation (Line(points={{-184.5,-190},{-158,-190},{-158,-170},{-168.28,
           -170}},                                           color={0,0,0}));
   connect(TSetSup.x1,TRooMin. y) annotation (Line(points={{-222,-52},{-230,-52},
           {-230,10},{-238,10}},

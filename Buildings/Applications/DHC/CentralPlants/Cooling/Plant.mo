@@ -292,7 +292,7 @@ equation
           56},{-90,-46},{-62,-46}},
                                 color={0,0,127}));
   connect(chiStaCon.y, pumCW.u) annotation (Line(points={{-99,56},{-90,56},{-90,
-          -38},{-20,-38},{-20,-46},{-12,-46}}, color={0,0,127}));
+          -34},{-30,-34},{-30,-46},{-12,-46}}, color={0,0,127}));
   connect(TWetBul, cooTowWitByp.TWetBul) annotation (Line(points={{-160,-60},{
           -90,-60},{-90,-52},{-62,-52}},
                                      color={0,0,127}));
@@ -321,8 +321,9 @@ equation
           4},{-70,4},{-70,-50},{-60,-50}}, color={0,127,255}));
   connect(chiOn.y, mulChiSys.on) annotation (Line(points={{-59,60},{-48,60},{-48,
           32},{22,32},{22,6},{12,6}}, color={255,0,255}));
-  connect(expTanCW.ports[1], pumCW.port_a) annotation (Line(points={{-30,-20},{-26,
-          -20},{-26,-50},{-10,-50}}, color={0,127,255}));
+  connect(expTanCW.ports[1], pumCW.port_a) annotation (Line(points={{-30,-20},{
+          -20,-20},{-20,-50},{-10,-50}},
+                                     color={0,127,255}));
   connect(senTCHWRet.port_b, senMasFlo.port_a)
     annotation (Line(points={{120,50},{72,50}}, color={0,127,255}));
   connect(senMasFlo.m_flow, pro.u2) annotation (Line(points={{62,61},{62,66},{

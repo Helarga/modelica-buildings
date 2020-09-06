@@ -13,6 +13,8 @@ model BuildingSpawnZ6WithCoolingIndirectETS
       final weaName=weaName,
       T_aChiWat_nominal=280.15,
       T_bChiWat_nominal=285.15,
+      T_aHeaWat_nominal=313.15,
+      T_bHeaWat_nominal=308.15,
       nPorts_aHeaWat=1,
       nPorts_bHeaWat=1,
       nPorts_aChiWat=1,
@@ -47,7 +49,8 @@ model BuildingSpawnZ6WithCoolingIndirectETS
     use_Q_flow_nominal=true,
     Q_flow_nominal=-1*(sum(bui.terUni.QCoo_flow_nominal)),
     T_a1_nominal=273.15 + 7,
-    T_a2_nominal=273.15 + 12)
+    T_a2_nominal=273.15 + 12,
+    eta=0.8)
     "Energy transfer station model"
     annotation (Placement(transformation(extent={{-28,-88},{32,-28}})));
 

@@ -1,5 +1,6 @@
 within Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Controls;
-model HeatingWaterPumpSpeed "Controller for variable speed heating water pumps"
+model HeatingWaterPumpSpeedWithPLRMassMapping
+  "Controller for variable speed heating water pumps"
 
   parameter Integer numPum(min=1, max=2)=2
     "Number of chilled water pumps, maximum is 2";
@@ -60,6 +61,7 @@ model HeatingWaterPumpSpeed "Controller for variable speed heating water pumps"
     Td=60,
     yMax=1,
     yMin=0,
+    initType=Modelica.Blocks.Types.InitPID.InitialOutput,
     y_start=conPID.yMin,
     reverseActing=true,
     reset=Buildings.Types.Reset.Disabled,
@@ -72,6 +74,16 @@ model HeatingWaterPumpSpeed "Controller for variable speed heating water pumps"
   Modelica.Blocks.Math.Gain gai(k=1/dpSetPoi)
     "Multiplier gain for normalizing dp input"
     annotation (Placement(transformation(extent={{-80,-60},{-60,-40}})));
+  Modelica.Blocks.Sources.RealExpression setMas(y=
+    if masFloPum <= m_flow_nominal*1.001
+      then m_flow_nominal
+    else numPum*m_flow_nominal)
+    "SetPoint of the heating water mass flow rate."
+    annotation (Placement(transformation(extent={{0,30},{20,50}})));
+  Buildings.Controls.OBC.CDL.Interfaces.RealOutput PLR "PLR of the boiler"
+    annotation (Placement(transformation(extent={{100,50},{120,70}})));
+  Modelica.Blocks.Math.Division ratMas
+    annotation (Placement(transformation(extent={{34,50},{54,70}})));
   Buildings.Controls.Continuous.LimPID bypValCon(
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     k=1,
@@ -81,20 +93,20 @@ model HeatingWaterPumpSpeed "Controller for variable speed heating water pumps"
     y_reset=0)
      "Heating water bypass valve controller"
     annotation (Placement(transformation(extent={{-10,-60},{10,-40}})));
-  Modelica.Blocks.Sources.RealExpression norDecSetMasFlo(y=1)
+  Modelica.Blocks.Sources.RealExpression norDecMasFlo(y=1)
     "Normalized decoupler line mass flow rate."
     annotation (Placement(transformation(extent={{-40,-60},{-20,-40}})));
-  Modelica.Blocks.Sources.RealExpression norDecMasFlo(y=meaFloByPas/(if resPI[
-        numPum] then numPum*mMin_flow else mMin_flow))
+  Modelica.Blocks.Sources.RealExpression ratMeaDecMasFlo(y=meaFloByPas/
+        mMin_flow)
     "Normalised decoupler line measured mass flow rate."
     annotation (Placement(transformation(extent={{42,-84},{22,-64}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealInput meaFloByPas(final unit="kg/s")
     "Measured  bypass mass flow." annotation (Placement(transformation(extent={{
             -120,-98},{-100,-78}}), iconTransformation(extent={{-120,-98},{-100,
             -78}})));
-  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput resPI[numPum]
-    "Reset the PI controller." annotation (Placement(transformation(extent={{-120,
-            78},{-100,98}}), iconTransformation(extent={{-120,78},{-100,98}})));
+  Buildings.Controls.OBC.CDL.Interfaces.BooleanInput resPI "Reset the PI controller."
+    annotation (Placement(transformation(extent={{-120,-80},{-100,-60}}),
+        iconTransformation(extent={{-120,-80},{-100,-60}})));
   Buildings.Controls.OBC.CDL.Interfaces.RealOutput deCouVal
     "Decoupler line valve."
     annotation (Placement(transformation(extent={{100,-60},{120,-40}})));
@@ -116,19 +128,27 @@ equation
     annotation (Line(points={{-110,-50},{-82,-50}}, color={0,0,127}));
   connect(conPID.u_m, gai.y)
     annotation (Line(points={{-50,-12},{-50,-50},{-59,-50}}, color={0,0,127}));
-  connect(bypValCon.u_s, norDecSetMasFlo.y)
-    annotation (Line(points={{-12,-50},{-19,-50}}, color={0,0,127}));
-  connect(bypValCon.u_m, norDecMasFlo.y)
+  connect(ratMas.u2, setMas.y) annotation (Line(points={{32,54},{26,54},{26,40},
+          {21,40}}, color={0,0,127}));
+  connect(masFloPum, ratMas.u1)
+    annotation (Line(points={{-110,66},{32,66}}, color={0,0,127}));
+  connect(PLR, PLR)
+    annotation (Line(points={{110,60},{110,60}}, color={0,0,127}));
+  connect(bypValCon.u_s,norDecMasFlo. y)
+    annotation (Line(points={{-12,-50},{-19,-50}},
+                                               color={0,0,127}));
+  connect(resPI, bypValCon.trigger) annotation (Line(points={{-110,-70},{-8,-70},
+          {-8,-62}}, color={255,0,255}));
+  connect(bypValCon.u_m, ratMeaDecMasFlo.y)
     annotation (Line(points={{0,-62},{0,-74},{21,-74}}, color={0,0,127}));
   connect(bypValCon.y, deCouVal)
     annotation (Line(points={{11,-50},{110,-50}}, color={0,0,127}));
+  connect(resPI, conPID.trigger) annotation (Line(points={{-110,-70},{-92,-70},
+          {-92,-28},{-58,-28},{-58,-12}}, color={255,0,255}));
+  connect(ratMas.y, PLR) annotation (Line(points={{55,60},{78,60},{78,60},{110,
+          60}}, color={0,0,127}));
   connect(pumSpe.y, y)
     annotation (Line(points={{61,0},{110,0}}, color={0,0,127}));
-  connect(resPI[1], bypValCon.trigger) annotation (Line(points={{-110,83},{-30,
-          83},{-30,-38},{-48,-38},{-48,-86},{-8,-86},{-8,-62}}, color={255,0,
-          255}));
-  connect(resPI[1], conPID.trigger) annotation (Line(points={{-110,83},{-72,83},
-          {-72,-26},{-58,-26},{-58,-12}}, color={255,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
           Rectangle(
           extent={{-100,100},{100,-100}},
@@ -140,4 +160,4 @@ equation
         textString="%name",
         lineColor={0,0,255})}),             Diagram(coordinateSystem(
           preserveAspectRatio=false)));
-end HeatingWaterPumpSpeed;
+end HeatingWaterPumpSpeedWithPLRMassMapping;

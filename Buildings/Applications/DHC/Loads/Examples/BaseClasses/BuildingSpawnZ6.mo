@@ -5,7 +5,6 @@ model BuildingSpawnZ6
     redeclare package Medium = MediumW,
     final have_eleHea=false,
     final have_eleCoo=false,
-    final have_pum=true,
     final have_weaBus=false);
 
   package MediumA = Buildings.Media.Air   " Air Medium";
@@ -13,13 +12,18 @@ model BuildingSpawnZ6
 
   parameter Integer nZon = 5
     "Number of conditioned thermal zones";
+
   parameter Integer facSca[nZon]=fill(5, nZon)
     "Scaling factor to be applied to on each extensive quantity";
-  parameter Modelica.SIunits.MassFlowRate mLoa_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] * 0.22)/(3500) for i in 1:nZon}
+  parameter Modelica.SIunits.MassFlowRate mLoaCoo_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] * 0.22)/(3500) for i in 1:nZon}
     "Load side mass flow rate at nominal conditions"
     annotation(Dialog(group="Nominal condition"));
+  parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] * 0.22)/(3500) for i in 1:nZon}
+    "Load side mass flow rate at nominal conditions"
+    annotation(Dialog(group="Nominal condition"));
+  //{(QHea_flow_nominal[i] * 0.1)/(3500) for i in 1:nZon}
   parameter Modelica.SIunits.HeatFlowRate QHea_flow_nominal[nZon]=
-    fill(3000, nZon) ./ facSca
+    fill(3500, nZon) ./ facSca
     "Design heating heat flow rate (>=0)"
     annotation (Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.HeatFlowRate QCoo_flow_nominal[nZon]=
@@ -36,11 +40,19 @@ model BuildingSpawnZ6
     "Nominal building supply and return water temperature difference";
   parameter Modelica.SIunits.TemperatureDifference delTDisCoo=9
     "Nominal district supply and return water temperature difference";
-  parameter Modelica.SIunits.Temperature T_aChiWat_nominal(displayUnit="degC")
-    "Supply chilled water nominal temperature";
-  parameter Modelica.SIunits.Temperature T_bChiWat_nominal(displayUnit="degC")
-    "Return chilled water nominal temperature";
+  parameter Modelica.SIunits.TemperatureDifference delTBuiHea=5
+    "Nominal building supply and return water temperature difference";
+  parameter Modelica.SIunits.TemperatureDifference delTDisHea=10
+    "Nominal district supply and return water temperature difference";
 
+  parameter Modelica.SIunits.Temperature T_aChiWat_nominal
+    "Supply chilled water nominal temperature";
+  parameter Modelica.SIunits.Temperature T_bChiWat_nominal
+    "Return chilled water nominal temperature";
+  parameter Modelica.SIunits.Temperature T_aHeaWat_nominal
+    "Supply heating water nominal temperature";
+  parameter Modelica.SIunits.Temperature T_bHeaWat_nominal
+    "Return heating water nominal temperature";
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant minTSet[nZon](
     k=fill(293.15, nZon),
     y(each final unit="K", each displayUnit="degC"))
@@ -100,7 +112,7 @@ model BuildingSpawnZ6
   BaseClasses.FanCoil4Pipe terUni[nZon](
     redeclare each final package Medium1 = MediumW,
     redeclare each final package Medium2 = MediumA,
-    fan(show_T=true),
+    each fan(show_T=true),
     final facSca=facSca,
     final QHea_flow_nominal=QHea_flow_nominal,
     final QCoo_flow_nominal=QCoo_flow_nominal,
@@ -108,16 +120,16 @@ model BuildingSpawnZ6
     each T_bChiWat_nominal=T_bChiWat_nominal,
     each T_aLoaHea_nominal=293.15,
     each T_aLoaCoo_nominal=297.15,
-    each T_bHeaWat_nominal=308.15,
-    each T_aHeaWat_nominal=313.15,
-    final mLoaHea_flow_nominal=mLoa_flow_nominal,
-    final mLoaCoo_flow_nominal=mLoa_flow_nominal)
+    each T_bHeaWat_nominal=T_bHeaWat_nominal,
+    each T_aHeaWat_nominal=T_aHeaWat_nominal,
+    final mLoaHea_flow_nominal=mLoaHea_flow_nominal,
+    final mLoaCoo_flow_nominal=mLoaCoo_flow_nominal)
     "Terminal unit"
     annotation (Placement(transformation(extent={{-140,-2},{-116,22}})));
-
   Buildings.Applications.DHC.Loads.FlowDistribution disFloHea(
     redeclare package Medium = MediumW,
     m_flow_nominal=sum(terUni.mHeaWat_flow_nominal .* terUni.facSca),
+    show_T=true,
     have_pum=true,
     dp_nominal=100000,
     nPorts_a1=nZon,

@@ -1,8 +1,9 @@
 within Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Subsystems;
-model FlowMachine_y "Identical speed controlled flow machines"
+model FlowMachine_y_HydHeader
+  "Identical speed controlled flow machines"
   extends
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Subsystems.PartialPumpParallel(
-    redeclare final Buildings.Fluid.Movers.SpeedControlled_y pum,
+     redeclare final Buildings.Fluid.Movers.SpeedControlled_y pum,
     rhoStd=Medium.density_pTX(Medium.p_default, Medium.T_default, Medium.X_default));
 
 equation
@@ -21,4 +22,4 @@ The number can be specified by setting a value of <code>num</code>.
 The shutoff valves are used to avoid circulating flow among pumps.
 </p>
 </html>"));
-end FlowMachine_y;
+end FlowMachine_y_HydHeader;
