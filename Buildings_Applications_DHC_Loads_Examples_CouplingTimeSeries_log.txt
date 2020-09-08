@@ -1,0 +1,13 @@
+FMIL: module = Model, log level = 2: [INFO][FMU status:Error]   <KinsolError category="error">
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]     Error occured in <value name="function">KINSol</value> at <value name="t">        1.1728665855641851E+07</value> when solving <value name="block">"1"</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]     <value name="msg">"The line search algorithm was unable to find an iterate sufficiently distinct from the current iterate."</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]     <value name="functionL2Norm">        2.0192288329224532E-05</value>, <value name="scaledStepLength">        6.5299183758940288E-09</value>, <value name="tolerance">        1.0000000000000000E-08</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]   </KinsolError>
+FMIL: module = Model, log level = 2: [INFO][FMU status:Error]   <KinsolError category="error">
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]     Error occured in <value name="function">KINSol</value> at <value name="t">        1.1728665855641851E+07</value> when solving <value name="block">"1"</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]     <value name="msg">"The line search algorithm was unable to find an iterate sufficiently distinct from the current iterate."</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]     <value name="functionL2Norm">        2.0192288329224532E-05</value>, <value name="scaledStepLength">        6.5299183758940288E-09</value>, <value name="tolerance">        1.0000000000000000E-08</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]   </KinsolError>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.1728665855641851E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.1734089672978312E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.1725515257718556E+07</value></Error>

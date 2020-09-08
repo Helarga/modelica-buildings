@@ -1,0 +1,22 @@
+#1,,,
+#Heating and Cooling Model loads from OpenStudio Prototype Buildings,,,
+#  Building Type: PrimarySchool,,,
+#  Climate Zone: 3C,,,
+#  Vintage: 90.1-2013,,,
+#,,,
+#First column: Seconds in the year (loads are hourly),,,
+#Second column: cooling loads in Watts (as negative numbers).,,,
+#Third column: space heating loads in Watts,,,
+#Fourth column: water heating in Watts,,,
+#,,,
+#Peak space cooling load = -275245.52 Watts,,,
+#Peak space heating load = 32823.064 Watts,,,
+#Peak water heating load = 0 Watts,,,
+double tab1(7,4),,
+0,0,0,0
+10,1,2,0
+20,1,2,0
+30,1,2,0
+40,1,2,0
+50,1,2,0
+60,1,2,0

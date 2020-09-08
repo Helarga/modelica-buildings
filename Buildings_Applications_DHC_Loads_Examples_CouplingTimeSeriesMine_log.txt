@@ -1,0 +1,11 @@
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.1728177395573717E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.1724175709147230E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.9805852134964094E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        1.9807412862483475E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        2.0089697098114807E+07</value></Error>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error] <Error category="error">Evaluating the derivatives failed at <value name="t">        2.0521912083939917E+07</value></Error>
+FMIL: module = Model, log level = 2: [INFO][FMU status:Error]           <KinsolError category="error">
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]             Error occured in <value name="function">KINSol</value> at <value name="t">        3.1532400000000000E+07</value> when solving <value name="block">"1"</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]             <value name="msg">"The line search algorithm was unable to find an iterate sufficiently distinct from the current iterate."</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]             <value name="functionL2Norm">        1.0238635274366688E+00</value>, <value name="scaledStepLength">        1.2328454064080929E+00</value>, <value name="tolerance">        1.0000000000000000E-08</value>
+FMIL: module = Model, log level = 2: [ERROR][FMU status:Error]           </KinsolError>
