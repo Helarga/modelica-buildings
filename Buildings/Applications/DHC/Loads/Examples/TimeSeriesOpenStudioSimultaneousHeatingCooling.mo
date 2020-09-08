@@ -11,7 +11,8 @@ model TimeSeriesOpenStudioSimultaneousHeatingCooling
         "modelica://Buildings/Applications/DHC/Loads/Examples/Resources/MediumOffice-90.1-2010-5A.mos",
     facScaHea=1,
     facScaCoo=1,
-    deltaTAir=285.15,
+    deltaTAirCoo(displayUnit="degC") = 6,
+    deltaTAirHea(displayUnit="degC") = 18,
     k=1,
     Ti=10,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -130,8 +131,7 @@ equation
                                                                color={0,0,127}));
   annotation (
   experiment(
-      StartTime=3024000,
-      StopTime=3456000,
+      StopTime=31534200,
       __Dymola_NumberOfIntervals=8760,
       Tolerance=1e-06,
       __Dymola_Algorithm="Dassl"),

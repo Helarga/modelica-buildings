@@ -43,14 +43,16 @@ model BuildingTimeSeriesHE
     min=273.15, displayUnit="degC") = 273.15 + 24
     "Load side inlet temperature at nominal conditions in cooling mode"
     annotation(Dialog(group="Nominal condition"));
-  parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal= QHea_flow_nominal/(1.005*deltaTAir)
+  parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal= QHea_flow_nominal/(cp_air*deltaTAirHea)
     "Load side mass flow rate at nominal conditions in heating mode"
     annotation(Dialog(group="Nominal condition"));
-  parameter Modelica.SIunits.MassFlowRate mLoaCoo_flow_nominal= -QCoo_flow_nominal/(1.005*deltaTAir)
+  parameter Modelica.SIunits.MassFlowRate mLoaCoo_flow_nominal= -QCoo_flow_nominal/(cp_air*deltaTAirCoo)
     "Load side mass flow rate at nominal conditions in cooling mode"
     annotation(Dialog(group="Nominal condition"));
-  parameter Modelica.SIunits.Temperature deltaTAir
-   "Nominal air temperature difference";
+  parameter Modelica.SIunits.TemperatureDifference deltaTAirCoo
+   "Nominal cooling air temperature difference";
+  parameter Modelica.SIunits.TemperatureDifference deltaTAirHea
+   "Nominal heating air temperature difference";
 
   parameter Modelica.SIunits.HeatFlowRate QCoo_flow_nominal(max=-Modelica.Constants.eps)=facScaCoo*
     Buildings.Experimental.DistrictHeatingCooling.SubStations.VaporCompression.BaseClasses.getPeakLoad(
@@ -81,6 +83,8 @@ model BuildingTimeSeriesHE
   parameter Modelica.SIunits.Time riseTime=30
     "Rise time of the filter (time to reach 99.6 % of the speed)"
     annotation(Dialog(tab="Dynamics", group="Filtered speed",enable=use_inputFilter));
+  parameter Modelica.SIunits.SpecificHeatCapacity cp_air= 1005;
+
   Modelica.Blocks.Sources.CombiTimeTable loa(
     tableOnFile=true,
     tableName="tab1",

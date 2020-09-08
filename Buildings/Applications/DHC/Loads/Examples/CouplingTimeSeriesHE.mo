@@ -11,7 +11,8 @@ model CouplingTimeSeriesHE
         "modelica://Buildings/Applications/DHC/Loads/Examples/Resources/SwissResidential_20190916.mos",
     facScaHea=1,
     facScaCoo=1,
-    deltaTAir=285.15,
+    deltaTAirCoo(displayUnit="degC") = 6,
+    deltaTAirHea(displayUnit="degC") = 18,
     k=1,
     Ti=10,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
@@ -129,7 +130,7 @@ equation
                                                                color={0,0,127}));
   annotation (
   experiment(
-      StopTime=31534200,
+      StopTime=86400,
       Interval=3600,
       Tolerance=1e-06,
       __Dymola_Algorithm="Dassl"),
