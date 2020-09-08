@@ -216,7 +216,7 @@ equation
   Xi_instream = inStream(port_a.Xi_outflow);
 
   // Set point without any capacity limitation
-  hSet = if use_TSet then Medium.specificEnthalpy(
+  hSet = if use_TSet and on then Medium.specificEnthalpy(
     Medium.setState_pTX(
       p = port_a.p,
       T = T,
@@ -245,7 +245,7 @@ equation
   // Note that the computations for the mass fraction and for the
   // enthalpy change are identical. In a development version, they were
   // put in a function, but this led to large nonlinear systems of equations.
-  if use_X_wSet then
+  if use_X_wSet and on then
     if not restrictHumi and not restrictDehu then
       // No capacity limit
       dXiAct = Xi_outflow-sum(Xi_instream);

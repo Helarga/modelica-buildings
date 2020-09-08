@@ -8,7 +8,6 @@ model Boiler_TParallel "Multiple identical boiler"
             each m_flow_nominal=m_flow_nominal,
             each dp_nominal=dp_nominal));
 
-
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal;
   parameter Modelica.SIunits.PressureDifference dp_nominal;
   parameter Modelica.SIunits.HeatFlowRate QMax_flow;
@@ -25,14 +24,11 @@ model Boiler_TParallel "Multiple identical boiler"
     annotation (Placement(transformation(extent={{-120,40},{-100,60}}),
         iconTransformation(extent={{-120,40},{-100,60}})));
 
-
-
   Modelica.Blocks.Interfaces.RealInput TSet[num]
     "Heating water setpoint temperature[K]." annotation (Placement(
         transformation(extent={{-120,-42},{-100,-22}}), iconTransformation(
           extent={{-120,-50},{-100,-30}})));
 equation
-
  for i in 1:numBoi loop
   connect(val[i].port_b, port_b)  annotation (Line(points={{56,0},{100,0}}, color={0,127,255}));
   connect(port_a, boi[i].port_a)  annotation (Line(points={{-100,0},{-20,0}}, color={0,127,255}));
@@ -41,8 +37,7 @@ equation
           50},{-59,50}}, color={0,0,127}));
   connect(on, booToRea.u) annotation (Line(points={{-110,50},{-82,50}}, color={255,0,255}));
   connect(val.port_a, boi.port_b) annotation (Line(points={{36,0},{0,0}}, color={0,127,255}));
-  connect(boi.Q_flow, Q_Boi)
-    annotation (Line(points={{1,8},{18,8},{18,50},{110,50}}, color={0,0,127}));
+  connect(boi.Q_flow, Q_Boi)  annotation (Line(points={{1,8},{18,8},{18,50},{110,50}}, color={0,0,127}));
   connect(TSet, boi.TSet) annotation (Line(points={{-110,-32},{-68,-32},{-68,8},
           {-22,8}}, color={0,0,127}));
   connect(on, boi.on) annotation (Line(points={{-110,50},{-88,50},{-88,-4},{-22,

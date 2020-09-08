@@ -33,8 +33,7 @@ model PlantHeatingNewBoiler "Central heating plant."
 
   // pump parameters
   replaceable parameter Buildings.Fluid.Movers.Data.Generic perHWPum
-    constrainedby Buildings.Fluid.Movers.Data.Generic
-    "Performance data of heating water pump" annotation (
+    constrainedby Buildings.Fluid.Movers.Data.Generic    "Performance data of heating water pump" annotation (
     Dialog(group="Pump"),
     choicesAllMatching=true,
     Placement(transformation(extent={{138,82},{152,96}})));
@@ -45,7 +44,6 @@ model PlantHeatingNewBoiler "Central heating plant."
   parameter Modelica.SIunits.PressureDifference dpSetPoi(displayUnit="Pa")
    "Demand side pressure difference setpoint"
     annotation (Dialog(group="Control Settings"));
-
   // dynamics
   parameter Modelica.Fluid.Types.Dynamics energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial
     "Type of energy balance: dynamic (3 initialization options) or steady state"
@@ -77,7 +75,7 @@ model PlantHeatingNewBoiler "Central heating plant."
         iconTransformation(extent={{90,-60},{110,-40}})));
 
   Modelica.Blocks.Interfaces.BooleanInput on "On signal of the plant"
-    annotation (Placement(transformation(extent={{-160,62},{-140,82}}),
+    annotation (Placement(transformation(extent={{-160,58},{-140,78}}),
         iconTransformation(extent={{-140,60},{-100,100}})));
 
   Modelica.Blocks.Interfaces.RealInput dpMea(final unit="Pa")
@@ -85,13 +83,12 @@ model PlantHeatingNewBoiler "Central heating plant."
             -40},{-140,-20}}),      iconTransformation(extent={{-140,-50},{-100,
             -10}})));
 
-  Boiler_TParallel boiHotWat(
+  Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Boiler_TParallel boiHotWat(
     redeclare package Medium = Medium,
     m_flow_nominal=mBoi_flow_nominal,
     show_T=true,
     dp_nominal=dpBoi_nominal,
-    QMax_flow=QBoi_flow_nominal)
-                     "Parallel boilers "
+    QMax_flow=QBoi_flow_nominal) "Parallel boilers."
     annotation (Placement(transformation(extent={{10,-60},{30,-40}})));
 
   Buildings.Fluid.Sensors.TemperatureTwoPort THWSup(redeclare package Medium =
@@ -101,7 +98,7 @@ model PlantHeatingNewBoiler "Central heating plant."
         rotation=0,
         origin={132,-50})));
 
-  Controls.HeatingWaterPumpSpeed heaWatPumCon(
+  Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Controls.HeatingWaterPumpSpeed heaWatPumCon(
     tWai=0,
     m_flow_nominal=mBoi_flow_nominal,
     dpSetPoi=dpSetPoi,
@@ -111,12 +108,12 @@ model PlantHeatingNewBoiler "Central heating plant."
     "Heating water pump controller."
     annotation (Placement(transformation(extent={{-120,-40},{-100,-20}})));
 
-  Controls.BoilerStage boiStaCon(
+  Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Controls.BoilerStage boiStaCon(
     tWai=tWai,
     QBoi_nominal=QBoi_flow_nominal,
     criPoiLoa=0.7*QBoi_flow_nominal,
     dQ=0.25*QBoi_flow_nominal,
-    numBoi=numBoi)                  "Boiler staging controller"
+    numBoi=numBoi) "Boiler staging controller."
     annotation (Placement(transformation(extent={{-120,58},{-100,78}})));
 
   Modelica.Blocks.Sources.RealExpression mPum_flow(y=pumHW.port_a.m_flow)
@@ -143,6 +140,7 @@ model PlantHeatingNewBoiler "Central heating plant."
     riseTimePump=100,
     l=0.001,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
+    "Parallel heating water pumps."
     annotation (Placement(transformation(extent={{0,40},{-20,60}})));
   Buildings.Fluid.Actuators.Valves.TwoWayEqualPercentage valByp(
     redeclare package Medium = Medium,
@@ -160,19 +158,11 @@ model PlantHeatingNewBoiler "Central heating plant."
         rotation=90,
         origin={54,0})));
 
-  Modelica.Blocks.Math.Add dT(final k1=1, final k2=-1)
-    "Temperature difference"
-    annotation (Placement(transformation(extent={{98,74},{78,94}})));
-  Modelica.Blocks.Math.Product pro "Product"
-    annotation (Placement(transformation(extent={{54,74},{34,94}})));
-  Modelica.Blocks.Math.Gain cp(final k=4200)
-    "Specific heat multiplier to calculate heat flow rate"
-    annotation (Placement(transformation(extent={{0,76},{-20,96}})));
-  Fluid.Sensors.MassFlowRate senMasFlo(
+  Buildings.Fluid.Sensors.MassFlowRate senMasFlo(
     redeclare package Medium =Medium)
     "Heating water return mass flow"
-    annotation (Placement(transformation(extent={{44,40},{24,60}})));
-  Fluid.Sensors.MassFlowRate senMasFloByp(
+    annotation (Placement(transformation(extent={{42,40},{22,60}})));
+  Buildings.Fluid.Sensors.MassFlowRate senMasFloByp(
     redeclare package Medium = Medium)
     "Heating water bypass valve mass flow meter"
     annotation (Placement(transformation(
@@ -189,7 +179,7 @@ model PlantHeatingNewBoiler "Central heating plant."
     Medium.specificHeatCapacityCp(sta_default)
     "Specific heat capacity of the fluid";
 
-  Buildings.Fluid.Sources.Boundary_pT expTanCW(redeclare package Medium =
+  Buildings.Fluid.Sources.Boundary_pT expTanHW(redeclare package Medium =
         Medium, nPorts=1)
      "Heating water expansion tank"
     annotation (Placement(transformation(extent={{-8,6},{12,26}})));
@@ -203,19 +193,13 @@ equation
             -50},{-60,-54},{9,-54}},
                               color={0,0,127}));
  end for;
-  connect(on,boiStaCon.on)  annotation (Line(points={{-150,72},{-122,72}},
+  connect(on,boiStaCon.on)  annotation (Line(points={{-150,68},{-121,68}},
                       color={255,0,255}));
   connect(mPum_flow.y, heaWatPumCon.masFloPum) annotation (Line(points={{-121,40},
           {-132,40},{-132,-23.4},{-121,-23.4}},
                                            color={0,0,127}));
   connect(dpMea, heaWatPumCon.dpMea)  annotation (Line(points={{-150,-30},{-138,
           -30},{-138,-35},{-121,-35}},               color={0,0,127}));
-  connect(dT.y, pro.u1)  annotation (Line(points={{77,84},{74,84},{74,90},{56,90}},
-        color={0,0,127}));
-  connect(pro.y, cp.u)  annotation (Line(points={{33,84},{22,84},{22,86},{2,86}},
-        color={0,0,127}));
-  connect(cp.y, boiStaCon.QLoa)  annotation (Line(points={{-21,86},{-134,86},{-134,
-          64},{-122,64}},      color={0,0,127}));
   connect(valByp.port_a, senMasFloByp.port_b)   annotation (Line(points={{54,-10},{54,-20}}, color={0,127,255}));
   connect(heaWatPumCon.y, pumHW.u) annotation (Line(points={{-99,-30},{-60,-30},
           {-60,68},{8,68},{8,54},{2,54}},      color={0,0,127}));
@@ -228,23 +212,31 @@ equation
                                     color={0,127,255}));
   connect(boiHotWat.port_b, THWSup.port_a)  annotation (Line(points={{30,-50},{122,-50}}, color={0,127,255}));
   connect(THWSup.port_b, port_b)   annotation (Line(points={{142,-50},{160,-50}}, color={0,127,255}));
-  connect(pumHW.port_a, senMasFlo.port_b)   annotation (Line(points={{0,50},{24,50}}, color={0,127,255}));
-  connect(senMasFlo.port_a, THWRet.port_b)   annotation (Line(points={{44,50},{94,50}}, color={0,127,255}));
+  connect(pumHW.port_a, senMasFlo.port_b)   annotation (Line(points={{0,50},{22,
+          50}},                                                                       color={0,127,255}));
+  connect(senMasFlo.port_a, THWRet.port_b)   annotation (Line(points={{42,50},{94,
+          50}},                                                                         color={0,127,255}));
   connect(heaWatPumCon.deCouVal, valByp.y) annotation (Line(points={{-99,-35},{
           -94,-35},{-94,-70},{80,-70},{80,0},{74,0},{74,-6.66134e-16},{66,
           -6.66134e-16}},                         color={0,0,127}));
-  connect(senMasFlo.m_flow, pro.u2) annotation (Line(points={{34,61},{72,61},{72,
-          78},{56,78}}, color={0,0,127}));
-  connect(valByp.port_b, senMasFlo.port_a)   annotation (Line(points={{54,10},{54,50},{44,50}}, color={0,127,255}));
+  connect(valByp.port_b, senMasFlo.port_a)   annotation (Line(points={{54,10},{54,
+          50},{42,50}},                                                                         color={0,127,255}));
   connect(boiHotWat.port_b, senMasFloByp.port_a)   annotation (Line(points={{30,-50},{54,-50},{54,-40}}, color={0,127,255}));
-  connect(expTanCW.ports[1], senMasFlo.port_a)   annotation (Line(points={{12,16},{44,16},{44,50}}, color={0,127,255}));
-  connect(dT.u2, THWRet.T)  annotation (Line(points={{100,78},{104,78},{104,61}}, color={0,0,127}));
-  connect(dT.u1, THWSup.T)  annotation (Line(points={{100,90},{132,90},{132,-39}}, color={0,0,127}));
-  connect(boiStaCon.y_On, boiHotWat.on) annotation (Line(points={{-99,72},{-72,72},
-          {-72,-45},{9,-45}}, color={255,0,255}));
-  connect(boiStaCon.y_On, heaWatPumCon.resPI) annotation (Line(points={{-99,72},
-          {-90,72},{-90,-6},{-128,-6},{-128,-21.2},{-121,-21.2}}, color={255,0,
+  connect(expTanHW.ports[1], senMasFlo.port_a)   annotation (Line(points={{12,16},
+          {42,16},{42,50}},                                                                         color={0,127,255}));
+  connect(boiStaCon.y_On, boiHotWat.on) annotation (Line(points={{-99,70.6},{-72,
+          70.6},{-72,-45},{9,-45}},
+                              color={255,0,255}));
+  connect(boiStaCon.y_On, heaWatPumCon.resPI) annotation (Line(points={{-99,70.6},
+          {-88,70.6},{-88,-6},{-126,-6},{-126,-21.2},{-121,-21.2}},
+                                                                  color={255,0,
           255}));
+  connect(THWSup.T, boiStaCon.TDisSup) annotation (Line(points={{132,-39},{132,96},
+          {-134,96},{-134,70.6},{-121,70.6}}, color={0,0,127}));
+  connect(THWRet.T, boiStaCon.TDisRet) annotation (Line(points={{104,61},{104,88},
+          {-130,88},{-130,73.4},{-121,73.4}}, color={0,0,127}));
+  connect(senMasFlo.m_flow, boiStaCon.mHeaDis) annotation (Line(points={{32,61},
+          {32,86},{-126,86},{-126,76.6},{-121,76.6}}, color={0,0,127}));
   annotation (__Dymola_Commands,
   Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-80},{160,100}})),
     experiment(
