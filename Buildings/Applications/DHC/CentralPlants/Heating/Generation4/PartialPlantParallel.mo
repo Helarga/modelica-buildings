@@ -6,7 +6,7 @@ partial model PartialPlantParallel
   extends
     Buildings.Applications.DHC.CentralPlants.Heating.Generation4.ValveParameters(
     final deltaM= 0.1,
-    rhoStd = Medium.density_pTX(101325, 273.15+50, Medium.X_default));
+    rhoStd = Medium.density_pTX(Medium.p_default, 273.15+50, Medium.X_default));
 
   extends
     Buildings.Applications.DataCenters.ChillerCooled.Equipment.BaseClasses.SignalFilter(

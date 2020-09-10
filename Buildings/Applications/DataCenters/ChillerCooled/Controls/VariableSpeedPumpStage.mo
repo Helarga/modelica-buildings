@@ -5,7 +5,7 @@ model VariableSpeedPumpStage "Staging control for variable speed pumps"
   parameter Modelica.SIunits.Time tWai "Waiting time";
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal
     "Nominal mass flow rate of the identical variable-speed pumps";
-  parameter Real minSpe(unit="1",min=0,max=1) = 0.05
+  parameter Real minSpe=0.1
     "Minimum speed ratio required by variable speed pumps";
   parameter Modelica.SIunits.MassFlowRate criPoiFlo = 0.7*m_flow_nominal
     "Critcal point of flowrate for switch pump on or off";

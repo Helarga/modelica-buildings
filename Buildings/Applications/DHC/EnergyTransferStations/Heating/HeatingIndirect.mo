@@ -48,11 +48,11 @@ model HeatingIndirect
     start=10000)
     "Nominal heat transfer"
     annotation(Dialog(group="Heat exchanger"));
-  parameter Modelica.SIunits.Temperature T_a1_nominal=333.15
+  parameter Modelica.SIunits.Temperature T_a1_nominal
     "Nominal temperature at port a1"
     annotation(Dialog(group="Heat exchanger"));
      //min=0 + 273,
-  parameter Modelica.SIunits.Temperature T_a2_nominal=313.15
+  parameter Modelica.SIunits.Temperature T_a2_nominal
     "Nominal temperature at port a2"
     annotation(Dialog(group="Heat exchanger"));
       //min=0 + 273,
@@ -65,10 +65,10 @@ model HeatingIndirect
     Modelica.Blocks.Types.SimpleController.PI
     "Type of controller"
     annotation(Dialog(tab="Controller"));
-  parameter Real k=0.1
+  parameter Real k=0.05
     "Gain of controller"
     annotation(Dialog(tab="Controller"));
-  parameter Modelica.SIunits.Time Ti=300
+  parameter Modelica.SIunits.Time Ti=120
     "Time constant of integrator block"
      annotation (Dialog(tab="Controller", enable=
           controllerType == Modelica.Blocks.Types.SimpleController.PI or
@@ -175,7 +175,7 @@ model HeatingIndirect
     final y_start=yCon_start,
     final reverseActing=reverseActing,
     reset=Buildings.Types.Reset.Disabled,
-    y_reset=0)                         "Controller"
+    y_reset=0) "Controller"
     annotation (Placement(transformation(extent={{-90,-10},{-70,10}})));
 
   Buildings.Fluid.Sensors.TemperatureTwoPort senTDisSup(
@@ -228,9 +228,9 @@ model HeatingIndirect
     "Building-side (secondary) supply temperature"
     annotation (Placement(transformation(extent={{76,-70},{56,-50}})));
   Modelica.Blocks.Sources.RealExpression norDecMasFlo(y=if hex.port_b2.m_flow
-         <= 0.0001 then TSetBuiSup + 3 else senTBuiSup.T)
+         <= 0.0001 then TSetBuiSup + 1 else senTBuiSup.T)
     "Normalized decoupler line mass flow rate."
-    annotation (Placement(transformation(extent={{-16,-38},{-36,-18}})));
+    annotation (Placement(transformation(extent={{-40,-38},{-60,-18}})));
 protected
   final parameter Medium.ThermodynamicState sta_default = Medium.setState_pTX(
     T=Medium.T_default,
@@ -282,8 +282,8 @@ equation
     annotation (Line(points={{76,-60},{100,-60}}, color={0,127,255}));
   connect(con.y, val.y)
     annotation (Line(points={{-69,0},{-20,0},{-20,48}}, color={0,0,127}));
-  connect(con.u_m, senTBuiSup.T)
-    annotation (Line(points={{-80,-12},{-80,-49}}, color={0,0,127}));
+  connect(norDecMasFlo.y, con.u_m)
+    annotation (Line(points={{-61,-28},{-80,-28},{-80,-12}}, color={0,0,127}));
 annotation (defaultComponentName="coo",
     Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
@@ -374,7 +374,8 @@ American Society of Heating, Refrigeration and Air-Conditioning
 Engineers. (2013). Chapter 5: End User Interface. In 
 <i>District Cooling Guide</i>. 1st Edition. 
 </p>
-</html>", revisions="<html>
+</html>",
+revisions="<html>
 <ul>
 <li>
 December 10, 2019 by Kathryn Hinkelman:<br/>

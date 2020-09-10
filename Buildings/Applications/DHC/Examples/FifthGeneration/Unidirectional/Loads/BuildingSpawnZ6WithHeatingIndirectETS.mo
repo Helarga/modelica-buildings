@@ -2,7 +2,7 @@ within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads;
 model BuildingSpawnZ6WithHeatingIndirectETS
   "Model of a building (Spawn 6 zones) with an energy transfer station"
   package MediumW = Buildings.Media.Water;
-  extends BaseClasses.PartialBuildingWithCoolingIndirectETS(
+  extends BaseClasses.PartialBuildingWithIndirectETS(
       final m1_flow_nominal=mBuiHea_flow_nominal,
       final m2_flow_nominal=mBuiCoo_flow_nominal,
       redeclare package Medium1 =MediumW,
@@ -12,8 +12,6 @@ model BuildingSpawnZ6WithHeatingIndirectETS
       final have_pum=true,
       final idfName=idfName,
       final weaName=weaName,
-      delTBuiHea=5,
-      delTDisHea=5,
       T_aChiWat_nominal=280.15,
       T_bChiWat_nominal=285.15,
       T_aHeaWat_nominal=323.15,
@@ -32,8 +30,7 @@ model BuildingSpawnZ6WithHeatingIndirectETS
     "Name of the weather file"
     annotation(Dialog(group="Building model parameters"));
   parameter Modelica.SIunits.MassFlowRate mDisHea_flow_nominal= bui.disFloHea.m_flow_nominal* (bui.delTBuiHea/bui.delTDisHea)
-   "Nominal mass flow rate of primary (district) district heating side";                 //bui.disFloCoo.m_flow_nominal*(bui.delTBuiCoo/bui.delTDisCoo)
-
+   "Nominal mass flow rate of primary (district) district heating side";
   parameter Modelica.SIunits.MassFlowRate mDisCoo_flow_nominal = bui.disFloCoo.m_flow_nominal*(bui.delTBuiCoo/bui.delTDisCoo)
     "Nominal mass flow rate of primary (district) district cooling side";
   parameter Modelica.SIunits.MassFlowRate mBuiHea_flow_nominal= bui.disFloHea.m_flow_nominal
@@ -51,8 +48,8 @@ model BuildingSpawnZ6WithHeatingIndirectETS
     final mBui_flow_nominal=mBuiHea_flow_nominal,
     use_Q_flow_nominal=true,
     Q_flow_nominal=(sum(bui.terUni.QHea_flow_nominal)),
-    T_a1_nominal=328.15,
-    T_a2_nominal=323.15,
+    T_a1_nominal=327.15,
+    T_a2_nominal=321.15,
     xi_start=0)
     "Energy transfer station model"
     annotation (Placement(transformation(extent={{-28,-84},{32,-24}})));
@@ -75,10 +72,10 @@ equation
           {100,60}}, color={0,127,255}));
   connect(preSou.ports[1], ets.port_b2) annotation (Line(points={{-60,-98},{-28,
           -98},{-28,-72}}, color={0,127,255}));
-  connect(port_a1, ets.port_a1) annotation (Line(points={{-100,60},{-64,60},{
-          -64,-36},{-28,-36}}, color={0,127,255}));
+  connect(port_a1, ets.port_a1) annotation (Line(points={{-100,60},{-72,60},{
+          -72,-36},{-28,-36}}, color={0,127,255}));
   annotation (Icon(graphics={
           Bitmap(extent={{-72,-62},{62,74}},
           fileName="modelica://Buildings/Resources/Images/ThermalZones/EnergyPlus/EnergyPlusLogo.png")}),
-      Diagram(coordinateSystem(extent={{-100,-140},{100,100}})));
+      Diagram(coordinateSystem(extent={{-100,-100},{100,100}})));
 end BuildingSpawnZ6WithHeatingIndirectETS;

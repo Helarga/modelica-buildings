@@ -2,7 +2,7 @@ within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads;
 model BuildingSpawnZ6WithCoolingIndirectETS
   "Model of a building (Spawn 6 zones) with an energy transfer station"
   package MediumW = Buildings.Media.Water;
-  extends BaseClasses.PartialBuildingWithCoolingIndirectETS(
+  extends BaseClasses.PartialBuildingWithIndirectETS(
       m1_flow_nominal=mBuiHea_flow_nominal,
       m2_flow_nominal=mDis_flow_nominal,
       redeclare package Medium1 =MediumW,

@@ -15,15 +15,23 @@ model BuildingSpawnZ6
 
   parameter Integer facSca[nZon]=fill(5, nZon)
     "Scaling factor to be applied to on each extensive quantity";
-  parameter Modelica.SIunits.MassFlowRate mLoaCoo_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] * 0.22)/(3500) for i in 1:nZon}
+<<<<<<< Updated upstream
+  parameter Modelica.SIunits.MassFlowRate mLoaCoo_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] *(0.045)/1000) for i in 1:nZon}
     "Load side mass flow rate at nominal conditions"
     annotation(Dialog(group="Nominal condition"));
-  parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] * 0.22)/(3500) for i in 1:nZon}
+  parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal[nZon]= {(QHea_flow_nominal[i]*(0.0285)/1000) for i in 1:nZon}
+=======
+  parameter Modelica.SIunits.MassFlowRate mLoaCoo_flow_nominal[nZon]= {(-1*QCoo_flow_nominal[i] *(0.06)/1000) for i in 1:nZon}
     "Load side mass flow rate at nominal conditions"
     annotation(Dialog(group="Nominal condition"));
+  parameter Modelica.SIunits.MassFlowRate mLoaHea_flow_nominal[nZon]= {(QHea_flow_nominal[i]*(0.04)/1000) for i in 1:nZon}
+>>>>>>> Stashed changes
+    "Load side mass flow rate at nominal conditions"
+    annotation(Dialog(group="Nominal condition"));
+  //{(QHea_flow_nominal[i] * 0.15)/(3500) for i in 1:nZon}
   //{(QHea_flow_nominal[i] * 0.1)/(3500) for i in 1:nZon}
   parameter Modelica.SIunits.HeatFlowRate QHea_flow_nominal[nZon]=
-    fill(3500, nZon) ./ facSca
+    fill(10500, nZon) ./ facSca
     "Design heating heat flow rate (>=0)"
     annotation (Dialog(group="Nominal condition"));
   parameter Modelica.SIunits.HeatFlowRate QCoo_flow_nominal[nZon]=
@@ -40,9 +48,13 @@ model BuildingSpawnZ6
     "Nominal building supply and return water temperature difference";
   parameter Modelica.SIunits.TemperatureDifference delTDisCoo=9
     "Nominal district supply and return water temperature difference";
-  parameter Modelica.SIunits.TemperatureDifference delTBuiHea=5
+  parameter Modelica.SIunits.TemperatureDifference delTBuiHea=8
     "Nominal building supply and return water temperature difference";
+<<<<<<< Updated upstream
+  parameter Modelica.SIunits.TemperatureDifference delTDisHea=12
+=======
   parameter Modelica.SIunits.TemperatureDifference delTDisHea=10
+>>>>>>> Stashed changes
     "Nominal district supply and return water temperature difference";
 
   parameter Modelica.SIunits.Temperature T_aChiWat_nominal

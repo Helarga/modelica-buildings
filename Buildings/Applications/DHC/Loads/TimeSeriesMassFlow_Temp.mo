@@ -52,7 +52,7 @@ model TimeSeriesMassFlow_Temp
         extent={{10,-10},{-10,10}},
         rotation=0,
         origin={26,60})));
-  Buildings.Applications.DHC.EnergyTransferStations.CoolingIndirect cooETS(
+  EnergyTransferStations.CoolingIndirect cooETS(
     allowFlowReversal1=false,
     allowFlowReversal2=false,
     redeclare package Medium = MediumW,
@@ -120,7 +120,7 @@ model TimeSeriesMassFlow_Temp
     annotation (Placement(transformation(extent={{4,70},{-16,90}})));
   Buildings.Controls.OBC.UnitConversions.From_degC THWSET
     annotation (Placement(transformation(extent={{4,-96},{-16,-76}})));
-  Fluid.Sources.MassFlowSource_T supDisChWat(
+  Buildings.Fluid.Sources.MassFlowSource_T supDisChWat(
     redeclare package Medium = MediumW,
     use_m_flow_in=true,
     use_T_in=false,
@@ -138,7 +138,7 @@ model TimeSeriesMassFlow_Temp
     annotation (Placement(transformation(extent={{-36,-10},{-56,10}})));
   Modelica.Blocks.Sources.RealExpression mBuiHW(y=buiMasTem.y[5])
     annotation (Placement(transformation(extent={{80,-34},{60,-14}})));
-  Fluid.Sources.MassFlowSource_T      disHeaSin(
+  Buildings.Fluid.Sources.MassFlowSource_T      disHeaSin(
     redeclare package Medium = MediumW,
     use_m_flow_in=true,
     use_T_in=false,

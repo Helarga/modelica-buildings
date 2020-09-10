@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads.BaseClasses;
-partial model PartialBuildingWithCoolingIndirectETS
+partial model PartialBuildingWithIndirectETS
   "Partial model of a building with an energy transfer station"
   extends Buildings.Fluid.Interfaces.PartialFourPortInterface(
     final m1_flow_small=1E-4*m1_flow_nominal,
@@ -162,4 +162,4 @@ partial model PartialBuildingWithCoolingIndirectETS
           origin={57,-13},
           rotation=90)}),                                        Diagram(
         coordinateSystem(preserveAspectRatio=false)));
-end PartialBuildingWithCoolingIndirectETS;
+end PartialBuildingWithIndirectETS;

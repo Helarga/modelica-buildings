@@ -36,7 +36,7 @@ model PlantHeatingNewBoiler "Central heating plant."
     constrainedby Buildings.Fluid.Movers.Data.Generic    "Performance data of heating water pump" annotation (
     Dialog(group="Pump"),
     choicesAllMatching=true,
-    Placement(transformation(extent={{138,82},{152,96}})));
+    Placement(transformation(extent={{102,80},{116,94}})));
 
   // control settings
   parameter Modelica.SIunits.Time tWai "Waiting time"
@@ -66,12 +66,12 @@ model PlantHeatingNewBoiler "Central heating plant."
 
   Modelica.Fluid.Interfaces.FluidPort_a port_a(redeclare package Medium = Medium)
     "Fluid connector a (positive design flow direction is from port_a to port_b)"
-    annotation (Placement(transformation(extent={{150,40},{170,60}}),
+    annotation (Placement(transformation(extent={{110,40},{130,60}}),
         iconTransformation(extent={{90,40},{110,60}})));
 
   Modelica.Fluid.Interfaces.FluidPort_b port_b(redeclare package Medium = Medium)
     "Fluid connector b (positive design flow direction is from port_a to port_b)"
-    annotation (Placement(transformation(extent={{150,-60},{170,-40}}),
+    annotation (Placement(transformation(extent={{112,-60},{132,-40}}),
         iconTransformation(extent={{90,-60},{110,-40}})));
 
   Modelica.Blocks.Interfaces.BooleanInput on "On signal of the plant"
@@ -96,7 +96,7 @@ model PlantHeatingNewBoiler "Central heating plant."
     "Heating water supply temperature" annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=0,
-        origin={132,-50})));
+        origin={94,-50})));
 
   Buildings.Applications.DHC.CentralPlants.Heating.Generation4.Controls.HeatingWaterPumpSpeed heaWatPumCon(
     tWai=0,
@@ -125,7 +125,7 @@ model PlantHeatingNewBoiler "Central heating plant."
     "Heating water return temperature" annotation (Placement(transformation(
         extent={{10,-10},{-10,10}},
         rotation=0,
-        origin={104,50})));
+        origin={80,50})));
 
   DataCenters.ChillerCooled.Equipment.FlowMachine_y pumHW(
     rhoStd=Medium.density_pTX(
@@ -161,7 +161,7 @@ model PlantHeatingNewBoiler "Central heating plant."
   Buildings.Fluid.Sensors.MassFlowRate senMasFlo(
     redeclare package Medium =Medium)
     "Heating water return mass flow"
-    annotation (Placement(transformation(extent={{42,40},{22,60}})));
+    annotation (Placement(transformation(extent={{36,40},{16,60}})));
   Buildings.Fluid.Sensors.MassFlowRate senMasFloByp(
     redeclare package Medium = Medium)
     "Heating water bypass valve mass flow meter"
@@ -182,7 +182,7 @@ model PlantHeatingNewBoiler "Central heating plant."
   Buildings.Fluid.Sources.Boundary_pT expTanHW(redeclare package Medium =
         Medium, nPorts=1)
      "Heating water expansion tank"
-    annotation (Placement(transformation(extent={{-8,6},{12,26}})));
+    annotation (Placement(transformation(extent={{0,0},{20,20}})));
   Modelica.Blocks.Interfaces.RealInput THeaSet(final unit="K", displayUnit="degC")
     "Heating water setpoint." annotation (Placement(transformation(extent={{-160,
             -60},{-140,-40}}), iconTransformation(extent={{-140,-104},{-100,-64}})));
@@ -206,24 +206,25 @@ equation
   connect(senMasFloByp.m_flow, heaWatPumCon.meaFloByPas) annotation (Line(
         points={{43,-30},{40,-30},{40,-74},{-130,-74},{-130,-38.8},{-121,-38.8}},
         color={0,0,127}));
-  connect(port_a, THWRet.port_a)   annotation (Line(points={{160,50},{114,50}}, color={0,127,255}));
+  connect(port_a, THWRet.port_a)   annotation (Line(points={{120,50},{90,50}},  color={0,127,255}));
   connect(pumHW.port_b, boiHotWat.port_a) annotation (Line(points={{-20,50},{
           -36,50},{-36,-50},{10,-50}},
                                     color={0,127,255}));
-  connect(boiHotWat.port_b, THWSup.port_a)  annotation (Line(points={{30,-50},{122,-50}}, color={0,127,255}));
-  connect(THWSup.port_b, port_b)   annotation (Line(points={{142,-50},{160,-50}}, color={0,127,255}));
-  connect(pumHW.port_a, senMasFlo.port_b)   annotation (Line(points={{0,50},{22,
+  connect(boiHotWat.port_b, THWSup.port_a)  annotation (Line(points={{30,-50},{84,
+          -50}},                                                                          color={0,127,255}));
+  connect(THWSup.port_b, port_b)   annotation (Line(points={{104,-50},{122,-50}}, color={0,127,255}));
+  connect(pumHW.port_a, senMasFlo.port_b)   annotation (Line(points={{0,50},{16,
           50}},                                                                       color={0,127,255}));
-  connect(senMasFlo.port_a, THWRet.port_b)   annotation (Line(points={{42,50},{94,
+  connect(senMasFlo.port_a, THWRet.port_b)   annotation (Line(points={{36,50},{70,
           50}},                                                                         color={0,127,255}));
   connect(heaWatPumCon.deCouVal, valByp.y) annotation (Line(points={{-99,-35},{
           -94,-35},{-94,-70},{80,-70},{80,0},{74,0},{74,-6.66134e-16},{66,
           -6.66134e-16}},                         color={0,0,127}));
   connect(valByp.port_b, senMasFlo.port_a)   annotation (Line(points={{54,10},{54,
-          50},{42,50}},                                                                         color={0,127,255}));
+          50},{36,50}},                                                                         color={0,127,255}));
   connect(boiHotWat.port_b, senMasFloByp.port_a)   annotation (Line(points={{30,-50},{54,-50},{54,-40}}, color={0,127,255}));
-  connect(expTanHW.ports[1], senMasFlo.port_a)   annotation (Line(points={{12,16},
-          {42,16},{42,50}},                                                                         color={0,127,255}));
+  connect(expTanHW.ports[1], senMasFlo.port_a)   annotation (Line(points={{20,10},
+          {36,10},{36,50}},                                                                         color={0,127,255}));
   connect(boiStaCon.y_On, boiHotWat.on) annotation (Line(points={{-99,70.6},{-72,
           70.6},{-72,-45},{9,-45}},
                               color={255,0,255}));
@@ -231,35 +232,21 @@ equation
           {-88,70.6},{-88,-6},{-126,-6},{-126,-21.2},{-121,-21.2}},
                                                                   color={255,0,
           255}));
-  connect(THWSup.T, boiStaCon.TDisSup) annotation (Line(points={{132,-39},{132,96},
-          {-134,96},{-134,70.6},{-121,70.6}}, color={0,0,127}));
-  connect(THWRet.T, boiStaCon.TDisRet) annotation (Line(points={{104,61},{104,88},
-          {-130,88},{-130,73.4},{-121,73.4}}, color={0,0,127}));
-  connect(senMasFlo.m_flow, boiStaCon.mHeaDis) annotation (Line(points={{32,61},
-          {32,86},{-126,86},{-126,76.6},{-121,76.6}}, color={0,0,127}));
+  connect(THWSup.T, boiStaCon.TDisSup) annotation (Line(points={{94,-39},{94,96},
+          {-136,96},{-136,70.6},{-121,70.6}}, color={0,0,127}));
+  connect(THWRet.T, boiStaCon.TDisRet) annotation (Line(points={{80,61},{80,92},
+          {-130,92},{-130,73.4},{-121,73.4}}, color={0,0,127}));
+  connect(senMasFlo.m_flow, boiStaCon.mHeaDis) annotation (Line(points={{26,61},
+          {26,86},{-126,86},{-126,76.6},{-121,76.6}}, color={0,0,127}));
+  connect(port_a, port_a)
+    annotation (Line(points={{120,50},{120,50}}, color={0,127,255}));
   annotation (__Dymola_Commands,
-  Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-80},{160,100}})),
+  Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-80},{120,100}})),
     experiment(
       StopTime=600,
-      __Dymola_NumberOfIntervals=1440,
-      __Dymola_Algorithm="Dassl"),
-    __Dymola_experimentSetupOutput,
-    Documentation(info="<html>
-<p>The schematic drawing of the Lejeune plant is shown as folowing.</p>
-<p><img src=\"Resources/Images/lejeunePlant/lejeune_schematic_drawing.jpg\" alt=\"image\"/> </p>
-<p>In addition, the parameters are listed as below.</p>
-<p>The parameters for the chiller plant.</p>
-<p><img src=\"Resources/Images/lejeunePlant/Chiller.png\" alt=\"image\"/> </p>
-<p>The parameters for the primary chilled water pump.</p>
-<p><img src=\"Resources/Images/lejeunePlant/PriCHWPum.png\" alt=\"image\"/> </p>
-<p>The parameters for the secondary chilled water pump.</p>
-<p><img src=\"Resources/Images/lejeunePlant/SecCHWPum1.png\" alt=\"image\"/> </p>
-<p><img src=\"Resources/Images/lejeunePlant/SecCHWPum2.png\" alt=\"image\"/> </p>
-<p>The parameters for the condenser water pump.</p>
-<p><img src=\"Resources/Images/lejeunePlant/CWPum.png\" alt=\"image\"/> </p>
-</html>"),
-    Icon(coordinateSystem(extent={{-100,-100},{100,100}}),    graphics={
-                                Rectangle(
+      __Dymola_NumberOfIntervals=1440),
+    Icon( graphics={
+      Rectangle(
         extent={{-100,-100},{100,100}},
         lineColor={0,0,127},
         fillColor={255,255,255},

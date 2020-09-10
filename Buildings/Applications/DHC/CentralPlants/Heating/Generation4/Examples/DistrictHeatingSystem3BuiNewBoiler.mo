@@ -10,11 +10,11 @@ model DistrictHeatingSystem3BuiNewBoiler
     nBui=nBui,
     mDis_flow_nominal=sum({bui_ETS[i].ets.mDis_flow_nominal for i in 1:nBui}),
     mCon_flow_nominal={bui_ETS[i].ets.mDis_flow_nominal for i in 1:nBui},
-    lDis=fill(15, nBui),
-    lCon=fill(20, nBui),
-    dhDis={0.05,0.025},
-    dhCon=fill(0.025, nBui))
-                            "Design data"
+    lDis=fill(5, nBui),
+    lCon=fill(5, nBui),
+    lEnd=5,
+    dhDis={0.015,0.01},
+    dhCon=fill(0.01, nBui)) "Design data"
     annotation (Placement(transformation(extent={{-80,20},{-60,40}})));
    //sum({bui_ETS[i].ets.mDis_flow_nominal for i in 1:nBui})*1.01,
   parameter Integer nBui=2
@@ -40,16 +40,16 @@ model DistrictHeatingSystem3BuiNewBoiler
     "Minimum mass flow rate of single chiller";
   parameter Boolean allowFlowReversal = false;
   // control settings
-  parameter Modelica.SIunits.Pressure dpSetPoi=70000
+  parameter Modelica.SIunits.Pressure dpSetPoi=50000
     "Differential pressure setpoint";
-  parameter Modelica.SIunits.Pressure pumDP=(heaPla.dpBoi_nominal+dpSetPoi+20000);
+  parameter Modelica.SIunits.Pressure pumDP=(heaPla.dpBoi_nominal+dpSetPoi+50000);
 
   parameter Modelica.SIunits.Time tWai=30 "Waiting time";
   // pumps
   parameter Buildings.Fluid.Movers.Data.Generic perHWPum(
     pressure=Buildings.Fluid.Movers.BaseClasses.Characteristics.flowParameters(
-      V_flow=mBoi_flow_nominal/1000 *{0.1,1.5},
-      dp=pumDP*{1.5,0.1}))
+      V_flow=mBoi_flow_nominal*3/1000 *{0.1,1.1},
+      dp=pumDP*{1.1,0.1}))
     "Performance data for chilled water pumps"; //datDes.mDis_flow_nominal
 
   PlantHeatingNewBoiler heaPla(
@@ -59,7 +59,7 @@ model DistrictHeatingSystem3BuiNewBoiler
     mMin_flow=mMin_flow,
     mBoi_flow_nominal=mBoi_flow_nominal,
     dpBoi_nominal=10000,
-    delT_nominal(displayUnit="degC") = 10,
+    delT_nominal(displayUnit="degC")=10,
     perHWPum=perHWPum,
     tWai=tWai,
     dpSetPoi=dpSetPoi,
@@ -69,9 +69,7 @@ model DistrictHeatingSystem3BuiNewBoiler
 
   Buildings.Applications.DHC.Examples.FifthGeneration.Unidirectional.Loads.BuildingSpawnZ6WithHeatingIndirectETS bui_ETS[nBui]
     annotation (Placement(transformation(extent={{20,60},{40,80}})));
-    //THeaWatSup_nominal=328.15,
-   // THeaWatRet_nominal=313.15)
-    //dp_nominal=100000)
+
   Buildings.Fluid.Sources.Boundary_pT cooSou(
     redeclare package Medium = MediumW,
     T=280.15,
@@ -92,7 +90,7 @@ model DistrictHeatingSystem3BuiNewBoiler
     annotation (Placement(transformation(extent={{16,20},{44,32}})));
   Modelica.Blocks.Sources.RealExpression TSetHeaWatSup[nBui](each y=50 + 273.15)
     "Heating water supply temperature set point."
-    annotation (Placement(transformation(extent={{-90,70},{-70,90}})));
+    annotation (Placement(transformation(extent={{-80,70},{-60,90}})));
   Fluid.Sensors.TemperatureTwoPort           senTDisSup(redeclare final package
       Medium = MediumW, final m_flow_nominal=mHW_flow_nominal)
     "District-side (primary) supply temperature sensor"
@@ -118,27 +116,26 @@ equation
   connect(cooSin.ports[i], bui_ETS[i].port_b2)   annotation (Line(points={{-10,64},{20,64}}, color={0,127,255}));
 
  end for;
-  connect(TSetHeaWatSup.y, bui_ETS.TSetWat) annotation (Line(points={{-69,80},{12,
+  connect(TSetHeaWatSup.y, bui_ETS.TSetWat) annotation (Line(points={{-59,80},{12,
           80},{12,73},{19,73}}, color={0,0,127}));
   connect(heaPla.port_a, disNet.port_bDisRet) annotation (Line(points={{-20,-25},
           {0,-25},{0,22.4},{16,22.4}}, color={0,127,255}));
 
-  connect(disNet.dp, heaPla.dpMea) annotation (Line(points={{44.7,27.8},{64,27.8},
-          {64,-66},{-60,-66},{-60,-33},{-42,-33}}, color={0,0,127}));
-  connect(heaPla.port_b, senTDisSup.port_a) annotation (Line(points={{-20,-35},
-          {0,-35},{0,-34},{14,-34},{14,-30}}, color={0,127,255}));
+  connect(disNet.dp, heaPla.dpMea) annotation (Line(points={{44.7,27.8},{62,
+          27.8},{62,-60},{-62,-60},{-62,-33},{-42,-33}},
+                                                   color={0,0,127}));
+  connect(heaPla.port_b, senTDisSup.port_a) annotation (Line(points={{-20,-35},{
+          0,-35},{0,-34},{14,-34},{14,-30}},  color={0,127,255}));
   connect(senTDisSup.port_b, disNet.port_aDisSup) annotation (Line(points={{14,
           -10},{14,0},{2,0},{2,26},{16,26}}, color={0,127,255}));
-  connect(mPum_flow.y, heaPla.on) annotation (Line(points={{-41,10},{-60,10},{
-          -60,-22},{-42,-22}},
-                           color={255,0,255}));
+  connect(mPum_flow.y, heaPla.on) annotation (Line(points={{-41,10},{-60,10},{-60,
+          -22},{-42,-22}}, color={255,0,255}));
   connect(TDisSetHeaWat.y, heaPla.THeaSet) annotation (Line(points={{-69,-40},{-56,
           -40},{-56,-38.4},{-42,-38.4}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
-      StartTime=3600,
-      StopTime=86400,
-      Tolerance=1e-06,
-      __Dymola_Algorithm="Dassl"));
+      StartTime=0,
+      StopTime=864000,
+      Tolerance=1e-06));
 end DistrictHeatingSystem3BuiNewBoiler;
