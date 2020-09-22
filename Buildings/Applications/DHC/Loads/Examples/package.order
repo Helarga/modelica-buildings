@@ -5,4 +5,5 @@ CouplingSpawnZ6
 CouplingTimeSeries
 BaseClasses
 CouplingTimeSeriesHE
-TimeSeriesOpenStudioSimultaneousHeatingCooling
+TimeSeriesMediumOffice
+CouplingTimeSeries_Hospital

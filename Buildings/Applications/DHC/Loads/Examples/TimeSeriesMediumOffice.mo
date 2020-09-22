@@ -1,5 +1,5 @@
 within Buildings.Applications.DHC.Loads.Examples;
-model TimeSeriesOpenStudioSimultaneousHeatingCooling
+model TimeSeriesMediumOffice
   "Example illustrating the coupling of a simultaneous heating and cooling building loads model to heating and chilled water loops."
   extends Modelica.Icons.Example;
   package Medium1 = Buildings.Media.Water
@@ -156,4 +156,4 @@ First implementation.
   __Dymola_Commands(file=
 "modelica://Buildings/Resources/Scripts/Dymola/Applications/DHC/Loads/Examples/TimeSeriesOpenStudioSimultaneousHeatingCooling.mos"
 "Simulate and plot"));
-end TimeSeriesOpenStudioSimultaneousHeatingCooling;
+end TimeSeriesMediumOffice;
