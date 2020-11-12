@@ -279,9 +279,20 @@ This limitation only affects Dymola. OPTIMICA and JModelica can simulate Modelic
 for which the EnergyPlus model has multiple thermal zones, or for which
 multiple buildings are simulated in EnergyPlus.
 </p>
+<h5>SPAWN Binaries</h5>
+For more information about spawn binaries for LINUX and Windows
+<p>
+<a href=\"https://github.com/NREL/Spawn\">NREL/Spawn</a>.
+
+</p>
+
 </html>",
       revisions="<html>
-<ul>
+      <ul>
+<li>
+May 20, 2020, by Kyle Benne: <br/>
+Added note about (EnergyPlus warm-up).
+</li>      
 <li>
 April 20, 2020, by Kun Zhang: <br/>
 Added note for weather file.
