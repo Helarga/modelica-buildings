@@ -351,23 +351,22 @@ void generateFMU(FMUBuilding* bui, const char* modelicaBuildingsJsonFile){
     SpawnFormatError("Requested to use json file '%s' which does not exist.", modelicaBuildingsJsonFile);
   }
 #ifdef _WIN32 /* Win32 or Win64 */
-  cmd = "/Resources/bin/spawn-win64/bin/spawn.exe";
+  cmd = "spawn.exe";
 #elif __APPLE__
-  cmd = "/Resources/bin/spawn-darwin64/bin/spawn";
+  cmd = "spawn";
 #else
-  cmd = "/Resources/bin/spawn-linux64/bin/spawn";
+  cmd = "spawn";
 #endif
   optionFlags = " --no-compress "; /* Flag for command */
   outputFlag = " --output-path "; /* Flag for command */
   createFlag = " --create "; /* Flag for command */
-  len = strlen(bui->buildingsLibraryRoot) + strlen(cmd) + strlen(optionFlags)
+  len = strlen(cmd) + strlen(optionFlags)
     + strlen(outputFlag) + strlen("\"") + strlen(bui->fmuAbsPat) + strlen("\"")
     + strlen(createFlag) + strlen("\"") + strlen(modelicaBuildingsJsonFile) + strlen("\"")
     + 1;
 
   mallocString(len, "Failed to allocate memory in generateFMU().", &fulCmd, SpawnFormatError);
   memset(fulCmd, '\0', len);
-  strcpy(fulCmd, bui->buildingsLibraryRoot); /* This is for example /mtn/shared/Buildings */
   strcat(fulCmd, cmd);
   /* Check if the executable exists
      Linux return 0, and Windows returns 2 if file does not exist */
