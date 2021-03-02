@@ -350,12 +350,15 @@ void generateFMU(FMUBuilding* bui, const char* modelicaBuildingsJsonFile){
   if( access(modelicaBuildingsJsonFile, F_OK ) == -1 ) {
     SpawnFormatError("Requested to use json file '%s' which does not exist.", modelicaBuildingsJsonFile);
   }
+  // These assume spawn is in the path
+  // readlink is used to resolve links since spawn does not play well otherwise
+  // TODO: make this better
 #ifdef _WIN32 /* Win32 or Win64 */
   cmd = "spawn.exe";
 #elif __APPLE__
-  cmd = "spawn";
+  cmd = "$(readlink $(which spawn))";
 #else
-  cmd = "spawn";
+  cmd = "$(readlink $(which spawn))";
 #endif
   optionFlags = " --no-compress "; /* Flag for command */
   outputFlag = " --output-path "; /* Flag for command */
@@ -370,16 +373,18 @@ void generateFMU(FMUBuilding* bui, const char* modelicaBuildingsJsonFile){
   strcat(fulCmd, cmd);
   /* Check if the executable exists
      Linux return 0, and Windows returns 2 if file does not exist */
-  if( access(fulCmd, F_OK ) != 0 ) {
-    SpawnFormatError("Executable '%s' does not exist: '%s'.", fulCmd, strerror(errno));
-  }
+  // These tests are not satisfied by the output of readlink (above) but the cmd is still valid
+  // TODO replace these checks with something more robust
+  //if( access(fulCmd, F_OK ) != 0 ) {
+  //  SpawnFormatError("Executable '%s' does not exist: '%s'.", fulCmd, strerror(errno));
+  //}
   /* Make sure the file is executable */
   /* Windows has no mode X_OK = 1, see https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/access-waccess?view=vs-2019 */
-#ifndef _WIN32
-  if( access(fulCmd, X_OK ) != 0 ) {
-    SpawnFormatError("File '%s' exists, but fails to have executable flag set: '%s.", fulCmd, strerror(errno));
-  }
-#endif
+//#ifndef _WIN32
+//  if( access(fulCmd, X_OK ) != 0 ) {
+//    SpawnFormatError("File '%s' exists, but fails to have executable flag set: '%s.", fulCmd, strerror(errno));
+//  }
+//#endif
   /* Continue building the command line */
   strcat(fulCmd, optionFlags);
   strcat(fulCmd, outputFlag);
