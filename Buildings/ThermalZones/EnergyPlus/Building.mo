@@ -5,12 +5,21 @@ model Building
   final constant String modelicaNameBuilding=getInstanceName()
     "Name of this instance"
     annotation (HideResult=true);
-  parameter String idfName
-    "Name of the IDF file"
-    annotation (Evaluate=true);
-  parameter String weaName
-    "Name of the weather file, in .mos format and with .mos extension (see info section)"
-    annotation (Evaluate=true);
+  //parameter String idfName
+  //  "Name of the IDF file"
+  //  annotation (Evaluate=true);
+  //parameter String weaName
+  //  "Name of the weather file, in .mos format and with .mos extension (see info section)"
+  //  annotation (Evaluate=true);
+  // For some reason jmodelica will not copy the resources unless it is done like this
+  // TODO: figure out what is going on
+  final parameter String idfName=Modelica.Utilities.Files.loadResource(
+    "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/SingleFamilyHouse_TwoSpeed_ZoneAirBalance/SingleFamilyHouse_TwoSpeed_ZoneAirBalance.idf");
+  // the fmu also needs to have an epw next to the mos, using the same name but with different extension
+  // At this time the fmu will need to be modified manually to work with alfalfa
+  // open the generated fmu and copy an epw into it (next to mos) and rezip
+  final parameter String weaName=Modelica.Utilities.Files.loadResource(
+    "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos");
   parameter Boolean usePrecompiledFMU=false
     "Set to true to use pre-compiled FMU with name specified by fmuName"
     annotation (Dialog(tab="Debug"));
