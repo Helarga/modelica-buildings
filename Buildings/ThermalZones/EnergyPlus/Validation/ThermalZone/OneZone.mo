@@ -5,10 +5,10 @@ model OneZone
   package Medium=Buildings.Media.Air
     "Medium model";
   inner Buildings.ThermalZones.EnergyPlus.Building building(
-    idfName=Modelica.Utilities.Files.loadResource(
-      "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/SingleFamilyHouse_TwoSpeed_ZoneAirBalance/SingleFamilyHouse_TwoSpeed_ZoneAirBalance.idf"),
-    weaName=Modelica.Utilities.Files.loadResource(
-      "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"),
+    //idfName=Modelica.Utilities.Files.loadResource(
+    //  "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/SingleFamilyHouse_TwoSpeed_ZoneAirBalance/SingleFamilyHouse_TwoSpeed_ZoneAirBalance.idf"),
+    //weaName=Modelica.Utilities.Files.loadResource(
+    //  "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"),
     usePrecompiledFMU=false,
     showWeatherData=true,
     computeWetBulbTemperature=false)
