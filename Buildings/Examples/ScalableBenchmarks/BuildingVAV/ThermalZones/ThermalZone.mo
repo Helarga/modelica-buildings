@@ -4,7 +4,6 @@ model ThermalZone "Thermal zone model"
   replaceable package MediumA = Modelica.Media.Interfaces.PartialMedium
     "Medium model";
 
-  parameter Modelica.SIunits.Angle lat "Latitude";
   parameter Real gainFactor(start=1) "IHG fluctuating amplitude factor";
   parameter Real VInf_flow=(roo.AFlo*roo.hRoo)*0.5/3600 "Infiltration volume flow rate";
 
@@ -153,8 +152,7 @@ model ThermalZone "Thermal zone model"
     nConPar=1,
     nSurBou=2,
     nConBou=2,
-    nConExtWin=1,
-    lat=lat)
+    nConExtWin=1)
     "Room model, adapted from BESTEST Case 600 and VAVReheat model (for constructions)"
     annotation (Placement(transformation(extent={{36,-16},{66,14}})));
   Modelica.Blocks.Sources.Constant qConGai_flow(k=579/48) "Convective heat gain"
@@ -360,19 +358,19 @@ equation
           rotation=90),
         Text(
           extent={{-84,8},{-64,-6}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="Wall"),
         Text(
           extent={{64,8},{84,-6}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="Wall"),
         Text(
           extent={{-8,-74},{12,-88}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="Floor"),
         Text(
           extent={{-10,88},{10,74}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="Ceiling"),
         Rectangle(
           extent={{-42,42},{42,-42}},
@@ -398,6 +396,12 @@ A constant air infiltration from outside is assumed.
 </p>
 </html>", revisions="<html>
 <ul>
+<li>
+September 16, 2021, by Michael Wetter:<br/>
+Removed parameter <code>lat</code> as this is now obtained from the weather data reader.<br/>
+This is for
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1477\">IBPSA, #1477</a>.
+</li>
 <li>
 August 13, 2021, by Michael Wetter:<br/>
 Reimplemented computation of energy provided by HVAC system to also include the latent load.

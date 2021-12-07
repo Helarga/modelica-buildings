@@ -40,8 +40,9 @@ protected
     startTime=startTime,
     modelicaNameBuilding=modelicaNameBuilding,
     modelicaInstanceName=modelicaInstanceName,
+    spawnExe=spawnExe,
     idfName=idfName,
-    weaName=weaName,
+    epwName=epwName,
     relativeSurfaceTolerance=relativeSurfaceTolerance,
     epName=surfaceName,
     usePrecompiledFMU=usePrecompiledFMU,
@@ -324,10 +325,10 @@ This is for
           fillPattern=FillPattern.Solid),
         Text(
           extent={{-76,68},{-50,40}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="Front"),
         Text(
           extent={{50,70},{76,42}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="Back")}));
 end OpaqueConstruction;

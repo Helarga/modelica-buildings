@@ -136,7 +136,7 @@ equation
           color={0,0,127}),
         Text(
           extent={{173,26},{79,-4}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           textString="dH_flow"),
         Line(
           points={{-100,60},{-36,60}},
@@ -153,20 +153,20 @@ equation
         Text(
           visible=have_integrator,
           extent={{135,-16},{41,-46}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           textString="E"),
         Text(
           extent={{132,112},{12,62}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           textString=DynamicSelect("",String(dH_flow,
-            leftjustified=false,
+            leftJustified=false,
             significantDigits=0))),
         Text(
           visible=have_integrator,
           extent={{132,-56},{12,-106}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           textString=DynamicSelect("",String(E,
-            leftjustified=false,
+            leftJustified=false,
             significantDigits=0)))}),
     Documentation(
       info="<html>

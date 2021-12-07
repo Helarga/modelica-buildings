@@ -41,8 +41,9 @@ protected
     startTime=startTime,
     modelicaNameBuilding=modelicaNameBuilding,
     modelicaInstanceName=modelicaInstanceName,
+    spawnExe=spawnExe,
     idfName=idfName,
-    weaName=weaName,
+    epwName=epwName,
     relativeSurfaceTolerance=relativeSurfaceTolerance,
     epName=name,
     usePrecompiledFMU=usePrecompiledFMU,
@@ -105,11 +106,11 @@ equation
       graphics={
         Text(
           extent={{-88,84},{80,50}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="%key"),
         Text(
           extent={{-86,36},{80,2}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="%name"),
         Text(
           extent={{-90,-96},{100,-28}},

@@ -79,7 +79,7 @@ model VAVBranch "Supply branch of a VAV system"
     nPorts=1) "Sink for terminal box "
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=180,
       origin={132,24})));
-  Buildings.Examples.VAVReheat.Controls.RoomVAV con
+  Buildings.Examples.VAVReheat.BaseClasses.Controls.RoomVAV con
     "Room temperature controller"
     annotation (Placement(transformation(extent={{0,-10},{20,10}})));
   Buildings.Fluid.Sensors.MassFlowRate senMasFlo(
@@ -233,23 +233,23 @@ annotation (Diagram(coordinateSystem(preserveAspectRatio=true, extent={{-100,
           lineColor={0,0,0}),
         Text(
           extent={{-78,198},{24,156}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="%name"),
         Text(
           extent={{126,24},{194,-20}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           fillColor={255,255,255},
           fillPattern=FillPattern.Solid,
           textString="yDam"),
         Text(
           extent={{144,194},{184,168}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           fillColor={255,255,255},
           fillPattern=FillPattern.Solid,
           textString="p_rel"),
         Text(
           extent={{144,154},{192,122}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           fillColor={255,255,255},
           fillPattern=FillPattern.Solid,
           textString="TRooAir")}),
