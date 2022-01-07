@@ -19,7 +19,7 @@ model Pipe
 
   parameter Modelica.SIunits.Length length "Length of the pipe";
   parameter Real ReC=4000
-    "Reynolds number where transition to turbulent starts"
+    "Reynolds number where transition to turbulence starts"
     annotation (Dialog(tab="Flow resistance"));
 
   Buildings.Fluid.FixedResistances.PressureDrop preDro(
@@ -100,7 +100,7 @@ equation
           fillColor={217,236,255}),
         Text(
           extent={{-42,12},{40,-12}},
-          lineColor={0,0,0},
+          textColor={0,0,0},
           textString="%nSeg")}),
     Documentation(info="<html>
 <p>

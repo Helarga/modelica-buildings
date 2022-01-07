@@ -5,6 +5,8 @@ model TwoIdenticalZones
   inner Building building(
     idfName=Modelica.Utilities.Files.loadResource(
       "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/TwoIdenticalZones/TwoIdenticalZones.idf"),
+    epwName=Modelica.Utilities.Files.loadResource(
+      "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"),
     weaName=Modelica.Utilities.Files.loadResource(
       "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"))
     "Building level declarations"
@@ -195,11 +197,11 @@ First implementation.
           pattern=LinePattern.None),
         Text(
           extent={{-70,96},{-40,86}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="EnergyPlus results"),
         Text(
           extent={{-70,-6},{-40,-16}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString="Spawn results")}),
     Icon(
       coordinateSystem(

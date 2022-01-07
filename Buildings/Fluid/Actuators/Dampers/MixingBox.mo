@@ -20,7 +20,7 @@ model MixingBox "Outside air mixing box with interlocked air dampers"
     "Set to true for round duct, false for square cross section"
     annotation(Dialog(enable=not use_deltaM));
   parameter Real ReC=4000
-    "Reynolds number where transition to turbulent starts"
+    "Reynolds number where transition to turbulence starts"
     annotation(Dialog(enable=not use_deltaM));
   parameter Modelica.SIunits.MassFlowRate mOut_flow_nominal
     "Mass flow rate outside air damper"
@@ -252,7 +252,7 @@ equation
           fillPattern=FillPattern.Solid),
         Text(
           extent={{22,132},{48,110}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           fillColor={0,0,0},
           fillPattern=FillPattern.Solid,
           textString="y"),
@@ -285,12 +285,18 @@ equation
           points={{0,40},{0,10},{0,12}},
           color={0,0,255}),  Text(
           extent={{-50,-84},{48,-132}},
-          lineColor={0,0,255},
+          textColor={0,0,255},
           textString=
                "%name")}),
 defaultComponentName="eco",
 Documentation(revisions="<html>
 <ul>
+<li>
+September 21, 2021, by Michael Wetter:<br/>
+Corrected typo in comments.<br/>
+This is for
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1525\">#1525</a>.
+</li>
 <li>
 June 10, 2021, by Michael Wetter:<br/>
 Changed implementation of the filter and changed the parameter <code>order</code> to a constant

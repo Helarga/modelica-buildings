@@ -2,7 +2,6 @@ within Buildings.ThermalZones.Detailed.Validation.BaseClasses;
 model SingleZoneFloor "Model of a building floor as a single zone"
   replaceable package Medium = Modelica.Media.Interfaces.PartialMedium
     "Medium model for air" annotation (choicesAllMatching=true);
-  parameter Modelica.SIunits.Angle lat "Latitude";
   parameter Modelica.SIunits.Volume VRoo = 4555.7  "Room volum";
   parameter Modelica.SIunits.Height hRoo = 2.74 "Room height";
   parameter Modelica.SIunits.Length hWin = 1.5 "Height of windows";
@@ -42,15 +41,9 @@ model SingleZoneFloor "Model of a building floor as a single zone"
     d=784,
     nStaRef=2) "Gypsum board"
     annotation (Placement(transformation(extent={{80,80},{100,100}})));
-  parameter Buildings.HeatTransfer.Data.Solids.Plywood matFur(x=0.15, nStaRef=5)
+  parameter Buildings.HeatTransfer.Data.Solids.Plywood matFur(x=0.15)
     "Material for furniture"
     annotation (Placement(transformation(extent={{80,170},{100,190}})));
-  parameter Buildings.HeatTransfer.Data.Solids.Plywood matCarTra(
-    x=0.215/0.11,
-    k=0.11,
-    d=544,
-    nStaRef=1) "Wood for floor"
-    annotation (Placement(transformation(extent={{40,170},{60,190}})));
   parameter Buildings.HeatTransfer.Data.Resistances.Carpet matCar "Carpet"
     annotation (Placement(transformation(extent={{120,140},{140,160}})));
   parameter Buildings.HeatTransfer.Data.GlazingSystems.DoubleClearAir13Clear glaSys(
@@ -96,7 +89,6 @@ model SingleZoneFloor "Model of a building floor as a single zone"
 
   Buildings.ThermalZones.Detailed.MixedAir flo(
     redeclare package Medium = Medium,
-    lat=lat,
     AFlo=AFlo,
     hRoo=hRoo,
     nConExt=0,
@@ -307,13 +299,20 @@ equation
   </p>
   </html>",
   revisions="<html>
-  <ul>
-  <li>March 10, 2020, by Kun Zhang:<br/>
-  First implementation. This is for issue
-  <a href=\"https://github.com/lbl-srg/modelica-buildings/issues/1717\">1717</a>.
-  </li>
-  </ul>
-  </html>"),
+<ul>
+<li>
+September 16, 2021, by Michael Wetter:<br/>
+Removed parameter <code>lat</code> as this is now obtained from the weather data reader.<br/>
+This is for
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1477\">IBPSA, #1477</a>.
+</li>
+<li>
+March 10, 2020, by Kun Zhang:<br/>
+First implementation. This is for issue
+<a href=\"https://github.com/lbl-srg/modelica-buildings/issues/1717\">1717</a>.
+</li>
+</ul>
+</html>"),
   Icon(coordinateSystem(preserveAspectRatio=true, extent={{-200,-200},{200,200}}),
         graphics={
         Rectangle(
@@ -377,7 +376,7 @@ equation
           rotation=90),
           Text(
             extent={{-100,238},{100,184}},
-            lineColor={0,0,255},
+            textColor={0,0,255},
           textString="%name")}),
               Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)));

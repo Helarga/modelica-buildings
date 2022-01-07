@@ -185,28 +185,28 @@ equation
           fillColor={255,255,255},
           fillPattern=FillPattern.Solid),
         Text(
-          lineColor={0,0,255},
+          textColor={0,0,255},
           extent={{-150,110},{150,150}},
           textString="%name"),
         Text(
           extent={{58,94},{94,44}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="TSupSet"),
         Text(
           extent={{76,-44},{96,-90}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="yPum"),
         Text(
           extent={{76,2},{98,-16}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="on"),
         Text(
           extent={{-92,92},{-48,44}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="TRooSet"),
         Text(
           extent={{-94,32},{-74,-14}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="TRoo"),
         Rectangle(
           extent={{-30,-16},{48,-40}},
@@ -248,41 +248,46 @@ equation
                                                color={255,0,255}),
         Text(
           extent={{80,32},{98,16}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="y"),
         Text(
           extent={{230,108},{110,58}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString=DynamicSelect("",
             String(TSupSet,
-              leftjustified=false,
+              leftJustified=false,
               significantDigits=3))),
         Text(
           extent={{230,64},{110,14}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString=DynamicSelect("",
             String(y,
-              leftjustified=false,
+              leftJustified=false,
               significantDigits=2))),
         Line(points={{-30,-8},{-66,-8},{-66,-60},{-100,-60}},
              color={28,108,200}),
         Text(
           extent={{-92,-24},{-72,-70}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           textString="phi")}),
     Documentation(info="<html>
 <p>
 Controller for a radiant cooling system.
 </p>
 <p>
-This controller tracks the room temperature set point <code>TRooSet</code> by
+The controller tracks the room temperature set point <code>TRooSet</code> by
 adjusting the supply water temperature set point <code>TSupSet</code>
-based on a proportional controller.
-The calculation of the supply water temperature set point <code>TSupSet</code> is
-such that it is never below the dew point temperature.
+based on the output signal <code>y</code> of the proportional controller.
+The supply water temperature set point <code>TSupSet</code> is
+limited by the dew point temperature that is calculated based on the inputs <code>TRoo</code> and <code>phiRoo</code>.
 The pump is either off or operates at full speed, in which case <code>yPum = 1</code>.
-The pump control is based on a hysteresis that takes as an input the control signal from
-the supply temperature set point controller.
+The pump control is based on a hysteresis that switches the pump on when the output of the
+proportional controller <code>y</code> exceeds <i>0.2</i>, and the pump is commanded off when the output falls
+below <i>0.1</i>. See figure below for the control charts.
+</p>
+<p align=\"center\">
+<img alt=\"Image of control output\"
+src=\"modelica://Buildings/Resources/Images/Controls/OBC/RadiantSystems/Cooling/HighMassSupplyTemperature_TRoomRelHum.png\"/>
 </p>
 <p>
 For systems with high thermal mass, this controller should be left configured

@@ -1,4 +1,4 @@
-﻿within Buildings.Fluid.Geothermal.BuriedPipes.Examples;
+within Buildings.Fluid.Geothermal.BuriedPipes.Examples;
 model DiscretizedBuriedPipe
   "Example model of a buried pipe with multiple segments"
   extends Modelica.Icons.Example;
@@ -27,11 +27,11 @@ model DiscretizedBuriedPipe
     soiDat(k=1.58,c=1150,d=1600) "Soil thermal properties"
     annotation (Placement(transformation(extent={{-60,80},{-40,100}})));
 
-  FixedResistances.PlugFlowDiscretized pip(
+  FixedResistances.PlugFlowPipeDiscretized pip(
     redeclare package Medium = Medium,
     nSeg=nSeg,
     dh=0.1,
-    length=segLen,
+    segLen=segLen,
     m_flow_nominal=1,
     dIns=dIns,
     kIns=soiDat.k,
@@ -43,7 +43,7 @@ model DiscretizedBuriedPipe
     cliCon=cliCon,
     soiDat=soiDat,
     nSeg=pip.nSeg,
-    len=pip.length,
+    len=pip.segLen,
     dep={1.5},
     pos={0},
     rad={pip.dh/2 + pip.thickness + pip.dIns}) "Ground coupling"
@@ -80,11 +80,11 @@ model DiscretizedBuriedPipe
     T_start=293.15) "Pipe outlet temperature sensor"
     annotation (Placement(transformation(extent={{30,30},{50,50}})));
 
-  FixedResistances.PlugFlowDiscretized pipRev(
+  FixedResistances.PlugFlowPipeDiscretized pipRev(
     redeclare package Medium = Medium,
     nSeg=nSegRev,
     dh=0.1,
-    length=segLenRev,
+    segLen=segLenRev,
     m_flow_nominal=1,
     dIns=dIns,
     kIns=soiDat.k,
@@ -95,7 +95,7 @@ model DiscretizedBuriedPipe
     cliCon=cliCon,
     soiDat=soiDat,
     nSeg=pipRev.nSeg,
-    len=pipRev.length,
+    len=pipRev.segLen,
     dep={1.5},
     pos={0},
     rad={pip.dh / 2 + pip.thickness + pip.dIns})
