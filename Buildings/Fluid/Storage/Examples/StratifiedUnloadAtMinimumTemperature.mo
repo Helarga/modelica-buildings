@@ -6,7 +6,7 @@ model StratifiedUnloadAtMinimumTemperature
 
   parameter Modelica.SIunits.Volume VTan=3 "Tank volume";
 
-  parameter Modelica.SIunits.MassFlowRate m_flow_nominal = 3*1000/3600
+  parameter Modelica.SIunits.MassFlowRate m_flow_nominal=3*1000/3600
     "Nominal mass flow rate";
 
   constant Integer nSeg=5 "Number of volume segments";
@@ -92,11 +92,11 @@ model StratifiedUnloadAtMinimumTemperature
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor TTop
     "Temperature tank top"
     annotation (Placement(transformation(extent={{-160,-100},{-180,-80}})));
-  Modelica.Blocks.Logical.Hysteresis onOffHea(uLow=273.15 + 50 - 0.05, uHigh=
-        273.15 + 50 + 0.05)
+  Modelica.Blocks.Logical.Hysteresis onOffHea(uLow=273.15 + 70 - 0.5, uHigh=
+        273.15 + 70 + 2)
     "Controller for heater at bottom"
     annotation (Placement(transformation(extent={{-210,-134},{-190,-114}})));
-  Modelica.Blocks.Math.BooleanToReal yHea(realFalse=150000)
+  Modelica.Blocks.Math.BooleanToReal yHea(realFalse=200000)
     "Boolean to real for valve at bottom"
     annotation (Placement(transformation(extent={{-180,-134},{-160,-114}})));
   Modelica.Blocks.Math.BooleanToReal yBot
@@ -109,7 +109,7 @@ equation
     annotation (Line(points={{-100,80},{-110,80},{-110,-120}},
                                                              color={191,0,0}));
   connect(TBot.port, tan.heaPorVol[5])
-    annotation (Line(points={{-100,40},{-110,40},{-110,-120}},
+    annotation (Line(points={{-100,40},{-110,40},{-110,-119.52}},
                                                            color={191,0,0}));
   connect(valTop.port_b, senTem.port_a) annotation (Line(points={{132,-20},{182,
           -20},{182,-60},{190,-60}},
@@ -123,12 +123,13 @@ equation
   connect(senTem.port_b,loa. ports[1])
     annotation (Line(points={{210,-60},{222,-60}},
                                                  color={0,127,255}));
-  connect(valTop.port_a, tan.fluPorVol[1]) annotation (Line(points={{112,-20},{-112.6,
-          -20},{-112.6,-120}}, color={0,127,255}));
+  connect(valTop.port_a, tan.fluPorVol[1]) annotation (Line(points={{112,-20},{
+          -112.6,-20},{-112.6,-120.8}},
+                               color={0,127,255}));
   connect(valMed.port_a, tan.fluPorVol[3]) annotation (Line(points={{132,-60},{-112.6,
           -60},{-112.6,-120}},color={0,127,255}));
-  connect(valBot.port_a, tan.fluPorVol[5]) annotation (Line(points={{150,-100},{
-          -112.6,-100},{-112.6,-120}},
+  connect(valBot.port_a, tan.fluPorVol[5]) annotation (Line(points={{150,-100},
+          {-112.6,-100},{-112.6,-119.2}},
                               color={0,127,255}));
   connect(onOffMid.y, and2.u1)
     annotation (Line(points={{-29,80},{8,80}},     color={255,0,255}));
@@ -150,12 +151,14 @@ equation
           {-29,40}},       color={255,0,255}));
   connect(not1.y, and2.u2) annotation (Line(points={{1,60},{4,60},{4,72},{8,72}},
         color={255,0,255}));
-  connect(hea.port, tan.heaPorVol[5]) annotation (Line(points={{-130,-124},{-110,
-          -124},{-110,-120}}, color={191,0,0}));
-  connect(TTop.port, tan.heaPorVol[1]) annotation (Line(points={{-160,-90},{-110,
-          -90},{-110,-120}}, color={191,0,0}));
+  connect(hea.port, tan.heaPorVol[5]) annotation (Line(points={{-130,-124},{
+          -110,-124},{-110,-119.52}},
+                              color={191,0,0}));
+  connect(TTop.port, tan.heaPorVol[1]) annotation (Line(points={{-160,-90},{
+          -110,-90},{-110,-120.48}},
+                             color={191,0,0}));
   connect(onOffHea.u, TTop.T) annotation (Line(points={{-212,-124},{-230,-124},
-          {-230,-90},{-180,-90}},color={0,0,127}));
+          {-230,-90},{-181,-90}},color={0,0,127}));
   connect(onOffHea.y, yHea.u)
     annotation (Line(points={{-189,-124},{-182,-124}}, color={255,0,255}));
   connect(hea.Q_flow, yHea.y)
@@ -165,11 +168,27 @@ equation
   connect(yBot.y, valBot.y)
     annotation (Line(points={{101,40},{160,40},{160,-88}}, color={0,0,127}));
   connect(TBot.T, onOffBot.u)
-    annotation (Line(points={{-80,40},{-52,40}}, color={0,0,127}));
+    annotation (Line(points={{-79,40},{-52,40}}, color={0,0,127}));
   connect(onOffMid.u, TMid.T)
-    annotation (Line(points={{-52,80},{-80,80}}, color={0,0,127}));
+    annotation (Line(points={{-52,80},{-79,80}}, color={0,0,127}));
   annotation (Diagram(
-        coordinateSystem(preserveAspectRatio=false, extent={{-300,-140},{260,140}})),
+        coordinateSystem(preserveAspectRatio=false, extent={{-300,-140},{260,140}}),
+        graphics={
+        Rectangle(
+          extent={{-56,144},{152,14}},
+          lineColor={28,108,200},
+          fillColor={255,255,170},
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{60,-2},{252,-134}},
+          lineColor={28,108,200},
+          fillColor={213,255,170},
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{-236,-66},{-54,-140}},
+          lineColor={28,108,200},
+          fillColor={213,170,255},
+          fillPattern=FillPattern.Solid)}),
        __Dymola_Commands(file=
           "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Storage/Examples/StratifiedUnloadAtMinimumTemperature.mos"
         "Simulate and plot"),
@@ -181,7 +200,7 @@ equation
 Example for tank model that has three outlets, each with a valve.
 The valve at the bottom opens when the temperature in that tank segment
 is sufficiently warm to serve the load.
-The tank in the middle also opens when its tank temperature is sufficiently high,
+The valve in the middle also opens when its tank temperature is sufficiently high,
 but only if the valve below is closed.
 Finally, the valve at the top only opens if no other valve is open.
 Hence, there is always exactly one valve open.
